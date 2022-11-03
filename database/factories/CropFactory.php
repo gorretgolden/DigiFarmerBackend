@@ -23,9 +23,9 @@ class CropFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-        'farm_id' => $this->faker->randomDigitNotNull,
-        'category_id' => $this->faker->randomDigitNotNull,
+        'standard_price' => $this->faker->randomDigitNotNull,
         'image' => $this->faker->word,
+        'sub_category_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

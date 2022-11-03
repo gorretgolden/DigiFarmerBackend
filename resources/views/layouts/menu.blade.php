@@ -62,3 +62,51 @@
 </li>
 
 
+<li class="nav-item">
+    <a href="{{ route('plots.index') }}"
+       class="nav-link {{ Request::is('plots*') ? 'active' : '' }}">
+        <p>Plots</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('expenseCategories.index') }}"
+       class="nav-link {{ Request::is('expenseCategories*') ? 'active' : '' }}">
+        <p>Expense Categories</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('expenses.index') }}"
+       class="nav-link {{ Request::is('expenses*') ? 'active' : '' }}">
+        <p>Expenses</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('harvests.index') }}"
+       class="nav-link {{ Request::is('harvests*') ? 'active' : '' }}">
+        <p>Harvests</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('companies.index') }}"
+       class="nav-link {{ Request::is('companies*') ? 'active' : '' }}">
+        <p>Companies</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('subCategories.index') }}"
+       class="nav-link {{ Request::is('subCategories*') ? 'active' : '' }}">
+        <p>Sub Categories</p>
+    </a>
+</li>
+
+

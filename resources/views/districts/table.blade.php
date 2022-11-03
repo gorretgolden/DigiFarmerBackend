@@ -3,7 +3,7 @@
         <thead>
         <tr>
             <th>Name</th>
-        <th>Country Id</th>
+        <th>Country</th>
             <th colspan="3">Action</th>
         </tr>
         </thead>

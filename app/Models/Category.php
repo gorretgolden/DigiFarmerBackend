@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Category
  * @package App\Models
- * @version October 31, 2022, 8:41 am UTC
+ * @version November 3, 2022, 7:11 pm UTC
  *
  * @property string $name
  * @property string $image
@@ -48,7 +48,7 @@ class Category extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
+        'name' => 'required|string|max:100',
         'image' => 'nullable'
     ];
 

@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::resource('categories', App\Http\Controllers\API\CategoryAPIController::class);
+Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
+Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);

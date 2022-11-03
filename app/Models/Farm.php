@@ -26,7 +26,7 @@ class Farm extends Model
     use HasFactory;
 
     public $table = 'farms';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -65,12 +65,23 @@ class Farm extends Model
     public static $rules = [
         'name' => 'required|string',
         'district_id' => 'required',
-        'address' => 'required"string',
+        'address' => 'required|string',
         'latitude' => 'required',
         'longitude' => 'required',
         'field_area' => 'required',
         'user_id' => 'required'
     ];
 
-    
+
+    //a farm has many plots
+
+      public function plots()
+      {
+         return $this->hasMany(\App\Models\Plot::class,'farm_id');
+      }
+
+
+
+
+
 }

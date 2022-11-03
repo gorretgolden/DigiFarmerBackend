@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Crop
  * @package App\Models
- * @version October 31, 2022, 8:52 am UTC
+ * @version November 3, 2022, 7:20 pm UTC
  *
  * @property string $name
- * @property integer $farm_id
- * @property integer $category_id
+ * @property integer $standard_price
  * @property string $image
+ * @property integer $sub_category_id
  */
 class Crop extends Model
 {
@@ -31,9 +31,9 @@ class Crop extends Model
 
     public $fillable = [
         'name',
-        'farm_id',
-        'category_id',
-        'image'
+        'standard_price',
+        'image',
+        'sub_category_id'
     ];
 
     /**
@@ -43,9 +43,9 @@ class Crop extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'farm_id' => 'integer',
-        'category_id' => 'integer',
-        'image' => 'string'
+        'standard_price' => 'integer',
+        'image' => 'string',
+        'sub_category_id' => 'integer'
     ];
 
     /**
@@ -54,10 +54,10 @@ class Crop extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
-        'farm_id' => 'required',
-        'category_id' => 'required',
-        'image' => 'nullable'
+        'name' => 'required|string|max:100',
+        'standard_price' => 'required|integer',
+        'image' => 'nullable',
+        'sub_category_id' => 'required'
     ];
 
     

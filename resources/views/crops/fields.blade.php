@@ -1,3 +1,9 @@
+
+<?php
+$categories= App\Models\Category::pluck('name','id');
+$farms= App\Models\Farm::pluck('name','id');
+?>
+
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
@@ -7,14 +13,14 @@
 <!-- Farm Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('farm_id', 'Farm Id:') !!}
-    {!! Form::select('farm_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('farm_id', $farms, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
-<!-- Category Id Field -->
+<!-- Sub Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('category_id', 'Category Id:') !!}
-    {!! Form::select('category_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

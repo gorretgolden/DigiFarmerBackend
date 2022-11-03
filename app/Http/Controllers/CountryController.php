@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Country;
 
 class CountryController extends AppBaseController
 {
@@ -29,11 +30,12 @@ class CountryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $countries = $this->countryRepository->all();
+        $countries= Country::latest()->paginate(10);
 
         return view('countries.index')
             ->with('countries', $countries);
     }
+
 
     /**
      * Show the form for creating a new Country.

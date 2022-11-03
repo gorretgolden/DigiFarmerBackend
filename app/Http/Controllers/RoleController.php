@@ -8,6 +8,8 @@ use App\Repositories\RoleRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Response;
 
 class RoleController extends AppBaseController
@@ -54,13 +56,20 @@ class RoleController extends AppBaseController
      */
     public function store(CreateRoleRequest $request)
     {
-        $input = $request->all();
+         //validations
+      $this->validate($request,[
+        'name'=>'required|unique:roles,name',
+        'permission'=>'required',
+      ]);
 
-        $role = $this->roleRepository->create($input);
+      $data = $request->all();
 
-        Flash::success('Role saved successfully.');
+      $role = Role::create(['name'=>$request->input('name')]);
+      $role->syncPermissions($request->input('permission'));
 
-        return redirect(route('roles.index'));
+      Flash::success('Role created Successfully');
+
+      return redirect()->route("roles.index");
     }
 
     /**

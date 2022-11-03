@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Repositories\CategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\Category;
 use Flash;
 use Response;
 
@@ -54,9 +55,13 @@ class CategoryController extends AppBaseController
      */
     public function store(CreateCategoryRequest $request)
     {
-        $input = $request->all();
+        $category = new category();
+        $category->name = $request->name;
+        $category->save();
 
-        $category = $this->categoryRepository->create($input);
+        $category = Category::find($category->id);
+        $category->image = \App\Models\ImageUploader::upload($request->file('image'),'categories');
+        $category->save();
 
         Flash::success('Category saved successfully.');
 

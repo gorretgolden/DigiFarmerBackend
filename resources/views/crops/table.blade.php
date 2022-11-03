@@ -3,8 +3,8 @@
         <thead>
         <tr>
             <th>Name</th>
-        <th>Farm Id</th>
-        <th>Category Id</th>
+        <th>Farm</th>
+        <th>Category</th>
         <th>Image</th>
             <th colspan="3">Action</th>
         </tr>

@@ -16,14 +16,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Country extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'countries';
-    
 
-    protected $dates = ['deleted_at'];
+
+   // protected $dates = ['deleted_at'];
 
 
 
@@ -52,5 +52,5 @@ class Country extends Model
         'short_code' => 'required|string'
     ];
 
-    
+
 }

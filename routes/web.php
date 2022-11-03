@@ -44,3 +44,21 @@ Route::resource('categories', App\Http\Controllers\CategoryController::class);
 
 
 Route::resource('crops', App\Http\Controllers\CropController::class);
+
+
+Route::resource('plots', App\Http\Controllers\PlotController::class);
+
+
+Route::resource('expenseCategories', App\Http\Controllers\ExpenseCategoryController::class);
+
+
+Route::resource('expenses', App\Http\Controllers\ExpenseController::class);
+
+
+Route::resource('harvests', App\Http\Controllers\HarvestController::class);
+
+
+Route::resource('companies', App\Http\Controllers\CompanyController::class);
+
+
+Route::resource('subCategories', App\Http\Controllers\SubCategoryController::class);

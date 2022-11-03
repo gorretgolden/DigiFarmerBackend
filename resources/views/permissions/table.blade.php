@@ -29,4 +29,7 @@
         @endforeach
         </tbody>
     </table>
+    <div class="float-right">
+        {{ $permissions->links() }}
+    </div>
 </div>

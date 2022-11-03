@@ -31,4 +31,8 @@
         @endforeach
         </tbody>
     </table>
+
+    <div class="float-right">
+        {{ $countries->links() }}
+    </div>
 </div>

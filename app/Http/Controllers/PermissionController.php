@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use Spatie\Permission\Models\Permission;
 
 class PermissionController extends AppBaseController
 {
@@ -29,7 +30,7 @@ class PermissionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $permissions = $this->permissionRepository->all();
+        $permissions = Permission::latest()->paginate(8);
 
         return view('permissions.index')
             ->with('permissions', $permissions);

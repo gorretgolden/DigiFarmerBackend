@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCropsTable extends Migration
+class CreateTasksTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,15 +13,11 @@ class CreateCropsTable extends Migration
      */
     public function up()
     {
-        Schema::create('crops', function (Blueprint $table) {
-            $table->id('id');
+        Schema::create('tasks', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
-            $table->foreignId('farm_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->foreignId('category_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->string('image')->nullable();
+            $table->foreignId('plot_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
-            $table->softDeletes();
-
         });
     }
 
@@ -33,6 +28,6 @@ class CreateCropsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('crops');
+        Schema::dropIfExists('tasks');
     }
 }

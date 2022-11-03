@@ -1,3 +1,8 @@
+
+<?php
+$permissions = Spatie\Permission\Models\Permission::pluck('name','id');
+
+?>
 @extends('layouts.app')
 
 @section('content')
@@ -23,6 +28,23 @@
 
                 <div class="row">
                     @include('roles.fields')
+
+                    <div class="col-md-8">
+                        <strong>Permission:</strong>
+                        <br/>
+
+                        @foreach ($permissions as  $key => $value )
+                      <div class="display:grid;grid-template-columns:repeat(2,1fr)">
+                        <label class="label label-success">
+                            {{!! Form::checkbox('permission[]', $value, false, array('class','permission')) !!}}
+                             {{$value}}</label>
+                        <br/>
+
+                      </div>
+                        @endforeach
+
+
+                    </div>
                 </div>
 
             </div>

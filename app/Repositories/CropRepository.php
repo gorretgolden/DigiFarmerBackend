@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class CropRepository
  * @package App\Repositories
- * @version October 31, 2022, 8:52 am UTC
+ * @version November 3, 2022, 7:20 pm UTC
 */
 
 class CropRepository extends BaseRepository
@@ -18,9 +18,9 @@ class CropRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'farm_id',
-        'category_id',
-        'image'
+        'standard_price',
+        'image',
+        'sub_category_id'
     ];
 
     /**

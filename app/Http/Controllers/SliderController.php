@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Slider;
 
 class SliderController extends AppBaseController
 {
@@ -29,7 +30,7 @@ class SliderController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sliders = $this->sliderRepository->all();
+        $sliders = Slider::latest()->paginate();
 
         return view('sliders.index')
             ->with('sliders', $sliders);
@@ -54,9 +55,10 @@ class SliderController extends AppBaseController
      */
     public function store(CreateSliderRequest $request)
     {
-        $input = $request->all();
-
-        $slider = $this->sliderRepository->create($input);
+        $slider = new Slider();
+        $slider->title = $request->title;
+        $slider->image = \App\Models\ImageUploader::upload($request->file('image'),'sliders');
+        $slider->save();
 
         Flash::success('Slider saved successfully.');
 
