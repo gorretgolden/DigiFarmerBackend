@@ -22,8 +22,8 @@ class SliderFactory extends Factory
     public function definition()
     {
         return [
-            'image' => $this->faker->word,
-        'title' => $this->faker->word,
+            'title' => $this->faker->word,
+        'image' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

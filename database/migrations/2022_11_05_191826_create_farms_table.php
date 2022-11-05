@@ -5,8 +5,9 @@
  use Illuminate\Database\Schema\Blueprint;
  use Illuminate\Support\Facades\Schema;
 
- class CreateSellerProductsTable extends Migration
+ class CreateFarmsTable extends Migration
  {
+
      /**
       * Run the migrations.
       *
@@ -14,15 +15,17 @@
       */
      public function up()
      {
-         Schema::create('seller_products', function (Blueprint $table) {
-             $table->id();
-             $table->string('name',100);
-             $table->text('description');
-             $table->string('iamge');
-             $table->integer('price');
-             $table->foreignId('seller_product_category_id')->nullable()->constrained()->onDelete('CASCADE');
+         Schema::create('farms', function (Blueprint $table) {
+             $table->id('id');
+             $table->string('name');
+             $table->string('latitude');
+             $table->string('longitude');
+             $table->double('field_area')->nullable();
              $table->string('image')->nullable();
+             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
              $table->timestamps();
+             $table->softDeletes();
+
          });
      }
 
@@ -33,8 +36,7 @@
       */
      public function down()
      {
-         Schema::dropIfExists('seller_products');
+         Schema::drop('farms');
      }
  }
-
 

@@ -19,7 +19,7 @@ class CreateExpenseCategoriesTable extends Migration
             $table->integer('standard_value');
             $table->text('description')->nullable();
             $table->timestamps();
-            $table->softDeletes();
+
         });
     }
 

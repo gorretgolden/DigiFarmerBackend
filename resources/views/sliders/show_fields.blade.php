@@ -1,13 +1,13 @@
-<!-- Image Field -->
-<div class="col-sm-12">
-    {!! Form::label('image', 'Image:') !!}
-    <p>{{ $slider->image }}</p>
-</div>
-
 <!-- Title Field -->
 <div class="col-sm-12">
     {!! Form::label('title', 'Title:') !!}
     <p>{{ $slider->title }}</p>
+</div>
+
+<!-- Image Field -->
+<div class="col-sm-12">
+    {!! Form::label('image', 'Image:') !!}
+    <p>{{ $slider->image }}</p>
 </div>
 
 <!-- Created At Field -->

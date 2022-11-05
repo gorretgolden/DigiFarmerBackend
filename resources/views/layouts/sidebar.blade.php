@@ -3,7 +3,7 @@
         <img src="https://cdn.pixabay.com/photo/2022/10/25/07/07/pumpkins-7545052__340.jpg"
              alt="{{ config('app.name') }} Logo"
              class="brand-image rounded">
-        <span class="brand-text font-weight-light">Farm</span>
+        <span class="brand-text font-weight-light">Digi Farm App</span>
     </a>
     <div class="sidebar">
         <nav class="mt-2">

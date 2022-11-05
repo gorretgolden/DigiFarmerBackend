@@ -1,7 +1,6 @@
-
 <?php
 $expense_categories = App\Models\ExpenseCategory::pluck('name','id');
-$farms = App\Models\Farm::pluck('name','id');
+$plots = App\Models\Plot::pluck('name','id');
 ?>
 
 <!-- Category Id Field -->
@@ -13,8 +12,8 @@ $farms = App\Models\Farm::pluck('name','id');
 
 <!-- Farm Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('farm_id', 'Farm :') !!}
-    {!! Form::select('farm_id',$farms, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('plot_id', 'Plot:') !!}
+    {!! Form::select('plot_id',$plots, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

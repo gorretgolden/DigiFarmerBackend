@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class SliderRepository
  * @package App\Repositories
- * @version October 31, 2022, 7:41 am UTC
+ * @version November 4, 2022, 12:05 pm UTC
 */
 
 class SliderRepository extends BaseRepository
@@ -17,8 +17,8 @@ class SliderRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'image',
-        'title'
+        'title',
+        'image'
     ];
 
     /**

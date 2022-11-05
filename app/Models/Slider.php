@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Slider
  * @package App\Models
- * @version October 31, 2022, 7:41 am UTC
+ * @version November 4, 2022, 12:05 pm UTC
  *
- * @property string $image
  * @property string $title
+ * @property string $image
  */
 class Slider extends Model
 {
@@ -28,8 +28,8 @@ class Slider extends Model
 
 
     public $fillable = [
-        'image',
-        'title'
+        'title',
+        'image'
     ];
 
     /**
@@ -38,8 +38,8 @@ class Slider extends Model
      * @var array
      */
     protected $casts = [
-        'image' => 'string',
-        'title' => 'string'
+        'title' => 'string',
+        'image' => 'string'
     ];
 
     /**
@@ -48,8 +48,8 @@ class Slider extends Model
      * @var array
      */
     public static $rules = [
-        'image' => 'nullable',
-        'title' => 'required|string'
+        'title' => 'required|string',
+        'image' => 'nullable'
     ];
 
     

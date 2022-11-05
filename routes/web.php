@@ -62,3 +62,9 @@ Route::resource('companies', App\Http\Controllers\CompanyController::class);
 
 
 Route::resource('subCategories', App\Http\Controllers\SubCategoryController::class);
+
+
+Route::resource('sellerProductCategories', App\Http\Controllers\SellerProductCategoryController::class);
+
+
+Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);

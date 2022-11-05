@@ -2,16 +2,16 @@
     <table class="table" id="sliders-table">
         <thead>
         <tr>
-            <th>Image</th>
-        <th>Title</th>
+            <th>Title</th>
+        <th>Image</th>
             <th colspan="3">Action</th>
         </tr>
         </thead>
         <tbody>
         @foreach($sliders as $slider)
             <tr>
-                <td>{{ $slider->image }}</td>
-            <td>{{ $slider->title }}</td>
+                <td>{{ $slider->title }}</td>
+            <td>{{ $slider->image }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['sliders.destroy', $slider->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

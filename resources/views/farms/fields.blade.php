@@ -1,6 +1,5 @@
 
 <?php
-$districts = App\Models\District::pluck('name','id');
 $users = App\Models\User::pluck('first_name','id');
 ?>
 <!-- Name Field -->
@@ -9,11 +8,7 @@ $users = App\Models\User::pluck('first_name','id');
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- District Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('district_id', 'District:') !!}
-    {!! Form::select('district_id', $districts, null, ['class' => 'form-control custom-select']) !!}
-</div>
+
 
 
 <!-- Address Field -->

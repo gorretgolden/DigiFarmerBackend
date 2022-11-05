@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class ExpenseCategory
  * @package App\Models
- * @version November 1, 2022, 11:26 am UTC
+ * @version November 4, 2022, 12:51 pm UTC
  *
  * @property string $name
  * @property integer $standard_value
@@ -17,14 +17,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class ExpenseCategory extends Model
 {
-    use SoftDeletes;
 
     use HasFactory;
 
     public $table = 'expense_categories';
 
 
-    protected $dates = ['deleted_at'];
+
 
 
 
@@ -51,16 +50,10 @@ class ExpenseCategory extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
-        'standard_value' => 'required',
+        'name' => 'required|string|unique:expense_categories',
+        'standard_value' => 'required|integer',
         'description' => 'nullable'
     ];
-
-    //an expense category
-    public function expense_category()
-    {
-       return $this->hasOne(\App\Models\Expense::class);
-    }
 
 
 }

@@ -17,14 +17,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Expense extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'expenses';
 
 
-    protected $dates = ['deleted_at'];
+
 
 
 

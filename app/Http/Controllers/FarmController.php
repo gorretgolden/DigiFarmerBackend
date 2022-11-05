@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Farm;
 
 class FarmController extends AppBaseController
 {
@@ -54,9 +55,15 @@ class FarmController extends AppBaseController
      */
     public function store(CreateFarmRequest $request)
     {
-        $input = $request->all();
-
-        $farm = $this->farmRepository->create($input);
+        $new_farm = new Farm();
+        $new_farm->name = $request->name;
+        $new_farm->latitude = $request->latitude;
+        $new_farm->longitude= $request->longitude;
+        $new_farm->address = $request->address;
+        $new_farm->field_area = $request->field_area;
+        $new_farm->image = $request->image;
+        $new_farm->user_id = $request->user_id;
+        $new_farm->save();
 
         Flash::success('Farm saved successfully.');
 

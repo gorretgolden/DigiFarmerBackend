@@ -19,11 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('image_url')->nullable();
-            $table->string('phone')->nullable();
-            $table->integer('otp')->nullable();
-            $table->enum('user_type',['admin','farmer','vendor','delivery-man'])->default('farmer');
+            $table->string('phone');
+            $table->enum('user_type',['admin','farmer','seller','vendor','delivery-man'])->default('farmer');
+            $table->foreignId('country_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->string('password')->nullable();
-            $table->string('gmail_id')->unique()->nullable();
+            $table->string('google_id')->unique()->nullable();
             $table->string('facebook_id')->unique()->nullable();
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();

@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class ExpenseCategoryRepository
  * @package App\Repositories
- * @version November 1, 2022, 11:26 am UTC
+ * @version November 4, 2022, 12:51 pm UTC
 */
 
 class ExpenseCategoryRepository extends BaseRepository

@@ -1,7 +1,6 @@
 
 <?php
-$categories= App\Models\Category::pluck('name','id');
-$farms= App\Models\Farm::pluck('name','id');
+$sub_categories= App\Models\SubCategory::pluck('name','id');
 ?>
 
 <!-- Name Field -->
@@ -10,17 +9,23 @@ $farms= App\Models\Farm::pluck('name','id');
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Farm Id Field -->
+
+<!-- Standard Price Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('farm_id', 'Farm Id:') !!}
-    {!! Form::select('farm_id', $farms, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('standard_price', 'Standard Price:') !!}
+    {!! Form::text('standard_price', null, ['class' => 'form-control']) !!}
+</div>
+
+<div class="form-group col-sm-6">
+    {!! Form::label('Crop Price') !!}
+    {!! Form::select('crop_pice', ['per-kg' => 'per-kg'],null, ['class' => 'form-control','placeholder'=>'Select Price Unit'] ) !!}
 </div>
 
 
 <!-- Sub Category Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('category_id', 'Category Id:') !!}
-    {!! Form::select('category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('sub_category_id', 'Sub Category:') !!}
+    {!! Form::select('sub_category_id', $sub_categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

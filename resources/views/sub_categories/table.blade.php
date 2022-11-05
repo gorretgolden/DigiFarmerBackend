@@ -3,7 +3,7 @@
         <thead>
         <tr>
             <th>Name</th>
-        <th>Category Id</th>
+        <th>Category</th>
             <th colspan="3">Action</th>
         </tr>
         </thead>

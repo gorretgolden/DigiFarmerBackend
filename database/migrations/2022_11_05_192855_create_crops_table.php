@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSlidersTable extends Migration
+class CreateCropsTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,12 +13,16 @@ class CreateSlidersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sliders', function (Blueprint $table) {
-            $table->id('id');
+        Schema::create('crops', function (Blueprint $table) {
+            $table->id();
+            $table->string('name',100);
+            $table->integer('standard_price');
+            $table->foreignId('sub_category_id')->nullable()->constrained()->onDelete('CASCADE');
+            $table->enum('price_unit',['per-kg'])->default('per-kg');
             $table->string('image')->nullable();
-            $table->string('title');
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 
@@ -30,6 +33,6 @@ class CreateSlidersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sliders');
+        Schema::dropIfExists('crops');
     }
 }

@@ -16,7 +16,9 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "laravelcollective/html": "^6.2",
-        "spatie/laravel-permission": "^5.5"
+        "spatie/laravel-permission": "^5.5",
+        "darkaonline/l5-swagger": "8.*",
+        "infyomlabs/swagger-generator": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

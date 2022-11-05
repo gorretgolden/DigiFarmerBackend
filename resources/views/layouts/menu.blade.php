@@ -1,4 +1,4 @@
-<li class="nav-item">
+<li class="nav-item  menu-is-opening menu-open">
     <a href="{{ route('roles.index') }}"
        class="nav-link {{ Request::is('roles*') ? 'active' : '' }}">
         <p>Roles</p>
@@ -22,20 +22,6 @@
 </li>
 
 
-<li class="nav-item">
-    <a href="{{ route('countries.index') }}"
-       class="nav-link {{ Request::is('countries*') ? 'active' : '' }}">
-        <p>Countries</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('districts.index') }}"
-       class="nav-link {{ Request::is('districts*') ? 'active' : '' }}">
-        <p>Districts</p>
-    </a>
-</li>
 
 
 <li class="nav-item">
@@ -86,26 +72,28 @@
 </li>
 
 
-<li class="nav-item">
-    <a href="{{ route('harvests.index') }}"
-       class="nav-link {{ Request::is('harvests*') ? 'active' : '' }}">
-        <p>Harvests</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('companies.index') }}"
-       class="nav-link {{ Request::is('companies*') ? 'active' : '' }}">
-        <p>Companies</p>
-    </a>
-</li>
 
 
 <li class="nav-item">
     <a href="{{ route('subCategories.index') }}"
        class="nav-link {{ Request::is('subCategories*') ? 'active' : '' }}">
         <p>Sub Categories</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('sellerProductCategories.index') }}"
+       class="nav-link {{ Request::is('sellerProductCategories*') ? 'active' : '' }}">
+        <p>Seller Product Categories</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('sellerProducts.index') }}"
+       class="nav-link {{ Request::is('sellerProducts*') ? 'active' : '' }}">
+        <p>Seller Products</p>
     </a>
 </li>
 

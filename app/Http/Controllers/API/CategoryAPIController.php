@@ -32,6 +32,13 @@ class CategoryAPIController extends AppBaseController
      * @param Request $request
      * @return Response
      */
+
+    //  /**
+    //  * @OA\Get(
+    //  *     path="/categories",
+    //  *     @OA\Response(response="200", description="Display a listing of categories.")
+    //  * )
+    //  */
     public function index(Request $request)
     {
         $categories = $this->categoryRepository->all(

@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Crop </th>
+                <th>Crops </th>
                 <th>Size</th>
                 <th>Latitude</th>
                 <th>Longitude</th>

@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class FarmRepository
  * @package App\Repositories
- * @version October 31, 2022, 8:22 am UTC
+ * @version November 4, 2022, 1:52 pm UTC
 */
 
 class FarmRepository extends BaseRepository
@@ -18,11 +18,11 @@ class FarmRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'district_id',
         'address',
         'latitude',
         'longitude',
         'field_area',
+        'image',
         'user_id'
     ];
 

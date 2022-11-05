@@ -1,5 +1,4 @@
-
-        <?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,10 +19,9 @@ class CreateExpensesTable extends Migration
             $table->foreignId('expense_category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('plot_id')->nullable()->constrained();
             $table->timestamps();
-            $table->softDeletes();
+
         });
     }
-
 
     /**
      * Reverse the migrations.
@@ -35,5 +33,3 @@ class CreateExpensesTable extends Migration
         Schema::dropIfExists('expenses');
     }
 }
-
-
