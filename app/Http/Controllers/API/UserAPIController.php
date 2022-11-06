@@ -125,7 +125,7 @@ class UserAPIController extends AppBaseController
         else{
             $response = [
                 'success'=>false,
-                'message'=> 'User already exists'
+                'message'=> 'User with this email already exists'
              ];
              return response()->json($response,403);
         }
@@ -135,7 +135,7 @@ class UserAPIController extends AppBaseController
 
     }
 
-
+   //user login controller
     public function login(Request $request){
         if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password] )){
             $user = Auth::user();
@@ -192,18 +192,53 @@ class UserAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateUserAPIRequest $request)
+    public function update($id,Request $request)
     {
-        $input = $request->all();
-
-        /** @var User $user */
-        $user = $this->userRepository->find($id);
+        $user = User::find($id);
 
         if (empty($user)) {
-            return $this->sendError('User not found');
+            $response = [
+                'success'=>false,
+                'message'=> 'User does not exist'
+               ];
+               return response()->json($response,200);
+
         }
 
-        $user = $this->userRepository->update($input, $id);
+        if(!$user){
+
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->country_id = (int)$request->country_id;
+            $user->phone = $request->phone;
+            $user->image_url = $request->image_url;
+            $password = $request->password;
+            $user->password = Hash::make($password);
+
+            if(!empty($request->file('image_url'))){
+                $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
+            }
+            $user->save();
+
+            $response = [
+                'success'=>true,
+                'data'=> $success,
+                'message'=> 'User account created successfully'
+             ];
+
+        return response()->json($response,200);
+
+        }
+        else{
+            $response = [
+                'success'=>false,
+                'message'=> 'User with this email already exists'
+             ];
+             return response()->json($response,403);
+        }
+
+
 
         return $this->sendResponse($user->toArray(), 'User updated successfully');
     }
@@ -230,5 +265,21 @@ class UserAPIController extends AppBaseController
         $user->delete();
 
         return $this->sendSuccess('User deleted successfully');
+    }
+
+    //user logout
+    public function logout(){
+        {
+
+
+            Auth::logout();
+
+            $response = [
+                'success'=>true,
+                'message'=> 'You logged out of your account'
+             ];
+
+        return response()->json($response,200);
+        }
     }
 }
