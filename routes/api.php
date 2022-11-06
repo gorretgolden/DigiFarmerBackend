@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
     Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
@@ -32,6 +32,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
 
+Route::controller(App\Http\Controllers\API\UserAPIController::class)->group(function(){
+    Route::post('login','login');
+    Route::post('register','register');
+
+});
 
 
 
@@ -42,3 +47,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
+
+
+Route::resource('users', App\Http\Controllers\API\UserAPIController::class);

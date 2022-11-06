@@ -52,5 +52,10 @@ class SubCategory extends Model
         'category_id' => 'required|integer'
     ];
 
+     //a sub_category has many crops
+     public function crops()
+     {
+         return $this->hasMany(\App\Models\Crop::class, 'sub_category_id');
+     }
 
 }

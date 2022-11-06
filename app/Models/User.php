@@ -2,48 +2,106 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Spatie\Permission\Traits\HasRoles;
+use Eloquent as Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Role;
 use Laravel\Sanctum\HasApiTokens;
 
-
-class User extends Authenticatable
+/**
+ * Class User
+ * @package App\Models
+ * @version October 8, 2022, 11:18 am UTC
+ *
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property string $image_url
+ * @property integer $country_id
+ * @property integer $role_id
+ * @property string $password
+ */
+class User extends Authenticable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use SoftDeletes;
+    use HasRoles;
+    use HasFactory;
+    use HasApiTokens;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
+    public $table = 'users';
+
+
+    protected $dates = ['deleted_at'];
+
+
+
+    public $fillable = [
         'first_name',
         'last_name',
         'email',
         'phone',
-        'user_type',
+        'image_url',
         'country_id',
+        'user_type',
         'password',
+        'confirm-password',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be casted to native types.
      *
-     * @var array<int, string>
+     * @var array
      */
+    protected $casts = [
+        'first_name' => 'string',
+        'last_name' => 'string',
+        'email' => 'string',
+        'image_url' => 'string',
+        'country_id' => 'integer',
+        'user_type' => 'string',
+        'phone' => 'string',
+        'password' => 'string',
+        'email_verified_at' => 'datetime',
+        'confirm-password' => 'string',
+    ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'email' => 'required|unique:users,id',
+        'image_url' => 'nullable',
+        'country_id' => 'nullable',
+        'password' => 'required',
+        'email_verified_at' => 'datetime',
+        'user_type' => 'required|string',
+        'confirm-password'=>'required|same:password'
+
+    ];
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+      //a user belongs to a country
+      public function country()
+      {
+          return $this->belongsTo(\App\Models\Country::class, 'country_id');
+      }
+
+      //a user belongs to a specific role
+      public function role()
+      {
+          return $this->belongsTo(\Spatie\Permission\Models\Role::class, 'role_id');
+      }
+
+
 }

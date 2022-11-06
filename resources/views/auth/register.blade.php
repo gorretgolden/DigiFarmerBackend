@@ -32,10 +32,10 @@
     <![endif]-->
 </head>
 
-<body class="hold-transition register-page bg-black text-white">
+<body class="hold-transition register-page bg-success text-white">
     <div class="register-box">
         <div class="register-logo">
-            <a class="text-white" href="{{ url('/home') }}"><b>Digi Farm App</b></a>
+            <a class="text-white" href="{{ url('/home') }}"><b>Digi Farm</b></a>
         </div>
 
         <div class="card shadow rounded">

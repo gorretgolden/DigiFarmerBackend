@@ -73,4 +73,10 @@ class Company extends Model
     ];
 
 
+      //a country has many users
+      public function country()
+      {
+          return $this->hasMany(\App\Models\User::class, 'country_id');
+      }
+
 }

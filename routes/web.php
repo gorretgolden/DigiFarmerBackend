@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -68,3 +68,6 @@ Route::resource('sellerProductCategories', App\Http\Controllers\SellerProductCat
 
 
 Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);
+
+
+Route::resource('users', App\Http\Controllers\UserController::class);

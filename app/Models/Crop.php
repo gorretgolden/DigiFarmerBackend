@@ -23,7 +23,7 @@ class Crop extends Model
     use HasFactory;
 
     public $table = 'crops';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -60,5 +60,10 @@ class Crop extends Model
         'image' => 'nullable'
     ];
 
-    
+     //a crop belongs to a sub category
+     public function sub_category()
+     {
+         return $this->belongsTo(\App\Models\SubCategory::class, 'sub_category_id');
+     }
+
 }

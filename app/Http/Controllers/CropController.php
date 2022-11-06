@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Crop;
 
 class CropController extends AppBaseController
 {
@@ -54,11 +55,31 @@ class CropController extends AppBaseController
      */
     public function store(CreateCropRequest $request)
     {
-        $input = $request->all();
+         //existing crop
+         $existing_crop = Crop::where('name',$request->name)->first();
 
-        $crop = $this->cropRepository->create($input);
+         if(!$existing_crop){
+            $request->validate(Crop::$rules);
+            $new_crop = new Crop();
+            $new_crop->name = $request->name;
+            $new_crop->standard_price = $request->standard_price;
+            $new_crop->sub_category_id = $request->sub_category_id;
+            $new_crop->image = $request->image;
+            $new_crop->price_unit = $request->price_unit;
+            $new_crop->save();
 
-        Flash::success('Crop saved successfully.');
+            $new_crop = Crop::find($new_crop->id);
+
+            $new_crop->image = \App\Models\ImageUploader::upload($request->file('image'),'crops');
+            $new_crop->save();
+
+            Flash::success('Crop saved successfully.');
+         }
+         else{
+            Flash::error('Crop already exists');
+         }
+
+
 
         return redirect(route('crops.index'));
     }

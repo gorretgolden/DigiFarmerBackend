@@ -31,17 +31,16 @@
     <![endif]-->
 
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page bg-success">
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{ url('/home') }}"><b>{{ config('app.name') }}</b></a>
+        <a class="text-white" href="{{ url('/home') }}"><b>Digi Farm</b></a>
     </div>
 
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
-
+            <p class="login-box-msg">Password Recovery
             @if (session('status'))
                 <div class="alert alert-success">
                     {{ session('status') }}
@@ -68,18 +67,16 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary btn-block">Send Password Reset Link</button>
+                        <button type="submit" class="btn bg-dark btn-block">Send Password Reset Link</button>
                     </div>
                     <!-- /.col -->
                 </div>
             </form>
 
-            <p class="mt-3 mb-1">
-                <a href="{{ route("login") }}">Login</a>
+            <p class="mt-3 mb-1 text-center">
+                <a class="text-success" href="{{ route("login") }}">Back</a>
             </p>
-            <p class="mb-0">
-                <a href="{{ route("register") }}" class="text-center">Register a new membership</a>
-            </p>
+
         </div>
         <!-- /.login-card-body -->
     </div>

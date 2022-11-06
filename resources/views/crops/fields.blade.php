@@ -17,8 +17,8 @@ $sub_categories= App\Models\SubCategory::pluck('name','id');
 </div>
 
 <div class="form-group col-sm-6">
-    {!! Form::label('Crop Price') !!}
-    {!! Form::select('crop_pice', ['per-kg' => 'per-kg'],null, ['class' => 'form-control','placeholder'=>'Select Price Unit'] ) !!}
+    {!! Form::label('Price Unit') !!}
+    {!! Form::select('price_unit', ['per-kg' => 'per-kg'],null, ['class' => 'form-control','placeholder'=>'Select Price Unit'] ) !!}
 </div>
 
 
