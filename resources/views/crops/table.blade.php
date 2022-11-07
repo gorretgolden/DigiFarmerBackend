@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Standard Price</th>
                 <th>Sub Category</th>
                 <th>Image</th>
                 <th colspan="3">Action</th>
@@ -12,6 +13,7 @@
             @foreach ($crops as $crop)
                 <tr>
                     <td>{{ $crop->name }}</td>
+                    <td>{{ $crop->standard_price }} {{ $crop->price_unit}}</td>
                     <td>{{ $crop->sub_category->name }}</td>
 
                     <td>
