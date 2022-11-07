@@ -76,13 +76,13 @@ class User extends Authenticable
     public static $rules = [
         'first_name' => 'required|string',
         'last_name' => 'required|string',
-        'email' => 'required|unique:users,id',
+        'email' => 'required|unique:users,id|email',
         'image_url' => 'nullable',
         'country_id' => 'nullable',
-        'password' => 'required',
+        'password' => 'required|password',
         'email_verified_at' => 'datetime',
         'user_type' => 'required|string',
-        'confirm-password'=>'required|same:password'
+        'confirm-password'=>'required|same:password|password'
 
     ];
 

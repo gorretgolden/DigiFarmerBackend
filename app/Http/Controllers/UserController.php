@@ -57,19 +57,7 @@ class UserController extends AppBaseController
     public function store(Request $request)
     {
 
-        $rules = [
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|unique:users,id',
-            'image_url' => 'nullable',
-            'country_id' => 'nullable',
-            'password' => 'required|same:confirm-password',
-            'email_verified_at' => 'datetime',
-            'user_type' => 'required|string',
-            'confirm-password'=>'required'
-        ];
-
-        $request->validate($rules);
+        $request->validate(User::$rules);
 
         $existing_user = User::where('email',$request->input('email'))->first();
         //if not existing user
