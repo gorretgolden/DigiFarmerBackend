@@ -174,13 +174,28 @@ class UserAPIController extends AppBaseController
     public function show($id)
     {
         /** @var User $user */
-        $user = $this->userRepository->find($id);
+        $user = User::find($id);
+        $success['first_name'] = $user->first_name;
+        $success['last_name'] = $user->last_name;
+        $success['email'] = $user->email;
+        $success['phone'] = $user->phone;
+        $success['user_type'] = $user->user_type;
+        $success['image_url'] = $user->image_url;
+        $success['country'] = $user->country->name;
+        $success['email_verified_at'] = $user->email_verified_at;
+        $success['created_at'] = $user->created_at;
+
 
         if (empty($user)) {
             return $this->sendError('User not found');
         }
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'User retrieved successfully'
+           ];
 
-        return $this->sendResponse($user->toArray(), 'User retrieved successfully');
+        return response()->json($response,200);
     }
 
     /**

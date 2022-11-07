@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class PlotRepository
  * @package App\Repositories
- * @version November 7, 2022, 8:09 am UTC
+ * @version November 7, 2022, 8:35 am UTC
 */
 
 class PlotRepository extends BaseRepository

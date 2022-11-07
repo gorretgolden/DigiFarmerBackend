@@ -79,10 +79,10 @@ class User extends Authenticable
         'email' => 'required|unique:users,id|email',
         'image_url' => 'nullable',
         'country_id' => 'nullable',
-        'password' => 'required|password',
+        'password' => 'required',
         'email_verified_at' => 'datetime',
         'user_type' => 'required|string',
-        'confirm-password'=>'required|same:password|password'
+        'confirm-password'=>'required|same:password'
 
     ];
 

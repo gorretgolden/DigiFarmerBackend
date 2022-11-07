@@ -57,10 +57,10 @@ class Plot extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required',
+        'name' => 'required|unique:plots',
         'crop_id' => 'required',
-        'size' => 'required|min:1',
-        'size_unit' => 'required',
+        'size' => 'required|min:1|integer',
+        'size_unit' => 'required|string',
         'farm_id' => 'required'
     ];
 

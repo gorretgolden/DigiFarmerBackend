@@ -28,6 +28,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
     Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
+    Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
 
 
 });
@@ -54,4 +55,6 @@ Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1
 
 
 
-Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
+// Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
+
+
