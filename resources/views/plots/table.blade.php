@@ -4,7 +4,6 @@
             <tr>
                 <th>Name</th>
                 <th>Size</th>
-                <th>Size Unit</th>
                 <th>Farm</th>
                 <th>Crop</th>
                 <th colspan="3">Action</th>
@@ -14,8 +13,7 @@
             @foreach ($plots as $plot)
                 <tr>
                     <td>{{ $plot->name }}</td>
-                    <td>{{ $plot->size }}</td>
-                    <td>{{ $plot->size_unit }}</td>
+                    <td>{{ $plot->size }}  {{ $plot->size_unit }}</td>
                     <td>{{ $plot->farm->name }}</td>
                     <td>{{ $plot->crop->name }}</td>
                     <td width="120">
