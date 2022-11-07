@@ -66,4 +66,11 @@ class Crop extends Model
          return $this->belongsTo(\App\Models\SubCategory::class, 'sub_category_id');
      }
 
+
+     //a crop has one plot
+    public function plot()
+        {
+           return $this->hasOne(\App\Models\Plot::class);
+        }
+
 }

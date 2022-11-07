@@ -61,9 +61,16 @@ class FarmController extends AppBaseController
         $new_farm->longitude= $request->longitude;
         $new_farm->address = $request->address;
         $new_farm->field_area = $request->field_area;
+        $new_farm->size_unit = $request->size_unit;
         $new_farm->image = $request->image;
         $new_farm->user_id = $request->user_id;
         $new_farm->save();
+
+        $new_farm = Farm::find($new_farm->id);
+
+        $new_farm->image = \App\Models\ImageUploader::upload($request->file('image'),'farms');
+        $new_farm->save();
+
 
         Flash::success('Farm saved successfully.');
 

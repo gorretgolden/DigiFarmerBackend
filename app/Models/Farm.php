@@ -25,7 +25,7 @@ class Farm extends Model
     use HasFactory;
 
     public $table = 'farms';
-    
+
 
 
 
@@ -60,7 +60,7 @@ class Farm extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:100',
+        'name' => 'required|string|max:100|unique:farms',
         'address' => 'required|string',
         'latitude' => 'required',
         'longitude' => 'required',
@@ -69,5 +69,18 @@ class Farm extends Model
         'user_id' => 'required|integer'
     ];
 
-    
+
+     //a Farm belongs to a user
+     public function user()
+     {
+         return $this->belongsTo(\App\Models\User::class, 'user_id');
+     }
+
+       //a Farm has many plots
+       public function plots()
+       {
+           return $this->hasMany(\App\Models\Plot::class, 'farm_id');
+       }
+
+
 }

@@ -25,7 +25,7 @@ class UpdatePlotRequest extends FormRequest
     public function rules()
     {
         $rules = Plot::$rules;
-        
+        $rules['name'] = $rules['name'].",".$this->route("plot");
         return $rules;
     }
 }

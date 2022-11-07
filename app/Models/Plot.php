@@ -19,14 +19,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Plot extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'plots';
 
 
-    protected $dates = ['deleted_at'];
+
 
 
 
@@ -34,8 +34,8 @@ class Plot extends Model
         'name',
         'crop_id',
         'size',
-        'latitude',
-        'longitude'
+        'size_unit',
+        'farm_id'
     ];
 
     /**
@@ -46,8 +46,9 @@ class Plot extends Model
     protected $casts = [
         'name' => 'string',
         'crop_id' => 'integer',
-        'size' => 'double',
-        'latitude' => 'double'
+        'size' => 'integer',
+        'size_unit' => 'string',
+        'farm_id'=>'integer'
     ];
 
     /**
@@ -58,15 +59,15 @@ class Plot extends Model
     public static $rules = [
         'name' => 'required',
         'crop_id' => 'required',
-        'size' => 'required',
-        'latitude' => 'required',
-        'longitude' => 'required'
+        'size' => 'required|min:1',
+        'size_unit' => 'required',
+        'farm_id' => 'required'
     ];
 
-    //a plot has many crops
-    public function crops()
+    //a plot belongs to a crop
+    public function crop()
     {
-       return $this->hasMany(\App\Models\Crop::class,'plot_id');
+       return $this->belongsTo(\App\Models\Crop::class,'crop_id');
     }
 
       //a plot belongs to a farm

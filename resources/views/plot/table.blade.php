@@ -1,32 +1,30 @@
 <div class="table-responsive">
-    <table class="table" id="farms-table">
+    <table class="table" id="plots-table">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Address</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Field Area</th>
-                <th>User </th>
+                <th>Crop </th>
+                <th>Size</th>
+                <th>Farm</th>
+
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($farms as $farm)
+            @foreach ($plots as $plot)
                 <tr>
-                    <td>{{ $farm->name }}</td>
-                    <td>{{ $farm->address }}</td>
-                    <td>{{ $farm->latitude }}</td>
-                    <td>{{ $farm->longitude }}</td>
-                    <td>{{ $farm->field_area }}</td>
-                    <td>{{ $farm->user->first_name }}</td>
+                    <td>{{ $plot->name }}</td>
+                    <td>{{ $plot->crop->name }}</td>
+                    <td>{{ $plot->size }} {{ $plot->size_unit }}</td>
+                    <td>{{ $plot->farm->name}}</td>
+
                     <td width="120">
-                        {!! Form::open(['route' => ['farms.destroy', $farm->id], 'method' => 'delete']) !!}
+                        {!! Form::open(['route' => ['plots.destroy', $plot->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
-                            <a href="{{ route('farms.show', [$farm->id]) }}" class='btn btn-default btn-xs'>
+                            <a href="{{ route('plots.show', [$plot->id]) }}" class='btn btn-default btn-xs'>
                                 <i class="far fa-eye"></i>
                             </a>
-                            <a href="{{ route('farms.edit', [$farm->id]) }}" class='btn btn-default btn-xs'>
+                            <a href="{{ route('plots.edit', [$plot->id]) }}" class='btn btn-default btn-xs'>
                                 <i class="far fa-edit"></i>
                             </a>
                             {!! Form::button('<i class="far fa-trash-alt"></i>', [

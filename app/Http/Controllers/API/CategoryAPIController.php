@@ -136,3 +136,56 @@ class CategoryAPIController extends AppBaseController
         return $this->sendSuccess('Category deleted successfully');
     }
 }
+
+
+// public function store(CreateFarmAPIRequest $request)
+// {
+//     $existing_farm = Farm::where('name',$request->name)->first();
+//     if(!$existing_farm){
+//         $new_farm = new Farm();
+//         $new_farm->name = $request->name;
+//         $new_farm->address = $request->addresss;
+//         $new_farm->latitude = $request->latitude;
+//         $new_farm->longitude = $request->longitude;
+//         $new_farm->field_area = $request->field_area;
+//         $new_farm->image = $request->image;
+//         $new_farm->size_unit = $request->size_unit;
+//         $new_farm->user_id = auth()->user()->id;
+//         $new_farm->save();
+
+//         $success['name'] = $new_farm->name;
+//         $success['address'] = $new_farm->address;
+//         $success['latitude'] = $new_farm->latitude;
+//         $success['longitude'] = $new_farm->longitude;
+//         $success['field_area'] = $new_farm->field_area;
+//         $success['size_unit '] = $new_farm->size_unit;
+//         $success['image'] = $new_farm->image;
+//         $success['image'] = $new_farm->image;
+//         $success['user_id'] = $new_farm->user_id;
+//         $success['farm_owner'] = $new_farm->user->email;
+
+//         $new_farm = Farm::find($new_farm->id);
+
+//         $new_farm->image = \App\Models\ImageUploader::upload($request->file('image'),'farms');
+//         $new_farm->save();
+//         $response = [
+//            'success'=>false,
+//            'message'=> 'Farm created successfully'
+//         ];
+
+//     return response()->json($response,200);
+//     }
+//     else{
+
+//         $response = [
+//             'success'=>true,
+//             'data'=> $success,
+//             'message'=> 'Farm name already exists'
+//          ];
+
+//          return response()->json($response,401);
+
+//     }
+
+
+// }

@@ -34,8 +34,9 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
 
 Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1')->group(function(){
-    Route::post('login','login');
-    Route::post('register','register');
+    Route::post('users/login','login');
+    Route::post('users/register','register');
+    Route::get('users','index');
     Route::get('users/details/{id}','show');
     Route::put('users/update/{id}','register');
     Route::get('user/logout','logout');

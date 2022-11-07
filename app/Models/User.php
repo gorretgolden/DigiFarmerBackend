@@ -103,5 +103,11 @@ class User extends Authenticable
           return $this->belongsTo(\Spatie\Permission\Models\Role::class, 'role_id');
       }
 
+     //a user
+     public function farms()
+     {
+         return $this->hasMany(\App\Models\Farm::class, 'user_id');
+     }
+
 
 }

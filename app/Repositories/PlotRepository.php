@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class PlotRepository
  * @package App\Repositories
- * @version October 31, 2022, 11:00 am UTC
+ * @version November 7, 2022, 8:09 am UTC
 */
 
 class PlotRepository extends BaseRepository
@@ -18,10 +18,10 @@ class PlotRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'crop_id',
         'size',
-        'latitude',
-        'longitude'
+        'size_unit',
+        'farm_id',
+        'crop_id'
     ];
 
     /**

@@ -3,10 +3,10 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Crops </th>
                 <th>Size</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
+                <th>Size Unit</th>
+                <th>Farm</th>
+                <th>Crop</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -14,10 +14,10 @@
             @foreach ($plots as $plot)
                 <tr>
                     <td>{{ $plot->name }}</td>
-                    <td>{{ $plot->crop_id }}</td>
                     <td>{{ $plot->size }}</td>
-                    <td>{{ $plot->latitude }}</td>
-                    <td>{{ $plot->longitude }}</td>
+                    <td>{{ $plot->size_unit }}</td>
+                    <td>{{ $plot->farm->name }}</td>
+                    <td>{{ $plot->crop->name }}</td>
                     <td width="120">
                         {!! Form::open(['route' => ['plots.destroy', $plot->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

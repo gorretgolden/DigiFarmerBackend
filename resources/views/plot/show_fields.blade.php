@@ -4,28 +4,28 @@
     <p>{{ $plot->name }}</p>
 </div>
 
+<!-- Crop Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('crop_id', 'Crop Id:') !!}
+    <p>{{ $plot->crop_id }}</p>
+</div>
+
 <!-- Size Field -->
 <div class="col-sm-12">
     {!! Form::label('size', 'Size:') !!}
     <p>{{ $plot->size }}</p>
 </div>
 
-<!-- Size Unit Field -->
+<!-- Latitude Field -->
 <div class="col-sm-12">
-    {!! Form::label('size_unit', 'Size Unit:') !!}
-    <p>{{ $plot->size_unit }}</p>
+    {!! Form::label('latitude', 'Latitude:') !!}
+    <p>{{ $plot->latitude }}</p>
 </div>
 
-<!-- Farm Id Field -->
+<!-- Longitude Field -->
 <div class="col-sm-12">
-    {!! Form::label('farm_id', 'Farm Id:') !!}
-    <p>{{ $plot->farm_id }}</p>
-</div>
-
-<!-- Crop Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('crop_id', 'Crop Id:') !!}
-    <p>{{ $plot->crop_id }}</p>
+    {!! Form::label('longitude', 'Longitude:') !!}
+    <p>{{ $plot->longitude }}</p>
 </div>
 
 <!-- Created At Field -->

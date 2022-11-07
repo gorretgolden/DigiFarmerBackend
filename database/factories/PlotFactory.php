@@ -23,10 +23,10 @@ class PlotFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
+        'size' => $this->faker->randomDigitNotNull,
+        'size_unit' => $this->faker->word,
+        'farm_id' => $this->faker->randomDigitNotNull,
         'crop_id' => $this->faker->randomDigitNotNull,
-        'size' => $this->faker->word,
-        'latitude' => $this->faker->word,
-        'longitude' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
