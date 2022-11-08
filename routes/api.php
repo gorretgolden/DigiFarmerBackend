@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,21 @@ Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1
 });
 
 
+// Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:sanctum');
+// Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:sanctum');
 
+
+
+Route::post('users/forgot-password', [App\Http\Controllers\API\NewPasswordController::class, 'userForgotPassword']);
+Route::post('reset-password', [App\Http\Controllers\API\NewPasswordController::class, 'reset']);
+
+//google login
+
+Route::get('/auth/google/redirect', function () {
+    return Socialite::driver('google')->redirect();
+});
+
+Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterController::class,'googleCallback'])->name('google-register');
 
 
 

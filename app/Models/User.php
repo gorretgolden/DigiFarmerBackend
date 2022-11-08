@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
 use Spatie\Permission\Models\Role;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -26,10 +27,9 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticable
 {
-    use SoftDeletes;
-    use HasRoles;
-    use HasFactory;
-    use HasApiTokens;
+    use SoftDeletes,Notifiable,HasRoles,HasFactory,HasApiTokens;
+
+
 
     public $table = 'users';
 
@@ -107,6 +107,15 @@ class User extends Authenticable
      public function farms()
      {
          return $this->hasMany(\App\Models\Farm::class, 'user_id');
+     }
+
+
+     public function sendPasswordResetNotification($token)
+     {
+
+         $url = 'https://spa.test/reset-password?token=' . $token;
+
+         $this->notify(new ResetPasswordNotification($url));
      }
 
 
