@@ -32,6 +32,7 @@ class CropAPIController extends AppBaseController
      * @param Request $request
      * @return Response
      */
+
     public function index(Request $request)
     {
         $crops = $this->cropRepository->all(

@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
+Route::middleware(['auth:api'])->prefix('v1')->group(function () {
 
     Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
     Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
@@ -30,6 +30,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
     Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
     Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
+    Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
+
 
 
 });
@@ -45,6 +47,9 @@ Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1
 
 });
 
+Route::group(['middleware' => ['api', 'auth:api']], function(){
+
+});
 
 // Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:sanctum');
 // Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:sanctum');
@@ -60,8 +65,6 @@ Route::get('/auth/google/redirect', function () {
     return Socialite::driver('google')->redirect();
 });
 
-Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterController::class,'googleCallback'])->name('google-register');
-
 
 
 
@@ -71,5 +74,7 @@ Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterControlle
 
 
 // Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
+
+
 
 

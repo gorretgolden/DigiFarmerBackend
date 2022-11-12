@@ -33,7 +33,8 @@ class SellerProduct extends Model
         'description',
         'price',
         'seller_product_category_id',
-        'image'
+        'image',
+         'user_id'
     ];
 
     /**
@@ -46,7 +47,8 @@ class SellerProduct extends Model
         'description' => 'string',
         'price' => 'integer',
         'seller_product_category_id' => 'integer',
-        'image' => 'string'
+        'image' => 'string',
+        'user_id'=> 'integer'
     ];
 
     /**
@@ -55,12 +57,19 @@ class SellerProduct extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
-        'description' => 'nullable',
+        'name' => 'required|string|unique:seller_products',
+        'description' => 'required|string',
         'price' => 'required|integer',
         'seller_product_category_id' => 'required|integer',
-        'image' => 'nullable'
+        'image' => 'required',
+        'user_id'=> 'required'
     ];
+
+     //a seller product belongs to a seller product category
+     public function seller_product_category()
+     {
+        return $this->belongsTo(\App\Models\SellerProductCategory::class);
+     }
 
 
 }

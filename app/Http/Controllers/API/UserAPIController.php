@@ -35,6 +35,20 @@ class UserAPIController extends AppBaseController
      * @param Request $request
      * @return Response
      */
+    /**
+ * @OA\Info(
+ *    title="APIs For Thrift Store",
+ *    version="1.0.0",
+ * ),
+ *   @OA\SecurityScheme(
+ *       securityScheme="bearerAuth",
+ *       in="header",
+ *       name="bearerAuth",
+ *       type="http",
+ *       scheme="bearer",
+ *       bearerFormat="JWT",
+ *    ),
+ */
     public function index(Request $request)
     {
         $users = $this->userRepository->all(

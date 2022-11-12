@@ -18,14 +18,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Crop extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'crops';
-
-
-    protected $dates = ['deleted_at'];
 
 
 
@@ -68,9 +65,17 @@ class Crop extends Model
 
 
      //a crop has one plot
-    public function plot()
+      public function plot()
         {
            return $this->hasOne(\App\Models\Plot::class);
         }
+
+       //a crop belongs to many buyers
+       public function buyers()
+       {
+          return $this->belongsToMany(\App\Models\CropBuyer::class);
+       }
+
+
 
 }

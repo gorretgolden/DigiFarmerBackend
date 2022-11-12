@@ -18,7 +18,7 @@
 
                     <td>
                         <img
-                            src="{{ $crop->image ? asset('/storage/crops/' . $crop->image) : asset('img/avatar-1.png') }}"
+                            src="{{ $crop->image ? asset('/storage/crops/' . $crop->image) : asset('img/crop.png') }}"
                             width="50px" height="50px"/>
                     </td>
 

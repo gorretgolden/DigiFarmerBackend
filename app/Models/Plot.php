@@ -80,6 +80,6 @@ class Plot extends Model
       //a plot has many expenses
       public function expenses()
       {
-         return $this->hasMany(\App\Models\Expense::class,'expense_category_id');
+         return $this->hasMany(\App\Models\Expense::class,'plot_id');
       }
 }

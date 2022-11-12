@@ -15,11 +15,13 @@ class CreateSellerProductsTable extends Migration
     {
         Schema::create('seller_products', function (Blueprint $table) {
             $table->id();
-             $table->string('name',100);
+             $table->string('name',100)->unique();
              $table->string('image')->nullable();
              $table->integer('price');
              $table->text('description');
              $table->foreignId('seller_product_category_id')->nullable()->constrained()->onDelete('CASCADE');
+             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
+             $table->enum('status',['on-sale','sold'])->default('on-sale');
              $table->timestamps();
         });
     }
@@ -34,3 +36,5 @@ class CreateSellerProductsTable extends Migration
         Schema::dropIfExists('seller_products');
     }
 }
+
+

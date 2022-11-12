@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+
 
 class GoogleRegisterController extends Controller
 {

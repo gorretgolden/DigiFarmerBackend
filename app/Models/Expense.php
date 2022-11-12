@@ -29,8 +29,8 @@ class Expense extends Model
 
 
     public $fillable = [
-        'category_id',
-        'farm_id',
+        'plot_id',
+        'expense_category_id',
         'amount'
     ];
 
@@ -40,8 +40,8 @@ class Expense extends Model
      * @var array
      */
     protected $casts = [
-        'category_id' => 'integer',
-        'farm_id' => 'integer',
+        'expense_category_id' => 'integer',
+        'plot_id' => 'integer',
         'amount' => 'integer'
     ];
 
@@ -51,8 +51,8 @@ class Expense extends Model
      * @var array
      */
     public static $rules = [
-        'category_id' => 'required',
-        'farm_id' => 'required',
+        'expense_category_id' => 'required',
+        'plot_id' => 'required',
         'amount' => 'required'
     ];
 
@@ -60,5 +60,12 @@ class Expense extends Model
       public function expense_category()
       {
          return $this->belongsTo(\App\Models\ExpenseCategory::class);
+      }
+
+
+      //an expense belongs to a plot
+      public function plot()
+      {
+         return $this->belongsTo(\App\Models\Plot::class,'plot_id');
       }
 }

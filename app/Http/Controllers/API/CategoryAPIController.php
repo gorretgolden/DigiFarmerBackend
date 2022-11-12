@@ -33,12 +33,28 @@ class CategoryAPIController extends AppBaseController
      * @return Response
      */
 
-    //  /**
-    //  * @OA\Get(
-    //  *     path="/categories",
-    //  *     @OA\Response(response="200", description="Display a listing of categories.")
-    //  * )
-    //  */
+     /**
+     * @OA\Get(
+     *      path="/categories",
+     *      operationId="getAllCategories",
+     *      tags={"Categories"},
+     *      summary="Get list of crop categories",
+     *      description="Returns list of crop categories",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
+     */
     public function index(Request $request)
     {
         $categories = $this->categoryRepository->all(

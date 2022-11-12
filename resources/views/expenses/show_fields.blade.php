@@ -1,19 +1,19 @@
-<!-- Category Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('category_id', 'Category Id:') !!}
-    <p>{{ $expense->category_id }}</p>
-</div>
-
-<!-- Farm Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('farm_id', 'Farm Id:') !!}
-    <p>{{ $expense->farm_id }}</p>
-</div>
-
 <!-- Amount Field -->
 <div class="col-sm-12">
     {!! Form::label('amount', 'Amount:') !!}
     <p>{{ $expense->amount }}</p>
+</div>
+
+<!-- Expense Category Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('expense_category_id', 'Expense Category Id:') !!}
+    <p>{{ $expense->expense_category_id }}</p>
+</div>
+
+<!-- Plot Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('plot_id', 'Plot Id:') !!}
+    <p>{{ $expense->plot_id }}</p>
 </div>
 
 <!-- Created At Field -->

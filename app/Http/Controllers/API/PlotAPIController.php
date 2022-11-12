@@ -54,7 +54,7 @@ class PlotAPIController extends AppBaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $existing_plot = Plot::where('name',$request->name);
+        $existing_plot = Plot::where('name',$request->name)->first();
         if(!$existing_plot){
             $plot = $this->plotRepository->create($input);
             $success['name'] = $request->name;

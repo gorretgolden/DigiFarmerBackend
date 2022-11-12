@@ -106,3 +106,43 @@
 </li>
 
 
+<li class="nav-item">
+    <a href="{{ route('cropBuyers.index') }}"
+       class="nav-link {{ Request::is('cropBuyers*') ? 'active' : '' }}">
+        <p>Crop Buyers</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('cropOnSales.index') }}"
+       class="nav-link {{ Request::is('cropOnSales*') ? 'active' : '' }}">
+        <p>Crop On Sales</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('vendorCategories.index') }}"
+       class="nav-link {{ Request::is('vendorCategories*') ? 'active' : '' }}">
+        <p>Vendor Categories</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('traningVendorServices.index') }}"
+       class="nav-link {{ Request::is('traningVendorServices*') ? 'active' : '' }}">
+        <p>Traning Vendor Services</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('farmerTrainings.index') }}"
+       class="nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <p>Farmer Trainings</p>
+    </a>
+</li>
+
+

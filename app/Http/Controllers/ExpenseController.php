@@ -56,6 +56,7 @@ class ExpenseController extends AppBaseController
     {
         $input = $request->all();
 
+
         $expense = $this->expenseRepository->create($input);
 
         Flash::success('Expense saved successfully.');

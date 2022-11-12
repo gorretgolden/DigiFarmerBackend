@@ -8,6 +8,7 @@ use App\Repositories\SellerProductRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use App\Models\SellerProduct;
 use Response;
 
 class SellerProductController extends AppBaseController
@@ -54,13 +55,32 @@ class SellerProductController extends AppBaseController
      */
     public function store(CreateSellerProductRequest $request)
     {
-        $input = $request->all();
+       //existing seller crop
+       $existing_seller_product = SellerProduct::where('name',$request->name)->first();
 
-        $sellerProduct = $this->sellerProductRepository->create($input);
+       if(!$existing_seller_product){
+          $request->validate(SellerProduct::$rules);
+          $new_seller_product = new SellerProduct();
+          $new_seller_product->name = $request->name;
+          $new_seller_product->description = $request->description;
+          $new_seller_product->price = $request->price;
+          $new_seller_product->image = $request->image;
+          $new_seller_product->user_id = $request->user_id;
+          $new_seller_product->seller_product_category_id = $request->seller_product_category_id;
+          $new_seller_product->save();
 
-        Flash::success('Seller Product saved successfully.');
+          $new_seller_product = SellerProduct::find($new_seller_product->id);
 
-        return redirect(route('sellerProducts.index'));
+          $new_seller_product->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_products');
+          $new_seller_product->save();
+
+          Flash::success('Product saved successfully.');
+       }
+       else{
+          Flash::error('Product name already exists');
+       }
+
+      return redirect(route('seller_products.index'));
     }
 
     /**

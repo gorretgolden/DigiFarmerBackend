@@ -71,3 +71,21 @@ Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::
 
 
 Route::resource('users', App\Http\Controllers\UserController::class);
+
+
+Route::resource('cropBuyers', App\Http\Controllers\CropBuyerController::class);
+
+
+Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);
+
+
+Route::resource('cropBuyers', App\Http\Controllers\CropBuyerController::class);
+
+
+Route::resource('vendorCategories', App\Http\Controllers\VendorCategoryController::class);
+
+
+Route::resource('traningVendorServices', App\Http\Controllers\TraningVendorServiceController::class);
+
+
+Route::resource('farmerTrainings', App\Http\Controllers\FarmerTrainingController::class);

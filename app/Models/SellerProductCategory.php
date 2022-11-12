@@ -47,5 +47,12 @@ class SellerProductCategory extends Model
         'name' => 'required|string|max:100'
     ];
 
+     //a seller product category has many products
+     public function products()
+     {
+        return $this->hasMany(\App\Models\SellerProduct::class);
+     }
+
+
 
 }

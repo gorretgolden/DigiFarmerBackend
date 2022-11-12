@@ -21,7 +21,7 @@ class CreateCropsTable extends Migration
             $table->enum('price_unit',['per-kg'])->default('per-kg');
             $table->string('image')->nullable();
             $table->timestamps();
-            $table->softDeletes();
+
 
         });
     }

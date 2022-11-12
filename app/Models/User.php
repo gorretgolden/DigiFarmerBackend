@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Spatie\Permission\Traits\HasRoles;
 use Eloquent as Model;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticable;
@@ -25,7 +26,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property integer $role_id
  * @property string $password
  */
-class User extends Authenticable
+class User extends Authenticable implements  MustVerifyEmail
+
 {
     use SoftDeletes,Notifiable,HasRoles,HasFactory,HasApiTokens;
 

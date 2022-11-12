@@ -22,9 +22,9 @@ class ExpenseFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => $this->faker->randomDigitNotNull,
-        'farm_id' => $this->faker->randomDigitNotNull,
-        'amount' => $this->faker->randomDigitNotNull,
+            'amount' => $this->faker->randomDigitNotNull,
+        'expense_category_id' => $this->faker->randomDigitNotNull,
+        'plot_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

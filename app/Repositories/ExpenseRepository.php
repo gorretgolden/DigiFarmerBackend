@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class ExpenseRepository
  * @package App\Repositories
- * @version November 2, 2022, 7:29 am UTC
+ * @version November 12, 2022, 7:34 am UTC
 */
 
 class ExpenseRepository extends BaseRepository
@@ -17,9 +17,9 @@ class ExpenseRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'category_id',
-        'farm_id',
-        'amount'
+        'amount',
+        'expense_category_id',
+        'plot_id'
     ];
 
     /**

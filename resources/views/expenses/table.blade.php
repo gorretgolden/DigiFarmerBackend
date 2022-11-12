@@ -2,18 +2,18 @@
     <table class="table" id="expenses-table">
         <thead>
             <tr>
-                <th>Category</th>
-                <th>Farm</th>
                 <th>Amount</th>
+                <th>Expense Category</th>
+                <th>Plot </th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($expenses as $expense)
                 <tr>
-                    <td>{{ $expense->category_id }}</td>
-                    <td>{{ $expense->farm_id }}</td>
                     <td>{{ $expense->amount }}</td>
+                    <td>{{ $expense->expense_category->name }}</td>
+                    <td>{{ $expense->plot->name }}</td>
                     <td width="120">
                         {!! Form::open(['route' => ['expenses.destroy', $expense->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
