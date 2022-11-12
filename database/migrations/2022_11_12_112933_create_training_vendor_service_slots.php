@@ -16,9 +16,10 @@ class CreateTrainingVendorServiceSlots extends Migration
         Schema::create('training_vendor_service_slots', function (Blueprint $table) {
             $table->id();
             $table->foreignId('training_vendor_service_id')->constrained()->onDelete('CASCADE');
-            $table->string('starting_time');
-            $table->string('ending_time');
+            $table->time('starting_time');
+            $table->time('ending_time');
             $table->timestamps();
+
         });
     }
 
