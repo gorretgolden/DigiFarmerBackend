@@ -12,6 +12,7 @@ use Response;
 use Hash;
 use Validator;
 use Auth;
+use Illuminate\Support\Str;
 
 /**
  * Class UserController
@@ -153,7 +154,8 @@ class UserAPIController extends AppBaseController
     public function login(Request $request){
         if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password] )){
             $user = Auth::user();
-            $success['token'] = $user->createToken('Farming')->plainTextToken;
+            $user_token = Str::random(60);
+            $success['token'] = $user->createToken($user_token)->plainTextToken;
             $success['first_name'] = $user->first_name;
             $success['last_name'] = $user->last_name;
             $success['email'] = $user->email;
