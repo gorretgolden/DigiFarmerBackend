@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTraningVendorServicesTable extends Migration
+class CreateTraingVendorServices extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,16 +13,14 @@ class CreateTraningVendorServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('training_vendor_services', function (Blueprint $table) {
+        Schema::create('traing_vendor_services', function (Blueprint $table) {
             $table->id('id');
             $table->string('name')->unique();
             $table->integer('charge');
             $table->text('description');
-            $table->string('slots');
-            $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');;
+            $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
-
 
         });
     }
@@ -35,6 +32,6 @@ class CreateTraningVendorServicesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('training_vendor_services');
+        Schema::dropIfExists('traing_vendor_services');
     }
 }
