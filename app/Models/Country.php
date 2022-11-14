@@ -59,4 +59,10 @@ class Country extends Model
           return $this->hasMany(\App\Models\User::class, 'country_id');
       }
 
+      //a country has many districts
+      public function districts()
+      {
+          return $this->hasMany(\App\Models\District::class, 'country_id');
+      }
+
 }

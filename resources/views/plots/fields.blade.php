@@ -1,6 +1,7 @@
 <?php
 $crops = App\Models\Crop::pluck('name','id');
 $farms = App\Models\Farm::pluck('name','id');
+$districts = App\Models\District::pluck('name','id');
 ?>
 
 <!-- Name Field -->
@@ -33,3 +34,11 @@ $farms = App\Models\Farm::pluck('name','id');
     {!! Form::label('crop_id', 'Crop:') !!}
     {!! Form::select('crop_id', $crops, null, ['class' => 'form-control custom-select']) !!}
 </div>
+
+
+<!-- District Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('district_id', 'District:') !!}
+    {!! Form::select('district_id', $districts, null, ['class' => 'form-control custom-select']) !!}
+</div>
+

@@ -54,7 +54,7 @@ class PlotAPIController extends AppBaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $existing_plot = Plot::where('name',$request->name)->first();
+        $existing_plot = Plot::where('name',$request->name)->orWhere('crop_id',$request->crop_id)->first();
         if(!$existing_plot){
             $plot = $this->plotRepository->create($input);
             $success['name'] = $request->name;
@@ -66,7 +66,7 @@ class PlotAPIController extends AppBaseController
             $response = [
                 'success'=>true,
                 'data'=> $success,
-                'message'=> 'Plotcreated successfully'
+                'message'=> 'Plot created successfully'
              ];
 
         return response()->json($response,200);
@@ -75,7 +75,7 @@ class PlotAPIController extends AppBaseController
         else{
             $response = [
                 'success'=>true,
-                'message'=> 'Plot name already exits'
+                'message'=> 'Plot name  or crop on the plot already exits'
              ];
 
              return response()->json($response,401);
@@ -99,7 +99,7 @@ class PlotAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Plot $plot */
-        $plot = $this->plotRepository->find($id);
+        $plot = Plot::find($id);
 
         if (empty($plot)) {
             return $this->sendError('Plot not found');
@@ -108,14 +108,17 @@ class PlotAPIController extends AppBaseController
             $success['name'] = $plot->name;
             $success['size'] = $plot->size;
             $success['size_unit'] = $plot->size_unit;
+            $success['district'] = $plot->district->name;
             $success['farm'] = $plot->farm;
             $success['crop'] = $plot->crop;
 
             $response = [
                 'success'=>true,
                 'data'=> $success,
-                'message'=> 'Plotcreated successfully'
+                'message'=> 'Plot details retrieved successfully'
              ];
+
+             return response()->json($response,200);
         }
 
 

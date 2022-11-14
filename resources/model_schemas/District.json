@@ -27,7 +27,7 @@
         "name": "country_id",
         "dbType": "integer:unsigned:foreign,countries,id",
         "htmlType": "select",
-        "validations": "nullable",
+        "validations": "required|integer",
         "searchable": true,
         "fillable": true,
         "primary": false,

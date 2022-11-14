@@ -33,6 +33,7 @@ class Plot extends Model
     public $fillable = [
         'name',
         'crop_id',
+        'district_id',
         'size',
         'size_unit',
         'farm_id'
@@ -48,7 +49,8 @@ class Plot extends Model
         'crop_id' => 'integer',
         'size' => 'integer',
         'size_unit' => 'string',
-        'farm_id'=>'integer'
+        'farm_id'=>'integer',
+        'district_id'=>'integer'
     ];
 
     /**
@@ -61,8 +63,16 @@ class Plot extends Model
         'crop_id' => 'required',
         'size' => 'required|min:1|integer',
         'size_unit' => 'required|string',
-        'farm_id' => 'required'
+        'farm_id' => 'required',
+        'district_id' => 'required'
     ];
+
+
+    //a plot belongs to a district
+    public function district()
+    {
+       return $this->belongsTo(\App\Models\District::class,'district_id');
+    }
 
     //a plot belongs to a crop
     public function crop()

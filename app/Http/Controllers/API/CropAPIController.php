@@ -72,17 +72,31 @@ class CropAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Crop $crop */
-        $crop = $this->cropRepository->find($id);
+        $crop = Crop::find($id);
 
         if (empty($crop)) {
             return $this->sendError('Crop not found');
         }
+        else{
+            $success['name'] = $crop->name;
+            $success['standard_price'] = $crop->standard_price;
+            $success['size_unit'] = $crop->size_unit;
+            $success['sub_category_id'] = $crop->sub_category->name;
+            $success['price_unit'] = $crop->price_unit;
+            $success['image'] = $crop->image;
 
-        return $this->sendResponse($crop->toArray(), 'Crop retrieved successfully');
+            $response = [
+                'success'=>true,
+                'data'=> $success,
+                'message'=> 'Crop details retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
     }
 
     /**
-     * Update the specified Crop in storage.
+     * Update the specified crop in storage.
      * PUT/PATCH /crops/{id}
      *
      * @param int $id

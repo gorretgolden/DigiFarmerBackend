@@ -33,7 +33,7 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
     Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
     Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
-    Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'logout']);
+    Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
     Route::get('users/details/{id}',[App\Http\Controllers\API\UserAPIController::class,'show']);
     Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
 });

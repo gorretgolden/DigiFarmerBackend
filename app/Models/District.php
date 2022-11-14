@@ -16,14 +16,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class District extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'districts';
-    
 
-    protected $dates = ['deleted_at'];
+
+
 
 
 
@@ -52,5 +52,18 @@ class District extends Model
         'country_id' => 'nullable'
     ];
 
-    
+    //a district belongs to a country
+    public function country()
+      {
+          return $this->belongsTo(\App\Models\Country::class, 'country_id');
+      }
+
+
+    //a district has many plots
+    public function plots()
+    {
+       return $this->hasMany(\App\Models\Plot::class,'district_id');
+    }
+
+
 }

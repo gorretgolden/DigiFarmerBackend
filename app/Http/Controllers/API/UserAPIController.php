@@ -13,6 +13,7 @@ use Hash;
 use Validator;
 use Auth;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
 
 /**
  * Class UserController
@@ -318,11 +319,18 @@ class UserAPIController extends AppBaseController
     }
 
     //user logout
-    public function logout(){
+    public function userLogOut(Request $request){
         {
 
 
-            Auth::logout();
+            // Get bearer token from the request
+           $accessToken = $request->bearerToken();
+
+           // Get access token from database
+           $token = PersonalAccessToken::findToken($accessToken);
+
+           // Revoke token
+           $token->delete();
 
             $response = [
                 'success'=>true,

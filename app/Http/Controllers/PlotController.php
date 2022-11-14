@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Plot;
 
 class PlotController extends AppBaseController
 {
@@ -54,11 +55,24 @@ class PlotController extends AppBaseController
      */
     public function store(CreatePlotRequest $request)
     {
-        $input = $request->all();
+        $existing_plot = Plot::where('name',$request->name)->orWhere('crop_id',$request->crop_id)->first();
+        if(!$existing_plot){
+            $new_plot = new Plot();
+            $new_plot->name = $request->name;
+            $new_plot->farm_id = $request->farm_id;
+            $new_plot->crop_id = $request->crop_id;
+            $new_plot->district_id = $request->district_id;
+            $new_plot->size = $request->size;
+            $new_plot->size_unit = $request->size_unit;
 
-        $plot = $this->plotRepository->create($input);
+            $new_plot->save();
+            Flash::success('Plot saved successfully.');
 
-        Flash::success('Plot saved successfully.');
+        }
+        else{
+            Flash::error('Plot  name or crop on the plot already exists');
+        }
+
 
         return redirect(route('plots.index'));
     }

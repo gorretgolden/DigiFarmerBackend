@@ -12,6 +12,13 @@
         <p>Permissions</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('districts.index') }}"
+       class="nav-link {{ Request::is('districts*') ? 'active' : '' }}">
+        <p>Districts</p>
+    </a>
+</li>
+
 
 
 <li class="nav-item">
@@ -144,5 +151,6 @@
         <p>Farmer Trainings</p>
     </a>
 </li>
+
 
 
