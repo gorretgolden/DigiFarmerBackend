@@ -243,7 +243,7 @@ class UserAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id,Request $request)
+    public function update($id,UpdateUserAPIRequest $request)
     {
         $user = User::find($id);
 

@@ -26,7 +26,7 @@
              $table->string('image')->nullable();
              $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
              $table->timestamps();
-             $table->softDeletes();
+
 
          });
      }

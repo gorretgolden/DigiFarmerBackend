@@ -105,7 +105,7 @@ class User extends Authenticable implements  MustVerifyEmail
           return $this->belongsTo(\Spatie\Permission\Models\Role::class, 'role_id');
       }
 
-     //a user
+     //a user has many farms
      public function farms()
      {
          return $this->hasMany(\App\Models\Farm::class, 'user_id');

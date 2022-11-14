@@ -9,6 +9,7 @@ use App\Repositories\FarmRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Validator;
 
 /**
  * Class FarmController
@@ -51,13 +52,62 @@ class FarmAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateFarmAPIRequest $request)
+    public function store(Request $request)
     {
-        $input = $request->all();
+           //existing farm
+           $existing_farm = Farm::where('name',$request->input('name'))->first();
+           $validator = Validator::make($request->all(),[
+            'name'=> 'required|unique:farms',
+            'address' => 'required|string',
+            'field_size' => 'required|integer',
+            'latitude' => 'required|string',
+            'longitude' =>'required|string',
+            'size_unit' => 'required|string',
+            'image' => 'nullable'
 
-        $farm = $this->farmRepository->create($input);
+           ]);
+           if(!$existing_farm){
+               $farm = new farm();
+               $farm->name = $request->name;
+               $farm->address = $request->address;
+               $farm->field_area = $request->field_area;
+               $farm->latitude = $request->latitude;
+               $farm->longitude = (int)$request->longitude;
+               $farm->size_unit = $request->size_unit;
+               $farm->image = $request->image;
+               $farm->user_id = auth()->user()->id;
 
-        return $this->sendResponse($farm->toArray(), 'Farm saved successfully');
+                $farm->save();
+
+                $success['name'] = $farm->name;
+                $success['address'] = $farm->address;
+                $success['field_size'] = $farm->field_size;
+                $success['size_unit'] = $farm->size_unit;
+                $success['latitude'] = $farm->latitude;
+                $success['longitude'] = $farm->longitude;
+                $success['farm_owner'] = $farm->user->email;
+                $success['image'] = $farm->image;
+
+                $farm = Farm::find($farm->id);
+
+                $farm->image = \App\Models\ImageUploader::upload($request->file('image'),'farms');
+                $farm->save();
+                $response = [
+                   'success'=>true,
+                   'data'=> $success,
+                   'message'=> 'Farm created successfully'
+                ];
+
+           return response()->json($response,200);
+
+           }
+           else{
+               $response = [
+                   'success'=>false,
+                   'message'=> 'Farm name already exists'
+                ];
+                return response()->json($response,403);
+           }
     }
 
     /**
@@ -78,6 +128,36 @@ class FarmAPIController extends AppBaseController
         }
 
         return $this->sendResponse($farm->toArray(), 'Farm retrieved successfully');
+    }
+
+    //get farms belonging to a farmer
+    public function farmUser(Request $request)
+    {
+        /** @var Farm $farm */
+        $user_id = auth()->user()->id();
+        dd($user_id);
+        $farm_user = Farm::where('user_id',$user_id)->first();
+
+        if (empty($farm_user)) {
+            return $this->sendError('Farmer has no farms');
+        }
+        else{
+            $success['farm_owner'] = $farm_user->user->name;
+            $success['name'] = $farm_user->name;
+            $success['address'] = $farm_user->address;
+            $success['field_area'] = $farm_user->field_area;
+            $success['size_unit'] = $farm_user->size_unit;
+            $success['image'] = $farm_user->image;
+
+            $response = [
+                'success'=>true,
+                'data'=> $success,
+                'message'=> 'User farm details retrieved successfully'
+               ];
+               return response()->json($response,200);
+        }
+
+
     }
 
     /**
