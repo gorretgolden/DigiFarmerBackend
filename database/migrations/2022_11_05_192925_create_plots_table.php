@@ -20,6 +20,7 @@ class CreatePlotsTable extends Migration
             $table->enum('size_unit',['Hectares','Acres'])->default('Acres');
             $table->foreignId('farm_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('crop_id')->constrained() ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreignId('district_id')->constrained() ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->timestamps();
         });
     }
