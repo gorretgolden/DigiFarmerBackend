@@ -115,8 +115,8 @@ class UserAPIController extends AppBaseController
              }
 
              $user->save();
-
-             $success['token'] = $user->createToken('Farming')->plainTextToken;
+             $user_token = Str::random(60);
+             $success['token'] = $user->createToken($user_token)->plainTextToken;
              $success['first_name'] = $user->first_name;
              $success['last_name'] = $user->last_name;
              $success['email'] = $user->email;
@@ -151,35 +151,54 @@ class UserAPIController extends AppBaseController
     }
 
    //user login controller
+    // public function login(Request $request){
+    //     if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password] )){
+    //         $user = Auth::user();
+    //         $user_token = Str::random(60);
+    //         $success['token'] = $user->createToken($user_token)->plainTextToken;
+    //         $success['first_name'] = $user->first_name;
+    //         $success['last_name'] = $user->last_name;
+    //         $success['email'] = $user->email;
+    //         $success['phone'] = $user->phone;
+    //         $success['user_type'] = $user->user_type;
+    //         $success['image_url'] = $user->image_url;
+
+    //         $response = [
+    //          'success'=>true,
+    //          'data'=> $success,
+    //          'message'=> 'You successfully logged into your account'
+    //         ];
+    //         return response()->json($response,200);
+    //     }
+    //     else{
+    //         $response = [
+    //             'success'=>true,
+    //             'message'=> 'Unauthorized'
+    //            ];
+    //            return response()->json($response,401);
+    //     }
+
+    // }
+
     public function login(Request $request){
-        if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password] )){
-            $user = Auth::user();
-            $user_token = Str::random(60);
-            $success['token'] = $user->createToken($user_token)->plainTextToken;
-            $success['first_name'] = $user->first_name;
-            $success['last_name'] = $user->last_name;
-            $success['email'] = $user->email;
-            $success['phone'] = $user->phone;
-            $success['user_type'] = $user->user_type;
-            $success['image_url'] = $user->image_url;
 
-            $response = [
-             'success'=>true,
-             'data'=> $success,
-             'message'=> 'You successfully logged into your account'
-            ];
-            return response()->json($response,200);
-        }
-        else{
-            $response = [
-                'success'=>true,
-                'message'=> 'Unauthorized'
-               ];
-               return response()->json($response,401);
-        }
+         if (!Auth::attempt($request->only('email', 'password'))) {
+             return response()->json([ 'message' => 'Invalid login details' ], 401);
+           }
 
+         $user = User::where('email', $request['email'])->firstOrFail();
+         $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json(['access_token' => $token,'token_type' => 'Bearer',    ]);
     }
-    /**
+
+
+    public function loggedInUser(Request $request){
+         return $request->user();
+    }
+
+
+
+           /**
      * Display the specified User.
      * GET|HEAD /users/{id}
      *
@@ -236,7 +255,7 @@ class UserAPIController extends AppBaseController
 
         }
 
-        if(!$user){
+        if( $user){
 
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;

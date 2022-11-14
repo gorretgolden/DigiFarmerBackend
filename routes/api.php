@@ -32,18 +32,16 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
     Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
     Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
-
-
+    Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
+    Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'logout']);
+    Route::get('users/details/{id}',[App\Http\Controllers\API\UserAPIController::class,'show']);
+    Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
 });
 
 
 Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1')->group(function(){
     Route::post('users/login','login');
     Route::post('users/register','register');
-    Route::get('users','index');
-    Route::get('users/details/{id}','show');
-    Route::put('users/update/{id}','register');
-    Route::get('user/logout','logout');
 
 });
 

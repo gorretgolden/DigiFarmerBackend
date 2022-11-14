@@ -17,6 +17,7 @@ class CreateFarmerTrainingsTable extends Migration
             $table->id('id');
             $table->string('starting_date');
             $table->string('ending_date');
+            $table->boolean('is_registered')->default(false);
             $table->enum('access',['online','offline']);
             $table->integer('period');
             $table->enum('period_unit',['days','weekly','monthly','yearly']);
