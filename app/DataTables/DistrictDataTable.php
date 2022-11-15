@@ -29,7 +29,7 @@ class DistrictDataTable extends DataTable
      */
     public function query(District $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['country']);
     }
 
     /**
@@ -66,7 +66,7 @@ class DistrictDataTable extends DataTable
     {
         return [
             'name',
-            'country_id'
+            'country'=> new \Yajra\DataTables\Html\Column(['title'=>"Country Name",'data'=>'country.name','name'=>'country.name'])
         ];
     }
 
