@@ -2,29 +2,22 @@
 
 namespace App\Repositories;
 
-use App\Models\Farm;
+use App\Models\Trial;
 use App\Repositories\BaseRepository;
 
 /**
- * Class FarmRepository
+ * Class TrialRepository
  * @package App\Repositories
- * @version November 15, 2022, 11:48 am UTC
+ * @version November 15, 2022, 11:31 am UTC
 */
 
-class FarmRepository extends BaseRepository
+class TrialRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        'name',
-        'address',
-        'latitude',
-        'longitude',
-        'user_id',
-        'field_area',
-        'size_unit',
-        'image'
+        'name'
     ];
 
     /**
@@ -42,6 +35,6 @@ class FarmRepository extends BaseRepository
      **/
     public function model()
     {
-        return Farm::class;
+        return Trial::class;
     }
 }

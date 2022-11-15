@@ -85,3 +85,6 @@ Route::get('/auth/google/redirect', function () {
 
 Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterController::class,'googleCallback'])->name('google-register');
 
+
+
+Route::resource('trials', App\Http\Controllers\TrialController::class);

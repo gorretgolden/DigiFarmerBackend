@@ -6,8 +6,8 @@
 
 <!-- Country Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('country_id', 'Country Id:') !!}
-    <p>{{ $district->country_id }}</p>
+    {!! Form::label('country_id', 'Country:') !!}
+    <p>{{ $district->country->name }}</p>
 </div>
 
 <!-- Created At Field -->

@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Farm;
+use App\Models\Trial;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FarmFactory extends Factory
+class TrialFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Farm::class;
+    protected $model = Trial::class;
 
     /**
      * Define the model's default state.
@@ -23,13 +23,6 @@ class FarmFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-        'address' => $this->faker->word,
-        'latitude' => $this->faker->word,
-        'longitude' => $this->faker->word,
-        'user_id' => $this->faker->randomDigitNotNull,
-        'field_area' => $this->faker->word,
-        'size_unit' => $this->faker->word,
-        'image' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

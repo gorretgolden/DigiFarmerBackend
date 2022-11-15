@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\FarmDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateFarmRequest;
 use App\Http\Requests\UpdateFarmRequest;
 use App\Repositories\FarmRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
-use App\Models\Farm;
 
 class FarmController extends AppBaseController
 {
@@ -24,16 +24,13 @@ class FarmController extends AppBaseController
     /**
      * Display a listing of the Farm.
      *
-     * @param Request $request
+     * @param FarmDataTable $farmDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(FarmDataTable $farmDataTable)
     {
-        $farms = $this->farmRepository->all();
-
-        return view('farms.index')
-            ->with('farms', $farms);
+        return $farmDataTable->render('farms.index');
     }
 
     /**
@@ -55,22 +52,9 @@ class FarmController extends AppBaseController
      */
     public function store(CreateFarmRequest $request)
     {
-        $new_farm = new Farm();
-        $new_farm->name = $request->name;
-        $new_farm->latitude = $request->latitude;
-        $new_farm->longitude= $request->longitude;
-        $new_farm->address = $request->address;
-        $new_farm->field_area = $request->field_area;
-        $new_farm->size_unit = $request->size_unit;
-        $new_farm->image = $request->image;
-        $new_farm->user_id = $request->user_id;
-        $new_farm->save();
+        $input = $request->all();
 
-        $new_farm = Farm::find($new_farm->id);
-
-        $new_farm->image = \App\Models\ImageUploader::upload($request->file('image'),'farms');
-        $new_farm->save();
-
+        $farm = $this->farmRepository->create($input);
 
         Flash::success('Farm saved successfully.');
 
@@ -146,8 +130,6 @@ class FarmController extends AppBaseController
      * Remove the specified Farm from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

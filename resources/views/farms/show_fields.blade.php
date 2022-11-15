@@ -4,12 +4,6 @@
     <p>{{ $farm->name }}</p>
 </div>
 
-<!-- District Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('district_id', 'District Id:') !!}
-    <p>{{ $farm->district_id }}</p>
-</div>
-
 <!-- Address Field -->
 <div class="col-sm-12">
     {!! Form::label('address', 'Address:') !!}
@@ -28,16 +22,28 @@
     <p>{{ $farm->longitude }}</p>
 </div>
 
+<!-- User Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('user_id', 'User Id:') !!}
+    <p>{{ $farm->user_id }}</p>
+</div>
+
 <!-- Field Area Field -->
 <div class="col-sm-12">
     {!! Form::label('field_area', 'Field Area:') !!}
     <p>{{ $farm->field_area }}</p>
 </div>
 
-<!-- User Id Field -->
+<!-- Size Unit Field -->
 <div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $farm->user_id }}</p>
+    {!! Form::label('size_unit', 'Size Unit:') !!}
+    <p>{{ $farm->size_unit }}</p>
+</div>
+
+<!-- Image Field -->
+<div class="col-sm-12">
+    {!! Form::label('image', 'Image:') !!}
+    <p>{{ $farm->image }}</p>
 </div>
 
 <!-- Created At Field -->
