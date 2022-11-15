@@ -1,3 +1,13 @@
+
+<li class="nav-item dropdown">
+    <a href="{{ route('roles.index') }}"
+       class="nav-link has-dropdown{{ Request::is('#*') ? 'active' : '' }}">
+       <p>User Management</p>
+       <i class="fas fa-angle-right dropdown float-right sub-menu"></i>
+
+    </a>
+</li>
+
 <li class="nav-item  menu-is-opening menu-open">
     <a href="{{ route('roles.index') }}"
        class="nav-link {{ Request::is('roles*') ? 'active' : '' }}">
@@ -151,6 +161,7 @@
         <p>Farmer Trainings</p>
     </a>
 </li>
+
 
 
 

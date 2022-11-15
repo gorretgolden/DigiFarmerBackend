@@ -111,7 +111,9 @@
                             </a>
                         </p>
 
-
+                        <a href="{{url('/auth/google/redirect') }}">
+                            Google
+                           </a>
                     </div>
                 </div>
             </div>

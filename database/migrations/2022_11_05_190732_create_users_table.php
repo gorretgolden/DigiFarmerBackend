@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('image_url')->nullable();
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->enum('user_type',['admin','farmer','seller','vendor','delivery-man'])->default('farmer');
             $table->foreignId('country_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->string('password')->nullable();

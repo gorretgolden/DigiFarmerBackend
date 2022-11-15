@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Laravel\Socialite\Facades\Socialite;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -62,30 +62,26 @@ Route::resource('companies', App\Http\Controllers\CompanyController::class);
 
 
 Route::resource('subCategories', App\Http\Controllers\SubCategoryController::class);
-
-
 Route::resource('sellerProductCategories', App\Http\Controllers\SellerProductCategoryController::class);
-
-
 Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);
-
-
 Route::resource('users', App\Http\Controllers\UserController::class);
-
-
 Route::resource('cropBuyers', App\Http\Controllers\CropBuyerController::class);
-
-
 Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);
 
-
 Route::resource('cropBuyers', App\Http\Controllers\CropBuyerController::class);
-
 
 Route::resource('vendorCategories', App\Http\Controllers\VendorCategoryController::class);
 
-
 Route::resource('traningVendorServices', App\Http\Controllers\TraningVendorServiceController::class);
 
-
 Route::resource('farmerTrainings', App\Http\Controllers\FarmerTrainingController::class);
+
+
+//google login
+
+Route::get('/auth/google/redirect', function () {
+    return Socialite::driver('google')->redirect();
+});
+
+Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterController::class,'googleCallback'])->name('google-register');
+

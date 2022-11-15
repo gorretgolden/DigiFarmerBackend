@@ -56,16 +56,16 @@ class FarmAPIController extends AppBaseController
     {
            //existing farm
            $existing_farm = Farm::where('name',$request->input('name'))->first();
-           $validator = Validator::make($request->all(),[
+           $rules = [
             'name'=> 'required|unique:farms',
-            'address' => 'required|string',
-            'field_size' => 'required|integer',
-            'latitude' => 'required|string',
-            'longitude' =>'required|string',
-            'size_unit' => 'required|string',
-            'image' => 'nullable'
+           'address' => 'required|string',
+           'field_area' => 'required|integer',
+           'latitude' => 'required|string',
+           'longitude' =>'required|string',
+           'size_unit' => 'required|string',
+           'image' => 'nullable'];
 
-           ]);
+           $request->validate($rules);
            if(!$existing_farm){
                $farm = new farm();
                $farm->name = $request->name;
@@ -81,12 +81,13 @@ class FarmAPIController extends AppBaseController
 
                 $success['name'] = $farm->name;
                 $success['address'] = $farm->address;
-                $success['field_size'] = $farm->field_size;
+                $success['field_area'] = $farm->field_area;
                 $success['size_unit'] = $farm->size_unit;
                 $success['latitude'] = $farm->latitude;
                 $success['longitude'] = $farm->longitude;
-                $success['farm_owner'] = $farm->user->email;
+                $success['farm_owner'] = $farm->user;
                 $success['image'] = $farm->image;
+                $success['created_at'] = $farm->created_at;
 
                 $farm = Farm::find($farm->id);
 
@@ -133,9 +134,10 @@ class FarmAPIController extends AppBaseController
     //get farms belonging to a farmer
     public function farmUser(Request $request)
     {
-        /** @var Farm $farm */
-        $user_id = auth()->user()->id();
+
+        $user_id = auth()->user()->id;
         dd($user_id);
+
         $farm_user = Farm::where('user_id',$user_id)->first();
 
         if (empty($farm_user)) {
