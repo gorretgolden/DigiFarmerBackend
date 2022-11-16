@@ -15,15 +15,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Permission extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'permissions';
-    
-
-    protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -48,5 +44,5 @@ class Permission extends Model
         'name' => 'required|string'
     ];
 
-    
+
 }

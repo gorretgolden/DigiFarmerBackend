@@ -14,6 +14,8 @@ use Validator;
 use Auth;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
+require_once('../external/AfricasTalkingGateway.php');
+
 
 /**
  * Class UserController
@@ -70,7 +72,33 @@ class UserAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function register(Request $request)
+
+    public function sendSms($content,$tell){
+
+
+
+        $rand = "3242";
+
+        $message    = $content;
+        $apikey = "32e6988167f57dc60e425bb7ff9808f6fa322d017c2341be040c6bf9f881bb3c";
+        $username='medaasi';
+
+        $gateway    = new \AfricasTalkingGateway($username, $apikey);
+       try
+       {
+         $recipients='+'.$tell;
+         //$recipients='+256779815657';
+         $results = $gateway->sendMessage($recipients, $message);
+
+       }
+       catch ( \AfricasTalkingGatewayException $e )
+       {
+        echo "Encountered an error while sending: ".$e->getMessage();
+      }
+
+
+    }
+    public function createUserAccount(Request $request)
     {
         $validator = Validator::make($request->all(),User::$rules);
         if($validator->fails()){
@@ -83,13 +111,14 @@ class UserAPIController extends AppBaseController
         }
 
         //existing user
-        $existing_user = User::where('email',$request->input('email'))->first();
+        $existing_user = User::where('email',$request->input('email'))->orWhere('phone',$request->phone)->first();
         if(!$existing_user){
             $user = new User();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->email = $request->email;
             $user->country_id = (int)$request->country_id;
+          //  $user->district_id = (int)$request->district_id;
             $user->phone = $request->phone;
             $user->image_url = $request->image_url;
             $user->user_type = $request->user_type;
@@ -124,11 +153,21 @@ class UserAPIController extends AppBaseController
              $success['phone'] = $user->phone;
              $success['user_type'] = $user->user_type;
              $success['image_url'] = $user->image_url;
+             $success['country'] = $user->country->name;
+           //  $success['district'] = $user->district->name;
 
              $user = User::find($user->id);
 
              $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
              $user->save();
+
+             $opt = rand(1000, 9999);
+             $user->otp = $opt;
+             $user->is_verified_otp = false;
+             $user->save();
+
+             $content = "Digi Farmer App verification OTP - ". $opt ;
+             $this->sendSms($content,$request->phone);
              $response = [
                 'success'=>true,
                 'data'=> $success,
@@ -141,7 +180,7 @@ class UserAPIController extends AppBaseController
         else{
             $response = [
                 'success'=>false,
-                'message'=> 'User with this email already exists'
+                'message'=> 'User with this email or phone number already exists'
              ];
              return response()->json($response,403);
         }
@@ -151,35 +190,34 @@ class UserAPIController extends AppBaseController
 
     }
 
-   //user login controller
-    // public function login(Request $request){
-    //     if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password] )){
-    //         $user = Auth::user();
-    //         $user_token = Str::random(60);
-    //         $success['token'] = $user->createToken($user_token)->plainTextToken;
-    //         $success['first_name'] = $user->first_name;
-    //         $success['last_name'] = $user->last_name;
-    //         $success['email'] = $user->email;
-    //         $success['phone'] = $user->phone;
-    //         $success['user_type'] = $user->user_type;
-    //         $success['image_url'] = $user->image_url;
 
-    //         $response = [
-    //          'success'=>true,
-    //          'data'=> $success,
-    //          'message'=> 'You successfully logged into your account'
-    //         ];
-    //         return response()->json($response,200);
-    //     }
-    //     else{
-    //         $response = [
-    //             'success'=>true,
-    //             'message'=> 'Unauthorized'
-    //            ];
-    //            return response()->json($response,401);
-    //     }
+    public function verifyUserOtp(Request $request){
 
-    // }
+        $check_user_otp = User::where('otp',$request->otp)->first();
+
+        if($check_user_otp){
+          $check_user_otp->is_verified_otp = true;
+          $check_user_otp->save();
+          $response = [
+            'success'=>true,
+            'message'=> 'Phone number verified successfully'
+         ];
+         return response()->json($response,200);
+
+        }
+        else{
+
+          $response = [
+            'success'=>false,
+            'message'=> 'An error occured'
+         ];
+         return response()->json($response);
+        }
+
+
+
+    }
+
 
     public function login(Request $request){
 
@@ -218,6 +256,7 @@ class UserAPIController extends AppBaseController
         $success['user_type'] = $user->user_type;
         $success['image_url'] = $user->image_url;
         $success['country'] = $user->country->name;
+        $success['district'] = $user->district->name;
         $success['email_verified_at'] = $user->email_verified_at;
         $success['created_at'] = $user->created_at;
 

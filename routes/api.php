@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:api')->prefix('v1')->group(function () {
+Route::middleware(['auth:api','cors'])->prefix('v1')->group(function () {
 
     Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
     Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
@@ -37,12 +37,15 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
     Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
     Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
+    Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
+
 });
 
 
 Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1')->group(function(){
     Route::post('users/login','login');
-    Route::post('users/register','register');
+    Route::post('users/create-account','createUserAccount');
+    Route::post('users/verify-otp','verifyUserOtp');
 
 });
 
@@ -70,9 +73,9 @@ Route::get('/auth/google/redirect', function () {
 
 
 
-
-
 // Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
+
+
 
 
 

@@ -57,6 +57,8 @@ class CategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
+
+
         $categories = $this->categoryRepository->all(
             $request->except(['skip', 'limit']),
             $request->get('skip'),
@@ -76,6 +78,8 @@ class CategoryAPIController extends AppBaseController
      */
     public function store(CreateCategoryAPIRequest $request)
     {
+
+
         $input = $request->all();
 
         $category = $this->categoryRepository->create($input);

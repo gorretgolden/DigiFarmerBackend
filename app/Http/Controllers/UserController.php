@@ -54,6 +54,11 @@ class UserController extends AppBaseController
      *
      * @return Response
      */
+
+
+
+
+
     public function store(Request $request)
     {
 

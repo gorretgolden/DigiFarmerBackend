@@ -81,6 +81,7 @@ class User extends Authenticable implements  MustVerifyEmail
         'email' => 'required|unique:users,id|email',
         'image_url' => 'nullable',
         'country_id' => 'nullable',
+        'phone' => 'required|unique:users,id',
         'password' => 'required',
         'email_verified_at' => 'datetime',
         'user_type' => 'required|string',
@@ -98,6 +99,13 @@ class User extends Authenticable implements  MustVerifyEmail
       {
           return $this->belongsTo(\App\Models\Country::class, 'country_id');
       }
+
+       //a user belongs to a district
+       public function district()
+       {
+           return $this->belongsTo(\App\Models\District::class, 'district_id');
+       }
+
 
       //a user belongs to a specific role
       public function role()

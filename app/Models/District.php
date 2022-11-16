@@ -58,6 +58,13 @@ class District extends Model
           return $this->belongsTo(\App\Models\Country::class, 'country_id');
       }
 
+    //a district has many users
+    public function users()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'district_id');
+    }
+
+
 
     //a district has many plots
     public function plots()

@@ -15,14 +15,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Role extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'roles';
-    
 
-    protected $dates = ['deleted_at'];
 
 
 
@@ -48,5 +46,5 @@ class Role extends Model
         'name' => 'required|string'
     ];
 
-    
+
 }
