@@ -70,14 +70,27 @@ class ExpenseAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Expense $expense */
-        $expense = $this->expenseRepository->find($id);
+
+        $expense= Expense::find($id);
 
         if (empty($expense)) {
-            return $this->sendError('Expense not found');
+            return $this->sendError('Plot expense enot found');
+        }
+        else{
+            $success['amount'] = $expense->amount;
+            $success['expense_category'] = $expense->expense_category;
+            $success['plot'] = $expense->plot;
+
+
+            $response = [
+                'success'=>true,
+                'data'=> $success,
+                'message'=> 'Expense details retrieved successfully'
+             ];
+
+             return response()->json($response,200);
         }
 
-        return $this->sendResponse($expense->toArray(), 'Expense retrieved successfully');
     }
 
     /**

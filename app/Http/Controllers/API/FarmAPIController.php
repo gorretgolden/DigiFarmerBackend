@@ -121,14 +121,28 @@ class FarmAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Farm $farm */
-        $farm = $this->farmRepository->find($id);
+
+        $farm = Farm::find($id);
+        $success['name'] = $farm->name;
+        $success['address'] = $farm->address;
+        $success['field_area'] = $farm->field_area;
+        $success['size_unit'] = $farm->size_unit;
+        $success['latitude'] = $farm->latitude;
+        $success['longitude'] = $farm->longitude;
+        $success['farm_owner'] = $farm->user;
+        $success['image'] = $farm->image;
+        $success['created_at'] = $farm->created_at;
 
         if (empty($farm)) {
             return $this->sendError('Farm not found');
         }
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Farm data retrieved successfully'
+           ];
 
-        return $this->sendResponse($farm->toArray(), 'Farm retrieved successfully');
+        return response()->json($response,200);
     }
 
     //get farms belonging to a farmer
@@ -136,20 +150,20 @@ class FarmAPIController extends AppBaseController
     {
 
         $user_id = auth()->user()->id;
-        dd($user_id);
+        //dd($user_id);
 
-        $farm_user = Farm::where('user_id',$user_id)->first();
+        $farm = Farm::where('user_id',$user_id)->first();
 
-        if (empty($farm_user)) {
+        if (empty($farm)) {
             return $this->sendError('Farmer has no farms');
         }
         else{
-            $success['farm_owner'] = $farm_user->user->name;
-            $success['name'] = $farm_user->name;
-            $success['address'] = $farm_user->address;
-            $success['field_area'] = $farm_user->field_area;
-            $success['size_unit'] = $farm_user->size_unit;
-            $success['image'] = $farm_user->image;
+            $success['farm_owner'] = $farm->user->email;
+            $success['name'] = $farm->name;
+            $success['address'] = $farm->address;
+            $success['field_area'] = $farm->field_area;
+            $success['size_unit'] = $farm->size_unit;
+            $success['image'] = $farm->image;
 
             $response = [
                 'success'=>true,
@@ -171,7 +185,7 @@ class FarmAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateFarmAPIRequest $request)
+    public function update($id,Request $request)
     {
         $input = $request->all();
 

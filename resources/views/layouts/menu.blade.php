@@ -1,165 +1,211 @@
-
-<li class="nav-item dropdown">
-    <a href="{{ route('roles.index') }}"
-       class="nav-link has-dropdown{{ Request::is('#*') ? 'active' : '' }}">
-       <p>User Management</p>
-       <i class="fas fa-angle-right dropdown float-right sub-menu"></i>
-
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <p>Dashboard</p>
     </a>
-</li>
 
-<li class="nav-item  menu-is-opening menu-open">
-    <a href="{{ route('roles.index') }}"
-       class="nav-link {{ Request::is('roles*') ? 'active' : '' }}">
-        <p>Roles</p>
-    </a>
 </li>
 
 
-<li class="nav-item">
-    <a href="{{ route('permissions.index') }}"
-       class="nav-link {{ Request::is('permissions*') ? 'active' : '' }}">
-        <p>Permissions</p>
-    </a>
-</li>
-<li class="nav-item">
-    <a href="{{ route('districts.index') }}"
-       class="nav-link {{ Request::is('districts*') ? 'active' : '' }}">
-        <p>Districts</p>
-    </a>
-</li>
-
-
-
-<li class="nav-item">
-    <a href="{{ route('sliders.index') }}"
-       class="nav-link {{ Request::is('sliders*') ? 'active' : '' }}">
-        <p>Sliders</p>
-    </a>
-</li>
-
-
-
-
-<li class="nav-item">
-    <a href="{{ route('farms.index') }}"
-       class="nav-link {{ Request::is('farms*') ? 'active' : '' }}">
-        <p>Farms</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('categories.index') }}"
-       class="nav-link {{ Request::is('categories*') ? 'active' : '' }}">
-        <p>Categories</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('crops.index') }}"
-       class="nav-link {{ Request::is('crops*') ? 'active' : '' }}">
-        <p>Crops</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('plots.index') }}"
-       class="nav-link {{ Request::is('plots*') ? 'active' : '' }}">
-        <p>Plots</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('expenseCategories.index') }}"
-       class="nav-link {{ Request::is('expenseCategories*') ? 'active' : '' }}">
-        <p>Expense Categories</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('expenses.index') }}"
-       class="nav-link {{ Request::is('expenses*') ? 'active' : '' }}">
-        <p>Expenses</p>
-    </a>
-</li>
-
-
-
-
-<li class="nav-item">
-    <a href="{{ route('subCategories.index') }}"
-       class="nav-link {{ Request::is('subCategories*') ? 'active' : '' }}">
-        <p>Sub Categories</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('sellerProductCategories.index') }}"
-       class="nav-link {{ Request::is('sellerProductCategories*') ? 'active' : '' }}">
-        <p>Seller Product Categories</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('sellerProducts.index') }}"
-       class="nav-link {{ Request::is('sellerProducts*') ? 'active' : '' }}">
-        <p>Seller Products</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('users.index') }}"
-       class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}"><i
+            class="fa fa-users mr-2" aria-hidden="true"></i>
         <p>Users</p>
     </a>
+
+    <ul class="menu-content" style="display: none">
+        <li class="nav-item  menu-is-opening menu-open">
+            <a href="{{ route('roles.index') }}">
+                <p>Roles</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('permissions.index') }}">
+                <p>Permissions</p>
+            </a>
+        </li>
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('users.index') }}">
+                <p>Users</p>
+            </a>
+        </li>
+
+
+    </ul>
 </li>
 
 
-<li class="nav-item">
-    <a href="{{ route('cropBuyers.index') }}"
-       class="nav-link {{ Request::is('cropBuyers*') ? 'active' : '' }}">
-        <p>Crop Buyers</p>
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-book mr-2" aria-hidden="true"></i>
+        <p>Content</p>
     </a>
+
+    <ul class="menu-content" style="display: none">
+
+        <li class="nav-item">
+            <a href="{{ route('countries.index') }}">
+                <p>Countries</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('districts.index') }}">
+                <p>Districts</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('sliders.index') }}">
+                <p>Sliders</p>
+            </a>
+        </li>
+
+
+    </ul>
 </li>
 
 
-<li class="nav-item">
-    <a href="{{ route('cropOnSales.index') }}"
-       class="nav-link {{ Request::is('cropOnSales*') ? 'active' : '' }}">
-        <p>Crop On Sales</p>
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-list-alt mr-2" aria-hidden="true"></i>
+        <p>Categories</p>
     </a>
+
+    <ul class="menu-content" style="display: none">
+
+
+        <li class="nav-item">
+            <a href="{{ route('categories.index') }}">
+                <p>Categories</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('expenseCategories.index') }}">
+                <p>Expense Categories</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('subCategories.index') }}">
+                <p>Sub Categories</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('sellerProductCategories.index') }}">
+                <p>Seller Product Categories</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('vendorCategories.index') }}">
+                <p>Vendor Categories</p>
+            </a>
+        </li>
+
+    </ul>
 </li>
 
-
-<li class="nav-item">
-    <a href="{{ route('vendorCategories.index') }}"
-       class="nav-link {{ Request::is('vendorCategories*') ? 'active' : '' }}">
-        <p>Vendor Categories</p>
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa-solid fa-cow  mr-2" aria-hidden="true"></i>
+        <p>My Farm</p>
     </a>
+
+    <ul class="menu-content" style="display: none">
+
+        <li class="nav-item">
+            <a href="{{ route('farms.index') }}">
+                <p>Farms</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('plots.index') }}" >
+                <p>Plots</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('crops.index') }}" >
+                <p>Crops</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('expenses.index') }}" >
+                <p>Expenses</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('sellerProducts.index') }} "
+           >
+                <p>Seller Products</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('cropBuyers.index') }}"
+                >
+                <p>Crop Buyers</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('cropOnSales.index') }}"
+            >
+                <p>Crop On Sales</p>
+            </a>
+        </li>
+
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('traningVendorServices.index') }}"
+             >
+                <p>Traning Vendor Services</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('farmerTrainings.index') }}"
+               >
+                <p>Farmer Trainings</p>
+            </a>
+        </li>
+
+
+    </ul>
 </li>
 
-
-<li class="nav-item">
-    <a href="{{ route('traningVendorServices.index') }}"
-       class="nav-link {{ Request::is('traningVendorServices*') ? 'active' : '' }}">
-        <p>Traning Vendor Services</p>
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-user mr-2" aria-hidden="true"></i>
+        <p>Account</p>
     </a>
+
 </li>
 
-
-<li class="nav-item">
-    <a href="{{ route('farmerTrainings.index') }}"
-       class="nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
-        <p>Farmer Trainings</p>
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fas fa-cog mr-2"></i>
+        <p>Settings</p>
     </a>
+
 </li>
 
 
@@ -167,3 +213,23 @@
 
 
 
+
+
+
+
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script language="JavaScript" type="text/javascript">
+    $(".nav-item-one").click(function() {
+        $(".menu-content-two").hide();
+        $("ul", this).toggle("slow");
+    });
+
+    //$('.menu-content-two').hide();
+
+    $(".nav-item-two").click(function() {
+        $(".menu-content").hide();
+        $("ul", this).toggle("slow");
+    });
+</script>

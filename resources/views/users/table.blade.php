@@ -22,7 +22,7 @@
                     <td>{{ $user->first_name }}</td>
                     <td>{{ $user->last_name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->country->name }}</td>
+                    <td>{{ $user->country_id }}</td>
                     <td>{{ $user->phone }}</td>
                     <td>{{ $user->user_type }}</td>
 

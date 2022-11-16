@@ -62,6 +62,7 @@ class PlotAPIController extends AppBaseController
             $success['size_unit'] = $request->size_unit;
             $success['farm'] = $plot->farm;
             $success['crop'] = $plot->crop;
+            $success['district'] = $plot->district->name;
 
             $response = [
                 'success'=>true,
@@ -133,12 +134,12 @@ class PlotAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdatePlotAPIRequest $request)
+    public function update($id,Request $request)
     {
         $input = $request->all();
 
         /** @var Plot $plot */
-        $plot = $this->plotRepository->find($id);
+        $plot =  Plot::find($id);
 
         if (empty($plot)) {
             return $this->sendError('Plot not found');
