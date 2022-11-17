@@ -31,10 +31,10 @@
     <![endif]-->
 
 </head>
-<body class="hold-transition login-page bg-success">
+<body class="hold-transition login-page bg-success" style="background-image: url('https://media.istockphoto.com/id/1308606393/photo/corn-field-in-agricultural-garden-and-light-shines-sunset.jpg?b=1&s=170667a&w=0&k=20&c=KcQPWv5gUPQbIlmfmBGuQxx4YkoJRY9sy7HV0Mypkso=');background-repeat: no-repeat;background-size: cover;">
 <div class="login-box">
     <div class="login-logo">
-        <a class="text-white" href="{{ url('/home') }}"><b>Digi Farm</b></a>
+        <a class="text-dark font-weight-bold" href="{{ url('/home') }}"><b>Digi Farmer</b></a>
     </div>
 
     <!-- /.login-logo -->
