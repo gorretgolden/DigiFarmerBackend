@@ -30,7 +30,7 @@ class CropController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $crops = $this->cropRepository->all();
+        $crops = Crop::latest()->paginate(6);
 
         return view('crops.index')
             ->with('crops', $crops);
@@ -134,7 +134,7 @@ class CropController extends AppBaseController
      */
     public function update($id, UpdateCropRequest $request)
     {
-        $crop = $this->cropRepository->find($id);
+        $crop = Crop::find($id);
 
         if (empty($crop)) {
             Flash::error('Crop not found');
@@ -142,7 +142,19 @@ class CropController extends AppBaseController
             return redirect(route('crops.index'));
         }
 
-        $crop = $this->cropRepository->update($request->all(), $id);
+        if($crop){
+
+            $crop->name = $request->name;
+            $crop->sub_category_id = $request->sub_category_id;
+            $crop->standard_price = $request->standard_price;
+            $crop->price_unit = $request->price_unit;
+
+            if(!empty($request->file('image'))){
+                $crop->image = \App\Models\ImageUploader::upload($request->file('image'),'crops');
+            }
+            $crop->save();
+
+        }
 
         Flash::success('Crop updated successfully.');
 

@@ -4,16 +4,16 @@
     <p>{{ $crop->name }}</p>
 </div>
 
-<!-- Farm Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('farm_id', 'Farm Id:') !!}
-    <p>{{ $crop->farm_id }}</p>
-</div>
+<!-- Standard Price Field -->
 
+<div class="col-sm-12">
+    {!! Form::label('standard_price', 'Standard Price:') !!}
+    <p>{{ $crop->standard_price }} {{ $crop->price_unit}}</p>
+</div>
 <!-- Category Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('category_id', 'Category Id:') !!}
-    <p>{{ $crop->category_id }}</p>
+    {!! Form::label('sub_category_id', 'Sub Category :') !!}
+    <p>{{ $crop->sub_category->name }}</p>
 </div>
 
 <!-- Image Field -->

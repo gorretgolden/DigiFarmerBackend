@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "consoletvs/charts": "6.*",
         "darkaonline/l5-swagger": "^8.4",
         "doctrine/dbal": "~2.3",
         "fruitcake/laravel-cors": "^2.0",

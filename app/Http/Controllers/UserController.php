@@ -166,9 +166,11 @@ class UserController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateUserRequest $request)
+    public function update($id, Request $request)
     {
-        $user = $this->userRepository->find($id);
+
+        $request->validate(User::$rules);
+        $user = User::find($id);
 
         if (empty($user)) {
             Flash::error('User not found');
@@ -176,7 +178,24 @@ class UserController extends AppBaseController
             return redirect(route('users.index'));
         }
 
-        $user = $this->userRepository->update($request->all(), $id);
+
+        if($user){
+
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->country_id = $request->country_id;
+            $user->phone = $request->phone;
+            $user->user_type = $request->user_type;
+            $user->image_url = $request->image_url;
+            $password = $request->password;
+            $user->password = Hash::make($password);
+
+            if(!empty($request->file('image_url'))){
+                $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
+            }
+            $user->save();
+        }
 
         Flash::success('User updated successfully.');
 

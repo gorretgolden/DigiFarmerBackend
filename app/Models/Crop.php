@@ -30,7 +30,8 @@ class Crop extends Model
         'name',
         'standard_price',
         'sub_category_id',
-        'image'
+        'image',
+        'price_unit'
     ];
 
     /**
@@ -42,7 +43,9 @@ class Crop extends Model
         'name' => 'string',
         'standard_price' => 'integer',
         'sub_category_id' => 'integer',
-        'image' => 'string'
+        'image' => 'string',
+        'price_unit'=>'string'
+
     ];
 
     /**
@@ -54,7 +57,8 @@ class Crop extends Model
         'name' => 'required|string|max:100',
         'standard_price' => 'required',
         'sub_category_id' => 'required|integer',
-        'image' => 'nullable'
+        'image' => 'nullable',
+        'price_unit'=>'required|string'
     ];
 
      //a crop belongs to a sub category

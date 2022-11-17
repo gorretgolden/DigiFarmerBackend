@@ -1,5 +1,5 @@
 <li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+    <a href="{{url('/home')}}" class="waves-effect nav-link">
         <p>Dashboard</p>
     </a>
 

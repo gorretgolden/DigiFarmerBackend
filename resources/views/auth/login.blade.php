@@ -33,16 +33,16 @@
 
 </head>
 
-<body class="hold-transition login-page bg-success">
+<body class="hold-transition login-page bg-success" style="background-image: url('https://media.istockphoto.com/id/1308606393/photo/corn-field-in-agricultural-garden-and-light-shines-sunset.jpg?b=1&s=170667a&w=0&k=20&c=KcQPWv5gUPQbIlmfmBGuQxx4YkoJRY9sy7HV0Mypkso=');background-repeat: no-repeat;background-size: cover; ">
     <div class="login-box">
         <div class="login-logo">
-            <a class="text-white" href="{{ url('/home') }}"><b>Digi Farm</b></a>
+            <a class="text-dark font-weight-bold" href="{{ url('/home') }}"><b>Digi Farmer</b></a>
         </div>
 
         <!-- /.login-logo -->
 
         <!-- /.login-box-body -->
-        <div class="card">
+        <div class="card bd-light shadow-sm">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
 
@@ -83,37 +83,40 @@
 
                     </div>
                     <div class="row mt-2">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="icheck-primary">
                                 <input type="checkbox" id="remember">
                                 <label for="remember">Remember Me</label>
                             </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <p class="float-right">
+                                <a href="{{ route('password.request') }}">
+                                    <p class="text-success ">Forgot your password?</p>
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </form>
 
                 <div class="row">
 
-                    <div class="col-12">
+                    {{-- <div class="col-12">
                         <p class="mb-0">
                             <a href="{{ route('register') }}" class="text-center text-dark">
                                 Dont have an account? | Create an account
                             </a>
                         </p>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="row">
                     <div class="col-12">
 
-                        <p class="mt-1 text-center">
-                            <a href="{{ route('password.request') }}">
-                                <small class="text-success ">Forgot your password</small>
-                            </a>
-                        </p>
 
-                        <a href="{{url('/auth/google/redirect') }}">
-                            Google
-                           </a>
+
+
                     </div>
                 </div>
             </div>

@@ -34,7 +34,7 @@
                             {!! Form::button('<i class="far fa-trash-alt"></i>', [
                                 'type' => 'submit',
                                 'class' => 'btn btn-danger btn-xs',
-                                'onclick' => "return confirm('Are you sure?')",
+                                'onclick' => "return confirm('Are you sure you want to delete $crop->name ?')",
                             ]) !!}
                         </div>
                         {!! Form::close() !!}
@@ -43,4 +43,8 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="float-right">
+        {{ $crops->links() }}
+    </div>
 </div>

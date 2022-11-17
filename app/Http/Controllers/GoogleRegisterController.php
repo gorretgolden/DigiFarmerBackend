@@ -36,20 +36,7 @@ class GoogleRegisterController extends Controller
         //else create a new user
         else{
 
-            $newUser = User::create(
-                [
-                    'first_name'=>$user['given_name'],
-                    'last_name'=>$user['family_name'],
-                    'email'=>$user->email,
-                    'email_verified_at'=> now(),
-                    'google_id'=>$user->id,
-                    'image'=>$user->avatar,
-
-
-                ]
-                );
-            $newUser->assignRole('farmer');
-            Auth::login($newUser,false);
+            return redirect('/login');
         }
         return redirect()->to('/home');
     }

@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->id('id');
             $table->integer('amount');
             $table->foreignId('expense_category_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->foreignId('plot_id')->nullable()->constrained();
+            $table->foreignId('plot_id')->constrained()->onDelete('CASCADE');;
             $table->timestamps();
 
         });

@@ -1,6 +1,6 @@
 
 <?php
-$users = App\Models\User::pluck('first_name','id');
+$users = App\Models\User::pluck('email','id');
 ?>
 
 <!-- Name Field -->
@@ -41,7 +41,7 @@ $users = App\Models\User::pluck('first_name','id');
 <!-- Longitude Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('longitude', 'Longitude:') !!}
-    {!! Form::number('longitude', null, ['class' => 'form-control']) !!}
+    {!! Form::text('longitude', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- User Id Field -->
