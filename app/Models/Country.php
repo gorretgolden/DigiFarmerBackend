@@ -29,7 +29,8 @@ class Country extends Model
 
     public $fillable = [
         'name',
-        'short_code'
+        'short_code',
+        'country_code'
     ];
 
     /**
@@ -39,7 +40,8 @@ class Country extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'short_code' => 'string'
+        'short_code' => 'string',
+        'country_code' => 'string'
     ];
 
     /**
@@ -49,7 +51,8 @@ class Country extends Model
      */
     public static $rules = [
         'name' => 'required|string',
-        'short_code' => 'required|string'
+        'short_code' => 'required|string',
+        'country_code' => 'required|string',
     ];
 
 

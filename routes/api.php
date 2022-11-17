@@ -15,69 +15,64 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-Route::middleware(['auth:api','cors'])->prefix('v1')->group(function () {
 
-    Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
-    Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
-    Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);
-    Route::resource('sliders', App\Http\Controllers\API\SliderAPIController::class);
-    Route::resource('seller_product_categories', App\Http\Controllers\API\SellerProductCategoryAPIController::class);
-    Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
-    Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
-    Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
-    Route::get('farm', [App\Http\Controllers\API\FarmAPIController::class,'farmUser']);
-    Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
-    Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
-    Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
-    Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
-    Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
-    Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
-    Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
+
+
+Route::group(['prefix'=>'v1'], function(){
+
+    //content routes
+    Route::resource('countries', App\Http\Controllers\API\CountryAPIController::class);
     Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
-
-});
-
-
-Route::controller(App\Http\Controllers\API\UserAPIController::class)->prefix('v1')->group(function(){
-    Route::post('users/login','login');
-    Route::post('users/create-account','createUserAccount');
-    Route::post('users/verify-otp','verifyUserOtp');
-
-});
+    Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
 
 
-Route::group(['middleware' => ['web']], function () {
-    Route::get('/users/google/redirect', function () {
-        return Socialite::driver('google')->redirect();
+    //user registration
+    Route::controller(App\Http\Controllers\API\UserAPIController::class)->group(function(){
+        Route::post('users/login','login');
+        Route::post('users/create-account','createUserAccount');
+        Route::post('users/verify-otp','verifyUserOtp');
+
     });
+
+    //user forgot password
+    Route::post('users/password/email', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'forgotPassword']);
+    Route::get('/auth/google/callback',[App\Http\Controllers\API\GoogleLoginController::class,'googleCallback']);
+
+
+    //google login
+    Route::group(['middleware' => ['web']], function () {
+        Route::get('/users/google/redirect', function () {
+            return Socialite::driver('google')->redirect();
+        });
+    });
+
+
+
+    //protected routes
+    Route::middleware(['auth:api','cors'])->group(function () {
+        Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
+        Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
+        Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);
+        Route::resource('sliders', App\Http\Controllers\API\SliderAPIController::class);
+        Route::resource('seller_product_categories', App\Http\Controllers\API\SellerProductCategoryAPIController::class);
+        Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
+        Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
+        Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
+        Route::get('farm', [App\Http\Controllers\API\FarmAPIController::class,'farmUser']);
+        Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
+        Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
+        Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
+        Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
+        Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
+        Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
+
+    });
+
+
 });
-Route::get('/auth/google/callback',[App\Http\Controllers\API\GoogleLoginController::class,'googleCallback']);
-//google login
 
 
-
-
-Route::group(['middleware' => ['api', 'auth:api']], function(){
-
-});
-
-Route::post('users/password/email', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'forgotPassword']);
-
-
-
-
-
-
-
-
-
-
-
-// Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
 
 
 

@@ -24,6 +24,7 @@ class CountryFactory extends Factory
         return [
             'name' => $this->faker->word,
         'short_code' => $this->faker->word,
+        'country_code' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

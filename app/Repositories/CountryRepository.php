@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class CountryRepository
  * @package App\Repositories
- * @version October 31, 2022, 7:45 am UTC
+ * @version November 17, 2022, 8:47 am UTC
 */
 
 class CountryRepository extends BaseRepository
@@ -18,7 +18,8 @@ class CountryRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'short_code'
+        'short_code',
+        'country_code'
     ];
 
     /**

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\CountryDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
 use App\Repositories\CountryRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
-use App\Models\Country;
 
 class CountryController extends AppBaseController
 {
@@ -24,18 +24,14 @@ class CountryController extends AppBaseController
     /**
      * Display a listing of the Country.
      *
-     * @param Request $request
+     * @param CountryDataTable $countryDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(CountryDataTable $countryDataTable)
     {
-        $countries= Country::latest()->paginate(10);
-
-        return view('countries.index')
-            ->with('countries', $countries);
+        return $countryDataTable->render('countries.index');
     }
-
 
     /**
      * Show the form for creating a new Country.
@@ -134,8 +130,6 @@ class CountryController extends AppBaseController
      * Remove the specified Country from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */
