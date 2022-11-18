@@ -55,13 +55,13 @@ class UserAPIController extends AppBaseController
  */
     public function index(Request $request)
     {
-        $users = $this->userRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($users->toArray(), 'Users retrieved successfully');
+        $users =User::with(['district','country'])->get();
+        $response = [
+            'success'=>true,
+            'data'=> $users,
+            'message'=> 'Users retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**

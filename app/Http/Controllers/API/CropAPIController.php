@@ -35,13 +35,13 @@ class CropAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $crops = $this->cropRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($crops->toArray(), 'Crops retrieved successfully');
+        $crops = Crop::with('sub_category')->get();
+        $response = [
+            'success'=>true,
+            'data'=> $crops,
+            'message'=> 'crops retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -69,6 +69,8 @@ class CropAPIController extends AppBaseController
      *
      * @return Response
      */
+
+
     public function show($id)
     {
         /** @var Crop $crop */

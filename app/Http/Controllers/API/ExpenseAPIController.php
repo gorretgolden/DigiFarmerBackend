@@ -34,13 +34,13 @@ class ExpenseAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $expenses = $this->expenseRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($expenses->toArray(), 'Expenses retrieved successfully');
+        $expenses =Expense::with(['plot','expense_category'])->get();
+        $response = [
+            'success'=>true,
+            'data'=> $expenses,
+            'message'=> 'Expenses retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -68,7 +68,7 @@ class ExpenseAPIController extends AppBaseController
                 'message'=> 'An expense with this expense category exists'
              ];
 
-             return response()->json($response);
+             return response()->json($response,409);
         }
 
 
