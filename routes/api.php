@@ -68,11 +68,14 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
         Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
         Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
-
+        Route::resource('crop_harvests', App\Http\Controllers\API\CropHarvestAPIController::class);
     });
 
 
 });
+
+
+
 
 
 
