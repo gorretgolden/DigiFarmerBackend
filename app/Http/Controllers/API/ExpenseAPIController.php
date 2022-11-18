@@ -54,10 +54,24 @@ class ExpenseAPIController extends AppBaseController
     public function store(CreateExpenseAPIRequest $request)
     {
         $input = $request->all();
+        $existing_expense = Expense::where('expense_category_id',$request->expense_category_id)->first();
+        if(!$existing_expense){
+            $expense = $this->expenseRepository->create($input);
 
-        $expense = $this->expenseRepository->create($input);
+            return $this->sendResponse($expense->toArray(), 'Expense saved successfully');
+        }
+        else{
 
-        return $this->sendResponse($expense->toArray(), 'Expense saved successfully');
+            $response = [
+                'success'=>false,
+
+                'message'=> 'An expense with this expense category exists'
+             ];
+
+             return response()->json($response);
+        }
+
+
     }
 
     /**

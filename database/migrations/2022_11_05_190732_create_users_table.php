@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('image_url')->nullable();
             $table->string('phone')->unique()->nullable();
             $table->integer('otp')->nullable();
+            $table->boolean('isAdmin')->nullable();
             $table->boolean('is_verified_otp')->default(false);
             $table->enum('user_type',['admin','farmer','seller','vendor','delivery-man'])->default('farmer');
             $table->foreignId('country_id')->nullable()->constrained()->onDelete('CASCADE');

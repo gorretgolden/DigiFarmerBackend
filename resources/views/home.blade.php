@@ -113,7 +113,7 @@
                             <div class="row">
                                 <div class="col-md-6 float-left">
                                     <h2>30</h2>
-                                    <small>Actors</small>
+                                    <small>Sellers</small>
 
                                 </div>
 
@@ -130,7 +130,7 @@
                     <div class="card-header">
                         <div class="card-body text-center">
                             <h2>20</h2>
-                            <small>Genres</small>
+                            <small>Plots</small>
 
                         </div>
                     </div>

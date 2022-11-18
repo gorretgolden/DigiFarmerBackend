@@ -33,4 +33,8 @@ class HomeController extends Controller
 
         return view('home',compact('total_farmers','total_buyers','total_farms','total_crops'));
     }
+
+    public function admin(){
+        return view('admin-restriction');
+    }
 }

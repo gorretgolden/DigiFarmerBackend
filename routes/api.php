@@ -26,12 +26,13 @@ Route::group(['prefix'=>'v1'], function(){
     Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
     Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
 
-
     //user registration
     Route::controller(App\Http\Controllers\API\UserAPIController::class)->group(function(){
         Route::post('users/login','login');
         Route::post('users/create-account','createUserAccount');
         Route::post('users/verify-otp','verifyUserOtp');
+        Route::post('users/check-phone-number','checkPhoneNumber');
+        Route::post('users/check-password','checkPassword');
 
     });
 
@@ -66,11 +67,14 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
         Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
         Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
+        Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
 
     });
 
 
 });
+
+
 
 
 

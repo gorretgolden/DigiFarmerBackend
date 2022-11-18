@@ -122,6 +122,7 @@
 
         <li class="nav-item">
             <a href="{{ route('farms.index') }}">
+                <i class="fas fa-flower mr-2" aria-hidden="true"></i>
                 <p>Farms</p>
             </a>
         </li>

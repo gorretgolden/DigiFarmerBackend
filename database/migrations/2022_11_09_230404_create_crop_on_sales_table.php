@@ -17,11 +17,12 @@ class CreateCropOnSalesTable extends Migration
         Schema::create('crop_on_sales', function (Blueprint $table) {
             $table->id('id');
             $table->integer('quantity');
+            $table->string('quantity_unit');
             $table->integer('selling_price');
             $table->string('price_unit');
             $table->text('description');
             $table->string('image');
-            $table->string('status');
+            $table->boolean('is_sold')->default(false);
             $table->foreignId('crop_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();

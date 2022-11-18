@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCropBuyersTable extends Migration
+class CreateFarmerBuySellerProductsTable extends Migration
 {
 
     /**
@@ -14,16 +14,12 @@ class CreateCropBuyersTable extends Migration
      */
     public function up()
     {
-        Schema::create('crop_buyers', function (Blueprint $table) {
+        Schema::create('farmer_buy_seller_products', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('buying_price');
-            $table->boolean('has_bought')->default(false);
-            $table->boolean('is_accepted')->default(false);
-            $table->foreignId('crop_on_sale')->constrained();
+            $table->boolean('is_product_bought');
+            $table->foreignId('seller_product_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
-
-
         });
     }
 
@@ -34,6 +30,6 @@ class CreateCropBuyersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('crop_buyers');
+        Schema::drop('farmer_buy_seller_products');
     }
 }

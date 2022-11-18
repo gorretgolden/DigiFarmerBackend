@@ -118,8 +118,9 @@ class UserAPIController extends AppBaseController
             $user->last_name = $request->last_name;
             $user->email = $request->email;
             $user->country_id = (int)$request->country_id;
-          //  $user->district_id = (int)$request->district_id;
+            $user->district_id = (int)$request->district_id;
             $user->phone = $request->phone;
+            $user->isAdmin = 0;
             $user->image_url = $request->image_url;
             $user->user_type = $request->user_type;
             $password = $request->password;
@@ -147,6 +148,7 @@ class UserAPIController extends AppBaseController
              $user->save();
              $user_token = Str::random(60);
              $success['token'] = $user->createToken($user_token)->plainTextToken;
+             $success['id'] = $user->id;
              $success['first_name'] = $user->first_name;
              $success['last_name'] = $user->last_name;
              $success['email'] = $user->email;
@@ -154,7 +156,7 @@ class UserAPIController extends AppBaseController
              $success['user_type'] = $user->user_type;
              $success['image_url'] = $user->image_url;
              $success['country'] = $user->country->name;
-           //  $success['district'] = $user->district->name;
+             $success['district'] = $user->district->name;
 
              $user = User::find($user->id);
 
@@ -209,7 +211,7 @@ class UserAPIController extends AppBaseController
 
           $response = [
             'success'=>false,
-            'message'=> 'An error occured'
+            'message'=> 'Invalid Otp'
          ];
          return response()->json($response);
         }
@@ -221,14 +223,52 @@ class UserAPIController extends AppBaseController
 
     public function login(Request $request){
 
-         if (!Auth::attempt($request->only('email', 'password'))) {
+         if (!Auth::attempt($request->only('phone', 'password'))) {
              return response()->json([ 'message' => 'Invalid login details' ], 401);
            }
 
-         $user = User::where('email', $request['email'])->firstOrFail();
+         $user = User::where('phone', $request['phone'])->firstOrFail();
          $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json(['access_token' => $token,'token_type' => 'Bearer Token',    ]);
     }
+
+
+
+    public function checkPhoneNumber(Request $request){
+
+
+
+       if($user_phone_number){
+        $response = [
+            'success'=>true,
+            'message'=> 'Phone number verified successfully'
+         ];
+         return response()->json($response,200);
+       }
+       else{
+
+        $response = [
+            'success'=>false,
+            'message'=> 'Phone number does not exist'
+         ];
+         return response()->json($response);
+       }
+
+   }
+
+
+   public function checkPassword(Request $request,$phone){
+
+
+    $user_password = User::where('phone',$phone)->first();
+    if(Hash::check($request->password, $user->password)) {
+        return response()->json(['status'=>'true','message'=>'User password exists']);
+    } else {
+        return response()->json(['status'=>'false', 'message'=>'Password doesnt exist']);
+    }
+
+
+}
 
 
     public function loggedInUser(Request $request){

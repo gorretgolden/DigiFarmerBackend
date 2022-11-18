@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Expense;
 
 class ExpenseController extends AppBaseController
 {
@@ -56,10 +57,18 @@ class ExpenseController extends AppBaseController
     {
         $input = $request->all();
 
+        $existing_expense = Expense::where('expense_category_id',$request->expense_category_id)->first();
 
-        $expense = $this->expenseRepository->create($input);
+        if(!$existing_expense){
+            $expense = $this->expenseRepository->create($input);
 
-        Flash::success('Expense saved successfully.');
+           Flash::success('Expense saved successfully.');
+        }
+        else{
+            Flash::error('An expense with this expense category exists.');
+        }
+
+
 
         return redirect(route('expenses.index'));
     }

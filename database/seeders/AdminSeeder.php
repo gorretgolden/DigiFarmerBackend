@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -16,14 +17,16 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
+        $password = "#golden@";
         $admin = User::create([
             'first_name'=>'admin',
             'last_name'=>'admin',
             'email'=>'admin@gmail.com',
             'phone'=>'0751547654',
-            'password'=>bcrypt('#golden@'),
+            'password'=> Hash::make($password),
             'user_type'=>'admin',
-            'country_id'=> 225
+            'country_id'=> 225,
+            'isAdmin' => 1
 
         ]);
 
