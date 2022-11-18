@@ -34,13 +34,13 @@ class PlotAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $plots = $this->plotRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($plots->toArray(), 'Plots retrieved successfully');
+        $plots = Plot::with(['farm','crop','district'])->get();
+        $response = [
+            'success'=>true,
+            'data'=> $plots,
+            'message'=> 'Plots retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -79,7 +79,7 @@ class PlotAPIController extends AppBaseController
                 'message'=> 'Plot name  or crop on the plot already exits'
              ];
 
-             return response()->json($response,401);
+             return response()->json($response,409);
 
         }
 
