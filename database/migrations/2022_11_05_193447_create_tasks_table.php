@@ -16,6 +16,7 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('reminder_date');
             $table->foreignId('plot_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
 

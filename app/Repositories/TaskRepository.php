@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class TaskRepository
  * @package App\Repositories
- * @version November 12, 2022, 10:29 am UTC
+ * @version November 18, 2022, 2:44 am UTC
 */
 
 class TaskRepository extends BaseRepository
@@ -18,6 +18,7 @@ class TaskRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
+        'reminder_date',
         'plot_id'
     ];
 

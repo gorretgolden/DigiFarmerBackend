@@ -34,13 +34,21 @@ class TaskAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $tasks = $this->taskRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        // $tasks = $this->taskRepository->all(
+        //     $request->except(['skip', 'limit']),
+        //     $request->get('skip'),
+        //     $request->get('limit')
+        // );
 
-        return $this->sendResponse($tasks->toArray(), 'Tasks retrieved successfully');
+        // return $this->sendResponse($tasks->toArray(), 'Tasks retrieved successfully');
+
+        $tasks = Task::with('plot')->get();
+        $response = [
+            'success'=>true,
+            'data'=> $tasks,
+            'message'=> 'Tasks retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -54,22 +62,10 @@ class TaskAPIController extends AppBaseController
     public function store(CreateTaskAPIRequest $request)
     {
         $input = $request->all();
-        $existing_task = Task::where('name',$request->name)->first();
-        if(!$existing_task){
-            $task = $this->taskRepository->create($input);
-            return $this->sendResponse($task->toArray(), 'Task saved successfully');
-        }
-        else{
-            $response = [
-                'success'=>false,
-                'message'=> 'The task name already exists'
-             ];
-             return response()->json($response);
-        }
 
+        $task = $this->taskRepository->create($input);
 
-
-
+        return $this->sendResponse($task->toArray(), 'Task saved successfully');
     }
 
     /**

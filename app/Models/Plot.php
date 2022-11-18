@@ -92,4 +92,11 @@ class Plot extends Model
       {
          return $this->hasMany(\App\Models\Expense::class,'plot_id');
       }
+
+
+         //a plot has many Tasks
+         public function tasks()
+         {
+            return $this->hasMany(\App\Models\Task::class,'plot_id');
+         }
 }
