@@ -54,10 +54,22 @@ class TaskAPIController extends AppBaseController
     public function store(CreateTaskAPIRequest $request)
     {
         $input = $request->all();
+        $existing_task = Task::where('name',$request->name)->first();
+        if(!$existing_task){
+            $task = $this->taskRepository->create($input);
+            return $this->sendResponse($task->toArray(), 'Task saved successfully');
+        }
+        else{
+            $response = [
+                'success'=>false,
+                'message'=> 'The task name already exists'
+             ];
+             return response()->json($response);
+        }
 
-        $task = $this->taskRepository->create($input);
 
-        return $this->sendResponse($task->toArray(), 'Task saved successfully');
+
+
     }
 
     /**
