@@ -18,8 +18,12 @@ class CreateCropBuyersTable extends Migration
             $table->id('id');
             $table->integer('buying_price');
             $table->boolean('has_bought')->default(false);
+            $table->string('contact_one');
+            $table->string('contact_two')->nullable();
+            $table->string('email');
+            $table->text('description');
             $table->boolean('is_accepted')->default(false);
-            $table->foreignId('crop_on_sale')->constrained();
+            $table->foreignId('crop_on_sale_id')->constrained();
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
 

@@ -70,11 +70,15 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
         Route::resource('crop_harvests', App\Http\Controllers\API\CropHarvestAPIController::class);
         Route::resource('market/crops_on_sales', App\Http\Controllers\API\CropOnSaleAPIController::class);
+        Route::resource('market/crop_buyers', App\Http\Controllers\API\CropBuyerAPIController::class);
 
     });
 
 
 });
+
+
+
 
 
 

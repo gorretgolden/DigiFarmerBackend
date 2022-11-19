@@ -75,10 +75,16 @@ class CropOnSale extends Model
 
     ];
 
-   //a crop  on sale belongs to a crop
-   public function crop()
+
+     //a crop on sale belongs to a crop
+     public function crop()
+     {
+        return $this->belongsTo(\App\Models\Crop::class,'crop_id');
+     }
+   //a crop  on sale belongs to many crop buyers
+   public function buyers()
    {
-      return $this->belongsTo(\App\Models\Crop::class,'crop_id');
+      return $this->belongsToMany(\App\Models\CropBuyer::class);
    }
 
    //a crop on sale belongs to a user

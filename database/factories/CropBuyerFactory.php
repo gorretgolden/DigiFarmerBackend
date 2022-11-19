@@ -23,9 +23,13 @@ class CropBuyerFactory extends Factory
     {
         return [
             'buying_price' => $this->faker->randomDigitNotNull,
+        'has_bought' => $this->faker->word,
+        'contact_one' => $this->faker->word,
+        'contact_two' => $this->faker->word,
+        'email' => $this->faker->word,
+        'is_accepted' => $this->faker->word,
         'crop_on_sale_id' => $this->faker->randomDigitNotNull,
-        'status' => $this->faker->word,
-        'is_bought' => $this->faker->word,
+        'user_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

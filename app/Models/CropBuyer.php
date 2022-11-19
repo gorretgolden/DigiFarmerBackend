@@ -32,8 +32,13 @@ class CropBuyer extends Model
     public $fillable = [
         'buying_price',
         'crop_on_sale_id',
-        'status',
-        'is_bought'
+        'is_accepted',
+        'is_bought',
+        'contact_one',
+        'contact_two',
+        'description',
+        'email',
+        'user_id'
     ];
 
     /**
@@ -44,8 +49,13 @@ class CropBuyer extends Model
     protected $casts = [
         'buying_price' => 'integer',
         'crop_on_sale_id' => 'integer',
-        'status' => 'string',
-        'is_bought' => 'boolean'
+        'is_accepted' => 'boolean',
+        'is_bought' => 'boolean',
+        'contact_one' => 'string',
+        'contact_two' => 'string',
+        'email' => 'string',
+        'description' => 'string',
+        'user_id' => 'integer'
     ];
 
     /**
@@ -54,11 +64,21 @@ class CropBuyer extends Model
      * @var array
      */
     public static $rules = [
-        'buying_price' => 'required',
-        'crop_on_sale_id' => 'required',
-        'status' => 'required',
-        'is_bought' => 'nullable'
+        'buying_price' => 'required|integer',
+        'crop_on_sale_id' => 'required|integer',
+        'contact_one' => 'string|required',
+        'contact_two' => 'string|nullable',
+        'email' => 'string|required',
+        'description' => 'string',
+        'is_bought' => 'nullable',
+        'is_accepted' => 'nullable'
     ];
 
+
+  //a crop buyer has many crops on sale
+   public function crops_on_sale()
+   {
+      return $this->hasMany(\App\Models\CropOnSale::class,'crop_on_sale_id');
+   }
 
 }
