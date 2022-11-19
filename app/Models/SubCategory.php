@@ -52,6 +52,12 @@ class SubCategory extends Model
         'category_id' => 'required|integer'
     ];
 
+
+      //a subcategory belongs to a category
+      public function category()
+      {
+          return $this->belongsTo(\App\Models\Category::class, 'category_id');
+      }
      //a sub_category has many crops
      public function crops()
      {

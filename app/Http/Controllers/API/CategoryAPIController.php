@@ -57,15 +57,13 @@ class CategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-
-
-        $categories = $this->categoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($categories->toArray(), 'Categories retrieved successfully');
+        $categories = Category::with('sub_categories')->get();
+        $response = [
+            'success'=>true,
+            'data'=> $categories,
+            'message'=> 'Categories retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -99,9 +97,22 @@ class CategoryAPIController extends AppBaseController
     {
         /** @var Category $category */
         $category = $this->categoryRepository->find($id);
+        $sub_categories = $category->sub_categories;
+       // dd( $category->sub_categories);
 
         if (empty($category)) {
             return $this->sendError('Category not found');
+        }
+        else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'category'=> $category,
+                     'sub_categories' => $sub_categories
+                ],
+
+                'message'=> 'Crop details retrieved successfully'
+             ];
         }
 
         return $this->sendResponse($category->toArray(), 'Category retrieved successfully');

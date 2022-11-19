@@ -16,14 +16,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Category extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'categories';
-    
 
-    protected $dates = ['deleted_at'];
+
+
 
 
 
@@ -52,5 +52,11 @@ class Category extends Model
         'image' => 'nullable'
     ];
 
-    
+
+    //a category has many sub_categories
+    public function sub_categories()
+    {
+        return $this->hasMany(\App\Models\SubCategory::class, 'category_id');
+    }
+
 }

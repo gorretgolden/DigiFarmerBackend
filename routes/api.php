@@ -69,10 +69,14 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
         Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
         Route::resource('crop_harvests', App\Http\Controllers\API\CropHarvestAPIController::class);
+        Route::resource('market/crops_on_sales', App\Http\Controllers\API\CropOnSaleAPIController::class);
+
     });
 
 
 });
+
+
 
 
 

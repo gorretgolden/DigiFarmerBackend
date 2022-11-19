@@ -119,6 +119,12 @@ class User extends Authenticable implements  MustVerifyEmail
          return $this->hasMany(\App\Models\Farm::class, 'user_id');
      }
 
+       //a user has many crops on sale
+       public function crops_on_sale()
+       {
+           return $this->hasMany(\App\Models\CropOnSale::class, 'user_id');
+       }
+
 
      public function sendPasswordResetNotification($token)
      {

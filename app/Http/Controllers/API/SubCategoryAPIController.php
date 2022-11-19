@@ -34,13 +34,13 @@ class SubCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $subCategories = $this->subCategoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($subCategories->toArray(), 'Sub Categories retrieved successfully');
+        $sub_categories = SubCategory::with('category')->get();
+        $response = [
+            'success'=>true,
+            'data'=> $sub_categories,
+            'message'=> 'Sub_categories retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -72,12 +72,26 @@ class SubCategoryAPIController extends AppBaseController
     {
         /** @var SubCategory $subCategory */
         $subCategory = $this->subCategoryRepository->find($id);
+        $crops = $subCategory->crops;
 
         if (empty($subCategory)) {
             return $this->sendError('Sub Category not found');
         }
+        else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'sub_category'=> $subCategory,
+                     'crops' => $crops
+                ],
 
-        return $this->sendResponse($subCategory->toArray(), 'Sub Category retrieved successfully');
+                'message'=> 'Sub category details retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
     }
 
     /**

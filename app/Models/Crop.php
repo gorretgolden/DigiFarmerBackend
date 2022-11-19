@@ -61,6 +61,14 @@ class Crop extends Model
         'price_unit'=>'required|string'
     ];
 
+
+
+       //a crop has many crops on sale
+       public function crops_on_sale()
+       {
+          return $this->hasMany(\App\Models\CropOnSale::class,'crop_id');
+       }
+
      //a crop belongs to a sub category
      public function sub_category()
      {

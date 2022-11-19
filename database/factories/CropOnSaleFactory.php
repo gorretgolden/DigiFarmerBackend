@@ -23,11 +23,12 @@ class CropOnSaleFactory extends Factory
     {
         return [
             'quantity' => $this->faker->randomDigitNotNull,
+        'quantity_unit' => $this->faker->word,
         'selling_price' => $this->faker->randomDigitNotNull,
-        'price_unit' => $this->faker->word,
+        'price_Uunit' => $this->faker->word,
         'description' => $this->faker->text,
         'image' => $this->faker->word,
-        'status' => $this->faker->word,
+        'is_sold' => $this->faker->word,
         'crop_id' => $this->faker->randomDigitNotNull,
         'user_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
