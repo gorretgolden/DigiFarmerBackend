@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
-class CropBuyerController extends AppBaseController
+class CropOrderController extends AppBaseController
 {
     /** @var CropBuyerRepository $cropBuyerRepository*/
     private $cropBuyerRepository;

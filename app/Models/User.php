@@ -125,8 +125,20 @@ class User extends Authenticable implements  MustVerifyEmail
            return $this->hasMany(\App\Models\CropOnSale::class, 'user_id');
        }
 
+         //a user has one crop buyer
+      public function crop_buyer()
+      {
+          return $this->hasOne(\App\Models\CropBuyer::class, 'user_id');
+      }
 
-     public function sendPasswordResetNotification($token)
+      //a user has many through crop orders
+
+      public function crop_orders()
+      {
+          $this->hasManyThrough(\App\Models\CropOrder::class, \App\Models\CropOnSale::class, 'user_id', 'crop_on_sale_id');
+      }
+
+      public function sendPasswordResetNotification($token)
      {
 
          $url = 'https://spa.test/reset-password?token=' . $token;

@@ -44,8 +44,8 @@
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_buyers}}</h2>
-                                    <p>Buyers</p>
+                                    <h2>{{$total_sellers}}</h2>
+                                    <p>Sellers</p>
                                 </div>
 
                             </div>

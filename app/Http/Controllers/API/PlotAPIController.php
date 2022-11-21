@@ -9,6 +9,7 @@ use App\Repositories\PlotRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\CropHarvest;
 
 /**
  * Class PlotController
@@ -34,7 +35,7 @@ class PlotAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $plots = Plot::with(['farm','crop','district'])->get();
+        $plots = Plot::with(['farm','crop','crop_harvests','district'])->get();
         $response = [
             'success'=>true,
             'data'=> $plots,
@@ -75,7 +76,7 @@ class PlotAPIController extends AppBaseController
         }
         else{
             $response = [
-                'success'=>true,
+                'success'=>false,
                 'message'=> 'Plot name  or crop on the plot already exits'
              ];
 
@@ -101,6 +102,7 @@ class PlotAPIController extends AppBaseController
     {
         /** @var Plot $plot */
         $plot = Plot::find($id);
+        $totalPlotHarvest =  CropHarvest::where('plot_id',$id)->sum('quantity');
 
         if (empty($plot)) {
             return $this->sendError('Plot not found');
@@ -112,10 +114,15 @@ class PlotAPIController extends AppBaseController
             $success['district'] = $plot->district->name;
             $success['farm'] = $plot->farm;
             $success['crop'] = $plot->crop;
+            $success['crop-harvests'] = $plot->crop_harvests;
+            $success['total-harvest'] = $totalPlotHarvest;
 
             $response = [
                 'success'=>true,
-                'data'=> $success,
+                'data'=>[
+                    'success'=>$success
+
+                ],
                 'message'=> 'Plot details retrieved successfully'
              ];
 

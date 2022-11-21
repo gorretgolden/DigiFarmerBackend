@@ -36,7 +36,7 @@ class CropOnSaleAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cropsOnSale = CropOnSale::with('user','crop')->get();
+        $cropsOnSale = CropOnSale::with('user','crop','crop_buyers')->get();
         $response = [
             'success'=>true,
             'data'=> $cropsOnSale,

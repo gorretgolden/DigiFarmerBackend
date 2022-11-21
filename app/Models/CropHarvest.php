@@ -52,8 +52,14 @@ class CropHarvest extends Model
     public static $rules = [
         'plot_id' => 'required|integer',
         'quantity' => 'required|integer',
-        'quantity_unit' => 'required|string'
+
     ];
+
+     //a crop harvest belongs to a plot
+     public function plot()
+     {
+        return $this->belongsTo(\App\Models\Plot::class,'plot_id');
+     }
 
 
 }

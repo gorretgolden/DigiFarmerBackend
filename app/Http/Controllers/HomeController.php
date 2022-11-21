@@ -27,11 +27,11 @@ class HomeController extends Controller
     public function index()
     {
         $total_farmers = User::where('user_type','=','farmer')->count();
-        $total_buyers = User::where('user_type','=','buyer')->count();
+        $total_sellers = User::where('user_type','=','seller')->count();
         $total_farms = Farm::all()->count();
         $total_crops = Crop::all()->count();
 
-        return view('home',compact('total_farmers','total_buyers','total_farms','total_crops'));
+        return view('home',compact('total_farmers','total_sellers','total_farms','total_crops'));
     }
 
     public function admin(){

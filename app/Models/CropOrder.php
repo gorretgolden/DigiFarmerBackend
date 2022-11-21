@@ -16,22 +16,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $status
  * @property boolean $is_bought
  */
-class CropBuyer extends Model
+class CropOrder extends Model
 {
 
 
     use HasFactory;
 
-    public $table = 'crop_buyers';
-
-
-
-
+    public $table = 'crop_orders';
 
 
     public $fillable = [
         'buying_price',
-        'crop_on_sale_id',
         'is_accepted',
         'is_bought',
         'contact_one',
@@ -48,7 +43,6 @@ class CropBuyer extends Model
      */
     protected $casts = [
         'buying_price' => 'integer',
-        'crop_on_sale_id' => 'integer',
         'is_accepted' => 'boolean',
         'is_bought' => 'boolean',
         'contact_one' => 'string',
@@ -65,7 +59,6 @@ class CropBuyer extends Model
      */
     public static $rules = [
         'buying_price' => 'required|integer',
-        'crop_on_sale_id' => 'required|integer',
         'contact_one' => 'string|required',
         'contact_two' => 'string|nullable',
         'email' => 'string|required',
@@ -75,10 +68,22 @@ class CropBuyer extends Model
     ];
 
 
-  //a crop buyer has many crops on sale
+  //a crop order belongs to many crops on sale
    public function crops_on_sale()
    {
-      return $this->hasMany(\App\Models\CropOnSale::class,'crop_on_sale_id');
+      return $this->belongsToMany(\App\Models\CropOnSale::class,'crop_on_sale_crop_order');
    }
+
+
+     //a  crop order belongs to a user
+     public function user()
+     {
+         return $this->belongsTo(\App\Models\User::class, 'user_id');
+     }
+
+     //a crop order has many crop onsale crop orders
+     public function orders(){
+        return $this->hasMany(\App\Models\CropOnSaleCropOrder::class, 'crop_on_sale_id');
+    }
 
 }

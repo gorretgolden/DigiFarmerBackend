@@ -55,23 +55,33 @@ class CropHarvestAPIController extends AppBaseController
     {
 
         $input = $request->all();
-        $existing_harvest = CropHarvest::where('plot_id',$request->plot_id)->first();
-        if(!$existing_harvest){
+        //$existing_harvest = CropHarvest::where('plot_id',$request->plot_id)->first();
 
-            $cropHarvest = $this->cropHarvestRepository->create($input);
 
-            return $this->sendResponse($cropHarvest->toArray(), 'Crop Harvest saved successfully');
-        }
-        else{
-            $response = [
-                'success'=>false,
-                'message'=> 'The plot harvest exists, update the quantity'
-             ];
-             return response()->json($response);
-        }
+        $cropHarvest = $this->cropHarvestRepository->create($input);
 
+        return $this->sendResponse($cropHarvest->toArray(), 'Crop Harvest saved successfully');
 
     }
+
+    public function getTotalHarvestForPlot(Request $request,$id)
+    {
+
+        $totalPlotHarvest =  CropHarvest::where('plot_id',$id)->sum('quantity');
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-harvest'=> $totalPlotHarvest,
+                'harvest-unit' => 'kg'
+            ],
+            'message'=> 'Total plot harvest retrieved'
+         ];
+
+         return response()->json($response,200);
+
+    }
+
 
     /**
      * Display the specified CropHarvest.

@@ -17,7 +17,7 @@ class CreateCropHarvestsTable extends Migration
         Schema::create('crop_harvests', function (Blueprint $table) {
             $table->id('id');
             $table->integer('quantity');
-            $table->string('quantity_unit');
+            $table->string('quantity_unit')->default('kg');
             $table->foreignId('plot_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
 

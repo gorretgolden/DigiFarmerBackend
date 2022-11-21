@@ -99,4 +99,11 @@ class Plot extends Model
          {
             return $this->hasMany(\App\Models\Task::class,'plot_id');
          }
+
+
+         //a plot has many crop harvests
+         public function crop_harvests()
+         {
+            return $this->hasMany(\App\Models\CropHarvest::class,'plot_id');
+         }
 }

@@ -69,8 +69,14 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
         Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
         Route::resource('crop_harvests', App\Http\Controllers\API\CropHarvestAPIController::class);
+
+        Route::get('crop-harvests/{id}/total-harvest', [App\Http\Controllers\API\CropHarvestAPIController::class,'getTotalHarvestForPlot']);
         Route::resource('market/crops_on_sales', App\Http\Controllers\API\CropOnSaleAPIController::class);
-        Route::resource('market/crop_buyers', App\Http\Controllers\API\CropBuyerAPIController::class);
+        Route::get('market/crop-buyers/crops', [App\Http\Controllers\API\CropOrderAPIController::class,'getCropBuyerCropOnSales']);
+        Route::post('market/buy_crop/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'buyCropOnSale']);
+        Route::get('market/crop_buyers', [App\Http\Controllers\API\CropOrderAPIController::class,'index']);
+        Route::get('market/crop_buyers/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'show']);
+        Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropOrderCropOnSaleAPIController::class);
 
     });
 
@@ -95,4 +101,8 @@ Route::group(['prefix'=>'v1'], function(){
 
 
 
+
+
+
+Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropBuyerCropOnSaleAPIController::class);
 
