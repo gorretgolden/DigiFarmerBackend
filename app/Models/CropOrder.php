@@ -29,10 +29,6 @@ class CropOrder extends Model
         'buying_price',
         'is_accepted',
         'is_bought',
-        'contact_one',
-        'contact_two',
-        'description',
-        'email',
         'user_id'
     ];
 
@@ -45,10 +41,6 @@ class CropOrder extends Model
         'buying_price' => 'integer',
         'is_accepted' => 'boolean',
         'is_bought' => 'boolean',
-        'contact_one' => 'string',
-        'contact_two' => 'string',
-        'email' => 'string',
-        'description' => 'string',
         'user_id' => 'integer'
     ];
 
@@ -59,10 +51,6 @@ class CropOrder extends Model
      */
     public static $rules = [
         'buying_price' => 'required|integer',
-        'contact_one' => 'string|required',
-        'contact_two' => 'string|nullable',
-        'email' => 'string|required',
-        'description' => 'string',
         'is_bought' => 'nullable',
         'is_accepted' => 'nullable'
     ];

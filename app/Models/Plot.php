@@ -36,7 +36,8 @@ class Plot extends Model
         'district_id',
         'size',
         'size_unit',
-        'farm_id'
+        'farm_id',
+        'total-harvest'
     ];
 
     /**
@@ -50,7 +51,8 @@ class Plot extends Model
         'size' => 'integer',
         'size_unit' => 'string',
         'farm_id'=>'integer',
-        'district_id'=>'integer'
+        'district_id'=>'integer',
+        'total_harvest' => 'integer'
     ];
 
     /**

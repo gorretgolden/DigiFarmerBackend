@@ -9,6 +9,7 @@ use App\Repositories\CropHarvestRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\Plot;
 
 /**
  * Class CropHarvestController
@@ -55,10 +56,18 @@ class CropHarvestAPIController extends AppBaseController
     {
 
         $input = $request->all();
-        //$existing_harvest = CropHarvest::where('plot_id',$request->plot_id)->first();
-
-
         $cropHarvest = $this->cropHarvestRepository->create($input);
+
+        $plot = Plot::find($request->plot_id);
+       // dd($request->quantity);
+
+
+        $totalPlotHarvest =  CropHarvest::where('plot_id',$request->plot_id)->sum('quantity');
+
+        $plot->total_harvest =  $totalPlotHarvest;
+        $plot->save();
+
+        //dd($new_harvest);
 
         return $this->sendResponse($cropHarvest->toArray(), 'Crop Harvest saved successfully');
 
@@ -93,14 +102,30 @@ class CropHarvestAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var CropHarvest $cropHarvest */
-        $cropHarvest = $this->cropHarvestRepository->find($id);
+        /** @var Plot $plot */
+        $cropHarvest = CropHarvest::find($id);
+
 
         if (empty($cropHarvest)) {
             return $this->sendError('Crop Harvest not found');
         }
+        else{
+            $success['quantity'] = $cropHarvest->quantity;
+            $success['quantity_unit'] = $cropHarvest->quantity_unit;
+            $success['plot'] = $cropHarvest->plot;
+            $success['created_at'] = $cropHarvest->created_at;
 
-        return $this->sendResponse($cropHarvest->toArray(), 'Crop Harvest retrieved successfully');
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'success'=>$success
+                ],
+                'message'=> 'Crop Harvest details retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+            }
     }
 
     /**

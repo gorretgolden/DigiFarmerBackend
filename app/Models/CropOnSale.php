@@ -26,17 +26,14 @@ class CropOnSale extends Model
 
     use HasFactory;
 
-    public $table = 'crop_on_sales';
+    public $table = 'crops_on_sale';
 
 
 
     public $fillable = [
         'quantity',
-        'quantity_unit',
         'selling_price',
         'price_unit',
-        'description',
-        'image',
         'is_sold',
         'crop_id',
         'user_id'
@@ -49,11 +46,8 @@ class CropOnSale extends Model
      */
     protected $casts = [
         'quantity' => 'integer',
-        'quantity_unit'=> 'string',
         'selling_price' => 'integer',
         'price_unit' => 'string',
-        'description' => 'string',
-        'image' => 'string',
         'is_sold' => 'boolean',
         'crop_id' => 'integer',
         'user_id' => 'integer'
@@ -65,12 +59,7 @@ class CropOnSale extends Model
      * @var array
      */
     public static $rules = [
-        'quantity' => 'required',
-        'quantity_unit' => 'required|string',
         'selling_price' => 'required|integer',
-        'price_unit' => 'required',
-        'description' => 'required',
-        'image' => 'required',
         'crop_id' => 'required:integer',
 
     ];

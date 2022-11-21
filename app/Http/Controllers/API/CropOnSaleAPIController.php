@@ -11,7 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\User;
 use App\Models\Crop;
-
+use App\Models\Plot;
 /**
  * Class CropOnSaleController
  * @package App\Http\Controllers\API
@@ -36,7 +36,7 @@ class CropOnSaleAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cropsOnSale = CropOnSale::with('user','crop','crop_buyers')->get();
+        $cropsOnSale = CropOnSale::with('user','crop')->get();
         $response = [
             'success'=>true,
             'data'=> $cropsOnSale,
@@ -70,32 +70,28 @@ class CropOnSaleAPIController extends AppBaseController
         }
 
         else
-        {
+         {
+
+            $crop_plot = Plot::where('crop_id',$request->crop_id)->first();
+            if($crop_plot){
+
+                //dd($crop_plot->total_harvest);
+            $total_stock = $crop_plot->total_harvest;
 
             $crop_on_sale = new CropOnSale();
-            $crop_on_sale->quantity = $request->quantity;
-            $crop_on_sale->quantity_unit = $request->quantity_unit;
-            $crop_on_sale->price_unit = $request->price_unit;
+            $crop_on_sale->quantity = $total_stock;
             $crop_on_sale->selling_price = $request->selling_price;
-            $crop_on_sale->description = $request->description;
-            $crop_on_sale->image = $request->image;
             $crop_on_sale->crop_id = $request->crop_id;
             $crop_on_sale->user_id = auth()->user()->id;
-             $crop_on_sale->save();
+            $crop_on_sale->save();
 
              $success['quantity'] = $crop_on_sale->quantity;
              $success['quantity_unit'] = $crop_on_sale->quantity_unit;
              $success['price_unit'] = $crop_on_sale->price_unit;
              $success['selling_price'] = $crop_on_sale->selling_price;
-             $success['description'] = $crop_on_sale->description;
              $success['crop'] = $crop_on_sale->crop;
-             $success['image'] = $crop_on_sale->image;
              $success['farmer'] = $crop_on_sale->user;
 
-             $crop_on_sale = CropOnSale::find($crop_on_sale->id);
-
-             $crop_on_sale->image = \App\Models\ImageUploader::upload($request->file('image'),'crops_on_sale');
-             $crop_on_sale->save();
 
              $response = [
                 'success'=>true,
@@ -104,6 +100,18 @@ class CropOnSaleAPIController extends AppBaseController
              ];
 
              return response()->json($response,200);
+            }
+            else{
+
+                $response = [
+                    'success'=>false,
+                    'message'=> 'Crop doesnt exist on the plot'
+                 ];
+
+                 return response()->json($response,200);
+            }
+
+
         }
     }
 

@@ -101,11 +101,7 @@ class CropOrderAPIController extends AppBaseController
 
 
         $crop_buyer = new CropBuyer();
-        $crop_buyer->contact_one = $request->contact_one;
-        $crop_buyer->contact_two = $request->contact_two;
-        $crop_buyer->email = $request->email;
         $crop_buyer->buying_price = $request->buying_price;
-        $crop_buyer->description = $request->description;
         $crop_buyer->user_id = auth()->user()->id;
         $crop_buyer->save();
 
@@ -116,11 +112,7 @@ class CropOrderAPIController extends AppBaseController
          $success['buying_price'] = $crop_buyer->buying_price;
          $success['has_bought'] = false;
          $success['is_accepted'] = false;
-         $success['contact_one'] = $crop_buyer->contact_one;
-         $success['description'] = $crop_buyer->description;
          $success['crop'] = $crop_buyer->crops;
-         $success['contact_two'] = $crop_buyer->contact_two;
-         $success['email'] = $crop_buyer->email;
          $success['buyer'] = auth()->user();
 
 
