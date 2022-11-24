@@ -12,7 +12,19 @@
         "inView": false
     },
     {
-        "name": "is_registered",
+        "name": "buying_price",
+        "dbType": "integer",
+        "htmlType": "number",
+        "validations": "required|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "has_brought",
         "dbType": "boolean",
         "htmlType": "checkbox",
         "validations": "nullable",
@@ -24,10 +36,10 @@
         "inView": true
     },
     {
-        "name": "training_vendor_service_id",
-        "dbType": "integer:unsigned:foreign,training_vendor_services,id",
-        "htmlType": "select",
-        "validations": "required|integer",
+        "name": "is_accepted",
+        "dbType": "boolean",
+        "htmlType": "checkbox",
+        "validations": "nullable",
         "searchable": true,
         "fillable": true,
         "primary": false,

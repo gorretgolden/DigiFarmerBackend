@@ -98,17 +98,17 @@ class UserAPIController extends AppBaseController
 
 
     }
-    public function createUserAccount(Request $request)
+    public function store(CreateUserAPIRequest $request)
     {
-        $validator = Validator::make($request->all(),User::$rules);
-        if($validator->fails()){
-            $response = [
-                'success'=>false,
-                'message'=>$validator->errors()
-            ];
-            return response()->json($response,400);
+        // $validator = Validator::make($request->all(),User::$rules);
+        // if($validator->fails()){
+        //     $response = [
+        //         'success'=>false,
+        //         'message'=>$validator->errors()
+        //     ];
+        //     return response()->json($response,400);
 
-        }
+        // }
 
         //existing user
         $existing_user = User::where('email',$request->input('email'))->orWhere('phone',$request->phone)->first();

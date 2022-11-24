@@ -138,6 +138,13 @@ class User extends Authenticable implements  MustVerifyEmail
           $this->hasManyThrough(\App\Models\CropOrder::class, \App\Models\CropOnSale::class, 'user_id', 'crop_on_sale_id');
       }
 
+
+       //a user has many  finance vendor services
+       public function finance_vendor_services()
+       {
+          return $this->hasMany(\App\Models\FinanceVendorService::class,'user_id');
+       }
+
       public function sendPasswordResetNotification($token)
      {
 

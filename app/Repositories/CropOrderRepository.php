@@ -2,22 +2,25 @@
 
 namespace App\Repositories;
 
-use App\Models\VendorCategory;
+use App\Models\CropOrder;
 use App\Repositories\BaseRepository;
 
 /**
- * Class VendorCategoryRepository
+ * Class CropOrderRepository
  * @package App\Repositories
- * @version November 21, 2022, 7:43 pm UTC
+ * @version November 23, 2022, 10:03 am UTC
 */
 
-class VendorCategoryRepository extends BaseRepository
+class CropOrderRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        'name'
+        'buying_price',
+        'has_brought',
+        'is_accepted',
+        'user_id'
     ];
 
     /**
@@ -35,6 +38,6 @@ class VendorCategoryRepository extends BaseRepository
      **/
     public function model()
     {
-        return VendorCategory::class;
+        return CropOrder::class;
     }
 }

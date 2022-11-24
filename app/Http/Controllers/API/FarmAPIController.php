@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use Validator;
+use App\Models\User;
 
 /**
  * Class FarmController
@@ -124,6 +125,7 @@ class FarmAPIController extends AppBaseController
 
         $farm = Farm::find($id);
         $success['name'] = $farm->name;
+        $success['plots'] = $farm->plots;
         $success['address'] = $farm->address;
         $success['field_area'] = $farm->field_area;
         $success['size_unit'] = $farm->size_unit;
@@ -149,26 +151,22 @@ class FarmAPIController extends AppBaseController
     public function farmUser(Request $request)
     {
 
-        $user_id = auth()->user()->id;
-        //dd($user_id);
 
-        $farm = Farm::where('user_id',$user_id)->first();
+        $farmer = User::where('id',auth()->user()->id)->first();
+        //dd($farmer);
 
-        if (empty($farm)) {
+        if (empty($farmer->farms)) {
             return $this->sendError('Farmer has no farms');
         }
         else{
-            $success['farm_owner'] = $farm->user->email;
-            $success['name'] = $farm->name;
-            $success['address'] = $farm->address;
-            $success['field_area'] = $farm->field_area;
-            $success['size_unit'] = $farm->size_unit;
-            $success['image'] = $farm->image;
+            $success['farm-owner'] = $farmer;
+            $success['farms'] = $farmer->farms;
+
 
             $response = [
                 'success'=>true,
                 'data'=> $success,
-                'message'=> 'User farm details retrieved successfully'
+                'message'=> 'User farms  retrieved successfully'
                ];
                return response()->json($response,200);
         }

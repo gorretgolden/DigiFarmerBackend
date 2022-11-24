@@ -9,37 +9,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class FarmerTraining
  * @package App\Models
- * @version November 10, 2022, 12:06 am UTC
+ * @version November 22, 2022, 8:13 am UTC
  *
- * @property integer $user_id
+ * @property boolean $is_registered
  * @property integer $training_vendor_service_id
- * @property string $starting_date
- * @property string $ending_date
- * @property string $access
- * @property integer $period
- * @property string $period_unit
- * @property string $farmer_time
- * @property string $status
+ * @property integer $user_id
  */
 class FarmerTraining extends Model
 {
-
+    use SoftDeletes;
 
     use HasFactory;
 
     public $table = 'farmer_trainings';
+    
+
+    protected $dates = ['deleted_at'];
+
 
 
     public $fillable = [
-        'user_id',
+        'is_registered',
         'training_vendor_service_id',
-        'starting_date',
-        'ending_date',
-        'access',
-        'period',
-        'period_unit',
-        'farmer_time',
-        'status'
+        'user_id'
     ];
 
     /**
@@ -48,15 +40,9 @@ class FarmerTraining extends Model
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer',
+        'is_registered' => 'boolean',
         'training_vendor_service_id' => 'integer',
-        'starting_date' => 'string',
-        'ending_date' => 'string',
-        'access' => 'string',
-        'period' => 'integer',
-        'period_unit' => 'string',
-        'farmer_time' => 'string',
-        'status' => 'string'
+        'user_id' => 'integer'
     ];
 
     /**
@@ -65,16 +51,10 @@ class FarmerTraining extends Model
      * @var array
      */
     public static $rules = [
-        'user_id' => 'required|integer',
-        'training_vendor_service_id' => 'required',
-        'starting_date' => 'required',
-        'ending_date' => 'required',
-        'access' => 'required',
-        'period' => 'required|integer',
-        'period_unit' => 'required',
-        'farmer_time' => 'required',
-        'status' => 'required'
+        'is_registered' => 'nullable',
+        'training_vendor_service_id' => 'required|integer',
+        'user_id' => 'required|integer'
     ];
 
-
+    
 }

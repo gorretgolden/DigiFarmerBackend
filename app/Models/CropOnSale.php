@@ -26,7 +26,7 @@ class CropOnSale extends Model
 
     use HasFactory;
 
-    public $table = 'crops_on_sale';
+    public $table = 'crop_on_sales';
 
 
 
@@ -70,16 +70,18 @@ class CropOnSale extends Model
      {
         return $this->belongsTo(\App\Models\Crop::class,'crop_id');
      }
+
    //a crop  on sale belongs to many crop buyers
    public function crop_orders()
    {
-      return $this->belongsToMany(\App\Models\CropOrder::class);
+      return $this->belongsToMany(\App\Models\CropOrder::class,'crop_order_crop_on_sale', 'crop_on_sale_id', 'crop_order_id');
    }
 
    //a crop on sale belongs to a user
    public function user()
    {
        return $this->belongsTo(\App\Models\User::class, 'user_id');
+
    }
 
 

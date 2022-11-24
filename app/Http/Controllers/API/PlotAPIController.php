@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\CropHarvest;
+use App\Models\Farm;
 
 /**
  * Class PlotController
@@ -55,7 +56,26 @@ class PlotAPIController extends AppBaseController
     public function store(Request $request)
     {
         $input = $request->all();
-        $existing_plot = Plot::where('name',$request->name)->orWhere('crop_id',$request->crop_id)->first();
+        $existing_plot = Plot::where('name',$request->name)->first();
+        $existing_crop_on_plot =Plot::where('crop_id',$request->crop_id)->first();
+        $existing_crop_on_plot_farm =Plot::where('farm_id',$request->farm_id)->first();
+
+        if($existing_plot ){
+            $response = [
+                'success'=>false,
+                'message'=> 'Plot name  already exits'
+             ];
+
+             return response()->json($response,409);
+        }
+        elseif($existing_crop_on_plot && $existing_crop_on_plot_farm){
+            $response = [
+                'success'=>false,
+                'message'=> 'A plot with this crop exits on the farm'
+             ];
+
+             return response()->json($response,409);
+        }
         if(!$existing_plot){
             $plot = $this->plotRepository->create($input);
             $success['name'] = $request->name;
@@ -124,6 +144,36 @@ class PlotAPIController extends AppBaseController
 
                 ],
                 'message'=> 'Plot details retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+    }
+
+    //get plots for a farm
+
+    public function plots_on_farm($id,Request $request)
+    {
+        /** @var Plot $plot */
+        $farm = Farm::find($id);
+
+
+        if (empty($farm)) {
+            return $this->sendError('Farm not found');
+        }
+        else{
+            $success['plots'] = $farm->plots;
+
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'success'=>$success
+
+                ],
+                'message'=> 'Plots on the farm retrieved successfully'
              ];
 
              return response()->json($response,200);

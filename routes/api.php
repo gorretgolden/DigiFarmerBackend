@@ -29,7 +29,7 @@ Route::group(['prefix'=>'v1'], function(){
     //user registration
     Route::controller(App\Http\Controllers\API\UserAPIController::class)->group(function(){
         Route::post('users/login','login');
-        Route::post('users/create-account','createUserAccount');
+        Route::post('users/create-account','store');
         Route::post('users/verify-otp','verifyUserOtp');
         Route::post('users/check-phone-number','checkPhoneNumber');
         Route::post('users/check-password','checkPassword');
@@ -60,8 +60,10 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
         Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
         Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
-        Route::get('farm', [App\Http\Controllers\API\FarmAPIController::class,'farmUser']);
+
+        Route::get('farm/owner', [App\Http\Controllers\API\FarmAPIController::class,'farmUser']);
         Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
+        Route::get('farms/{id}/plots', [App\Http\Controllers\API\PlotAPIController::class,'plots_on_farm']);
         Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
         Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
         Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
@@ -77,6 +79,11 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('market/crop_buyers', [App\Http\Controllers\API\CropOrderAPIController::class,'index']);
         Route::get('market/crop_buyers/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'show']);
         Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropOrderCropOnSaleAPIController::class);
+        Route::resource('vendor_categories', App\Http\Controllers\API\VendorCategoryAPIController::class);
+        Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropBuyerCropOnSaleAPIController::class);
+        Route::resource('training_vendor_services', App\Http\Controllers\API\TrainingVendorServiceAPIController::class);
+        Route::resource('farmer_trainings', App\Http\Controllers\API\FarmerTrainingAPIController::class);
+        Route::resource('finance_vendor_services', App\Http\Controllers\API\FinanceVendorServiceAPIController::class);
 
     });
 
@@ -104,5 +111,13 @@ Route::group(['prefix'=>'v1'], function(){
 
 
 
-Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropBuyerCropOnSaleAPIController::class);
 
+
+
+Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFinanceApplicationAPIController::class);
+
+
+//Route::resource('crop_oders', App\Http\Controllers\API\CropOrderAPIController::class);
+
+
+//Route::resource('crop_orders', App\Http\Controllers\API\CropOrderAPIController::class);

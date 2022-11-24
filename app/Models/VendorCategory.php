@@ -44,5 +44,18 @@ class VendorCategory extends Model
         'name' => 'required|max:100'
     ];
 
+     //a vendor category has many training vendor serviceS
+     public function training_vendor_serviceS()
+     {
+        return $this->hasMany(\App\Models\TrainingVendorService::class,'vendor_category_id');
+     }
+
+     //a vendor category has many finance vendor services
+     public function finance_vendor_services()
+     {
+        return $this->hasMany(\App\Models\FinanceVendorService::class,'vendor_category_id');
+     }
+
+
 
 }

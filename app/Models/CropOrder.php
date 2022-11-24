@@ -59,7 +59,7 @@ class CropOrder extends Model
   //a crop order belongs to many crops on sale
    public function crops_on_sale()
    {
-      return $this->belongsToMany(\App\Models\CropOnSale::class,'crop_on_sale_crop_order');
+      return $this->belongsToMany(\App\Models\CropOnSale::class);
    }
 
 
@@ -69,9 +69,9 @@ class CropOrder extends Model
          return $this->belongsTo(\App\Models\User::class, 'user_id');
      }
 
-     //a crop order has many crop onsale crop orders
-     public function orders(){
-        return $this->hasMany(\App\Models\CropOnSaleCropOrder::class, 'crop_on_sale_id');
-    }
+    //  //a crop order has many crop onsale crop orders
+    //  public function orders(){
+    //     return $this->hasMany(\App\Models\CropOnSaleCropOrder::class, 'crop_on_sale_id');
+    // }
 
 }

@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class FarmerTrainingRepository
  * @package App\Repositories
- * @version November 10, 2022, 12:06 am UTC
+ * @version November 22, 2022, 8:13 am UTC
 */
 
 class FarmerTrainingRepository extends BaseRepository
@@ -17,15 +17,9 @@ class FarmerTrainingRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'user_id',
+        'is_registered',
         'training_vendor_service_id',
-        'starting_date',
-        'ending_date',
-        'access',
-        'period',
-        'period_unit',
-        'farmer_time',
-        'status'
+        'user_id'
     ];
 
     /**

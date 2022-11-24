@@ -136,8 +136,6 @@ class CropOnSaleAPIController extends AppBaseController
             $success['quantity_unit'] = $crop_on_sale->quantity_unit;
             $success['selling_price'] = $crop_on_sale->selling_price;
             $success['price_unit'] = $crop_on_sale->price_unit;
-            $success['image'] = $crop_on_sale->image;
-            $success['description'] = $crop_on_sale->description;
             $success['crop'] = $crop_on_sale->crop;
             $success['farmer'] = $crop_on_sale->user;
 
@@ -160,9 +158,12 @@ class CropOnSaleAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCropOnSaleAPIRequest $request)
+    public function update($id,Request $request)
     {
         $input = $request->all();
+        $request->validate([
+            'selling_price'=>'required|integer'
+        ]);
 
         /** @var CropOnSale $cropOnSale */
         $cropOnSale = $this->cropOnSaleRepository->find($id);

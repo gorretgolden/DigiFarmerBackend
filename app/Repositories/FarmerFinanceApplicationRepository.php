@@ -2,22 +2,27 @@
 
 namespace App\Repositories;
 
-use App\Models\VendorCategory;
+use App\Models\FarmerFinanceApplication;
 use App\Repositories\BaseRepository;
 
 /**
- * Class VendorCategoryRepository
+ * Class FarmerFinanceApplicationRepository
  * @package App\Repositories
- * @version November 21, 2022, 7:43 pm UTC
+ * @version November 22, 2022, 9:55 am UTC
 */
 
-class VendorCategoryRepository extends BaseRepository
+class FarmerFinanceApplicationRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        'name'
+        'finance_vendor_service_id',
+        'user_id',
+        'is_approved',
+        'national_id',
+        'drivin_permit',
+        'land_title'
     ];
 
     /**
@@ -35,6 +40,6 @@ class VendorCategoryRepository extends BaseRepository
      **/
     public function model()
     {
-        return VendorCategory::class;
+        return FarmerFinanceApplication::class;
     }
 }

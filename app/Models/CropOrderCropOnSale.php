@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $crop_on_sale_id
  * @property integer $crop_buyer_id
  */
-class CropOnSaleCropOrder extends Model
+class CropOrderCropOnSale extends Model
 {
 
 
