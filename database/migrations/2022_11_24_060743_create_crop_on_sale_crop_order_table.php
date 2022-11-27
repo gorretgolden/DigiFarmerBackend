@@ -16,6 +16,7 @@ class CreateCropOnSaleCropOrderTable extends Migration
         Schema::create('crop_on_sale_crop_order', function (Blueprint $table) {
             $table->foreignId('crop_on_sale_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('crop_order_id')->nullable()->constrained()->onDelete('CASCADE');
+            $table->integer('buying_price');
             $table->timestamps();
         });
     }

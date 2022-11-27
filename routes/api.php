@@ -92,9 +92,21 @@ Route::group(['prefix'=>'v1'], function(){
 
 
 
+// Route::get('/concat-table', function(){
+//     $crops_on_sale = App\Models\CropOnSale::all();
+//     $crop_orders = App\Models\CropOrder::get();
+//     $data = $crops_on_sale->concat($crop_orders);
+//     return $data;
+// });
 
 
-
+Route::get('/get-data', function(){
+    $data = DB::table('crop_on_sales')
+        ->join('crop_on_sale_crop_order', 'crop_on_sales.id', '=', 'crop_on_sale_crop_order.crop_on_sale_id')
+        ->select('crop_on_sales.*', 'crop_on_sale_crop_order.crop_order_id')
+        ->get();
+    dd($data);
+});
 
 
 

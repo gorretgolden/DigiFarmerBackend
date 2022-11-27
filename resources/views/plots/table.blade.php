@@ -4,6 +4,7 @@
             <tr>
                 <th>Name</th>
                 <th>Size</th>
+                <th>District</th>
                 <th>Farm</th>
                 <th>Crop</th>
                 <th colspan="3">Action</th>
@@ -14,6 +15,7 @@
                 <tr>
                     <td>{{ $plot->name }}</td>
                     <td>{{ $plot->size }}  {{ $plot->size_unit }}</td>
+                    <td>{{ $plot->farm->address}}</td>
                     <td>{{ $plot->farm->name }}</td>
                     <td>{{ $plot->crop->name }}</td>
                     <td width="120">

@@ -122,7 +122,7 @@ class CropOrderAPIController extends AppBaseController
     public function show($id)
     {
          /** @var CropOrder $cropBuyer */
-         $cropBuyer = $this->cropBuyerRepository->find($id);
+         $cropBuyer = CropOrder::find($id);
 
          if (empty($cropBuyer)) {
              return $this->sendError('Crop Buyer not found');

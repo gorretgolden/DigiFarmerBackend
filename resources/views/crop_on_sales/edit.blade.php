@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($cropOnSale, ['route' => ['cropOnSales.update', $cropOnSale->id], 'method' => 'patch', 'files' => true]) !!}
+            {!! Form::model($cropOnSale, ['route' => ['cropOnSales.update', $cropOnSale->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">

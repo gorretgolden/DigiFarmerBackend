@@ -53,61 +53,71 @@ class PlotAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(CreatePlotAPIRequest $request)
     {
-        $input = $request->all();
-        $existing_plot = Plot::where('name',$request->name)->first();
-        $existing_crop_on_plot =Plot::where('crop_id',$request->crop_id)->first();
-        $existing_crop_on_plot_farm =Plot::where('farm_id',$request->farm_id)->first();
+         //get the farm
+         $farm = Farm::where('id',$request->farm_id)->first();
 
-        if($existing_plot ){
+         if(!$farm){
+
             $response = [
                 'success'=>false,
-                'message'=> 'Plot name  already exits'
+                'message'=> 'No farm selected'
+             ];
+
+             return response()->json($response,400);
+
+         }elseif(collect($farm->plots)->contains('name',$request->name)){
+
+
+             $response = [
+                'success'=>false,
+                'message'=> 'Plot with this name already exits on the farm'
              ];
 
              return response()->json($response,409);
-        }
-        elseif($existing_crop_on_plot && $existing_crop_on_plot_farm){
+
+         }elseif(collect($farm->plots)->contains('crop_id',$request->crop_id)){
+
             $response = [
                 'success'=>false,
-                'message'=> 'A plot with this crop exits on the farm'
+                'message'=> 'Crop selected already exists on a plot'
              ];
 
              return response()->json($response,409);
-        }
-        if(!$existing_plot){
-            $plot = $this->plotRepository->create($input);
-            $success['name'] = $request->name;
-            $success['size'] = $request->size;
-            $success['size_unit'] = $request->size_unit;
-            $success['farm'] = $plot->farm;
-            $success['crop'] = $plot->crop;
-            $success['district'] = $plot->district->name;
 
-            $response = [
+         }else{
+
+             $new_plot = new Plot();
+             $new_plot->name = $request->name;
+             $new_plot->farm_id = $request->farm_id;
+             $new_plot->crop_id = $request->crop_id;
+             $new_plot->district = $farm->address;
+             $new_plot->size = $request->size;
+             $new_plot->size_unit = $request->size_unit;
+             $new_plot->save();
+
+
+             $success['name'] = $request->name;
+             $success['size'] = $request->size;
+             $success['size_unit'] = $request->size_unit;
+             $success['farm'] = $new_plot->farm;
+             $success['crop'] = $new_plot->crop;
+             $success['district'] = $farm->address;
+
+             $response = [
                 'success'=>true,
                 'data'=> $success,
                 'message'=> 'Plot created successfully'
-             ];
+              ];
 
-        return response()->json($response,200);
-
-        }
-        else{
-            $response = [
-                'success'=>false,
-                'message'=> 'Plot name  or crop on the plot already exits'
-             ];
-
-             return response()->json($response,409);
-
-        }
+            return response()->json($response,200);
 
 
 
+         }
 
-        return $this->sendResponse($plot->toArray(), 'Plot saved successfully');
+
     }
 
     /**

@@ -44,9 +44,9 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('sellerProductCategories', App\Http\Controllers\SellerProductCategoryController::class);
     Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);
     Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::resource('cropBuyers', App\Http\Controllers\CropBuyerController::class);
+    Route::resource('cropBuyers', App\Http\Controllers\CropOrderController::class);
     Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);
-    Route::resource('cropBuyers', App\Http\Controllers\CropBuyerController::class);
+    Route::resource('cropBuyers', App\Http\Controllers\CropOrderController::class);
     Route::resource('vendorCategories', App\Http\Controllers\VendorCategoryController::class);
     Route::resource('traningVendorServices', App\Http\Controllers\TraningVendorServiceController::class);
     Route::resource('farmerTrainings', App\Http\Controllers\FarmerTrainingController::class);
@@ -66,3 +66,12 @@ Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterControlle
 
 
 Route::resource('trials', App\Http\Controllers\TrialController::class);
+
+
+Route::resource('cropHarvests', App\Http\Controllers\CropHarvestController::class);
+
+
+Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);
+
+
+Route::resource('cropOrders', App\Http\Controllers\CropOrderController::class);

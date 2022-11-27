@@ -29,14 +29,13 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticable implements  MustVerifyEmail
 
 {
-    use SoftDeletes,Notifiable,HasRoles,HasFactory,HasApiTokens;
+    use Notifiable,HasRoles,HasFactory,HasApiTokens;
 
 
 
     public $table = 'users';
 
 
-    protected $dates = ['deleted_at'];
 
 
 
@@ -135,7 +134,7 @@ class User extends Authenticable implements  MustVerifyEmail
 
       public function crop_orders()
       {
-          $this->hasManyThrough(\App\Models\CropOrder::class, \App\Models\CropOnSale::class, 'user_id', 'crop_on_sale_id');
+          return $this->hasMany(\App\Models\CropOrder::class,'user_id');
       }
 
 

@@ -71,6 +71,7 @@ class UserController extends AppBaseController
           $user = new User();
           $user->first_name = $request->input('first_name');
           $user->last_name = $request->input('last_name');
+          $user->username = $request->last_name ." " . $request->first_name;
           $user->email = $request->input('email');
           $user->country_id = $request->input('country_id');
           $user->phone = $request->input('phone');

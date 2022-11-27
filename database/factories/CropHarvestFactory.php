@@ -22,9 +22,9 @@ class CropHarvestFactory extends Factory
     public function definition()
     {
         return [
-            'plot_id' => $this->faker->randomDigitNotNull,
-        'quantity' => $this->faker->randomDigitNotNull,
+            'quantity' => $this->faker->randomDigitNotNull,
         'quantity_unit' => $this->faker->word,
+        'plot_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

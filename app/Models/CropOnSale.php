@@ -74,7 +74,7 @@ class CropOnSale extends Model
    //a crop  on sale belongs to many crop buyers
    public function crop_orders()
    {
-      return $this->belongsToMany(\App\Models\CropOrder::class,'crop_order_crop_on_sale', 'crop_on_sale_id', 'crop_order_id');
+      return $this->belongsToMany(\App\Models\CropOrder::class,'crop_on_sale_crop_order', 'crop_on_sale_id', 'crop_order_id')->withPivot('buying_price');
    }
 
    //a crop on sale belongs to a user
@@ -83,6 +83,11 @@ class CropOnSale extends Model
        return $this->belongsTo(\App\Models\User::class, 'user_id');
 
    }
+
+//    public function getMinPrice()
+// {
+//     return $this->collect(crop_orders()->min('buying_price'));
+// }
 
 
 }

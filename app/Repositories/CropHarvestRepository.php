@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class CropHarvestRepository
  * @package App\Repositories
- * @version November 18, 2022, 2:13 am UTC
+ * @version November 26, 2022, 6:32 pm UTC
 */
 
 class CropHarvestRepository extends BaseRepository
@@ -17,9 +17,9 @@ class CropHarvestRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'plot_id',
         'quantity',
-        'quantity_unit'
+        'quantity_unit',
+        'plot_id'
     ];
 
     /**

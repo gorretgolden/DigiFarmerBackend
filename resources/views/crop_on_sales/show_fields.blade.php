@@ -10,28 +10,22 @@
     <p>{{ $cropOnSale->selling_price }}</p>
 </div>
 
+<!-- Quantity Unit Field -->
+<div class="col-sm-12">
+    {!! Form::label('quantity_unit', 'Quantity Unit:') !!}
+    <p>{{ $cropOnSale->quantity_unit }}</p>
+</div>
+
 <!-- Price Unit Field -->
 <div class="col-sm-12">
     {!! Form::label('price_unit', 'Price Unit:') !!}
     <p>{{ $cropOnSale->price_unit }}</p>
 </div>
 
-<!-- Description Field -->
+<!-- Is Sold Field -->
 <div class="col-sm-12">
-    {!! Form::label('description', 'Description:') !!}
-    <p>{{ $cropOnSale->description }}</p>
-</div>
-
-<!-- Image Field -->
-<div class="col-sm-12">
-    {!! Form::label('image', 'Image:') !!}
-    <p>{{ $cropOnSale->image }}</p>
-</div>
-
-<!-- Status Field -->
-<div class="col-sm-12">
-    {!! Form::label('status', 'Status:') !!}
-    <p>{{ $cropOnSale->status }}</p>
+    {!! Form::label('is_sold', 'Is Sold:') !!}
+    <p>{{ $cropOnSale->is_sold }}</p>
 </div>
 
 <!-- Crop Id Field -->

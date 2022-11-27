@@ -19,8 +19,9 @@ class AdminSeeder extends Seeder
     {
         $password = "#golden@";
         $admin = User::create([
-            'first_name'=>'admin',
-            'last_name'=>'admin',
+            'first_name'=>'Farm',
+            'last_name'=>'Digi',
+            'username'=>'Digi Farm',
             'email'=>'admin@gmail.com',
             'phone'=>'0751547654',
             'password'=> Hash::make($password),

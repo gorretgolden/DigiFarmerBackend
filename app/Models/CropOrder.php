@@ -50,7 +50,7 @@ class CropOrder extends Model
      * @var array
      */
     public static $rules = [
-        'buying_price' => 'required|integer',
+
         'is_bought' => 'nullable',
         'is_accepted' => 'nullable'
     ];
@@ -59,7 +59,7 @@ class CropOrder extends Model
   //a crop order belongs to many crops on sale
    public function crops_on_sale()
    {
-      return $this->belongsToMany(\App\Models\CropOnSale::class);
+      return $this->belongsToMany(\App\Models\CropOnSale::class)->withPivot('buying_price');
    }
 
 

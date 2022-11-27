@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\CropBuyer;
+use App\Models\CropOrder;
 
 class CreateCropBuyerRequest extends FormRequest
 {
@@ -24,6 +24,6 @@ class CreateCropBuyerRequest extends FormRequest
      */
     public function rules()
     {
-        return CropBuyer::$rules;
+        return CropOrder::$rules;
     }
 }

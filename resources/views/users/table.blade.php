@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th>Image</th>
+                <th>Username</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
@@ -19,6 +20,7 @@
             @foreach ($users as $user)
                 <tr>
                     <td>  <img src="{{$user->image_url ? asset('/storage/users/'.$user->image_url) : asset('img/avatar-1.png') }}" width="50px" height="50px"></td>
+                    <td>{{ $user->username}}</td>
                     <td>{{ $user->first_name }}</td>
                     <td>{{ $user->last_name }}</td>
                     <td>{{ $user->email }}</td>

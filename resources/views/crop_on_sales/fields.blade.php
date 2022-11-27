@@ -1,7 +1,14 @@
+<?php
+$farmers = App\Models\User::where('user_type','farmer')->pluck('username','id');
+$crops = App\Models\Crop::pluck('name','id');
+?>
+
+
+
 <!-- Quantity Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('quantity', 'Quantity:') !!}
-    {!! Form::number('quantity', null, ['class' => 'form-control']) !!}
+    {!! Form::number('quantity', null, ['class' => 'form-control','placeholder'=>"Quantity is obtained from your plot stock harvest for a crop you post for sale", 'readonly']) !!}
 </div>
 
 <!-- Selling Price Field -->
@@ -10,40 +17,37 @@
     {!! Form::number('selling_price', null, ['class' => 'form-control']) !!}
 </div>
 
+<!-- Quantity Unit Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('quantity_unit', 'Quantity Unit:') !!}
+    {!! Form::text('quantity_unit', null, ['class' => 'form-control','placeholder'=>"kg",'readonly']) !!}
+</div>
+
 <!-- Price Unit Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('price_unit', 'Price Unit:') !!}
-    {!! Form::text('price_unit', null, ['class' => 'form-control']) !!}
+    {!! Form::text('price_unit', null, ['class' => 'form-control','placeholder'=>"UGX",'readonly']) !!}
 </div>
 
-<!-- Description Field -->
-<div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('description', 'Description:') !!}
-    {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Image Field -->
+<!-- Is Sold Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('image', 'Image:') !!}
-    <div class="input-group">
-        <div class="custom-file">
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
-            {!! Form::label('image', 'Choose file', ['class' => 'custom-file-label']) !!}
-        </div>
+    <div class="form-check">
+        {!! Form::hidden('is_sold', 0, ['class' => 'form-check-input']) !!}
+        {!! Form::checkbox('is_sold', '1', null, ['class' => 'form-check-input']) !!}
+        {!! Form::label('is_sold', 'Is Sold', ['class' => 'form-check-label']) !!}
     </div>
 </div>
-<div class="clearfix"></div>
 
 
 <!-- Crop Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('crop_id', 'Crop Id:') !!}
-    {!! Form::select('crop_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('crop_id', 'Crop:') !!}
+    {!! Form::select('crop_id', $crops, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'User Id:') !!}
-    {!! Form::select('user_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('user_id', 'Farmers:') !!}
+    {!! Form::select('user_id', $farmers, null, ['class' => 'form-control custom-select']) !!}
 </div>

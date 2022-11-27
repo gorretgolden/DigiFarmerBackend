@@ -36,9 +36,9 @@ $districts = App\Models\District::pluck('name','id');
 </div>
 
 
-<!-- District Id Field -->
+{{-- <!-- District Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('district_id', 'District:') !!}
     {!! Form::select('district_id', $districts, null, ['class' => 'form-control custom-select']) !!}
-</div>
+</div> --}}
 

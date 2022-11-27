@@ -2,69 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCropBuyerRequest;
-use App\Http\Requests\UpdateCropBuyerRequest;
-use App\Repositories\CropBuyerRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
+use App\DataTables\CropOrderDataTable;
+use App\Http\Requests;
+use App\Http\Requests\CreateCropOrderRequest;
+use App\Http\Requests\UpdateCropOrderRequest;
+use App\Repositories\CropOrderRepository;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\CropOrder;
+use App\Models\CropOrderCropOnSale;
 
 class CropOrderController extends AppBaseController
 {
-    /** @var CropBuyerRepository $cropBuyerRepository*/
-    private $cropBuyerRepository;
+    /** @var CropOrderRepository $cropOrderRepository*/
+    private $cropOrderRepository;
 
-    public function __construct(CropBuyerRepository $cropBuyerRepo)
+    public function __construct(CropOrderRepository $cropOrderRepo)
     {
-        $this->cropBuyerRepository = $cropBuyerRepo;
+        $this->cropOrderRepository = $cropOrderRepo;
     }
 
     /**
-     * Display a listing of the CropBuyer.
+     * Display a listing of the CropOrder.
      *
-     * @param Request $request
+     * @param CropOrderDataTable $cropOrderDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
-    {
-        $cropBuyers = $this->cropBuyerRepository->all();
+    // public function index(CropOrderDataTable $cropOrderDataTable)
+    // {
+    //     return $cropOrderDataTable->render('crop_orders.index');
+    // }
 
-        return view('crop_buyers.index')
-            ->with('cropBuyers', $cropBuyers);
-    }
+    public function index()
+    {
+    $orders = CropOrder::with('crops_on_sale')->get();
+    return view('crop_orders.index', compact('orders'));
+   }
 
     /**
-     * Show the form for creating a new CropBuyer.
+     * Show the form for creating a new CropOrder.
      *
      * @return Response
      */
     public function create()
     {
-        return view('crop_buyers.create');
+        return view('crop_orders.create');
     }
 
     /**
-     * Store a newly created CropBuyer in storage.
+     * Store a newly created CropOrder in storage.
      *
-     * @param CreateCropBuyerRequest $request
+     * @param CreateCropOrderRequest $request
      *
      * @return Response
      */
-    public function store(CreateCropBuyerRequest $request)
+    public function store(CreateCropOrderRequest $request)
     {
-        $input = $request->all();
 
-        $cropBuyer = $this->cropBuyerRepository->create($input);
+        $existing_buyer = CropOrder::where('user_id',$request->user_id)->first();
+        $existing_crop_on_sale = CropOrderCropOnSale::where('crop_on_sale_id', $request->crops_on_sales)->first();
+       // dd($existing_crop_on_sale );
 
-        Flash::success('Crop Buyer saved successfully.');
+        if($existing_buyer && $existing_crop_on_sale ){
 
-        return redirect(route('cropBuyers.index'));
+            Flash::error('You already made an order for'. " ". $existing_crop_on_sale->crop_on_sale->quantity.$existing_crop_on_sale->crop_on_sale->quantity_unit. " ". 'of'. " ". $existing_crop_on_sale->crop_on_sale->crop->name. " ". 'sold by' ." ". 'farmer:'. " ". $existing_crop_on_sale->crop_on_sale->user->username );
+
+            return redirect(route('cropOrders.index'));
+
+        }
+        else{
+
+            $order = CropOrder::create($request->all());
+        //dd($order);
+
+        $crop_orders = $request->input('crops_on_sales', []);
+       //dd($crop_orders);
+
+        $buying_prices = $request->input('buying_prices', []);
+        //dd($buying_prices);
+        for ($crop_order=0; $crop_order < count($crop_orders); $crop_order++) {
+            if ($crop_orders[$crop_order] != '') {
+                $order->crops_on_sale()->attach($crop_orders[$crop_order], ['buying_price' => $buying_prices[$crop_order]]);
+            }
+        }
+
+
+        Flash::success('Crop Order saved successfully.');
+
+        return redirect(route('cropOrders.index'));
+        }
+
+
     }
 
     /**
-     * Display the specified CropBuyer.
+     * Display the specified CropOrder.
      *
      * @param int $id
      *
@@ -72,19 +106,19 @@ class CropOrderController extends AppBaseController
      */
     public function show($id)
     {
-        $cropBuyer = $this->cropBuyerRepository->find($id);
+        $cropOrder = $this->cropOrderRepository->find($id);
 
-        if (empty($cropBuyer)) {
-            Flash::error('Crop Buyer not found');
+        if (empty($cropOrder)) {
+            Flash::error('Crop Order not found');
 
-            return redirect(route('cropBuyers.index'));
+            return redirect(route('cropOrders.index'));
         }
 
-        return view('crop_buyers.show')->with('cropBuyer', $cropBuyer);
+        return view('crop_orders.show')->with('cropOrder', $cropOrder);
     }
 
     /**
-     * Show the form for editing the specified CropBuyer.
+     * Show the form for editing the specified CropOrder.
      *
      * @param int $id
      *
@@ -92,65 +126,63 @@ class CropOrderController extends AppBaseController
      */
     public function edit($id)
     {
-        $cropBuyer = $this->cropBuyerRepository->find($id);
+        $cropOrder = $this->cropOrderRepository->find($id);
 
-        if (empty($cropBuyer)) {
-            Flash::error('Crop Buyer not found');
+        if (empty($cropOrder)) {
+            Flash::error('Crop Order not found');
 
-            return redirect(route('cropBuyers.index'));
+            return redirect(route('cropOrders.index'));
         }
 
-        return view('crop_buyers.edit')->with('cropBuyer', $cropBuyer);
+        return view('crop_orders.edit')->with('cropOrder', $cropOrder);
     }
 
     /**
-     * Update the specified CropBuyer in storage.
+     * Update the specified CropOrder in storage.
      *
      * @param int $id
-     * @param UpdateCropBuyerRequest $request
+     * @param UpdateCropOrderRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateCropBuyerRequest $request)
+    public function update($id, UpdateCropOrderRequest $request)
     {
-        $cropBuyer = $this->cropBuyerRepository->find($id);
+        $cropOrder = $this->cropOrderRepository->find($id);
 
-        if (empty($cropBuyer)) {
-            Flash::error('Crop Buyer not found');
+        if (empty($cropOrder)) {
+            Flash::error('Crop Order not found');
 
-            return redirect(route('cropBuyers.index'));
+            return redirect(route('cropOrders.index'));
         }
 
-        $cropBuyer = $this->cropBuyerRepository->update($request->all(), $id);
+        $cropOrder = $this->cropOrderRepository->update($request->all(), $id);
 
-        Flash::success('Crop Buyer updated successfully.');
+        Flash::success('Crop Order updated successfully.');
 
-        return redirect(route('cropBuyers.index'));
+        return redirect(route('cropOrders.index'));
     }
 
     /**
-     * Remove the specified CropBuyer from storage.
+     * Remove the specified CropOrder from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */
     public function destroy($id)
     {
-        $cropBuyer = $this->cropBuyerRepository->find($id);
+        $cropOrder = $this->cropOrderRepository->find($id);
 
-        if (empty($cropBuyer)) {
-            Flash::error('Crop Buyer not found');
+        if (empty($cropOrder)) {
+            Flash::error('Crop Order not found');
 
-            return redirect(route('cropBuyers.index'));
+            return redirect(route('cropOrders.index'));
         }
 
-        $this->cropBuyerRepository->delete($id);
+        $this->cropOrderRepository->delete($id);
 
-        Flash::success('Crop Buyer deleted successfully.');
+        Flash::success('Crop Order deleted successfully.');
 
-        return redirect(route('cropBuyers.index'));
+        return redirect(route('cropOrders.index'));
     }
 }

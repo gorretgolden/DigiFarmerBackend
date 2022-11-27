@@ -15,13 +15,14 @@ class CreatePlotsTable extends Migration
     {
         Schema::create('plots', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->integer('size');
+            $table->string('district');
             $table->integer('total_harvest')->default(0);
             $table->enum('size_unit',['Hectares','Acres'])->default('Acres');
             $table->foreignId('farm_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('crop_id')->constrained() ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreignId('district_id')->constrained() ->onUpdate('CASCADE')->onDelete('CASCADE');
+
             $table->timestamps();
         });
     }

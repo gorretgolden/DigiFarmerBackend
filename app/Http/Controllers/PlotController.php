@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Models\Plot;
+use App\Models\Farm;
 
 class PlotController extends AppBaseController
 {
@@ -55,26 +56,42 @@ class PlotController extends AppBaseController
      */
     public function store(CreatePlotRequest $request)
     {
-        $existing_plot = Plot::where('name',$request->name)->orWhere('crop_id',$request->crop_id)->first();
-        if(!$existing_plot){
+
+        //get the farm
+        $farm = Farm::where('id',$request->farm_id)->first();
+
+        if(!$farm){
+
+            Flash::error('No farm selected');
+            return redirect(route('plots.index'));
+
+        }elseif(collect($farm->plots)->contains('name',$request->name)){
+
+            Flash::error('Plot name exists on the farm.');
+            return redirect(route('plots.index'));
+
+        }elseif(collect($farm->plots)->contains('crop_id',$request->crop_id)){
+
+            Flash::error('Crop selected already exists on a plot');
+            return redirect(route('plots.index'));
+
+        }else{
+
             $new_plot = new Plot();
             $new_plot->name = $request->name;
             $new_plot->farm_id = $request->farm_id;
             $new_plot->crop_id = $request->crop_id;
-            $new_plot->district_id = $request->district_id;
+            $new_plot->district = $farm->address;
             $new_plot->size = $request->size;
             $new_plot->size_unit = $request->size_unit;
-
             $new_plot->save();
-            Flash::success('Plot saved successfully.');
+            Flash::success('Plot saved successfuly');
+            return redirect(route('plots.index'));
+
 
         }
-        else{
-            Flash::error('Plot  name or crop on the plot already exists');
-        }
 
 
-        return redirect(route('plots.index'));
     }
 
     /**
@@ -168,3 +185,45 @@ class PlotController extends AppBaseController
         return redirect(route('plots.index'));
     }
 }
+
+// Flash::error('The crop'. ' '. $request->crop->name .''. 'already exists on'.' '. $plot->name);
+// return redirect(route('plots.index'));
+//check if plots exist
+
+         //dd($farm->plots);
+        //  $farm_plot_names = collect($farm->plots)->pluck('name');
+        //  $farm_plot_crop_ids = collect($farm->plots)->pluck('crop_id');
+        //  $farm_plot_ids = collect($farm->plots)->pluck('id');
+         //dd($farm_plot_names);
+
+        //  else{
+        //     $collection = $farm->plots;
+
+        //     for ($i = 0; $i < $collection->count(); $i++) {
+
+        //         if ($plot->name == $request->name ) {
+
+        //             Flash::error('Name already exits on  your farm plots');
+
+
+        //         } elseif($plot->crop_id == $request->crop_id){
+
+        //             Flash::error('The crop already exists on');
+
+
+        //         }else{
+                    // $new_plot = new Plot();
+                    // $new_plot->name = $request->name;
+                    // $new_plot->farm_id = $request->farm_id;
+                    // $new_plot->crop_id = $request->crop_id;
+                    // $new_plot->district_id = $request->district_id;
+                    // $new_plot->size = $request->size;
+                    // $new_plot->size_unit = $request->size_unit;
+                    // $new_plot->save();
+                    // Flash::success('Plot saved successfuly');
+                    // return redirect(route('plots.index'));
+
+
+        //         }
+
+        //     }

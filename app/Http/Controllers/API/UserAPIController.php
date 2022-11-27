@@ -116,6 +116,7 @@ class UserAPIController extends AppBaseController
             $user = new User();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
+            $user->username = $request->last_name . " " .$request->first_name;
             $user->email = $request->email;
             $user->country_id = (int)$request->country_id;
             $user->district_id = (int)$request->district_id;
@@ -221,15 +222,34 @@ class UserAPIController extends AppBaseController
     }
 
 
-    public function login(Request $request){
+    // public function login(Request $request){
 
-         if (!Auth::attempt($request->only('phone', 'password'))) {
-             return response()->json([ 'message' => 'Invalid login details' ], 401);
-           }
+    //      if (!Auth::attempt($request->only('phone', 'password'))) {
+    //          return response()->json([ 'message' => 'Invalid login details' ], 401);
+    //        }
 
-         $user = User::where('phone', $request['phone'])->firstOrFail();
-         $token = $user->createToken('auth_token')->plainTextToken;
-        return response()->json(['access_token' => $token,'token_type' => 'Bearer Token',    ]);
+    //      $token = $user->createToken('auth_token')->plainTextToken;
+    //     return response()->json(['access_token' => $token,'token_type' => 'Bearer Token',    ]);
+    // }
+
+    public function login(Request $request)
+    {
+        if(Auth::attempt(['phone' => $request->phone ,'password' => $request->password])){
+            $user = Auth::user();
+            $success['token'] =  $user->createToken('Farmer')->plainTextToken;
+            $success['email'] =  $user->email;
+            $success['phone'] =  $user->phone;
+
+            return $this->sendResponse($success, 'User login successfully.');
+        }
+        else{
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Invalid credentials'
+             ];
+             return response()->json($response);
+        }
     }
 
 
@@ -237,7 +257,7 @@ class UserAPIController extends AppBaseController
     public function checkPhoneNumber(Request $request){
 
 
-
+        $user_phone_number = User::where('phone', $request['phone'])->firstOrFail();
        if($user_phone_number){
         $response = [
             'success'=>true,
@@ -245,7 +265,7 @@ class UserAPIController extends AppBaseController
          ];
          return response()->json($response,200);
        }
-       else{
+        else{
 
         $response = [
             'success'=>false,
@@ -289,6 +309,7 @@ class UserAPIController extends AppBaseController
     {
         /** @var User $user */
         $user = User::find($id);
+        $success['username'] = $user->username;
         $success['first_name'] = $user->first_name;
         $success['last_name'] = $user->last_name;
         $success['email'] = $user->email;

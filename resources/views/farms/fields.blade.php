@@ -1,6 +1,6 @@
 
 <?php
-$users = App\Models\User::pluck('email','id');
+$users = App\Models\User::pluck('username','id');
 ?>
 
 <!-- Name Field -->

@@ -27,13 +27,10 @@ class Plot extends Model
 
 
 
-
-
-
     public $fillable = [
         'name',
         'crop_id',
-        'district_id',
+        'district',
         'size',
         'size_unit',
         'farm_id',
@@ -51,7 +48,7 @@ class Plot extends Model
         'size' => 'integer',
         'size_unit' => 'string',
         'farm_id'=>'integer',
-        'district_id'=>'integer',
+        'district'=>'string',
         'total_harvest' => 'integer'
     ];
 
@@ -61,12 +58,12 @@ class Plot extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|unique:plots',
+        'name' => 'required',
         'crop_id' => 'required',
         'size' => 'required|min:1|integer',
         'size_unit' => 'required|string',
         'farm_id' => 'required',
-        'district_id' => 'required'
+
     ];
 
 

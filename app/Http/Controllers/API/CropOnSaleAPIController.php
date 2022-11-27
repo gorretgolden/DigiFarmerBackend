@@ -36,10 +36,15 @@ class CropOnSaleAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cropsOnSale = CropOnSale::with('user','crop')->get();
+        $cropsOnSale = CropOnSale::with('user','crop','crop_orders')->get();
+
+      //  $data = collect($cropsOnSale);
+        //dd($data->min('buying_price'));
+
         $response = [
             'success'=>true,
             'data'=> $cropsOnSale,
+
             'message'=> 'cropsOnSale retrieved successfully'
          ];
          return response()->json($response,200);
@@ -138,6 +143,11 @@ class CropOnSaleAPIController extends AppBaseController
             $success['price_unit'] = $crop_on_sale->price_unit;
             $success['crop'] = $crop_on_sale->crop;
             $success['farmer'] = $crop_on_sale->user;
+            $success['buyers'] = $crop_on_sale->crop_orders;
+            $success['total-buyers'] = count($crop_on_sale->crop_orders);
+            $data = collect($crop_on_sale->crop_orders);
+            //dd($data->min('buying_price'));
+            $success['min-price'] = $data->min('buying_price');
 
             $response = [
                 'success'=>true,

@@ -36,13 +36,13 @@ class FarmAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $farms = $this->farmRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($farms->toArray(), 'Farms retrieved successfully');
+        $farms = Farm::with('user')->get();
+        $response = [
+            'success'=>true,
+            'data'=> $farms,
+            'message'=> 'farms retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -125,12 +125,12 @@ class FarmAPIController extends AppBaseController
 
         $farm = Farm::find($id);
         $success['name'] = $farm->name;
-        $success['plots'] = $farm->plots;
         $success['address'] = $farm->address;
         $success['field_area'] = $farm->field_area;
         $success['size_unit'] = $farm->size_unit;
         $success['latitude'] = $farm->latitude;
         $success['longitude'] = $farm->longitude;
+        $success['plots'] = $farm->plots;
         $success['farm_owner'] = $farm->user;
         $success['image'] = $farm->image;
         $success['created_at'] = $farm->created_at;

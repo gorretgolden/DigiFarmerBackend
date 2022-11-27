@@ -156,13 +156,6 @@
         </li>
 
 
-        <li class="nav-item">
-            <a href="{{ route('cropBuyers.index') }}"
-                >
-                <p>Crop Buyers</p>
-            </a>
-        </li>
-
 
         <li class="nav-item">
             <a href="{{ route('cropOnSales.index') }}"
@@ -234,3 +227,19 @@
         $("ul", this).toggle("slow");
     });
 </script>
+<li class="nav-item">
+    <a href="{{ route('cropHarvests.index') }}"
+       class="nav-link {{ Request::is('cropHarvests*') ? 'active' : '' }}">
+        <p>Crop Harvests</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('cropOrders.index') }}"
+       class="nav-link {{ Request::is('cropOrders*') ? 'active' : '' }}">
+        <p>Crop Orders</p>
+    </a>
+</li>
+
+

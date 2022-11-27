@@ -49,7 +49,7 @@ class CropOrderCropOnSale extends Model
     ];
 
     //an order product belongs to a crop on sale
-    public function crops_on_sale()
+    public function crop_on_sale()
     {
         return $this->belongsTo(\App\Models\CropOnSale::class);
     }
