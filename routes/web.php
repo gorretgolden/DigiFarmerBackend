@@ -44,15 +44,27 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('sellerProductCategories', App\Http\Controllers\SellerProductCategoryController::class);
     Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);
     Route::resource('farmers', App\Http\Controllers\UserController::class);
-    Route::get('users/buyers', [App\Http\Controllers\UserController::class, 'buyers'])->name('buyers');
+    Route::get('buyers', [App\Http\Controllers\UserController::class, 'buyers'])->name('buyers');
 
+    //sellers
     Route::get('sellers', [App\Http\Controllers\SellerController::class, 'index'])->name('sellers.index');
     Route::get('sellers/create', [App\Http\Controllers\SellerController::class, 'create'])->name('sellers.create');
     Route::get('sellers/{id}', [App\Http\Controllers\SellerController::class, 'show'])->name('sellers.show');
     Route::get('sellers/{id}/edit', [App\Http\Controllers\SellerController::class, 'edit'])->name('sellers.edit');
-    Route::get('sellers/update', [App\Http\Controllers\SellerController::class, 'update'])->name('sellers.update');
+    Route::put('sellers/update', [App\Http\Controllers\SellerController::class, 'update'])->name('sellers.update');
     Route::post('sellers/new', [App\Http\Controllers\SellerController::class, 'store'])->name('sellers.store');
-    Route::post('sellers/delete', [App\Http\Controllers\SellerController::class, 'destroy'])->name('sellers.destroy');
+    Route::delete('sellers/{id}', [App\Http\Controllers\SellerController::class, 'destroy'])->name('sellers.destroy');
+
+
+    //buyers
+    Route::get('buyers', [App\Http\Controllers\BuyerController::class, 'index'])->name('buyers.index');
+    Route::get('buyers/create', [App\Http\Controllers\BuyerController::class, 'create'])->name('buyers.create');
+    Route::get('buyers/{id}', [App\Http\Controllers\BuyerController::class, 'show'])->name('buyers.show');
+    Route::get('buyers/{id}/edit', [App\Http\Controllers\BuyerController::class, 'edit'])->name('buyers.edit');
+    Route::put('buyers/update', [App\Http\Controllers\BuyerController::class, 'update'])->name('buyers.update');
+    Route::post('buyers/new', [App\Http\Controllers\BuyerController::class, 'store'])->name('buyers.store');
+    Route::delete('buyers/{id}', [App\Http\Controllers\BuyerController::class, 'destroy'])->name('buyers.destroy');
+
 
     Route::resource('cropBuyers', App\Http\Controllers\CropOrderController::class);
     Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);

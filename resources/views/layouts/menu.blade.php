@@ -36,7 +36,7 @@
 
 
         <li class="nav-item">
-            <a href="{{url('buyers') }}">
+            <a href="{{route('buyers.index') }}">
                 <p>Buyers</p>
             </a>
         </li>
@@ -56,7 +56,7 @@
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
         <i class="fa fa-book mr-2" aria-hidden="true"></i>
-        <p>Content</p>
+        <p>Content Management</p>
     </a>
 
     <ul class="menu-content" style="display: none">
@@ -89,7 +89,7 @@
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
         <i class="fa fa-list-alt mr-2" aria-hidden="true"></i>
-        <p>Categories</p>
+        <p>Crop Categories</p>
     </a>
 
     <ul class="menu-content" style="display: none">
@@ -100,11 +100,7 @@
                 <p>Categories</p>
             </a>
         </li>
-        <li class="nav-item">
-            <a href="{{ route('expenseCategories.index') }}">
-                <p>Expense Categories</p>
-            </a>
-        </li>
+
         <li class="nav-item">
             <a href="{{ route('subCategories.index') }}">
                 <p>Sub Categories</p>
@@ -113,19 +109,15 @@
 
 
 
-        <li class="nav-item">
-            <a href="{{ route('vendorCategories.index') }}">
-                <p>Vendor Categories</p>
-            </a>
-        </li>
 
     </ul>
 </li>
 
+
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
-        <i class="fa-solid fa-cow  mr-2" aria-hidden="true"></i>
-        <p>My Farm</p>
+        <i class="fa fa-book mr-2" aria-hidden="true"></i>
+        <p>Farm Management</p>
     </a>
 
     <ul class="menu-content" style="display: none">
@@ -152,16 +144,42 @@
 
 
         <li class="nav-item">
+            <a href="{{ route('cropHarvests.index') }}"
+         >
+                <p>Crop Harvests</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('expenseCategories.index') }}">
+                <p>Expense Categories</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a href="{{ route('expenses.index') }}" >
                 <p>Expenses</p>
             </a>
         </li>
 
 
+    </ul>
+</li>
+
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-list-alt mr-2" aria-hidden="true"></i>
+        <p>Manage Market</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+
         <li class="nav-item">
-            <a href="{{ route('sellerProducts.index') }} "
-           >
-                <p>Seller Products</p>
+            <a href="{{ route('vendorCategories.index') }}">
+                <p>Vendor Categories</p>
             </a>
         </li>
 
@@ -174,27 +192,24 @@
             </a>
         </li>
 
-
-
-
         <li class="nav-item">
-            <a href="{{ route('traningVendorServices.index') }}"
-             >
-                <p>Traning Vendor Services</p>
+            <a href="{{route('buyers.index') }}">
+                <p>Buyers</p>
             </a>
         </li>
 
-
         <li class="nav-item">
-            <a href="{{ route('farmerTrainings.index') }}"
-               >
-                <p>Farmer Trainings</p>
+            <a href="{{ route('cropOrders.index') }}"
+               class="nav-link">
+                <p>Crop Orders</p>
             </a>
         </li>
+
 
 
     </ul>
 </li>
+
 
 
 <li class="nav-item-one nav-item">
@@ -224,7 +239,7 @@
 </li>
 
 
-<li class="nav-item-one nav-item">
+{{-- <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
         <i class="fa fa-users mr-2" aria-hidden="true"></i>
         <p>Training Vendor Services</p>
@@ -249,7 +264,7 @@
 
 
     </ul>
-</li>
+</li> --}}
 
 
 
@@ -267,6 +282,18 @@
         <i class="fas fa-cog mr-2"></i>
         <p>Settings</p>
     </a>
+
+</li>
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;"   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fas fa-cog mr-2"></i>
+        <p>Logout</p>
+    </a>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
 
 </li>
 
@@ -295,19 +322,5 @@
         $("ul", this).toggle("slow");
     });
 </script>
-<li class="nav-item">
-    <a href="{{ route('cropHarvests.index') }}"
-       class="nav-link {{ Request::is('cropHarvests*') ? 'active' : '' }}">
-        <p>Crop Harvests</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('cropOrders.index') }}"
-       class="nav-link {{ Request::is('cropOrders*') ? 'active' : '' }}">
-        <p>Crop Orders</p>
-    </a>
-</li>
 
 

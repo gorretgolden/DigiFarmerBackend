@@ -14,7 +14,7 @@ use Validator;
 use Auth;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
-require_once('../external/AfricasTalkingGateway.php');
+//require_once('../external/AfricasTalkingGateway.php');
 
 
 /**

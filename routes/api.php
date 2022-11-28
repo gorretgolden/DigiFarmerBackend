@@ -60,6 +60,9 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
         Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
         Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
+        Route::get('farmer/farms', [App\Http\Controllers\API\FarmAPIController::class,'user_farms']);
+
+        Route::get('farmer/plots', [App\Http\Controllers\API\PlotAPIController::class,'farmPlots']);
 
         Route::get('farm/owner', [App\Http\Controllers\API\FarmAPIController::class,'farmUser']);
         Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);

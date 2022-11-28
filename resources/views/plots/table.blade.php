@@ -39,4 +39,8 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="float-right">
+        {{ $plots->links() }}
+    </div>
 </div>

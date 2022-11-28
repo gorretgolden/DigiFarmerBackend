@@ -45,6 +45,24 @@ class FarmAPIController extends AppBaseController
          return response()->json($response,200);
     }
 
+    //get farms for a farmer
+    public function user_farms(Request $request)
+    {
+        $farmer = User::find(auth()->user()->id);
+       // dd($farmer->farms);
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+               'farms' => $farmer->farms,
+               'total-farms'=> $farmer->farms->count()
+            ],
+            'message'=> 'farmers for farmer retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
+
+
     /**
      * Store a newly created Farm in storage.
      * POST /farms

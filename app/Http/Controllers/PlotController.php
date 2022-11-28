@@ -11,6 +11,7 @@ use Flash;
 use Response;
 use App\Models\Plot;
 use App\Models\Farm;
+use App\Models\CropHarvest;
 
 class PlotController extends AppBaseController
 {
@@ -31,7 +32,7 @@ class PlotController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $plots = $this->plotRepository->all();
+        $plots = Plot::latest()->paginate();
 
         return view('plots.index')
             ->with('plots', $plots);
@@ -87,8 +88,10 @@ class PlotController extends AppBaseController
             $new_plot->size_unit = $request->size_unit;
             $new_plot->save();
 
-            $plot->total_harvest =  $totalPlotHarvest;
-            $plot->save();
+            //$totalPlotHarvest =  CropHarvest::where('plot_id',$new_plot->$id)->sum('quantity');
+
+           // $plot->total_harvest =  $totalPlotHarvest;
+           // $new_plot->save();
 
             Flash::success('Plot saved successfuly');
             return redirect(route('plots.index'));

@@ -11,6 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\CropHarvest;
 use App\Models\Farm;
+use App\Models\User;
 
 /**
  * Class PlotController
@@ -45,6 +46,22 @@ class PlotAPIController extends AppBaseController
          return response()->json($response,200);
     }
 
+   //get farm farmer plots
+    public function farmPlots(Request $request)
+    {
+        $farmer = Farm::where('user_id',auth()->user()->id)->get();
+        dd($farmer->plots);
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+               'plots' => $farmer->farms->plots,
+               'total-farms'=> $farmer->farms->plots->count()
+            ],
+            'message'=> 'farmer plots  retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
     /**
      * Store a newly created Plot in storage.
      * POST /plots
@@ -141,7 +158,7 @@ class PlotAPIController extends AppBaseController
             $success['name'] = $plot->name;
             $success['size'] = $plot->size;
             $success['size_unit'] = $plot->size_unit;
-            $success['district'] = $plot->district->name;
+            $success['district'] = $plot->district;
             $success['farm'] = $plot->farm;
             $success['crop'] = $plot->crop;
             $success['crop-harvests'] = $plot->crop_harvests;

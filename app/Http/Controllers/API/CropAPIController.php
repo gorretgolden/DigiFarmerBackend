@@ -82,7 +82,7 @@ class CropAPIController extends AppBaseController
         else{
             $success['name'] = $crop->name;
             $success['standard_price'] = $crop->standard_price;
-            $success['sub_category_id'] = $crop->sub_category->name;
+            $success['sub_category_id'] = $crop->sub_category;
             $success['price_unit'] = $crop->price_unit;
             $success['image'] = $crop->image;
 

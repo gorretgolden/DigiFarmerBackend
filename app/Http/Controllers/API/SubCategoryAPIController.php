@@ -71,11 +71,15 @@ class SubCategoryAPIController extends AppBaseController
     public function show($id)
     {
         /** @var SubCategory $subCategory */
-        $subCategory = $this->subCategoryRepository->find($id);
+        $subCategory = SubCategory::find($id);
         $crops = $subCategory->crops;
 
         if (empty($subCategory)) {
-            return $this->sendError('Sub Category not found');
+            $response = [
+                'success'=>true,
+                'message'=> 'Sub category not found'
+             ];
+            return response()->json($response,200);
         }
         else{
             $response = [

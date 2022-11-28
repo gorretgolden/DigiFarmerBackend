@@ -7,9 +7,10 @@ use App\Models\User;
 use Flash;
 use Hash;
 
-class SellerController extends Controller
+
+class BuyerController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -18,10 +19,10 @@ class SellerController extends Controller
     {
 
        // dd('Test');
-        $sellers = User::where('user_type','seller')->paginate(10);
+        $buyers = User::where('user_type','buyer')->paginate(10);
 
-        return view('sellers.index')
-            ->with('sellers', $sellers);
+        return view('buyers.index')
+            ->with('buyers', $buyers);
     }
 
 
@@ -32,7 +33,7 @@ class SellerController extends Controller
      */
     public function create(Request $request)
     {
-        return view('sellers.create');
+        return view('buyers.create');
     }
 
 
@@ -45,7 +46,7 @@ class SellerController extends Controller
     public function store(Request $request)
     {
 
-        $seller_rules = [
+        $buyer_rules = [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:users,id|email',
@@ -56,7 +57,7 @@ class SellerController extends Controller
             'email_verified_at' => 'datetime',
             'confirm-password'=>'required|same:password'
         ];
-        $request->validate($seller_rules);
+        $request->validate($buyer_rules);
 
         $existing_user = User::where('email',$request->input('email'))->first();
         //if not existing user
@@ -70,13 +71,13 @@ class SellerController extends Controller
           $user->country_id = $request->input('country_id');
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
-          $user->user_type = "seller";
+          $user->user_type = "buyer";
           $password = $request->input('password');
           $user->password = Hash::make($password);
 
           //assign a user a role depending on the user type
 
-           $user->assignRole('seller');
+           $user->assignRole('buyer');
            $user->save();
 
            $user = User::find($user->id);
@@ -84,7 +85,7 @@ class SellerController extends Controller
            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
            $user->save();
 
-           Flash::success('Seller saved successfully.');
+           Flash::success('Buyer saved successfully.');
 
 
         }
@@ -92,7 +93,7 @@ class SellerController extends Controller
         else{
             Flash::error('User with this email already exists');
         }
-        return redirect(route('sellers.index'));
+        return redirect(route('buyers.index'));
 
     }
 
@@ -104,15 +105,15 @@ class SellerController extends Controller
      */
     public function show($id)
     {
-        $seller = User::find($id);
+        $buyer = User::find($id);
 
-        if (empty($seller)) {
-            Flash::error('Seller not found');
+        if (empty($buyer)) {
+            Flash::error('Buyer not found');
 
-            return redirect(route('sellers.index'));
+            return redirect(route('buyers.index'));
         }
 
-        return view('sellers.show')->with('seller', $seller);
+        return view('buyers.show')->with('buyer', $buyer);
     }
 
     /**
@@ -128,10 +129,10 @@ class SellerController extends Controller
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('sellers.index'));
+            return redirect(route('buyers.index'));
         }
 
-        return view('sellers.edit')->with('user', $user);
+        return view('buyers.edit')->with('user', $user);
     }
 
     /**
@@ -149,7 +150,7 @@ class SellerController extends Controller
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('sellers.index'));
+            return redirect(route('buyers.index'));
         }
 
 
@@ -169,12 +170,11 @@ class SellerController extends Controller
                 $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
             }
             $user->save();
-            Flash::success('User updated successfully.');
-
-            return redirect(route('sellers.index'));
         }
 
+        Flash::success('Seller updated successfully.');
 
+        return redirect(route('buyers.index'));
     }
 
     /**
@@ -190,14 +190,14 @@ class SellerController extends Controller
         if (empty($user)) {
             Flash::error('Seller not found');
 
-            return redirect(route('sellers.index'));
+            return redirect(route('buyers.index'));
         }
 
         $user->delete($id);
 
         Flash::success('User deleted successfully.');
 
-        return redirect(route('sellers.index'));
+        return redirect(route('buyers.index'));
     }
 
 }

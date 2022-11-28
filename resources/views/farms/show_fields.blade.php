@@ -25,7 +25,7 @@
 <!-- User Id Field -->
 <div class="col-sm-12">
     {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $farm->user_id }}</p>
+    <p>{{ $farm->user->username}}</p>
 </div>
 
 <!-- Field Area Field -->
@@ -46,6 +46,19 @@
     <p>{{ $farm->image }}</p>
 </div>
 
+
+
+
+<!--farm plots-->
+<div class="col-sm-12">
+    {!! Form::label('plots', 'Total Plots:') !!}  {{ $farm->plots->count() }}
+    @foreach($farm->plots as $plot)
+    <p>{{$plot->name}}</p>
+
+    @endforeach
+
+</div>
+
 <!-- Created At Field -->
 <div class="col-sm-12">
     {!! Form::label('created_at', 'Created At:') !!}
@@ -57,4 +70,3 @@
     {!! Form::label('updated_at', 'Updated At:') !!}
     <p>{{ $farm->updated_at }}</p>
 </div>
-

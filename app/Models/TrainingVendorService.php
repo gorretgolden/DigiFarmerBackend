@@ -28,14 +28,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class TrainingVendorService extends Model
 {
-    use SoftDeletes;
 
     use HasFactory;
 
     public $table = 'training_vendor_services';
 
 
-    protected $dates = ['deleted_at'];
 
 
 
