@@ -1,6 +1,6 @@
 
 <?php
-$users = App\Models\User::pluck('username','id');
+$users = App\Models\User::where('user_type','farmer')->pluck('username','id');
 ?>
 
 <!-- Name Field -->

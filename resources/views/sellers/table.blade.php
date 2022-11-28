@@ -11,39 +11,39 @@
                 <th>Phone</th>
                 <th>User Type</th>
                 <th>Role</th>
-                <th>Total Farms</th>
+                <th>Total Products For Sale</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($farmers as $farmer)
+            @foreach ($sellers as $seller)
                 <tr>
-                    <td>  <img src="{{$farmer->image_url ? asset('/storage/users/'.$farmer->image_url) : asset('img/avatar-1.png') }}" width="50px" height="50px"></td>
-                    <td>{{ $farmer->username}}</td>
-                    <td>{{ $farmer->first_name }}</td>
-                    <td>{{ $farmer->last_name }}</td>
-                    <td>{{ $farmer->email }}</td>
-                    <td>{{ $farmer->country->name }}</td>
-                    <td>{{ $farmer->phone }}</td>
-                    <td>{{ $farmer->user_type }}</td>
+                    <td>  <img src="{{$seller->image_url ? asset('/storage/users/'.$seller->image_url) : asset('img/avatar-1.png') }}" width="50px" height="50px"></td>
+                    <td>{{ $seller->username}}</td>
+                    <td>{{ $seller->first_name }}</td>
+                    <td>{{ $seller->last_name }}</td>
+                    <td>{{ $seller->email }}</td>
+                    <td>{{ $seller->country->name }}</td>
+                    <td>{{ $seller->phone }}</td>
+                    <td>{{ $seller->user_type }}</td>
 
 
                     <td>
 
-                        @if (!empty($farmer->getRoleNames()))
-                            @foreach ($farmer->getRoleNames() as $name)
+                        @if (!empty($seller->getRoleNames()))
+                            @foreach ($seller->getRoleNames() as $name)
                                 <span class="badge rounded-pill bg-success">{{ $name }}</span>
                             @endforeach
                         @endif
                     </td>
-                    <td class="text-center">{{ $farmer->farms->count()}}</td>
+                    <td class="text-center">{{ $seller->seller_products->count()}}</td>
                     <td width="120">
-                        {!! Form::open(['route' => ['farmers.destroy', $farmer->id], 'method' => 'delete']) !!}
+                        {!! Form::open(['route' => ['sellers.destroy', $seller->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
-                            <a href="{{ route('farmers.show', [$farmer->id]) }}" class='btn btn-default btn-xs'>
+                            <a href="{{ route('sellers.show', [$seller->id]) }}" class='btn btn-default btn-xs'>
                                 <i class="far fa-eye"></i>
                             </a>
-                            <a href="{{ route('farmers.edit', [$farmer->id]) }}" class='btn btn-default btn-xs'>
+                            <a href="{{ route('sellers.edit', [$seller->id]) }}" class='btn btn-default btn-xs'>
                                 <i class="far fa-edit"></i>
                             </a>
                             {!! Form::button('<i class="far fa-trash-alt"></i>', [
@@ -60,6 +60,6 @@
     </table>
 
     <div class="float-right">
-        {{ $farmers->links() }}
+        {{ $sellers->links() }}
     </div>
 </div>

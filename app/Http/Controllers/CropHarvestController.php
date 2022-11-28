@@ -10,6 +10,8 @@ use App\Repositories\CropHarvestRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\CropHarvest;
+use App\Models\Plot;
 
 class CropHarvestController extends AppBaseController
 {
@@ -55,6 +57,13 @@ class CropHarvestController extends AppBaseController
         $input = $request->all();
 
         $cropHarvest = $this->cropHarvestRepository->create($input);
+        $totalPlotHarvest =  CropHarvest::where('plot_id',$request->plot_id)->sum('quantity');
+
+        $plot = Plot::find($request->plot_id);
+
+        $plot->total_harvest =  $totalPlotHarvest;
+        $plot->save();
+
 
         Flash::success('Crop Harvest saved successfully.');
 
@@ -142,6 +151,8 @@ class CropHarvestController extends AppBaseController
 
             return redirect(route('cropHarvests.index'));
         }
+        $cropHarvest->plot->total_harvest = 0;
+        $cropHarvest->update();
 
         $this->cropHarvestRepository->delete($id);
 

@@ -1,7 +1,7 @@
 
 <?php
 $seller_product_categories = App\Models\SellerProductCategory::pluck('name','id');
-$users = App\Models\User::pluck('email','id');
+$users = App\Models\User::where('user_type','seller')->pluck('username','id');
 ?>
 <!-- Name Field -->
 <div class="form-group col-sm-6">
@@ -42,6 +42,6 @@ $users = App\Models\User::pluck('email','id');
 
 <!-- User-->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'User:') !!}
+    {!! Form::label('user_id', 'Sellers:') !!}
     {!! Form::select('user_id', $users , null, ['class' => 'form-control custom-select']) !!}
 </div>

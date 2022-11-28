@@ -75,23 +75,24 @@ class CropOrderController extends AppBaseController
         else{
 
             $order = CropOrder::create($request->all());
-        //dd($order);
 
-        $crop_orders = $request->input('crops_on_sales', []);
-       //dd($crop_orders);
+            //dd($order);
 
-        $buying_prices = $request->input('buying_prices', []);
-        //dd($buying_prices);
-        for ($crop_order=0; $crop_order < count($crop_orders); $crop_order++) {
-            if ($crop_orders[$crop_order] != '') {
+            $crop_orders = $request->input('crops_on_sales', []);
+           //dd($crop_orders);
+
+            $buying_prices = $request->input('buying_prices', []);
+           //dd($buying_prices);
+            for ($crop_order=0; $crop_order < count($crop_orders); $crop_order++) {
+              if ($crop_orders[$crop_order] != '') {
                 $order->crops_on_sale()->attach($crop_orders[$crop_order], ['buying_price' => $buying_prices[$crop_order]]);
+              }
             }
-        }
 
 
-        Flash::success('Crop Order saved successfully.');
+             Flash::success('Crop Order saved successfully.');
 
-        return redirect(route('cropOrders.index'));
+             return redirect(route('cropOrders.index'));
         }
 
 

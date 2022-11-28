@@ -7,6 +7,7 @@
                 <th>Price</th>
                 <th>Image</th>
                 <th>Category</th>
+                <th>Seller</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                             width="50px" height="50px"/>
                     </td>
                     <td>{{ $sellerProduct->seller_product_category->name }}</td>
+                    <td>{{ $sellerProduct->user->username }}</td>
                     <td width="120">
                         {!! Form::open(['route' => ['sellerProducts.destroy', $sellerProduct->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
@@ -45,4 +47,8 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="float-right">
+        {{ $sellerProducts->links() }}
+    </div>
 </div>

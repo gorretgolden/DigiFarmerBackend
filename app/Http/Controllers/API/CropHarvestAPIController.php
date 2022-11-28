@@ -65,9 +65,10 @@ class CropHarvestAPIController extends AppBaseController
         $totalPlotHarvest =  CropHarvest::where('plot_id',$request->plot_id)->sum('quantity');
 
         $plot->total_harvest =  $totalPlotHarvest;
+        dd($plot->total_harvest);
         $plot->save();
 
-        //dd($new_harvest);
+
 
         return $this->sendResponse($cropHarvest->toArray(), 'Crop Harvest saved successfully');
 

@@ -86,10 +86,6 @@ class PlotController extends AppBaseController
             $new_plot->size = $request->size;
             $new_plot->size_unit = $request->size_unit;
             $new_plot->save();
-
-            $plot->total_harvest =  $totalPlotHarvest;
-            $plot->save();
-
             Flash::success('Plot saved successfuly');
             return redirect(route('plots.index'));
 

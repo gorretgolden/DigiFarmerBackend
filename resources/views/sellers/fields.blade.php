@@ -41,9 +41,9 @@ $roles =    Spatie\Permission\Models\Role::pluck('name','id');
 </div>
 
 <!-- User type -->
-<div class="form-group col-sm-6">
+ <div class="form-group col-sm-6">
     {!! Form::label('user_type', 'User Type:') !!}
-    {!! Form::text('user_type',null,['class' => 'form-control','placeholder' => 'farmer','readonly']) !!}
+    {!! Form::text('user_type',null,['class' => 'form-control','placeholder' => 'seller','readonly']) !!}
 </div>
 
 <!-- Country Id Field -->

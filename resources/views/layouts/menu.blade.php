@@ -7,9 +7,9 @@
 
 
 <li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}"><i
-            class="fa fa-users mr-2" aria-hidden="true"></i>
-        <p>Users</p>
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>User Management</p>
     </a>
 
     <ul class="menu-content" style="display: none">
@@ -29,10 +29,24 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('users.index') }}">
-                <p>Users</p>
+            <a href="{{ route('farmers.index') }}">
+                <p>Farmers</p>
             </a>
         </li>
+
+
+        <li class="nav-item">
+            <a href="{{url('buyers') }}">
+                <p>Buyers</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{route('sellers.index') }}">
+                <p>Sellers</p>
+            </a>
+        </li>
+
 
 
     </ul>
@@ -98,11 +112,7 @@
         </li>
 
 
-        <li class="nav-item">
-            <a href="{{ route('sellerProductCategories.index') }}">
-                <p>Seller Product Categories</p>
-            </a>
-        </li>
+
         <li class="nav-item">
             <a href="{{ route('vendorCategories.index') }}">
                 <p>Vendor Categories</p>
@@ -185,6 +195,64 @@
 
     </ul>
 </li>
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>Seller Vendor Services</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+
+        <li class="nav-item">
+            <a href="{{ route('sellerProductCategories.index') }}">
+                <p>Seller Product Categories</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('sellerProducts.index') }} "
+           >
+                <p>Seller Products</p>
+            </a>
+        </li>
+
+
+    </ul>
+</li>
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>Training Vendor Services</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+        <li class="nav-item">
+            <a href="{{ route('traningVendorServices.index') }}"
+             >
+                <p>Traning Vendor Services</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('farmerTrainings.index') }}"
+               >
+                <p>Farmer Trainings</p>
+            </a>
+        </li>
+
+
+    </ul>
+</li>
+
+
+
 
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link {{ Request::is('farmerTrainings*') ? 'active' : '' }}">

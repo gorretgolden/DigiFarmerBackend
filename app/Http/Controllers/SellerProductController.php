@@ -30,7 +30,7 @@ class SellerProductController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sellerProducts = $this->sellerProductRepository->all();
+        $sellerProducts = SellerProduct::latest()->paginate(10);
 
         return view('seller_products.index')
             ->with('sellerProducts', $sellerProducts);
@@ -75,12 +75,14 @@ class SellerProductController extends AppBaseController
           $new_seller_product->save();
 
           Flash::success('Product saved successfully.');
+          return redirect(route('sellerProducts.index'));
        }
        else{
           Flash::error('Product name already exists');
+          return redirect(route('sellerProducts.index'));
        }
 
-      return redirect(route('seller_products.index'));
+      return redirect(route('sellerProducts.index'));
     }
 
     /**

@@ -2,85 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Repositories\UserRepository;
-use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
-use Flash;
-use Response;
 use App\Models\User;
+use Flash;
 use Hash;
 
-class UserController extends AppBaseController
+class SellerController extends Controller
 {
-    /** @var UserRepository $userRepository*/
-    private $userRepository;
-
-    public function __construct(UserRepository $userRepo)
-    {
-        $this->userRepository = $userRepo;
-    }
-
     /**
-     * Display a listing of the User.
+     * Display a listing of the resource.
      *
-     * @param Request $request
-     *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $farmers = User::where('user_type','farmer')->paginate(10);
 
-        return view('users.index')
-            ->with('farmers', $farmers);
+       // dd('Test');
+        $sellers = User::where('user_type','seller')->paginate(10);
+
+        return view('sellers.index')
+            ->with('sellers', $sellers);
     }
-
-
-
-
-    public function buyers(Request $request)
-    {
-        $buyers = User::where('user_type','buyer')->paginate(10);
-
-        return view('users.buyers')->with('buyers', $buyers);
-    }
-
-
 
 
     /**
-     * Show the form for creating a new User.
+     * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('users.create');
+        return view('sellers.create');
     }
 
-    public function createBuyers()
-    {
-        return view('users.create-buyers');
-    }
 
     /**
-     * Store a newly created User in storage.
+     * Store a newly created resource in storage.
      *
-     * @param CreateUserRequest $request
-     *
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-
-
-
-
-
     public function store(Request $request)
     {
 
-        $farmer_rules = [
+        $seller_rules = [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:users,id|email',
@@ -91,7 +56,7 @@ class UserController extends AppBaseController
             'email_verified_at' => 'datetime',
             'confirm-password'=>'required|same:password'
         ];
-        $request->validate($farmer_rules);
+        $request->validate($seller_rules);
 
         $existing_user = User::where('email',$request->input('email'))->first();
         //if not existing user
@@ -105,14 +70,13 @@ class UserController extends AppBaseController
           $user->country_id = $request->input('country_id');
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
-          $user->user_type = "farmer";
+          $user->user_type = "seller";
           $password = $request->input('password');
           $user->password = Hash::make($password);
 
           //assign a user a role depending on the user type
 
-           $user->assignRole('farmer');
-
+           $user->assignRole('seller');
            $user->save();
 
            $user = User::find($user->id);
@@ -120,77 +84,72 @@ class UserController extends AppBaseController
            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
            $user->save();
 
-           Flash::success('User saved successfully.');
+           Flash::success('Seller saved successfully.');
 
 
         }
 
         else{
-            Flash::error('User already exists');
+            Flash::error('User with this email already exists');
         }
-        return redirect(route('farmers.index'));
-
+        return redirect(route('sellers.index'));
 
     }
 
     /**
-     * Display the specified User.
+     * Display the specified resource.
      *
-     * @param int $id
-     *
-     * @return Response
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $user = $this->userRepository->find($id);
+        $seller = User::find($id);
 
-        if (empty($user)) {
-            Flash::error('User not found');
+        if (empty($seller)) {
+            Flash::error('Seller not found');
 
-            return redirect(route('farmers.index'));
+            return redirect(route('sellers.index'));
         }
 
-        return view('users.show')->with('user', $user);
+        return view('sellers.show')->with('seller', $seller);
     }
 
     /**
-     * Show the form for editing the specified User.
+     * Show the form for editing the specified resource.
      *
-     * @param int $id
-     *
-     * @return Response
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $user = $this->userRepository->find($id);
+        $user = User::find($id);
 
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('farmers.index'));
+            return redirect(route('sellers.index'));
         }
 
-        return view('users.edit')->with('user', $user);
+        return view('sellers.edit')->with('user', $user);
     }
 
     /**
-     * Update the specified User in storage.
+     * Update the specified resource in storage.
      *
-     * @param int $id
-     * @param UpdateUserRequest $request
-     *
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
-
         $request->validate(User::$rules);
         $user = User::find($id);
 
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('farmers.index'));
+            return redirect(route('sellers.index'));
         }
 
 
@@ -214,32 +173,30 @@ class UserController extends AppBaseController
 
         Flash::success('User updated successfully.');
 
-        return redirect(route('farmers.index'));
+        return redirect(route('sellers.index'));
     }
 
     /**
-     * Remove the specified User from storage.
+     * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $user = $this->userRepository->find($id);
+        $user = User::find($id);
 
         if (empty($user)) {
             Flash::error('User not found');
 
-            return redirect(route('farmers.index'));
+            return redirect(route('sellers.index'));
         }
 
         $this->userRepository->delete($id);
 
         Flash::success('User deleted successfully.');
 
-        return redirect(route('farmers.index'));
+        return redirect(route('sellers.index'));
     }
+
 }

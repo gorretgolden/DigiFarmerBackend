@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Farmer</h1>
+                    <h1>Create Buyer</h1>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'farmers.store', 'files' => true]) !!}
+            {!! Form::open(['route' => 'users.store', 'files' => true]) !!}
 
             <div class="card-body">
 
@@ -29,7 +29,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('farmers.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('users.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

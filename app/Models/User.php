@@ -153,4 +153,13 @@ class User extends Authenticable implements  MustVerifyEmail
      }
 
 
+     //a user has many products for sell
+     //a user has many through crop orders
+
+     public function seller_products()
+     {
+         return $this->hasMany(\App\Models\SellerProduct::class,'user_id');
+     }
+
+
 }
