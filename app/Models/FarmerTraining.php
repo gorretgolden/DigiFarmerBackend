@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class FarmerTraining
  * @package App\Models
- * @version November 22, 2022, 8:13 am UTC
+ * @version November 29, 2022, 3:48 am UTC
  *
  * @property boolean $is_registered
  * @property integer $training_vendor_service_id
@@ -17,14 +17,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class FarmerTraining extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'farmer_trainings';
-    
 
-    protected $dates = ['deleted_at'];
 
 
 
@@ -51,10 +49,25 @@ class FarmerTraining extends Model
      * @var array
      */
     public static $rules = [
-        'is_registered' => 'nullable',
+        'is_registered' => 'required',
         'training_vendor_service_id' => 'required|integer',
         'user_id' => 'required|integer'
     ];
 
-    
+     //a registered farmer belongs to training vendor service
+     public function training_vendor_service()
+     {
+        return $this->belongsTo(\App\Models\TrainingVendorService::class,'training_vendor_service_id');
+     }
+
+
+     //a farmer training belongs to a user
+     public function farmer()
+     {
+        return $this->belongsTo(\App\Models\User::class,'user_id');
+     }
+
+
+
+
 }

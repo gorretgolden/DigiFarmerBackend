@@ -85,6 +85,8 @@ class CropOrderController extends AppBaseController
            //dd($buying_prices);
             for ($crop_order=0; $crop_order < count($crop_orders); $crop_order++) {
               if ($crop_orders[$crop_order] != '') {
+                //dd($crop_orders[$crop_order]);
+
                 $order->crops_on_sale()->attach($crop_orders[$crop_order], ['buying_price' => $buying_prices[$crop_order]]);
               }
             }

@@ -58,67 +58,104 @@ class CropOnSaleAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateCropOnSaleAPIRequest $request)
-    {
 
+    public function store(CreateCropOnSaleAPIRequest $request){
 
-         $existing_farmer = CropOnSale::where('user_id',auth()->user()->id)->first();
-         $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->first();
+        $existing_farmer = CropOnSale::where('user_id',auth()->user()->id)->first();
 
-         if($existing_farmer && $existing_crop){
+        $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->first();
+
+        if($existing_farmer && $existing_crop){
 
             $response = [
                 'success'=>false,
-                'message'=> 'Crop  already on sale '
+                'message'=> 'Farmer already posted this crop for sale '
              ];
              return response()->json($response,403);
-        }
 
-        else
-         {
+       }
 
-            $crop_plot = Plot::where('crop_id',$request->crop_id)->first();
-            if($crop_plot){
+       else
+        {
+            //for each crop on sale ensure that it exits on a farm plot
 
-                //dd($crop_plot->total_harvest);
-            $total_stock = $crop_plot->total_harvest;
 
-            $crop_on_sale = new CropOnSale();
-            $crop_on_sale->quantity = $total_stock;
-            $crop_on_sale->selling_price = $request->selling_price;
-            $crop_on_sale->crop_id = $request->crop_id;
-            $crop_on_sale->user_id = auth()->user()->id;
-            $crop_on_sale->save();
+           $farmer = User::where('id', auth()->user()->id)->first();
 
-             $success['quantity'] = $crop_on_sale->quantity;
-             $success['quantity_unit'] = $crop_on_sale->quantity_unit;
-             $success['price_unit'] = $crop_on_sale->price_unit;
-             $success['selling_price'] = $crop_on_sale->selling_price;
-             $success['crop'] = $crop_on_sale->crop;
-             $success['farmer'] = $crop_on_sale->user;
-
+           if ($farmer->farms->count() == 0) {
+             // dd('Farmer has no farms');
 
              $response = [
-                'success'=>true,
-                'data'=> $success,
-                'message'=> 'Crop posted for sale'
+                'success'=>false,
+                'message'=> 'Farmer has no farms '
              ];
+             return response()->json($response,404);
 
-             return response()->json($response,200);
+           }else{
+            foreach ($farmer->farms as $farm){
+
+                if($farm->plots->count() == 0){
+
+                    $response = [
+                        'success'=>false,
+                        'message'=> 'No plots exit on the farm for this crop '
+                     ];
+                     return response()->json($response,404);
+
+                }elseif(collect($farm->plots)->contains('crop_id', $request->crop_id)){
+
+                    $data = collect($farm->plots->where('crop_id', $request->crop_id));
+                    $plot_harvest = $data->pluck('total_harvest')->toArray()[0];
+                    //dd($plot_harvest);
+                    $new_crop_on_sale = new CropOnSale();
+                    $new_crop_on_sale->quantity = $plot_harvest;
+                    $new_crop_on_sale->selling_price = $request->selling_price;
+                    $new_crop_on_sale->quantity_unit = 'kg';
+                    $new_crop_on_sale->price_unit = 'UGX';
+                    $new_crop_on_sale->is_sold = false;
+                    $new_crop_on_sale->crop_id= $request->crop_id;
+                    $new_crop_on_sale->user_id= auth()->user()->id;
+                    $new_crop_on_sale->save();
+
+
+                    $success['quantity'] = $new_crop_on_sale->quantity;
+                    $success['quantity_unit'] = $new_crop_on_sale->quantity_unit;
+                    $success['price_unit'] = $new_crop_on_sale->price_unit;
+                    $success['selling_price'] = $new_crop_on_sale->selling_price;
+                    $success['crop'] = $new_crop_on_sale->crop;
+                    $success['farmer'] = $farmer;
+
+                    $response = [
+                        'success'=>true,
+                        'data'=> $success,
+                        'message'=> 'Crop posted for sale successfully'
+                     ];
+
+                     return response()->json($response,200);
+
+
+
+                }else{
+
+
+                    $response = [
+                        'success'=>false,
+                        'message'=> 'Crop selected doesnt exist on the plot '
+                     ];
+                     return response()->json($response,404);
+                }
+
             }
-            else{
-
-                $response = [
-                    'success'=>false,
-                    'message'=> 'Crop doesnt exist on the plot'
-                 ];
-
-                 return response()->json($response,200);
-            }
 
 
-        }
+           }
+
+
+
+       }
+
     }
+
 
     /**
      * Display the specified CropOnSale.

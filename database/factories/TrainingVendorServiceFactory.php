@@ -34,7 +34,7 @@ class TrainingVendorServiceFactory extends Factory
         'ending_time' => $this->faker->word,
         'zoom_details' => $this->faker->text,
         'location_details' => $this->faker->text,
-        'vendory_category_id' => $this->faker->randomDigitNotNull,
+        'vendor_category_id' => $this->faker->randomDigitNotNull,
         'user_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')

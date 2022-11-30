@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class TrainingVendorServiceRepository
  * @package App\Repositories
- * @version November 22, 2022, 8:00 am UTC
+ * @version November 28, 2022, 1:42 pm UTC
 */
 
 class TrainingVendorServiceRepository extends BaseRepository
@@ -29,7 +29,7 @@ class TrainingVendorServiceRepository extends BaseRepository
         'ending_time',
         'zoom_details',
         'location_details',
-        'vendory_category_id',
+        'vendor_category_id',
         'user_id'
     ];
 

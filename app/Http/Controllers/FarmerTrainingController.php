@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\FarmerTrainingDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateFarmerTrainingRequest;
 use App\Http\Requests\UpdateFarmerTrainingRequest;
 use App\Repositories\FarmerTrainingRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
 
 class FarmerTrainingController extends AppBaseController
@@ -23,16 +24,13 @@ class FarmerTrainingController extends AppBaseController
     /**
      * Display a listing of the FarmerTraining.
      *
-     * @param Request $request
+     * @param FarmerTrainingDataTable $farmerTrainingDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(FarmerTrainingDataTable $farmerTrainingDataTable)
     {
-        $farmerTrainings = $this->farmerTrainingRepository->all();
-
-        return view('farmer_trainings.index')
-            ->with('farmerTrainings', $farmerTrainings);
+        return $farmerTrainingDataTable->render('farmer_trainings.index');
     }
 
     /**
@@ -132,8 +130,6 @@ class FarmerTrainingController extends AppBaseController
      * Remove the specified FarmerTraining from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

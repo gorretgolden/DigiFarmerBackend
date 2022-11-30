@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Traning Vendor Service</h1>
+                    <h1>Create Animal Feed Sub Category</h1>
                 </div>
             </div>
         </div>
@@ -17,19 +17,19 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'traningVendorServices.store']) !!}
+            {!! Form::open(['route' => 'animalFeedSubCategories.store']) !!}
 
             <div class="card-body">
 
                 <div class="row">
-                    @include('traning_vendor_services.fields')
+                    @include('animal_feed_sub_categories.fields')
                 </div>
 
             </div>
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('traningVendorServices.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('animalFeedSubCategories.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $ending_time
  * @property string $zoom_details
  * @property string $location_details
- * @property integer $vendory_category_id
+ * @property integer $vendor_category_id
  * @property integer $user_id
  */
 class TrainingVendorService extends Model
@@ -50,7 +50,7 @@ class TrainingVendorService extends Model
         'ending_time',
         'zoom_details',
         'location_details',
-        'vendory_category_id',
+        'vendor_category_id',
         'user_id'
     ];
 
@@ -72,7 +72,7 @@ class TrainingVendorService extends Model
         'ending_time' => 'string',
         'zoom_details' => 'string',
         'location_details' => 'string',
-        'vendory_category_id' => 'integer',
+        'vendor_category_id' => 'integer',
         'user_id' => 'integer'
     ];
 
@@ -94,7 +94,7 @@ class TrainingVendorService extends Model
         'ending_time' => 'required',
         'zoom_details' => 'nullable',
         'location_details' => 'nullable',
-        'vendory_category_id' => 'required|integer',
+        'vendor_category_id' => 'required|integer',
         'user_id' => 'required|integer'
     ];
 
@@ -104,5 +104,17 @@ class TrainingVendorService extends Model
        {
           return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
        }
+
+    //a training vendor service has many farmers for training
+     public function farmers()
+     {
+        return $this->hasMany(\App\Models\User::class,'training_vendor_service_id');
+     }
+
+     //a training vendor service belongs to a vendor
+     public function vendor()
+     {
+        return $this->belongsTo(\App\Models\User::class,'user_id');
+     }
 
 }

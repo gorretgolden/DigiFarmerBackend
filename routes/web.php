@@ -97,3 +97,21 @@ Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class)
 
 
 Route::resource('cropOrders', App\Http\Controllers\CropOrderController::class);
+
+
+Route::resource('trainingVendorServices', App\Http\Controllers\TrainingVendorServiceController::class);
+
+
+Route::resource('farmerTrainings', App\Http\Controllers\FarmerTrainingController::class);
+
+
+Route::resource('animalFeedCategories', App\Http\Controllers\AnimalFeedCategoryController::class);
+
+
+Route::resource('animalFeedSubCategories', App\Http\Controllers\AnimalFeedSubCategoryController::class);
+
+
+Route::resource('animalFeeds', App\Http\Controllers\AnimalFeedController::class);
+
+
+Route::resource('tasks', App\Http\Controllers\TaskController::class);

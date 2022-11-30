@@ -16,7 +16,7 @@ class CreateFarmerBuySellerProductsTable extends Migration
     {
         Schema::create('farmer_buy_seller_products', function (Blueprint $table) {
             $table->id('id');
-            $table->boolean('is_product_bought');
+            $table->boolean('is_product_bought')->default(false);
             $table->foreignId('seller_product_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();

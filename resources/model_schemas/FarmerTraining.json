@@ -15,7 +15,7 @@
         "name": "is_registered",
         "dbType": "boolean",
         "htmlType": "checkbox",
-        "validations": "nullable",
+        "validations": "required",
         "searchable": true,
         "fillable": true,
         "primary": false,

@@ -31,7 +31,7 @@ class UserController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $farmers = User::where('user_type','farmer')->paginate(10);
+        $farmers = User::where('user_type','farmer')->paginate(8);
 
         return view('users.index')
             ->with('farmers', $farmers);

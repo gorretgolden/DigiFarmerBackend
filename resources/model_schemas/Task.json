@@ -24,10 +24,10 @@
         "inView": true
     },
     {
-        "name": "reminder_date",
+        "name": "task_date",
         "dbType": "string",
         "htmlType": "date",
-        "validations": "required|string",
+        "validations": "required",
         "searchable": true,
         "fillable": true,
         "primary": false,

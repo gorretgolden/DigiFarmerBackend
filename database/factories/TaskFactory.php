@@ -23,7 +23,7 @@ class TaskFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-        'reminder_date' => $this->faker->word,
+        'task_date' => $this->faker->word,
         'plot_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')

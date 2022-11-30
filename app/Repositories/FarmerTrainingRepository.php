@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class FarmerTrainingRepository
  * @package App\Repositories
- * @version November 22, 2022, 8:13 am UTC
+ * @version November 29, 2022, 3:48 am UTC
 */
 
 class FarmerTrainingRepository extends BaseRepository

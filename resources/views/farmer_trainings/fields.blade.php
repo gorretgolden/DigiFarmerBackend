@@ -1,51 +1,28 @@
-<!-- User Id Field -->
+
+<?php
+$users = App\Models\User::where('user_type','farmer')->pluck('username','id');
+$training_vendor_services = App\Models\TrainingVendorService::pluck('name','id');
+?>
+
+<!-- Is Registered Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'User Id:') !!}
-    {!! Form::select('user_id', ], null, ['class' => 'form-control custom-select']) !!}
+    <div class="form-check">
+        {!! Form::hidden('is_registered', 0, ['class' => 'form-check-input']) !!}
+        {!! Form::checkbox('is_registered', '1', null, ['class' => 'form-check-input','checked']) !!}
+        {!! Form::label('is_registered', 'Is Registered', ['class' => 'form-check-label']) !!}
+    </div>
 </div>
 
 
 <!-- Training Vendor Service Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('training_vendor_service_id', 'Training Vendor Service Id:') !!}
-    {!! Form::select('training_vendor_service_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('training_vendor_service_id', 'Training Vendor Services:') !!}
+    {!! Form::select('training_vendor_service_id', $training_vendor_services, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
-<!-- Starting Date Field -->
+<!-- User Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('starting_date', 'Starting Date:') !!}
-    {!! Form::text('starting_date', null, ['class' => 'form-control','id'=>'starting_date']) !!}
-</div>
-
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#starting_date').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
-
-<!-- Ending Date Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('ending_date', 'Ending Date:') !!}
-    {!! Form::text('ending_date', null, ['class' => 'form-control','id'=>'ending_date']) !!}
-</div>
-
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#ending_date').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
-
-<!-- Period Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('period', 'Period:') !!}
-    {!! Form::number('period', null, ['class' => 'form-control']) !!}
+    {!! Form::label('user_id', 'Farmers:') !!}
+    {!! Form::select('user_id', $users, null, ['class' => 'form-control custom-select']) !!}
 </div>

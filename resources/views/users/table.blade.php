@@ -9,7 +9,6 @@
                 <th>Email</th>
                 <th>Country</th>
                 <th>Phone</th>
-                <th>User Type</th>
                 <th>Role</th>
                 <th>Total Farms</th>
                 <th colspan="3">Action</th>
@@ -25,7 +24,7 @@
                     <td>{{ $farmer->email }}</td>
                     <td>{{ $farmer->country->name }}</td>
                     <td>{{ $farmer->phone }}</td>
-                    <td>{{ $farmer->user_type }}</td>
+
 
 
                     <td>
@@ -36,7 +35,10 @@
                             @endforeach
                         @endif
                     </td>
-                    <td class="text-center">{{ $farmer->farms->count()}}</td>
+                    <td class="text-center">
+                        {{ $farmer->farms->count()}}
+
+                    </td>
                     <td width="120">
                         {!! Form::open(['route' => ['farmers.destroy', $farmer->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

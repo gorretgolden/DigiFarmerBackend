@@ -161,5 +161,26 @@ class User extends Authenticable implements  MustVerifyEmail
          return $this->hasMany(\App\Models\SellerProduct::class,'user_id');
      }
 
+     //user(venodr) has many animal feeds
+     public function animal_feeds()
+     {
+      return $this->hasMany(\App\Models\AnimalFeed::class, 'user_id');
+     }
+
+
+     //a user has many farmer trainings
+     public function farmer_trainings()
+     {
+        return $this->hasMany(\App\Models\FarmerTraining::class,'user_id');
+     }
+
+
+     //a vendor has many training vendor services
+     public function training_vendor_services()
+     {
+        return $this->hasMany(\App\Models\TrainingVendorService::class,'user_id');
+     }
+
+
 
 }

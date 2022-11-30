@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Edit Traning Vendor Service</h1>
+                    <h1>Create Training Vendor Service</h1>
                 </div>
             </div>
         </div>
@@ -17,17 +17,19 @@
 
         <div class="card">
 
-            {!! Form::model($traningVendorService, ['route' => ['traningVendorServices.update', $traningVendorService->id], 'method' => 'patch']) !!}
+            {!! Form::open(['route' => 'trainingVendorServices.store']) !!}
 
             <div class="card-body">
+
                 <div class="row">
-                    @include('traning_vendor_services.fields')
+                    @include('training_vendor_services.fields')
                 </div>
+
             </div>
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('traningVendorServices.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('trainingVendorServices.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

@@ -1,6 +1,6 @@
 
 <?php
-$users = App\Models\User::pluck('email','id');
+$buyers = App\Models\User::where('user_type','buyer')->pluck('username','id');
 $crops_on_sales = App\Models\CropOnSale::all();
 ?>
 
@@ -26,8 +26,8 @@ $crops_on_sales = App\Models\CropOnSale::all();
 
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'User Id:') !!}
-    {!! Form::select('user_id', $users, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('user_id', 'Buyers:') !!}
+    {!! Form::select('user_id', $buyers, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
@@ -51,7 +51,7 @@ $crops_on_sales = App\Models\CropOnSale::all();
                             <option value="">--Select a crop on sale--</option>
                             @foreach ($crops_on_sales  as $crop)
                                 <option value="{{ $crop->id }}">
-                                    {{ $crop->crop->name}} sold by  Farmer: {{$crop->user->email}} at (UGX{{ number_format($crop->selling_price, 0) }})
+                                    {{ $crop->crop->name}} sold by  Farmer: {{$crop->user->username}} at (UGX{{ number_format($crop->selling_price, 0) }})
                                 </option>
                             @endforeach
                         </select>

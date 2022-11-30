@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Traning Vendor Service Details</h1>
+                    <h1>Animal Feed Details</h1>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"
-                       href="{{ route('traningVendorServices.index') }}">
+                       href="{{ route('animalFeeds.index') }}">
                         Back
                     </a>
                 </div>
@@ -21,7 +21,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    @include('traning_vendor_services.show_fields')
+                    @include('animal_feeds.show_fields')
                 </div>
             </div>
         </div>

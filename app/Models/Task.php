@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version November 18, 2022, 2:44 am UTC
  *
  * @property string $name
- * @property string $reminder_date
+ * @property string $task_date
  * @property integer $plot_id
  */
 class Task extends Model
@@ -29,7 +29,7 @@ class Task extends Model
 
     public $fillable = [
         'name',
-        'reminder_date',
+        'task_date',
         'plot_id'
     ];
 
@@ -40,7 +40,7 @@ class Task extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'reminder_date' => 'string',
+        'task_date' => 'string',
         'plot_id' => 'integer'
     ];
 
@@ -51,7 +51,7 @@ class Task extends Model
      */
     public static $rules = [
         'name' => 'required|string',
-        'reminder_date' => 'required|string',
+        'task_date' => 'required|string',
         'plot_id' => 'required|integer'
     ];
 

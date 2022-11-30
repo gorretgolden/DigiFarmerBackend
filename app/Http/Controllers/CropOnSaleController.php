@@ -77,16 +77,17 @@ class CropOnSaleController extends AppBaseController
 
            $farmer = User::where('id', $request->user_id)->first();
 
-           if ($farmer->farms->count() == null) {
-            dd('Farmer has no farms');
+           if ($farmer->farms->count() == 0) {
+             // dd('Farmer has no farms');
+             Flash::error('Farmer has no farms');
 
-           // return redirect(route('cropOnSales.index'));
+             return redirect(route('cropOnSales.index'));
            }else{
             foreach ($farmer->farms as $farm){
 
-                if($farm->plots->count() == null){
+                if($farm->plots->count() == 0){
 
-                    Flash::error('No plot exit on the farm for this crop');
+                    Flash::error('No plots exit on the farm for this crop');
 
                     return redirect(route('cropOnSales.index'));
 
@@ -94,7 +95,22 @@ class CropOnSaleController extends AppBaseController
 
                     $data = collect($farm->plots->where('crop_id', $request->crop_id));
                     $plot_harvest = $data->pluck('total_harvest')->toArray()[0];
-                    dd($plot_harvest);
+                    //dd($plot_harvest);
+                    $new_crop_on_sale = new CropOnSale();
+                    $new_crop_on_sale->quantity = $plot_harvest;
+                    $new_crop_on_sale->selling_price = $request->selling_price;
+                    $new_crop_on_sale->quantity_unit = 'kg';
+                    $new_crop_on_sale->price_unit = 'UGX';
+                    $new_crop_on_sale->is_sold = false;
+                    $new_crop_on_sale->crop_id= $request->crop_id;
+                    $new_crop_on_sale->user_id= $request->user_id;
+                    $new_crop_on_sale->save();
+
+                    Flash::success('Crop posted for sale');
+
+                    return redirect(route('cropOnSales.index'));
+
+
 
                 }else{
                     Flash::error('Crop selected doesnt exist on the plot');
