@@ -61,11 +61,12 @@ class CropOnSaleAPIController extends AppBaseController
 
     public function store(CreateCropOnSaleAPIRequest $request){
 
-        $existing_farmer = CropOnSale::where('user_id',auth()->user()->id)->first();
+        $existing_crop_on_sale = CropOnSale::where('user_id',$request->user_id)->where('crop_id',$request->crop_id)->first();
 
-        $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->first();
 
-        if($existing_farmer && $existing_crop){
+        //dd($existing_farmer);
+
+        if($existing_crop_on_sale){
 
             $response = [
                 'success'=>false,

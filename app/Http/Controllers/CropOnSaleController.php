@@ -58,13 +58,11 @@ class CropOnSaleController extends AppBaseController
     {
 
 
+        $existing_crop_on_sale = CropOnSale::where('user_id',$request->user_id)->where('crop_id',$request->crop_id)->first();
 
+        //dd($existing_crop_on_sale);
 
-        $existing_farmer = CropOnSale::where('user_id',$request->user_id)->first();
-
-        $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->first();
-
-        if($existing_farmer && $existing_crop){
+        if($existing_crop_on_sale){
 
             Flash::error('Farmer already posted this crop for sale');
             return redirect(route('cropOnSales.index'));

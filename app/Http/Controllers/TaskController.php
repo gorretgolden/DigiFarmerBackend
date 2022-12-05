@@ -10,6 +10,7 @@ use App\Repositories\TaskRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Http\Request;
 
 class TaskController extends AppBaseController
 {
@@ -31,6 +32,14 @@ class TaskController extends AppBaseController
     public function index(TaskDataTable $taskDataTable)
     {
         return $taskDataTable->render('tasks.index');
+    }
+
+
+    public function taskCalender(Request $request)
+
+    {
+        $tasks = \App\Models\Task::all();
+        return view('tasks.calender')->with('tasks',$tasks);
     }
 
     /**

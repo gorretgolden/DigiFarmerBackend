@@ -257,21 +257,23 @@ class UserAPIController extends AppBaseController
     public function checkPhoneNumber(Request $request){
 
 
-        $user_phone_number = User::where('phone', $request['phone'])->firstOrFail();
-       if($user_phone_number){
-        $response = [
+        $user_phone_number = User::where('phone', $request['phone'])->first();
+        if($user_phone_number){
+          //dd('yes');
+          $response = [
             'success'=>true,
             'message'=> 'Phone number verified successfully'
-         ];
-         return response()->json($response,200);
+          ];
+          return response()->json($response,200);
        }
         else{
 
-        $response = [
+          //dd('no');
+          $response = [
             'success'=>false,
             'message'=> 'Phone number does not exist'
-         ];
-         return response()->json($response);
+           ];
+          return response()->json($response,404);
        }
 
    }

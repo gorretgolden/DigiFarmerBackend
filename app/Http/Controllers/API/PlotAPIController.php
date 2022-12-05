@@ -49,18 +49,61 @@ class PlotAPIController extends AppBaseController
    //get farm farmer plots
     public function farmPlots(Request $request)
     {
-        $farmer = Farm::where('user_id',auth()->user()->id)->get();
-        dd($farmer->plots);
+        $farm_plots = [];//farm plots
 
-        $response = [
-            'success'=>true,
-            'data'=> [
-               'plots' => $farmer->farms->plots,
-               'total-farms'=> $farmer->farms->plots->count()
-            ],
-            'message'=> 'farmer plots  retrieved successfully'
-         ];
-         return response()->json($response,200);
+        $farmer = User::where('id', auth()->user()->id)->first();
+        //dd($user_farms->count());
+
+
+        if($farmer->farms->count()== 0){
+
+            //dd('Farmer has no farms');
+            $response = [
+                'success'=>false,
+                'data'=> $success,
+                'message'=> 'Farmer has no farms'
+             ];
+
+             return response()->json($response,404);
+
+        }else{
+
+             foreach ($farmer->farms as $farm){
+
+                if($farm->plots->count() == 0){
+
+                   //dd('No plots exit on this farm');
+                    $response = [
+                        'success'=>false,
+                        'data'=> $success,
+                        'message'=> 'No plots exit on this farm'
+                     ];
+
+                     return response()->json($response,404);
+
+
+                }else{
+                    $data = collect($farm->plots);
+
+                    $farm_plots = $data;
+
+                   $response = [
+                    'success'=>true,
+                    'data'=> [
+                        'total-plots'=>$farm_plots->count(),
+                        'farm-plots'=>$farm_plots,
+                        'farmer'=>$farmer,
+
+
+                    ],
+                    'message'=> 'Farm plots retrieved successfully'
+                 ];
+
+                 return response()->json($response,200);
+                }
+
+            }
+        }
     }
     /**
      * Store a newly created Plot in storage.

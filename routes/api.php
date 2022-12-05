@@ -27,12 +27,15 @@ Route::group(['prefix'=>'v1'], function(){
     Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
     Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
     Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
+
     Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);
     Route::resource('seller_product_categories', App\Http\Controllers\API\SellerProductCategoryAPIController::class);
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
     Route::resource('vendor_categories', App\Http\Controllers\API\VendorCategoryAPIController::class);
     Route::resource('animal-feed-categories', App\Http\Controllers\API\AnimalFeedCategoryAPIController::class);
     Route::resource('animal-feed-sub-categories', App\Http\Controllers\API\AnimalFeedSubCategoryAPIController::class);
+    Route::resource('market/crops_on_sales', App\Http\Controllers\API\CropOnSaleAPIController::class);
+    Route::get('sub-categories/crops-on-sale/{id}', [App\Http\Controllers\API\SubCategoryAPIController::class,'showCropsOnSale']);
 
 
     //user registration
@@ -80,7 +83,8 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('crop_harvests', App\Http\Controllers\API\CropHarvestAPIController::class);
 
         Route::get('crop-harvests/{id}/total-harvest', [App\Http\Controllers\API\CropHarvestAPIController::class,'getTotalHarvestForPlot']);
-        Route::resource('market/crops_on_sales', App\Http\Controllers\API\CropOnSaleAPIController::class);
+
+        Route::resource('animals', App\Http\Controllers\API\AnimalAPIController::class);
         Route::get('market/crop-buyers/crops', [App\Http\Controllers\API\CropOrderAPIController::class,'getCropBuyerCropOnSales']);
         Route::post('market/buy_crop/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'buyCropOnSale']);
         Route::get('market/crop_buyers', [App\Http\Controllers\API\CropOrderAPIController::class,'index']);
@@ -145,6 +149,8 @@ Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFi
 
 
 //Route::resource('crop_orders', App\Http\Controllers\API\CropOrderAPIController::class);
+
+
 
 
 

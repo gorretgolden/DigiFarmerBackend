@@ -115,3 +115,34 @@ Route::resource('animalFeeds', App\Http\Controllers\AnimalFeedController::class)
 
 
 Route::resource('tasks', App\Http\Controllers\TaskController::class);
+Route::get('task-calender', [App\Http\Controllers\TaskController::class,'taskCalender'])->name('task-calender');
+
+
+Route::resource('animals', App\Http\Controllers\AnimalController::class);
+
+
+Route::resource('animalCategories', App\Http\Controllers\AnimalCategoryController::class);
+
+
+Route::resource('rentVendorCategories', App\Http\Controllers\RentVendorCategoryController::class);
+
+
+Route::resource('rentVendorSubCategories', App\Http\Controllers\RentVendorSubCategoryController::class);
+
+
+Route::resource('rentVendorCategories', App\Http\Controllers\RentVendorCategoryController::class);
+
+
+Route::resource('rentVendorSubCategories', App\Http\Controllers\RentVendorSubCategoryController::class);
+
+
+Route::resource('rentVendorServices', App\Http\Controllers\RentVendorServiceController::class);
+
+
+Route::resource('rentVendorServices', App\Http\Controllers\RentVendorServiceController::class);
+
+
+Route::resource('rentVendorImages', App\Http\Controllers\RentVendorImageController::class);
+
+
+Route::resource('insuaranceVendorServices', App\Http\Controllers\InsuaranceVendorServiceController::class);

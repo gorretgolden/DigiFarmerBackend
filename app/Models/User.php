@@ -182,5 +182,12 @@ class User extends Authenticable implements  MustVerifyEmail
      }
 
 
+      //a vendor has many rent vendor services
+    public function rent_vendor_services()
+    {
+    return $this->hasMany(\App\Models\RentVendorServices::class, 'user_id');
+    }
+
+
 
 }

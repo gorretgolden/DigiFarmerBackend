@@ -105,4 +105,13 @@ class Plot extends Model
          {
             return $this->hasMany(\App\Models\CropHarvest::class,'plot_id');
          }
+
+
+
+     //a plot has many animals
+       public function animals()
+      {
+         return $this->hasMany(\App\Models\Animal::class, 'plot_id');
+     }
+
 }

@@ -73,6 +73,7 @@ class SubCategoryAPIController extends AppBaseController
         /** @var SubCategory $subCategory */
         $subCategory = SubCategory::find($id);
         $crops = $subCategory->crops;
+       // dd($subCategory->crops);
 
         if (empty($subCategory)) {
             $response = [
@@ -90,6 +91,52 @@ class SubCategoryAPIController extends AppBaseController
                 ],
 
                 'message'=> 'Sub category details retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+    }
+
+    public function showCropsOnSale($id)
+    {
+        /** @var SubCategory $subCategory */
+        $subCategory = SubCategory::find($id);
+        $crops = $subCategory->crops;
+
+       $data = [];
+       $buyers = [];
+
+       foreach($crops as $crop){
+         $data = $crop->crops_on_sale;
+
+       }
+       foreach($data as $crop_on_sale){
+        $buyers = $crop_on_sale->crop_orders;
+
+      }
+      // dd($buyers);
+
+        if (empty($subCategory)) {
+            $response = [
+                'success'=>true,
+                'message'=> 'Sub category not found'
+             ];
+            return response()->json($response,200);
+        }
+        else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'sub_category'=> $subCategory,
+                    'crops-on-sale' => $data,
+                    'totalcrops-on-sale' => $data->count(),
+                    'total-buyers' => $buyers->count(),
+                    'buyers' => $buyers,
+                ],
+
+                'message'=> 'Sub category crops on sale'
              ];
 
              return response()->json($response,200);

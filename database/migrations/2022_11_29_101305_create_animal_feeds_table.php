@@ -18,6 +18,7 @@ class CreateAnimalFeedsTable extends Migration
             $table->id('id');
             $table->string('name');
             $table->integer('price');
+            $table->integer('quantity');
             $table->string('price_unit')->default('kg');
             $table->text('description')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');

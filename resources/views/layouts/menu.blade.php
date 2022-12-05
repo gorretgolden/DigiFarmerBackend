@@ -122,6 +122,37 @@
 
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link ">
+        <i class="fa fa-list-alt mr-2" aria-hidden="true"></i>
+        <p>Animal Management</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+        <li class="nav-item">
+            <a href="{{ route('animals.index') }}"
+               class="nav-link {{ Request::is('animals*') ? 'active' : '' }}">
+                <p>Animals</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('animalCategories.index') }}"
+               class="nav-link {{ Request::is('animalCategories*') ? 'active' : '' }}">
+                <p>Animal Categories</p>
+            </a>
+        </li>
+
+
+
+
+    </ul>
+</li>
+
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link ">
         <i class="fa fa-book mr-2" aria-hidden="true"></i>
         <p>Farm Management</p>
     </a>
@@ -157,7 +188,12 @@
                     </a>
                 </li>
 
-
+                <li class="nav-item">
+                    <a href="{{ route('task-calender') }}"
+                       class="nav-link">
+                        <p>Task Calender</p>
+                    </a>
+                </li>
 
 
 
@@ -244,13 +280,13 @@
 
         <li class="nav-item">
             <a href="{{ route('sellerProductCategories.index') }}" class="nav-link">
-                <p>Seller Product Categories</p>
+                <p>Add Product Categories</p>
             </a>
         </li>
 
         <li class="nav-item">
             <a href="{{ route('sellerProducts.index') }} " class="nav-link">
-                <p>Seller Products</p>
+                <p>Add Seller Products</p>
             </a>
         </li>
 
@@ -276,7 +312,7 @@
 
         <li class="nav-item">
             <a href="{{ route('farmerTrainings.index') }}" class="nav-link">
-                <p>Farmer Trainings</p>
+                <p>Add Farmer Trainings</p>
             </a>
         </li>
 
@@ -285,6 +321,77 @@
 </li>
 
 
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link ">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>Rent Vendor Services</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('rentVendorCategories.index') }}"
+               class="nav-link">
+                <p>Add Rent Categories</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('rentVendorSubCategories.index') }}"
+               class="nav-link">
+                <p>Add Sub Categories</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('rentVendorServices.index') }}"
+               class="nav-link ">
+                <p>Add Rent Vendor Service</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('rentVendorImages.index') }}"
+               class="nav-link">
+                <p>View Rent Vendor Images</p>
+            </a>
+        </li>
+
+
+    </ul>
+</li>
+
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link ">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>Insuarance Services</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('insuaranceVendorServices.index') }}"
+               class="nav-link ">
+                <p>Add Insuarance Services</p>
+            </a>
+        </li>
+
+
+
+
+
+
+    </ul>
+</li>
 
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link ">
@@ -298,7 +405,7 @@
 
         <li class="nav-item">
             <a href="{{ route('animalFeedCategories.index') }}" class="nav-link">
-                <p>Animal Feed Categories</p>
+                <p>Add Categories</p>
             </a>
         </li>
 
@@ -306,7 +413,7 @@
         <li class="nav-item">
             <a href="{{ route('animalFeedSubCategories.index') }}"
                 class="nav-link">
-                <p>Animal Feed Sub Categories</p>
+                <p>Add Sub Categories</p>
             </a>
         </li>
 
@@ -324,6 +431,8 @@
 
     </ul>
 </li>
+
+
 
 
 <li class="nav-item-one nav-item">
@@ -380,5 +489,12 @@
         $("ul", this).toggle("slow");
     });
 </script>
+
+
+
+
+
+
+
 
 
