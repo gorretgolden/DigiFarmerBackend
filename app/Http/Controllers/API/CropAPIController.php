@@ -35,7 +35,7 @@ class CropAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $crops = Crop::with('sub_category')->get();
+        $crops = Crop::with('category')->get();
         $response = [
             'success'=>true,
             'data'=> $crops,
@@ -82,7 +82,7 @@ class CropAPIController extends AppBaseController
         else{
             $success['name'] = $crop->name;
             $success['standard_price'] = $crop->standard_price;
-            $success['sub_category_id'] = $crop->sub_category;
+            $success['category'] = $crop->category;
             $success['price_unit'] = $crop->price_unit;
             $success['image'] = $crop->image;
 

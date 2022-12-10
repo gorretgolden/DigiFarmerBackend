@@ -7,8 +7,8 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
-                <th>Country</th>
                 <th>Phone</th>
+
                 <th>Role</th>
                 <th>Total Farms</th>
                 <th colspan="3">Action</th>
@@ -22,8 +22,10 @@
                     <td>{{ $farmer->first_name }}</td>
                     <td>{{ $farmer->last_name }}</td>
                     <td>{{ $farmer->email }}</td>
-                    <td>{{ $farmer->country->name }}</td>
+
                     <td>{{ $farmer->phone }}</td>
+
+
 
 
 

@@ -26,8 +26,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $total_farmers = User::where('user_type','=','farmer')->count();
-        $total_sellers = User::where('user_type','=','seller')->count();
+        $total_farmers = User::where('user_type_id','=',2)->count();
+        $total_sellers = User::where('user_type_id','=',4)->count();
         $total_farms = Farm::all()->count();
         $total_crops = Crop::all()->count();
 

@@ -43,15 +43,15 @@
                 You are only one step a way from your new password, recover your password now.
             </p>
 
-            <form action="{{ route('password.update') }}" method="POST">
+            <form action="{{ route('reset-password') }}" method="POST">
                 @csrf
 
-                <input type="hidden" name="token" value="{{ $token }}">
+                <input type="hidden" name="token" value="{{request()->get('token')}}">
 
                 <div class="input-group mb-3">
                     <input type="email"
                            name="email"
-                           value="{{ $email ?? old('email') }}"
+                           value="{{request()->get('email')}}"
                            class="form-control @error('email') is-invalid @enderror"
                            placeholder="Email">
                     <div class="input-group-append">

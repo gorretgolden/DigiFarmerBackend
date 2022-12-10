@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class AnimalCategoryRepository
  * @package App\Repositories
- * @version December 1, 2022, 11:28 am UTC
+ * @version December 8, 2022, 12:21 pm UTC
 */
 
 class AnimalCategoryRepository extends BaseRepository

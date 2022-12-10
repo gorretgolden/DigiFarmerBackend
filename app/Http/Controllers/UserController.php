@@ -31,7 +31,7 @@ class UserController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $farmers = User::where('user_type','farmer')->paginate(8);
+        $farmers = User::where('user_type_id',2)->paginate(8);
 
         return view('users.index')
             ->with('farmers', $farmers);
@@ -42,7 +42,7 @@ class UserController extends AppBaseController
 
     public function buyers(Request $request)
     {
-        $buyers = User::where('user_type','buyer')->paginate(10);
+        $buyers = User::where('user_type_id',3)->paginate(10);
 
         return view('users.buyers')->with('buyers', $buyers);
     }
@@ -102,10 +102,9 @@ class UserController extends AppBaseController
           $user->last_name = $request->input('last_name');
           $user->username = $request->last_name ." " . $request->first_name;
           $user->email = $request->input('email');
-          $user->country_id = $request->input('country_id');
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
-          $user->user_type = "farmer";
+          $user->user_type_id= 2;
           $password = $request->input('password');
           $user->password = Hash::make($password);
 

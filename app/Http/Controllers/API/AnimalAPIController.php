@@ -62,12 +62,12 @@ class AnimalAPIController extends AppBaseController
 
         $input = $request->all();
 
-
         $farmer = User::where('id', auth()->user()->id)->first();
+
         //dd($user_farms->count());
 
 
-        $animal_plot = Animal::where('plot_id',$request->plot_id)->first();
+        $animal_plot = Animal::where('animal_category_id',$request->animal_category_id)->first();
 
 
         if( $animal_plot){
@@ -83,7 +83,6 @@ class AnimalAPIController extends AppBaseController
             //dd('Farmer has no farms');
             $response = [
                 'success'=>false,
-                'data'=> $success,
                 'message'=> 'Farmer has no farms'
              ];
 
@@ -106,10 +105,7 @@ class AnimalAPIController extends AppBaseController
 
 
                 }else{
-                    $data = collect($farm->plots->where('id', $request->plot_id));
 
-                    $plot_id =  $data->pluck('id')->toArray()[0];
-                    //dd($plot_id);
                     $new_animal = new Animal();
                     $new_animal->animal_category_id = $request->animal_category_id;
                     $new_animal->plot_id = $request->plot_id;

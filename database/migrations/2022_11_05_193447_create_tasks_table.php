@@ -17,6 +17,7 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('task_date');
+            $table->string('status');
             $table->foreignId('plot_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
 

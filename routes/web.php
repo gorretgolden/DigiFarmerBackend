@@ -17,8 +17,15 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Auth::routes();
+Route::get('/response-password-reset', function () {
+    return view('auth.passwords.reset_password');
+});
 
+
+Route::post('password/reset', [App\Http\Controllers\UserForgotPasswordController::class,'reset']);
+
+
+Auth::routes();
 
 Route::get('/admin-restriction', [App\Http\Controllers\HomeController::class, 'admin'])->name('admin-restriction');
 
@@ -81,7 +88,7 @@ Route::group(['middleware' => 'admin'], function () {
 
 Route::get('/auth/google/redirect', function () {
     return Socialite::driver('google')->redirect();
-});
+})->name('google');
 
 Route::get('/auth/google/callback',[App\Http\Controllers\GoogleRegisterController::class,'googleCallback'])->name('google-register');
 
@@ -146,3 +153,9 @@ Route::resource('rentVendorImages', App\Http\Controllers\RentVendorImageControll
 
 
 Route::resource('insuaranceVendorServices', App\Http\Controllers\InsuaranceVendorServiceController::class);
+
+
+Route::resource('userTypes', App\Http\Controllers\UserTypeController::class);
+
+
+Route::resource('finaceVendorServices', App\Http\Controllers\FinaceVendorServiceController::class);

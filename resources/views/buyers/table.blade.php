@@ -7,9 +7,9 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
-                <th>Country</th>
+
                 <th>Phone</th>
-                <th>User Type</th>
+
                 <th>Role</th>
                 <th>Total Buy Requests</th>
                 <th colspan="3">Action</th>
@@ -23,9 +23,9 @@
                     <td>{{ $buyer->first_name }}</td>
                     <td>{{ $buyer->last_name }}</td>
                     <td>{{ $buyer->email }}</td>
-                    <td>{{ $buyer->country->name }}</td>
+
                     <td>{{ $buyer->phone }}</td>
-                    <td>{{ $buyer->user_type }}</td>
+
 
 
                     <td>

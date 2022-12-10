@@ -49,14 +49,16 @@ class Category extends Model
      */
     public static $rules = [
         'name' => 'required|string|max:100',
-        'image' => 'nullable'
+        'image' => 'nullable',
+        'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+
     ];
 
 
-    //a category has many sub_categories
-    public function sub_categories()
+    //a category has many crops
+    public function crops()
     {
-        return $this->hasMany(\App\Models\SubCategory::class, 'category_id');
+        return $this->hasMany(\App\Models\Crop::class, 'category_id');
     }
 
 }

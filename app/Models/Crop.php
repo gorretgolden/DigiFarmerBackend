@@ -29,7 +29,7 @@ class Crop extends Model
     public $fillable = [
         'name',
         'standard_price',
-        'sub_category_id',
+        'category_id',
         'image',
         'price_unit'
     ];
@@ -42,7 +42,7 @@ class Crop extends Model
     protected $casts = [
         'name' => 'string',
         'standard_price' => 'integer',
-        'sub_category_id' => 'integer',
+        'category_id' => 'integer',
         'image' => 'string',
         'price_unit'=>'string'
 
@@ -56,7 +56,7 @@ class Crop extends Model
     public static $rules = [
         'name' => 'required|string|max:100',
         'standard_price' => 'required',
-        'sub_category_id' => 'required|integer',
+        'category_id' => 'required|integer',
         'image' => 'nullable',
         'price_unit'=>'required|string'
     ];
@@ -69,10 +69,10 @@ class Crop extends Model
           return $this->hasMany(\App\Models\CropOnSale::class,'crop_id');
        }
 
-     //a crop belongs to a sub category
-     public function sub_category()
+     //a crop belongs to category
+     public function category()
      {
-         return $this->belongsTo(\App\Models\SubCategory::class, 'sub_category_id');
+         return $this->belongsTo(\App\Models\Category::class, 'category_id');
      }
 
 

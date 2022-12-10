@@ -103,13 +103,13 @@
 
                 <div class="row">
 
-                    {{-- <div class="col-12">
+                    <div class="col-12">
                         <p class="mb-0">
-                            <a href="{{ route('register') }}" class="text-center text-dark">
-                                Dont have an account? | Create an account
+                            <a href="{{ route('google') }}" class="text-center text-dark">
+                                Google
                             </a>
                         </p>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-12">

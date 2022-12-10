@@ -25,7 +25,7 @@ class AdminSeeder extends Seeder
             'email'=>'admin@gmail.com',
             'phone'=>'0751547654',
             'password'=> Hash::make($password),
-            'user_type'=>'admin',
+            'user_type_id'=>1,
             'country_id'=> 225,
             'isAdmin' => 1
 

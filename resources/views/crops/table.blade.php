@@ -2,25 +2,27 @@
     <table class="table" id="crops-table">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Standard Price</th>
-                <th>Sub Category</th>
-                <th>Image</th>
+                <th>Category</th>
+
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($crops as $crop)
                 <tr>
-                    <td>{{ $crop->name }}</td>
-                    <td>{{ $crop->standard_price }} {{ $crop->price_unit}}</td>
-                    <td>{{ $crop->sub_category->name }}</td>
-
                     <td>
                         <img
                             src="{{ $crop->image ? asset('/storage/crops/' . $crop->image) : asset('img/crop.png') }}"
                             width="50px" height="50px"/>
                     </td>
+                    <td>{{ $crop->name }}</td>
+                    <td>{{ $crop->standard_price }} {{ $crop->price_unit}}</td>
+                    <td>{{ $crop->category->name }}</td>
+
+
 
                     <td width="120">
                         {!! Form::open(['route' => ['crops.destroy', $crop->id], 'method' => 'delete']) !!}

@@ -204,6 +204,7 @@ class PlotAPIController extends AppBaseController
             $success['district'] = $plot->district;
             $success['farm'] = $plot->farm;
             $success['crop'] = $plot->crop;
+            $success['animals'] = $plot->animals;
             $success['crop-harvests'] = $plot->crop_harvests;
             $success['total-harvest'] = $totalPlotHarvest;
 

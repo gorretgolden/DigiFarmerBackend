@@ -28,6 +28,10 @@ Route::group(['prefix'=>'v1'], function(){
     Route::apiResource('categories', App\Http\Controllers\API\CategoryAPIController::class);
     Route::resource('sub_categories', App\Http\Controllers\API\SubCategoryAPIController::class);
 
+
+    Route::resource('animal_categories', App\Http\Controllers\API\AnimalCategoryAPIController::class);
+
+
     Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);
     Route::resource('seller_product_categories', App\Http\Controllers\API\SellerProductCategoryAPIController::class);
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
@@ -36,17 +40,26 @@ Route::group(['prefix'=>'v1'], function(){
     Route::resource('animal-feed-sub-categories', App\Http\Controllers\API\AnimalFeedSubCategoryAPIController::class);
     Route::resource('market/crops_on_sales', App\Http\Controllers\API\CropOnSaleAPIController::class);
     Route::get('sub-categories/crops-on-sale/{id}', [App\Http\Controllers\API\SubCategoryAPIController::class,'showCropsOnSale']);
+    Route::resource('user-types', App\Http\Controllers\API\UserTypeAPIController::class);
+    Route::resource('sliders', App\Http\Controllers\API\SliderAPIController::class);
 
 
     //user registration
     Route::controller(App\Http\Controllers\API\UserAPIController::class)->group(function(){
-        Route::post('users/login','login');
-        Route::post('users/create-account','store');
-        Route::post('users/verify-otp','verifyUserOtp');
-        Route::post('users/check-phone-number','checkPhoneNumber');
-        Route::post('users/check-password','checkPassword');
+        Route::post('auth/login','login');
+        Route::post('auth/create-account','store');
+        Route::post('auth/verify-otp','verifyUserOtp');
+        Route::post('auth/check-phone-number','checkPhoneNumber');
+        Route::post('auth/check-password','checkPassword');
 
     });
+
+  //password request
+  Route::post('password/email', [App\Http\Controllers\UserForgotPasswordController::class,'forgot']);
+  Route::post('password/reset', [App\Http\Controllers\UserForgotPasswordController::class,'reset']);
+
+
+
 
     //user forgot password
     Route::post('users/password/email', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'forgotPassword']);
@@ -61,19 +74,21 @@ Route::group(['prefix'=>'v1'], function(){
     });
 
 
-
+    Route::post('sendPasswordResetLink',[App\Http\Controllers\UserForgotPasswordController::class, 'sendEmail']);
+    Route::post('resetPassword',[App\Http\Controllers\ChangePasswordController::class, 'passwordResetProcess']);
     //protected routes
     Route::middleware(['auth:api','cors'])->group(function () {
 
-        Route::resource('sliders', App\Http\Controllers\API\SliderAPIController::class);
-        Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
 
+
+        Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
         Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
         Route::get('farmer/farms', [App\Http\Controllers\API\FarmAPIController::class,'user_farms']);
         Route::get('farmer/plots', [App\Http\Controllers\API\PlotAPIController::class,'farmPlots']);
         Route::get('farm/owner', [App\Http\Controllers\API\FarmAPIController::class,'farmUser']);
         Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
         Route::get('farms/{id}/plots', [App\Http\Controllers\API\PlotAPIController::class,'plots_on_farm']);
+        Route::resource('animals', App\Http\Controllers\API\AnimalAPIController::class);
         Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
         Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
         Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
@@ -84,7 +99,7 @@ Route::group(['prefix'=>'v1'], function(){
 
         Route::get('crop-harvests/{id}/total-harvest', [App\Http\Controllers\API\CropHarvestAPIController::class,'getTotalHarvestForPlot']);
 
-        Route::resource('animals', App\Http\Controllers\API\AnimalAPIController::class);
+
         Route::get('market/crop-buyers/crops', [App\Http\Controllers\API\CropOrderAPIController::class,'getCropBuyerCropOnSales']);
         Route::post('market/buy_crop/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'buyCropOnSale']);
         Route::get('market/crop_buyers', [App\Http\Controllers\API\CropOrderAPIController::class,'index']);
@@ -149,6 +164,9 @@ Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFi
 
 
 //Route::resource('crop_orders', App\Http\Controllers\API\CropOrderAPIController::class);
+
+
+
 
 
 

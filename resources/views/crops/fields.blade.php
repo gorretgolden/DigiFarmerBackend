@@ -1,6 +1,6 @@
 
 <?php
-$sub_categories= App\Models\SubCategory::pluck('name','id');
+$categories= App\Models\Category::pluck('name','id');
 ?>
 
 <!-- Name Field -->
@@ -18,14 +18,14 @@ $sub_categories= App\Models\SubCategory::pluck('name','id');
 
 <div class="form-group col-sm-6">
     {!! Form::label('Price Unit') !!}
-    {!! Form::select('price_unit', ['per-kg' => 'per-kg'],null, ['class' => 'form-control','placeholder'=>'Select Price Unit'] ) !!}
+    {!! Form::select('price_unit', ['per-kg' => 'per-kg','per-item'=>'per-item'],null, ['class' => 'form-control','placeholder'=>'Select Price Unit'] ) !!}
 </div>
 
 
 <!-- Sub Category Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('sub_category_id', 'Sub Category:') !!}
-    {!! Form::select('sub_category_id', $sub_categories, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('category_id', 'Category:') !!}
+    {!! Form::select('category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

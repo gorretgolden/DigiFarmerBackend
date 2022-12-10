@@ -23,6 +23,7 @@ class CreateAnimalFeedsTable extends Migration
             $table->text('description')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('animal_feed_sub_category_id')->nullable()->constrained()->onDelete('CASCADE');
+            $table->foreignId('vendor_category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
         });
     }

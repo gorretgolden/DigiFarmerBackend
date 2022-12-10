@@ -2,8 +2,9 @@
     <table class="table" id="categories-table">
         <thead>
             <tr>
-                <th>Name</th>
                 <th>Image</th>
+                <th>Name</th>
+
 
                 <th colspan="3">Action</th>
             </tr>
@@ -11,11 +12,12 @@
         <tbody>
             @foreach ($categories as $category)
                 <tr>
-                    <td>{{ $category->name }}</td>
                     <td>
                         <img src="{{ $category->image ? asset('/storage/categories/' . $category->image) : asset('img/crop.png') }}"
                             width="50px" height="50px" />
                     </td>
+
+                    <td>{{ $category->name }}</td>
 
                     <td width="120">
                         {!! Form::open(['route' => ['categories.destroy', $category->id], 'method' => 'delete']) !!}

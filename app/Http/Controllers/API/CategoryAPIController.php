@@ -57,7 +57,7 @@ class CategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $categories = Category::with('sub_categories')->get();
+        $categories = Category::with('crops')->get();
         $response = [
             'success'=>true,
             'data'=> $categories,
@@ -96,8 +96,8 @@ class CategoryAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Category $category */
-        $category = $this->categoryRepository->find($id);
-        $sub_categories = $category->sub_categories;
+        $category = Category::find($id);
+        $crops = $category->crops;
        // dd( $category->sub_categories);
 
         if (empty($category)) {
@@ -108,7 +108,7 @@ class CategoryAPIController extends AppBaseController
                 'success'=>true,
                 'data'=> [
                     'category'=> $category,
-                     'sub_categories' => $sub_categories
+                     'crops' => $crops
                 ],
 
                 'message'=> 'Crop details retrieved successfully'

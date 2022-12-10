@@ -19,7 +19,7 @@ class BuyerController extends Controller
     {
 
        // dd('Test');
-        $buyers = User::where('user_type','buyer')->paginate(10);
+        $buyers = User::where('user_type_id',3)->paginate(10);
 
         return view('buyers.index')
             ->with('buyers', $buyers);
@@ -71,7 +71,7 @@ class BuyerController extends Controller
           $user->country_id = $request->input('country_id');
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
-          $user->user_type = "buyer";
+          $user->user_type_id = 3;
           $password = $request->input('password');
           $user->password = Hash::make($password);
 

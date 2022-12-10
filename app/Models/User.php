@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 use Spatie\Permission\Models\Role;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 /**
  * Class User
@@ -46,7 +47,7 @@ class User extends Authenticable implements  MustVerifyEmail
         'phone',
         'image_url',
         'country_id',
-        'user_type',
+        'user_type_id',
         'password',
         'confirm-password',
     ];
@@ -62,11 +63,11 @@ class User extends Authenticable implements  MustVerifyEmail
         'email' => 'string',
         'image_url' => 'string',
         'country_id' => 'integer',
-        'user_type' => 'string',
         'phone' => 'string',
         'password' => 'string',
         'email_verified_at' => 'datetime',
         'confirm-password' => 'string',
+        'user_type_id' => 'integer'
     ];
 
     /**
@@ -83,8 +84,9 @@ class User extends Authenticable implements  MustVerifyEmail
         'phone' => 'required|unique:users,id',
         'password' => 'required',
         'email_verified_at' => 'datetime',
-        'user_type' => 'required|string',
-        'confirm-password'=>'required|same:password'
+        'user_type_id' => 'required|integer',
+        'confirm-password'=>'required|same:password',
+
 
     ];
 
@@ -92,6 +94,17 @@ class User extends Authenticable implements  MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+
+
+
+
+
+    //a user has one user-type
+    public function user_type()
+      {
+          return $this->belongsTo(\App\Models\UserType::class, 'user_type_id');
+      }
 
       //a user belongs to a country
       public function country()
@@ -147,7 +160,7 @@ class User extends Authenticable implements  MustVerifyEmail
       public function sendPasswordResetNotification($token)
      {
 
-         $url = 'https://spa.test/reset-password?token=' . $token;
+         $url = 'http://127.0.0.1:8000/response-password-reset?token=' . $token;
 
          $this->notify(new ResetPasswordNotification($url));
      }

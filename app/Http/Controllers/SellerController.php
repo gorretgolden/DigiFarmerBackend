@@ -18,7 +18,7 @@ class SellerController extends Controller
     {
 
        // dd('Test');
-        $sellers = User::where('user_type','seller')->paginate(10);
+        $sellers = User::where('user_type_id',4)->paginate(10);
 
         return view('sellers.index')
             ->with('sellers', $sellers);
@@ -70,13 +70,13 @@ class SellerController extends Controller
           $user->country_id = $request->input('country_id');
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
-          $user->user_type = "seller";
+          $user->user_type_id = 4;
           $password = $request->input('password');
           $user->password = Hash::make($password);
 
           //assign a user a role depending on the user type
 
-           $user->assignRole('seller');
+           $user->assignRole('vendor');
            $user->save();
 
            $user = User::find($user->id);

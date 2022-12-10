@@ -26,6 +26,12 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('userTypes.index') }}"
+               class="nav-link ">
+                <p>User Types</p>
+            </a>
+        </li>
 
 
         <li class="nav-item">
@@ -43,7 +49,7 @@
 
         <li class="nav-item">
             <a href="{{ route('sellers.index') }}" class="nav-link">
-                <p>Sellers</p>
+                <p>Vendors</p>
             </a>
         </li>
 
@@ -97,15 +103,11 @@
 
         <li class="nav-item">
             <a href="{{ route('categories.index') }}" class="nav-link">
-                <p>Categories</p>
+                <p>Add Categories</p>
             </a>
         </li>
 
-        <li class="nav-item">
-            <a href="{{ route('subCategories.index') }}" class="nav-link">
-                <p>Sub Categories</p>
-            </a>
-        </li>
+
 
         <li class="nav-item">
             <a href="{{ route('crops.index') }}" class="nav-link">
@@ -129,19 +131,20 @@
     <ul class="menu-content" style="display: none">
 
         <li class="nav-item">
-            <a href="{{ route('animals.index') }}"
-               class="nav-link {{ Request::is('animals*') ? 'active' : '' }}">
-                <p>Animals</p>
-            </a>
-        </li>
-
-
-        <li class="nav-item">
             <a href="{{ route('animalCategories.index') }}"
-               class="nav-link {{ Request::is('animalCategories*') ? 'active' : '' }}">
+               class="nav-link ">
                 <p>Animal Categories</p>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a href="{{ route('animals.index') }}"
+               class="nav-link">
+                <p>Add Animals</p>
+            </a>
+        </li>
+
+
 
 
 
@@ -496,5 +499,15 @@
 
 
 
+
+
+
+
+<li class="nav-item">
+    <a href="{{ route('finaceVendorServices.index') }}"
+       class="nav-link {{ Request::is('finaceVendorServices*') ? 'active' : '' }}">
+        <p>Finace Vendor Services</p>
+    </a>
+</li>
 
 

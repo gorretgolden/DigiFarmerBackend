@@ -7,9 +7,8 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
-                <th>Country</th>
+                {{-- <th>Country</th> --}}
                 <th>Phone</th>
-                <th>User Type</th>
                 <th>Role</th>
                 <th>Total Products For Sale</th>
                 <th colspan="3">Action</th>
@@ -23,9 +22,9 @@
                     <td>{{ $seller->first_name }}</td>
                     <td>{{ $seller->last_name }}</td>
                     <td>{{ $seller->email }}</td>
-                    <td>{{ $seller->country->name }}</td>
+                    {{-- <td>{{ $seller->country->name }}</td> --}}
                     <td>{{ $seller->phone }}</td>
-                    <td>{{ $seller->user_type }}</td>
+
 
 
                     <td>

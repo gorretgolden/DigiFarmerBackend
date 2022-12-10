@@ -30,7 +30,7 @@ class CategoryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $categories = $this->categoryRepository->all();
+        $categories = Category::latest()->paginate(6);
 
         return view('categories.index')
             ->with('categories', $categories);

@@ -25,6 +25,7 @@ class CreateRentVendorServicesTable extends Migration
             $table->text('description');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('rent_vendor_sub_category_id')->nullable()->constrained()->onDelete('CASCADE');
+            $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
         });
     }

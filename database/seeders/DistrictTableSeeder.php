@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\District;
 
 class DistrictTableSeeder extends Seeder
 {
@@ -57,5 +58,7 @@ class DistrictTableSeeder extends Seeder
 
             ],
             ];
+
+            District::insert($districts);
     }
 }

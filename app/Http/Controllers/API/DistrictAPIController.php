@@ -34,14 +34,14 @@ class DistrictAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-
-        $districts = District::with('country')->get();
+        $districts = District::with(['country'])->get();
         $response = [
             'success'=>true,
-            'data'=> $districts,
+            'data'=>  $districts,
             'message'=> 'Districts retrieved successfully'
          ];
          return response()->json($response,200);
+
     }
 
     /**

@@ -63,7 +63,7 @@ class CropController extends AppBaseController
             $new_crop = new Crop();
             $new_crop->name = $request->name;
             $new_crop->standard_price = $request->standard_price;
-            $new_crop->sub_category_id = $request->sub_category_id;
+            $new_crop->category_id = $request->category_id;
             $new_crop->image = $request->image;
             $new_crop->price_unit = $request->price_unit;
             $new_crop->save();

@@ -98,47 +98,71 @@ class UserAPIController extends AppBaseController
 
 
     }
-    public function store(CreateUserAPIRequest $request)
+    public function store(Request $request)
     {
-        // $validator = Validator::make($request->all(),User::$rules);
-        // if($validator->fails()){
-        //     $response = [
-        //         'success'=>false,
-        //         'message'=>$validator->errors()
-        //     ];
-        //     return response()->json($response,400);
 
-        // }
+        $rules = [
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|unique:users,id|email',
+            'image_url' => 'nullable',
+            'user_type_id' => 'required|integer',
+            'phone' => 'required|unique:users,id',
+            'password' => 'required',
+            'email_verified_at' => 'datetime',
+            'confirm-password'=>'required|same:password'
+        ];
+
+        $request->validate($rules);
+
 
         //existing user
-        $existing_user = User::where('email',$request->input('email'))->orWhere('phone',$request->phone)->first();
-        if(!$existing_user){
+        $existing_email = User::where('email',$request->email)->first();
+        $existing_phone = User::where('phone',$request->phone)->first();
+
+        if($existing_email){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'User with this email  already exists'
+             ];
+             return response()->json($response,403);
+
+        }
+        elseif($existing_phone){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'User with this phone number  already exists'
+             ];
+             return response()->json($response,403);
+
+        }
+        else{
+
             $user = new User();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->username = $request->last_name . " " .$request->first_name;
             $user->email = $request->email;
-            $user->country_id = (int)$request->country_id;
-            $user->district_id = (int)$request->district_id;
             $user->phone = $request->phone;
             $user->isAdmin = 0;
             $user->image_url = $request->image_url;
-            $user->user_type = $request->user_type;
+            $user->user_type_id = $request->user_type_id;
             $password = $request->password;
             $user->password = Hash::make($password);
 
+            $user->save();
+
             //assign a user a role depending on the user type
-             if($user->user_type=='Admin'){
+             if($user->user_type_id == 1){
               $user->assignRole('admin');
              }
 
-             elseif($user->user_type=='seller'){
-              $user->assignRole('seller');
-             }
-             elseif($user->user_type=='vendor'){
+             elseif($user->user_type_id == 4){
               $user->assignRole('vendor');
              }
-             elseif($user->user_type=='buyer'){
+             elseif($user->user_type_id == 3){
               $user->assignRole('buyer');
              }
              else{
@@ -154,10 +178,9 @@ class UserAPIController extends AppBaseController
              $success['last_name'] = $user->last_name;
              $success['email'] = $user->email;
              $success['phone'] = $user->phone;
-             $success['user_type'] = $user->user_type;
+             $success['user_type'] = $user->user_type->name;
              $success['image_url'] = $user->image_url;
-             $success['country'] = $user->country->name;
-             $success['district'] = $user->district->name;
+
 
              $user = User::find($user->id);
 
@@ -177,16 +200,10 @@ class UserAPIController extends AppBaseController
                 'message'=> 'Account created successfully'
              ];
 
-        return response()->json($response,200);
+            return response()->json($response,200);
 
         }
-        else{
-            $response = [
-                'success'=>false,
-                'message'=> 'User with this email or phone number already exists'
-             ];
-             return response()->json($response,403);
-        }
+
 
 
 
@@ -222,27 +239,20 @@ class UserAPIController extends AppBaseController
     }
 
 
-    // public function login(Request $request){
-
-    //      if (!Auth::attempt($request->only('phone', 'password'))) {
-    //          return response()->json([ 'message' => 'Invalid login details' ], 401);
-    //        }
-
-    //      $token = $user->createToken('auth_token')->plainTextToken;
-    //     return response()->json(['access_token' => $token,'token_type' => 'Bearer Token',    ]);
-    // }
-
     public function login(Request $request)
     {
-        if(Auth::attempt(['phone' => $request->phone ,'password' => $request->password])){
+
+        if(Auth::attempt(['phone' => request('phone'), 'password' => request('password')]) ||
+          Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+
             $user = Auth::user();
             $success['token'] =  $user->createToken('Farmer')->plainTextToken;
             $success['email'] =  $user->email;
             $success['phone'] =  $user->phone;
 
             return $this->sendResponse($success, 'User login successfully.');
-        }
-        else{
+
+        }else{
 
             $response = [
                 'success'=>false,
@@ -250,6 +260,9 @@ class UserAPIController extends AppBaseController
              ];
              return response()->json($response);
         }
+
+
+
     }
 
 
@@ -318,8 +331,6 @@ class UserAPIController extends AppBaseController
         $success['phone'] = $user->phone;
         $success['user_type'] = $user->user_type;
         $success['image_url'] = $user->image_url;
-        $success['country'] = $user->country->name;
-        $success['district'] = $user->district->name;
         $success['email_verified_at'] = $user->email_verified_at;
         $success['created_at'] = $user->created_at;
 
