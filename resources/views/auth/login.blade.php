@@ -102,14 +102,14 @@
                 </form>
 
                 <div class="row">
-
+{{--
                     <div class="col-12">
                         <p class="mb-0">
                             <a href="{{ route('google') }}" class="text-center text-dark">
                                 Google
                             </a>
                         </p>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="row">
                     <div class="col-12">

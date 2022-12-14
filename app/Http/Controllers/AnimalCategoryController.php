@@ -10,6 +10,8 @@ use App\Repositories\AnimalCategoryRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\AnimalCategory;
+use Illuminate\Http\Request;
 
 class AnimalCategoryController extends AppBaseController
 {
@@ -28,9 +30,12 @@ class AnimalCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function index(AnimalCategoryDataTable $animalCategoryDataTable)
+    public function index(Request $request)
     {
-        return $animalCategoryDataTable->render('animal_categories.index');
+        $animalCategories = AnimalCategory::latest()->paginate(6);
+
+        return view('animal_categories.index')
+            ->with('animalCategories', $animalCategories);
     }
 
     /**
@@ -54,11 +59,32 @@ class AnimalCategoryController extends AppBaseController
     {
         $input = $request->all();
 
-        $animalCategory = $this->animalCategoryRepository->create($input);
 
-        Flash::success('Animal Category saved successfully.');
+        if(AnimalCategory::where('name',$request->name)->first()){
+            Flash::error('Animal Category name already exists');
 
-        return redirect(route('animalCategories.index'));
+            return redirect(route('animalCategories.index'));
+
+        }else{
+
+            $animalCategory = new AnimalCategory();
+            $animalCategory->name = $request->name;
+            $animalCategory->image = $request->image;
+            $animalCategory->save();
+
+            $animalCategory  = AnimalCategory::find($animalCategory->id);
+
+            $animalCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_categories');
+            $animalCategory->save();
+
+
+            Flash::success('Animal Category saved successfully.');
+
+             return redirect(route('animalCategories.index'));
+
+        }
+
+
     }
 
     /**
@@ -150,3 +176,4 @@ class AnimalCategoryController extends AppBaseController
         return redirect(route('animalCategories.index'));
     }
 }
+

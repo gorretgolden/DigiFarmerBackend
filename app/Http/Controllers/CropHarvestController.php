@@ -59,11 +59,10 @@ class CropHarvestController extends AppBaseController
         $cropHarvest = $this->cropHarvestRepository->create($input);
         $totalPlotHarvest =  CropHarvest::where('plot_id',$request->plot_id)->sum('quantity');
 
-        $plot = Plot::find($request->plot_id);
+        // $plot = Plot::find($request->plot_id);
 
-        $plot->total_harvest =  $totalPlotHarvest;
-        $plot->save();
-
+        // $plot->total_harvest =  $totalPlotHarvest;
+        // $plot->save();
 
         Flash::success('Crop Harvest saved successfully.');
 

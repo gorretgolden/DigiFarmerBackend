@@ -48,11 +48,13 @@ Route::group(['prefix'=>'v1'], function(){
     Route::controller(App\Http\Controllers\API\UserAPIController::class)->group(function(){
         Route::post('auth/login','login');
         Route::post('auth/create-account','store');
-        Route::post('auth/verify-otp','verifyUserOtp');
+        Route::post('auth/verify-otp','verifyOtp');
+        Route::post('auth/send-otp','sendOtp');
         Route::post('auth/check-phone-number','checkPhoneNumber');
         Route::post('auth/check-password','checkPassword');
 
     });
+
 
   //password request
   Route::post('password/email', [App\Http\Controllers\UserForgotPasswordController::class,'forgot']);
@@ -78,8 +80,6 @@ Route::group(['prefix'=>'v1'], function(){
     Route::post('resetPassword',[App\Http\Controllers\ChangePasswordController::class, 'passwordResetProcess']);
     //protected routes
     Route::middleware(['auth:api','cors'])->group(function () {
-
-
 
         Route::resource('seller_products', App\Http\Controllers\API\SellerProductAPIController::class);
         Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class);
@@ -107,7 +107,7 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropOrderCropOnSaleAPIController::class);
 
         Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropBuyerCropOnSaleAPIController::class);
-        Route::resource('training_vendor_services', App\Http\Controllers\API\TrainingVendorServiceAPIController::class);
+        Route::resource('vendors/training-vendor-services', App\Http\Controllers\API\TrainingVendorServiceAPIController::class);
         Route::resource('farmer_trainings', App\Http\Controllers\API\FarmerTrainingAPIController::class);
         Route::resource('finance_vendor_services', App\Http\Controllers\API\FinanceVendorServiceAPIController::class);
         Route::resource('animal-feeds', App\Http\Controllers\API\AnimalFeedAPIController::class);
@@ -178,3 +178,6 @@ Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFi
 
 
 
+
+
+Route::resource('onboardings', App\Http\Controllers\API\OnboardingAPIController::class);

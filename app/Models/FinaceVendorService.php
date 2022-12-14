@@ -27,14 +27,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class FinaceVendorService extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
-    public $table = 'finace_vendor_services';
-    
+    public $table = 'finance_vendor_services';
 
-    protected $dates = ['deleted_at'];
+
 
 
 
@@ -96,5 +95,5 @@ class FinaceVendorService extends Model
         'user_id' => 'required|integer'
     ];
 
-    
+
 }

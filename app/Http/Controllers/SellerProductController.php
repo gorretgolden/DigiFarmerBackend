@@ -67,6 +67,7 @@ class SellerProductController extends AppBaseController
           $new_seller_product->image = $request->image;
           $new_seller_product->user_id = $request->user_id;
           $new_seller_product->seller_product_category_id = $request->seller_product_category_id;
+          $new_seller_product->vendor_category_id = $request->vendor_category_id;
           $new_seller_product->save();
 
           $new_seller_product = SellerProduct::find($new_seller_product->id);

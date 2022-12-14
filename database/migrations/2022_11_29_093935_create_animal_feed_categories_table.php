@@ -17,6 +17,7 @@ class CreateAnimalFeedCategoriesTable extends Migration
         Schema::create('animal_feed_categories', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
+            $table->string('image')->nullable();
             $table->timestamps();
 
         });

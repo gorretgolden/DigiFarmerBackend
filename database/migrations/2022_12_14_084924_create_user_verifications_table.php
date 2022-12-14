@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserTypesTable extends Migration
+class CreateUserVerificationsTable extends Migration
 {
 
     /**
@@ -14,10 +14,13 @@ class CreateUserTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_types', function (Blueprint $table) {
+        Schema::create('user_verifications', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name');
+            $table->string('image');
+            $table->booleab('verified')->default(false);
+            $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
+
         });
     }
 
@@ -28,6 +31,6 @@ class CreateUserTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user_types');
+        Schema::drop('user_verifications');
     }
 }

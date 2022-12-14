@@ -9,21 +9,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class VendorCategory
  * @package App\Models
- * @version November 9, 2022, 11:36 pm UTC
+ * @version December 12, 2022, 7:49 am UTC
  *
  * @property string $name
+ * @property string $image
  */
 class VendorCategory extends Model
 {
-
-
     use HasFactory;
 
     public $table = 'vendor_categories';
 
 
+
+
+
+
     public $fillable = [
-        'name'
+        'name',
+        'image'
     ];
 
     /**
@@ -32,7 +36,8 @@ class VendorCategory extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string'
+        'name' => 'string',
+        'image' => 'string'
     ];
 
     /**
@@ -41,21 +46,9 @@ class VendorCategory extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|max:100'
+        'name' => 'required|string',
+        'image' => 'nullable'
     ];
-
-     //a vendor category has many training vendor serviceS
-     public function training_vendor_serviceS()
-     {
-        return $this->hasMany(\App\Models\TrainingVendorService::class,'vendor_category_id');
-     }
-
-     //a vendor category has many finance vendor services
-     public function finance_vendor_services()
-     {
-        return $this->hasMany(\App\Models\FinanceVendorService::class,'vendor_category_id');
-     }
-
 
 
 }

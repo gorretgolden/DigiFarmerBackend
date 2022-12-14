@@ -51,7 +51,8 @@ class TrainingVendorService extends Model
         'zoom_details',
         'location_details',
         'vendor_category_id',
-        'user_id'
+        'user_id',
+        'period_unit_id'
     ];
 
     /**
@@ -73,7 +74,8 @@ class TrainingVendorService extends Model
         'zoom_details' => 'string',
         'location_details' => 'string',
         'vendor_category_id' => 'integer',
-        'user_id' => 'integer'
+        'user_id' => 'integer',
+        'period_unit_id' => 'integer'
     ];
 
     /**
@@ -87,7 +89,7 @@ class TrainingVendorService extends Model
         'description' => 'required|string',
         'period' => 'required|integer',
         'period_unit' => 'nullable|string',
-        'access' => 'nullable',
+        'access' => 'required|string',
         'starting_date' => 'required',
         'ending_date' => 'required',
         'starting_time' => 'required',
@@ -95,7 +97,8 @@ class TrainingVendorService extends Model
         'zoom_details' => 'nullable',
         'location_details' => 'nullable',
         'vendor_category_id' => 'required|integer',
-        'user_id' => 'required|integer'
+        'user_id' => 'required|integer',
+        'period_unit_id'  => 'required|integer',
     ];
 
 

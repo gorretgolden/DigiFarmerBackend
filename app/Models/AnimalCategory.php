@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class AnimalCategory
  * @package App\Models
- * @version December 1, 2022, 11:28 am UTC
+ * @version December 14, 2022, 7:50 am UTC
  *
  * @property string $name
+ * @property string $image
  */
 class AnimalCategory extends Model
 {
@@ -24,8 +25,11 @@ class AnimalCategory extends Model
 
 
 
+
+
     public $fillable = [
-        'name'
+        'name',
+        'image'
     ];
 
     /**
@@ -34,7 +38,8 @@ class AnimalCategory extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string'
+        'name' => 'string',
+        'image' => 'string'
     ];
 
     /**
@@ -43,22 +48,9 @@ class AnimalCategory extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string'
+        'name' => 'required|string',
+        'image' => 'nullable'
     ];
-
-
-    //an animal category has many animals
-     //animal belongs to an animal category
-     public function animals()
-     {
-         return $this->hasMany(\App\Models\Animal::class, 'animal_category_id');
-     }
-
-     //an animal belongs to a plot
-     public function plot()
-     {
-         return $this->belongsTo(\App\Models\Plot::class, 'plot_id');
-     }
 
 
 }

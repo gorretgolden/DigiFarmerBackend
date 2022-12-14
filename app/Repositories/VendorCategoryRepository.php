@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class VendorCategoryRepository
  * @package App\Repositories
- * @version November 21, 2022, 7:43 pm UTC
+ * @version December 12, 2022, 7:49 am UTC
 */
 
 class VendorCategoryRepository extends BaseRepository
@@ -17,7 +17,8 @@ class VendorCategoryRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'name'
+        'name',
+        'image'
     ];
 
     /**

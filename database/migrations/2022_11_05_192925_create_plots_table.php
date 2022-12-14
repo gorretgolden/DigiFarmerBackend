@@ -18,7 +18,6 @@ class CreatePlotsTable extends Migration
             $table->string('name');
             $table->integer('size');
             $table->string('district');
-            $table->integer('total_harvest')->default(0);
             $table->enum('size_unit',['Hectares','Acres'])->default('Acres');
             $table->foreignId('farm_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('crop_id')->constrained() ->onUpdate('CASCADE')->onDelete('CASCADE');

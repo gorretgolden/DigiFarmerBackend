@@ -53,7 +53,7 @@ $roles =    Spatie\Permission\Models\Role::pluck('name','id');
 </div> --}}
 
 
-<!-- Password Field -->
+{{-- <!-- Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Password:') !!}
     {!! Form::text('password', null, ['class' => 'form-control','minlength' => 8]) !!}
@@ -63,7 +63,7 @@ $roles =    Spatie\Permission\Models\Role::pluck('name','id');
 <!-- Confirm-Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('confirm-password', 'Confirm-Password:') !!}
-    {!! Form::text('confirm-password', null, ['class' => 'form-control']) !!}
+    {!! Form::text('confirm-password', null, ['class' => 'form-control']) !!} --}}
 </div>
 
 <!-- Role Field -->

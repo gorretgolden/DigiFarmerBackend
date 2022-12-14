@@ -9,7 +9,7 @@ use App\Repositories\TrainingVendorServiceRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
-
+use Carbon\Carbon;
 /**
  * Class TrainingVendorServiceController
  * @package App\Http\Controllers\API
@@ -51,13 +51,50 @@ class TrainingVendorServiceAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateTrainingVendorServiceAPIRequest $request)
+    public function store(Request $request)
     {
+
+        $rules = [
+            'name' => 'required|string|unique:training_vendor_services',
+            'charge' => 'required|integer',
+            'description' => 'required|string',
+            'period' => 'required|integer',
+            'access' => 'required|string',
+            'starting_date' => 'required|date',
+            'ending_date' => 'required|after_or_equal:starting_date',
+            'starting_time' => 'required|before:ending_time',
+            'ending_time' => 'required|after:starting_time',
+            'location_details' => 'nullable',
+            'period_unit_id'  => 'required|integer',
+        ];
+        $request->validate($rules);
         $input = $request->all();
+        $input['user_id'] = auth()->user()->id;
 
-        $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
+        //access
+        if($input['access']=='Online'){
+            $request->validate(['zoom_details' => 'required|string']);
+            $input['zoom_details'] = $request->zoom_details;
+            $input['vendor_category_id'] = 5;
+            $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
+            return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
 
-        return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
+
+        }else{
+            if($input['access']=='Offline'){
+
+                $request->validate(['location_details' => 'required|string']);
+                $input['location_details'] = $request->location_details;
+                $input['vendor_category_id'] = 5;
+                $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
+                return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
+            }
+
+
+        }
+
+
+
     }
 
     /**

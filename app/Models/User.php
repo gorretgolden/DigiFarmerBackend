@@ -100,10 +100,10 @@ class User extends Authenticable implements  MustVerifyEmail
 
 
 
-    //a user has one user-type
-    public function user_type()
+    //a user belongs to a user type
+    public function userType()
       {
-          return $this->belongsTo(\App\Models\UserType::class, 'user_type_id');
+          return $this->belongsTo(\App\Models\UserType::class,'user_type_id');
       }
 
       //a user belongs to a country
@@ -202,5 +202,11 @@ class User extends Authenticable implements  MustVerifyEmail
     }
 
 
+
+    //user has one verification
+    public function verifications()
+    {
+    return $this->hasMany(\App\Models\UserVerification::class, 'user_id');
+    }
 
 }

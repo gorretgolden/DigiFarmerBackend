@@ -1,7 +1,8 @@
 
 <?php
-$users = App\Models\User::where('user_type','seller')->pluck('username','id');
+$users = App\Models\User::where('user_type',"farmer")->pluck('username','id');
 $vendor_categories = App\Models\VendorCategory::pluck('name','id');
+$period_units = App\Models\PeriodUnit::pluck('name','id');
 ?>
 <!-- Name Field -->
 <div class="form-group col-sm-6">
@@ -21,21 +22,32 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
     {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Period Field -->
+
+
+<!-- Period  Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('period', 'Period:') !!}
-    {!! Form::number('period', null, ['class' => 'form-control','placeholder'=>1,'minlength'=>1]) !!}
-</div>
-
-<!-- Period Unit Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('period_unit', 'Period Unit:') !!}
-    {!! Form::text('period_unit', null, ['class' => 'form-control','placeholder'=>'days']) !!}
+    {!! Form::text('period', null, ['class' => 'form-control','placeholder'=>'1']) !!}
 </div>
 
 <div class="form-group col-sm-6">
     {!! Form::label('Access') !!}
-    {!! Form::select('access', ['Online'=>'Online','Offline'=>'Offline'],null, ['class' => 'form-control'] ) !!}
+    {!! Form::select('access', ['Online'=>'Online','Offline'=>'Offline'],null, ['class' => 'form-control select select-access'] ) !!}
+</div>
+
+
+
+
+<!-- Vendor Category Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
+    {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+<!-- Period Unit Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('period_unit_id', 'Period Unit:') !!}
+    {!! Form::select('period_unit_id', $period_units, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
@@ -48,7 +60,7 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 @push('page_scripts')
     <script type="text/javascript">
         $('#starting_date').datetimepicker({
-            format: 'MM-DD-YYYY',
+            format: 'DD-MM-YYYY',
             useCurrent: true,
             sideBySide: true
         })
@@ -81,7 +93,7 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 @push('page_scripts')
     <script type="text/javascript">
         $('#ending_date').datetimepicker({
-            format: 'YYYY-MM-DD ',
+            format: 'DD-MM-YYYY ',
             useCurrent: true,
             sideBySide: true
         })
@@ -103,29 +115,54 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
             sideBySide: true
         })
     </script>
-@endpush
-
 <!-- Zoom Details Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('zoom_details', 'Zoom Details:') !!}
-    {!! Form::textarea('zoom_details', null, ['class' => 'form-control']) !!}
+    {!! Form::textarea('zoom_details', null, ['class' => 'form-control find']) !!}
 </div>
 
 <!-- Location Details Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('location_details', 'Location Details:') !!}
-    {!! Form::textarea('location_details', null, ['class' => 'form-control']) !!}
+    {!! Form::textarea('location_details', null, ['class' => 'form-control rep']) !!}
 </div>
 
-<!-- Vendor Category Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
-    {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
-</div>
+<script>
+    $(document).ready(function(){
+        $("select-access").change(function(){
+            $( "select option:selected").each(function(){
+                if($(this).attr("access")=="Online"){
+                    $(".rep").hide();
+                    $(".find").show();
+                    $(".replace").show();
+                } else {
+                    $(".rep").show();
+                    $(".find").hide();
+                    $(".replace").hide();
+                }
+            });
+        }).change();
+    });
+</script>
+@endpush
+
+
 
 
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('user_id', 'Vendor :') !!}
     {!! Form::select('user_id', $users, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+<!-- Zoom Details Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('zoom_details', 'Zoom Details:') !!}
+    {!! Form::textarea('zoom_details', null, ['class' => 'form-control find']) !!}
+</div>
+
+<!-- Location Details Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('location_details', 'Location Details:') !!}
+    {!! Form::textarea('location_details', null, ['class' => 'form-control rep']) !!}
 </div>

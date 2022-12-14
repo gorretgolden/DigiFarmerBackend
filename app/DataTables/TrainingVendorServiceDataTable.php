@@ -77,7 +77,7 @@ class TrainingVendorServiceDataTable extends DataTable
             'zoom_details',
             'location_details',
             'vendor_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor Category",'data'=>'vendor_category.name']),
-            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
+            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username'])
         ];
     }
 

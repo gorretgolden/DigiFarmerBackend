@@ -21,8 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('image_url')->nullable();
             $table->string('phone')->unique()->nullable();
-            $table->integer('otp')->nullable();
-            $table->boolean('isAdmin')->nullable();
+            $table->string('user_type')->default('farmer');
+            $table->boolean('isAdmin')->default(false);
+            $table->boolean('is_verified')->default(false);
             $table->boolean('is_verified_otp')->default(false);
             $table->foreignId('country_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('district_id')->nullable()->constrained()->onDelete('CASCADE');

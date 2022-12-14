@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Flash;
 use Hash;
-
+require_once('../external/AfricasTalkingGateway.php');
 
 class BuyerController extends Controller
 {
@@ -19,7 +19,7 @@ class BuyerController extends Controller
     {
 
        // dd('Test');
-        $buyers = User::where('user_type_id',3)->paginate(10);
+        $buyers = User::where('user_type_id',3)->latest()->paginate(10);
 
         return view('buyers.index')
             ->with('buyers', $buyers);
@@ -43,6 +43,32 @@ class BuyerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function sendSms($content,$tell){
+
+
+
+        $rand = "3242";
+
+        $message    = $content;
+        $apikey = "32e6988167f57dc60e425bb7ff9808f6fa322d017c2341be040c6bf9f881bb3c";
+        $username='medaasi';
+
+        $gateway    = new \AfricasTalkingGateway($username, $apikey);
+       try
+       {
+         $recipients='+'.$tell;
+         //$recipients='+256779815657';
+         $results = $gateway->sendMessage($recipients, $message);
+
+       }
+       catch ( \AfricasTalkingGatewayException $e )
+       {
+        echo "Encountered an error while sending: ".$e->getMessage();
+      }
+
+
+    }
     public function store(Request $request)
     {
 
@@ -53,9 +79,9 @@ class BuyerController extends Controller
             'image_url' => 'nullable',
             'country_id' => 'nullable',
             'phone' => 'required|unique:users,id',
-            'password' => 'required',
+            // 'password' => 'required',
             'email_verified_at' => 'datetime',
-            'confirm-password'=>'required|same:password'
+            // 'confirm-password'=>'required|same:password'
         ];
         $request->validate($buyer_rules);
 
@@ -72,7 +98,7 @@ class BuyerController extends Controller
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
           $user->user_type_id = 3;
-          $password = $request->input('password');
+          $password = '12345678';
           $user->password = Hash::make($password);
 
           //assign a user a role depending on the user type
@@ -85,15 +111,20 @@ class BuyerController extends Controller
            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
            $user->save();
 
+           $content = "Digi Farmer App login password - ". $request->password;
+           $this->sendSms($content,$request->phone);
+
            Flash::success('Buyer saved successfully.');
+           return redirect(route('buyers.index'));
 
 
         }
 
         else{
             Flash::error('User with this email already exists');
+            return redirect(route('buyers.index'));
+
         }
-        return redirect(route('buyers.index'));
 
     }
 

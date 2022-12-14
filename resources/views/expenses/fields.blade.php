@@ -1,6 +1,6 @@
 <?php
 $expense_categories= App\Models\ExpenseCategory::pluck('name','id');
-$plots= App\Models\Plot::pluck('name','id');
+$plots= App\Models\Plot::all();
 ?>
 <!-- Amount Field -->
 <div class="form-group col-sm-6">
@@ -15,8 +15,19 @@ $plots= App\Models\Plot::pluck('name','id');
 </div>
 
 
-<!-- Plot Id Field -->
+{{-- <!-- Plot Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('plot_id', 'Plot:') !!}
     {!! Form::select('plot_id', $plots, null, ['class' => 'form-control custom-select']) !!}
-</div>
+</div> --}}
+
+<!-- Plot Id Field -->
+<select class="custom-select" name="plot_id" >
+    <option value="" selected disabled hidden>Select Plot for expense</option>
+    @foreach ($plots as $plot)
+        <option value="{{ $plot->id }}">
+            {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->user->username}}
+        </option>
+    @endforeach
+
+</select>

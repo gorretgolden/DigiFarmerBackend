@@ -53,6 +53,7 @@ class InsuaranceVendorServiceController extends AppBaseController
     public function store(CreateInsuaranceVendorServiceRequest $request)
     {
         $input = $request->all();
+        $input['vendor_category_id'] = $request->vendor_category_id;
 
         $insuaranceVendorService = $this->insuaranceVendorServiceRepository->create($input);
 

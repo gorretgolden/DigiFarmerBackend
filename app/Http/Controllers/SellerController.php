@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Flash;
 use Hash;
+require_once('../external/AfricasTalkingGateway.php');
 
 class SellerController extends Controller
 {
@@ -42,6 +43,33 @@ class SellerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+
+    public function sendSms($content,$tell){
+
+
+
+        $rand = "3242";
+
+        $message    = $content;
+        $apikey = "32e6988167f57dc60e425bb7ff9808f6fa322d017c2341be040c6bf9f881bb3c";
+        $username='medaasi';
+
+        $gateway    = new \AfricasTalkingGateway($username, $apikey);
+       try
+       {
+         $recipients='+'.$tell;
+         //$recipients='+256779815657';
+         $results = $gateway->sendMessage($recipients, $message);
+
+       }
+       catch ( \AfricasTalkingGatewayException $e )
+       {
+        echo "Encountered an error while sending: ".$e->getMessage();
+      }
+
+
+    }
     public function store(Request $request)
     {
 
@@ -52,9 +80,8 @@ class SellerController extends Controller
             'image_url' => 'nullable',
             'country_id' => 'nullable',
             'phone' => 'required|unique:users,id',
-            'password' => 'required',
             'email_verified_at' => 'datetime',
-            'confirm-password'=>'required|same:password'
+
         ];
         $request->validate($seller_rules);
 
@@ -71,7 +98,7 @@ class SellerController extends Controller
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
           $user->user_type_id = 4;
-          $password = $request->input('password');
+          $password = '12345678';
           $user->password = Hash::make($password);
 
           //assign a user a role depending on the user type
@@ -84,15 +111,20 @@ class SellerController extends Controller
            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
            $user->save();
 
-           Flash::success('Seller saved successfully.');
+           $content = "Digi Farmer App login password - ". $request->password;
+           $this->sendSms($content,$request->phone);
+
+           Flash::success('Vendor saved successfully.');
+           return redirect(route('sellers.index'));
 
 
         }
 
         else{
             Flash::error('User with this email already exists');
+            return redirect(route('sellers.index'));
         }
-        return redirect(route('sellers.index'));
+
 
     }
 

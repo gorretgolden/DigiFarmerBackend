@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Seller</h1>
+                    <h1>Create Vendor</h1>
                 </div>
             </div>
         </div>

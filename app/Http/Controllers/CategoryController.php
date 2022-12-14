@@ -55,6 +55,9 @@ class CategoryController extends AppBaseController
      */
     public function store(CreateCategoryRequest $request)
     {
+       $existing_name = Category::where('name',$request->name)->first();
+       if(!$existing_name){
+
         $category = new category();
         $category->name = $request->name;
         $category->save();
@@ -66,6 +69,14 @@ class CategoryController extends AppBaseController
         Flash::success('Category saved successfully.');
 
         return redirect(route('categories.index'));
+
+    }else{
+        Flash::error('Category name exists.');
+
+        return redirect(route('categories.index'));
+       }
+
+
     }
 
     /**
@@ -118,7 +129,7 @@ class CategoryController extends AppBaseController
      */
     public function update($id, UpdateCategoryRequest $request)
     {
-        $category = $this->categoryRepository->find($id);
+        $category = Category::find($id);
 
         if (empty($category)) {
             Flash::error('Category not found');
@@ -126,7 +137,19 @@ class CategoryController extends AppBaseController
             return redirect(route('categories.index'));
         }
 
-        $category = $this->categoryRepository->update($request->all(), $id);
+        if($category){
+
+            $category->name = $request->name;
+
+
+            if(!empty($request->file('image'))){
+                $category->image = \App\Models\ImageUploader::upload($request->file('image'),'categories');
+            }
+            $category->save();
+
+        }
+
+
 
         Flash::success('Category updated successfully.');
 

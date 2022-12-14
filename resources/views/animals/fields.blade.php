@@ -13,9 +13,17 @@ $animal_categories = App\Models\AnimalCategory::pluck('name','id');
 <select class="custom-select" name="plot_id" >
     <option value="" selected disabled hidden>Select Animal Plot</option>
     @foreach ($plots as $plot)
-        <option value="{{ $plot->id }}">
-            {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->user->username}}
-        </option>
+    @if ($plots->count()==0)
+      <option>
+        <p>No plots</p>
+      </option>
+
+      @else
+      <option value="{{ $plot->id }}">
+        {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->user->username}}
+    </option>
+    @endif
+
     @endforeach
 
 </select>

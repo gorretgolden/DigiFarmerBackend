@@ -11,6 +11,7 @@ use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use Illuminate\Http\Request;
+use App\Models\Task;
 
 class TaskController extends AppBaseController
 {
@@ -29,9 +30,12 @@ class TaskController extends AppBaseController
      *
      * @return Response
      */
-    public function index(TaskDataTable $taskDataTable)
+    public function index(Request $request)
     {
-        return $taskDataTable->render('tasks.index');
+        $tasks = Task::latest()->paginate(6);
+
+        return view('tasks.index')
+            ->with('tasks', $tasks);
     }
 
 
@@ -62,12 +66,28 @@ class TaskController extends AppBaseController
     public function store(CreateTaskRequest $request)
     {
         $input = $request->all();
+        $input['status_id'] = $request->status_id;
+        //dd($input['status_id']);
 
-        $task = $this->taskRepository->create($input);
+        $existing_name = Task::where('name',$request->name)->first();
+        $existing_plot = Task::where('plot_id',$request->plot_id)->first();
 
-        Flash::success('Task saved successfully.');
+        if($existing_name && $existing_plot){
+            Flash::error('Task already exists on the plot');
 
-        return redirect(route('tasks.index'));
+            return redirect(route('tasks.index'));
+
+        }
+        else{
+
+            $task = $this->taskRepository->create($input);
+
+            Flash::success('Task saved successfully.');
+
+            return redirect(route('tasks.index'));
+        }
+
+
     }
 
     /**

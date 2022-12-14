@@ -21,6 +21,7 @@
         "laravel/ui": "^3.4",
         "laravelcollective/html": "^6.2",
         "spatie/laravel-permission": "^5.5",
+        "tjmugova/laravel-dpo": "^1.0",
         "yajra/laravel-datatables-buttons": "*",
         "yajra/laravel-datatables-oracle": "9.21.2",
         "zepson/dpo-laravel": "^1.0"

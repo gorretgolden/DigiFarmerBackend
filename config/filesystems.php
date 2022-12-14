@@ -56,6 +56,10 @@ return [
         'rent-images' => [
             'driver' => 'local',
             'root'   => public_path() . '/'
+        ],
+        'user-verification-documents' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/'
          ]
 
     ],

@@ -4,6 +4,12 @@
     <p>{{ $animalCategory->name }}</p>
 </div>
 
+<!-- Image Field -->
+<div class="col-sm-12">
+    {!! Form::label('image', 'Image:') !!}
+    <p>{{ $animalCategory->image }}</p>
+</div>
+
 <!-- Created At Field -->
 <div class="col-sm-12">
     {!! Form::label('created_at', 'Created At:') !!}

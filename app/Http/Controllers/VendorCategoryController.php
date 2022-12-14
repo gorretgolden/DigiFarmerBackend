@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\VendorCategoryDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateVendorCategoryRequest;
 use App\Http\Requests\UpdateVendorCategoryRequest;
 use App\Repositories\VendorCategoryRepository;
+use Flash;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
-use Flash;
 use Response;
+use App\Models\VendorCategory;
 
 class VendorCategoryController extends AppBaseController
 {
@@ -23,16 +26,17 @@ class VendorCategoryController extends AppBaseController
     /**
      * Display a listing of the VendorCategory.
      *
-     * @param Request $request
+     * @param VendorCategoryDataTable $vendorCategoryDataTable
      *
      * @return Response
      */
     public function index(Request $request)
     {
-        $vendorCategories = $this->vendorCategoryRepository->all();
+        $vendorCategories = VendorCategory::latest()->paginate(6);
 
         return view('vendor_categories.index')
             ->with('vendorCategories', $vendorCategories);
+
     }
 
     /**
@@ -54,13 +58,29 @@ class VendorCategoryController extends AppBaseController
      */
     public function store(CreateVendorCategoryRequest $request)
     {
-        $input = $request->all();
+           //existing name
+           $existing_name = VendorCategory::where('name',$request->name)->first();
 
-        $vendorCategory = $this->vendorCategoryRepository->create($input);
+           if(!$existing_name){
 
-        Flash::success('Vendor Category saved successfully.');
+              $new_vendor_category = new VendorCategory();
+              $new_vendor_category->name = $request->name;
+              $new_vendor_category->image = $request->image;
+              $new_vendor_category->save();
 
-        return redirect(route('vendorCategories.index'));
+              $new_vendor_category = VendorCategory::find($new_vendor_category->id);
+
+              $new_vendor_category->image = \App\Models\ImageUploader::upload($request->file('image'),'vendor_categories');
+              $new_vendor_category->save();
+
+              Flash::success('Vendor Category saved successfully.');
+              return redirect(route('vendorCategories.index'));
+           }
+           else{
+              Flash::error('Crop already exists');
+              return redirect(route('vendorCategories.index'));
+           }
+
     }
 
     /**
@@ -132,8 +152,6 @@ class VendorCategoryController extends AppBaseController
      * Remove the specified VendorCategory from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

@@ -1,6 +1,7 @@
 
 <?php
 $plots= App\Models\Plot::all();
+$statuses = App\Models\Status::pluck('name','id');
 ?>
 
 <!-- Name Field -->
@@ -35,3 +36,9 @@ $plots= App\Models\Plot::all();
     @endforeach
 
 </select>
+
+<!--Status-->
+<div class="form-group col-sm-6">
+    {!! Form::label('status_id', 'Status:') !!}
+    {!! Form::select('status_id', $statuses, null, ['class' => 'form-control custom-select']) !!}
+</div>

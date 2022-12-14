@@ -12,8 +12,11 @@ use Response;
 use Hash;
 use Validator;
 use Auth;
+use Session;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
+use App\Models\UserType;
+use App\Models\OtpPhoneNumber;
 require_once('../external/AfricasTalkingGateway.php');
 
 
@@ -80,8 +83,8 @@ class UserAPIController extends AppBaseController
         $rand = "3242";
 
         $message    = $content;
-        $apikey = "32e6988167f57dc60e425bb7ff9808f6fa322d017c2341be040c6bf9f881bb3c";
-        $username='medaasi';
+        $apikey = "9573978d923d7e24177203b1ba6e946c5802ac0f79766eb7eb0f5cbd0e4b62e8";
+        $username='digifarmer';
 
         $gateway    = new \AfricasTalkingGateway($username, $apikey);
        try
@@ -98,6 +101,118 @@ class UserAPIController extends AppBaseController
 
 
     }
+
+    public function sendOtp(Request $request){
+
+        $input = $request->all();
+
+        $existing_phone_number = User::where('phone',$request->phone)->first();
+
+
+        if(empty($input['phone'])){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Phone number is required'
+             ];
+             return response()->json($response,400);
+
+        }elseif($existing_phone_number){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Phone number already in use'
+             ];
+             return response()->json($response,409);
+
+        }
+
+        else{
+
+            $otp = rand(1000, 9999);
+            $content = "Digi Farmer App verification OTP - ". $otp;
+            $new_phone_otp = new OtpPhoneNumber();
+            $new_phone_otp->otp = $otp;
+            $new_phone_otp->phone = $request->phone;
+            $new_phone_otp->save();
+          //  dd($content,$request->phone);
+
+            $this->sendSms($content,$request->phone);
+
+            $response = [
+                'success'=>true,
+                'message'=> 'OTP has been sent to your phone number',
+
+            ];
+             return response()->json($response,200);
+
+        }
+
+
+    }
+
+
+
+    public function verifyOtp(Request $request){
+
+        $response = array();
+        if(empty($request->otp)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'OTP Code is required'
+             ];
+             return response()->json($response,400);
+        }
+
+        elseif(empty($request->phone)){
+            $response = [
+                'success'=>false,
+                'message'=> 'Phone number is required'
+             ];
+             return response()->json($response,400);
+
+        }
+        else{
+
+            $enteredOtp = $request->input('otp');
+            $enteredPhone = $request->input('phone');
+
+            $phone_otp = OtpPhoneNumber::where('otp',$enteredOtp)->where('phone', $enteredPhone)->first();
+            //dd(collect($phone_otp)->get('id'));
+            $phone_otp_id = collect($phone_otp)->get('id');
+            //dd($phone_otp_id);
+
+            //for a valid otp delete it after phone verification
+            if($phone_otp){
+
+             $verified_otp = OtpPhoneNumber::find($phone_otp_id);
+             $verified_otp->delete();
+
+
+             $response = [
+                'success'=>true,
+                'message'=> 'Your phone number has been verified successfully '
+             ];
+             return response()->json($response,200);
+
+
+            }else{
+                $response = [
+                    'success'=>false,
+                    'message'=> 'Invalid OTP'
+                 ];
+                 return response()->json($response,403);
+
+            }
+
+        }
+
+
+
+    }
+
+
     public function store(Request $request)
     {
 
@@ -106,7 +221,7 @@ class UserAPIController extends AppBaseController
             'last_name' => 'required|string',
             'email' => 'required|unique:users,id|email',
             'image_url' => 'nullable',
-            'user_type_id' => 'required|integer',
+            'user_type_id' =>'required',
             'phone' => 'required|unique:users,id',
             'password' => 'required',
             'email_verified_at' => 'datetime',
@@ -119,6 +234,7 @@ class UserAPIController extends AppBaseController
         //existing user
         $existing_email = User::where('email',$request->email)->first();
         $existing_phone = User::where('phone',$request->phone)->first();
+       // dd($existing_phone);
 
         if($existing_email){
 
@@ -146,13 +262,14 @@ class UserAPIController extends AppBaseController
             $user->username = $request->last_name . " " .$request->first_name;
             $user->email = $request->email;
             $user->phone = $request->phone;
+            $user->user_type_id = $request->user_type_id;
             $user->isAdmin = 0;
             $user->image_url = $request->image_url;
-            $user->user_type_id = $request->user_type_id;
             $password = $request->password;
             $user->password = Hash::make($password);
-
+            $user->is_verified_otp = true;
             $user->save();
+
 
             //assign a user a role depending on the user type
              if($user->user_type_id == 1){
@@ -178,7 +295,7 @@ class UserAPIController extends AppBaseController
              $success['last_name'] = $user->last_name;
              $success['email'] = $user->email;
              $success['phone'] = $user->phone;
-             $success['user_type'] = $user->user_type->name;
+             $success['user_type'] = $user->userType->name;
              $success['image_url'] = $user->image_url;
 
 
@@ -187,13 +304,7 @@ class UserAPIController extends AppBaseController
              $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
              $user->save();
 
-             $opt = rand(1000, 9999);
-             $user->otp = $opt;
-             $user->is_verified_otp = false;
-             $user->save();
 
-             $content = "Digi Farmer App verification OTP - ". $opt ;
-             $this->sendSms($content,$request->phone);
              $response = [
                 'success'=>true,
                 'data'=> $success,
@@ -202,6 +313,7 @@ class UserAPIController extends AppBaseController
 
             return response()->json($response,200);
 
+
         }
 
 
@@ -211,56 +323,66 @@ class UserAPIController extends AppBaseController
     }
 
 
-    public function verifyUserOtp(Request $request){
+    // public function verifyUserOtp(Request $request){
 
-        $check_user_otp = User::where('otp',$request->otp)->first();
+    //     $check_user_otp = User::where('otp',$request->otp)->first();
 
-        if($check_user_otp){
-          $check_user_otp->is_verified_otp = true;
-          $check_user_otp->save();
-          $response = [
-            'success'=>true,
-            'message'=> 'Phone number verified successfully'
-         ];
-         return response()->json($response,200);
+    //     if($check_user_otp){
+    //       $check_user_otp->is_verified_otp = true;
+    //       $check_user_otp->save();
+    //       $response = [
+    //         'success'=>true,
+    //         'message'=> 'Phone number verified successfully'
+    //      ];
+    //      return response()->json($response,200);
 
-        }
-        else{
+    //     }
+    //     else{
 
-          $response = [
-            'success'=>false,
-            'message'=> 'Invalid Otp'
-         ];
-         return response()->json($response);
-        }
+    //       $response = [
+    //         'success'=>false,
+    //         'message'=> 'Invalid Otp'
+    //      ];
+    //      return response()->json($response);
+    //     }
 
 
 
-    }
+    // }
 
 
     public function login(Request $request)
     {
 
-        if(Auth::attempt(['phone' => request('phone'), 'password' => request('password')]) ||
-          Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+        $existing_email = User::where('email', $request->email)->first();
+        $existing_phone = User::where('phone',$request->phone)->first();
+        $existing_user = User::where('email',$request->email)->orWhere('phone',$request->phone)->first();
 
-            $user = Auth::user();
-            $success['token'] =  $user->createToken('Farmer')->plainTextToken;
-            $success['email'] =  $user->email;
-            $success['phone'] =  $user->phone;
-
-            return $this->sendResponse($success, 'User login successfully.');
-
-        }else{
+        if(!$existing_user){
 
             $response = [
                 'success'=>false,
-                'message'=> 'Invalid credentials'
+                'message'=> 'Invalid email address or phone number provided'
              ];
              return response()->json($response);
         }
+        elseif ($existing_user && !Hash::check($request->password, $existing_user->password)) {
+            $response = [
+                'success'=>false,
+                'message'=> 'Invalid password'
+             ];
+             return response()->json($response);
 
+            }else{
+
+            $user = Auth::user();
+            $success['token'] =  $existing_user->createToken('Farmer')->plainTextToken;
+            $success['email'] =  $existing_user->email;
+            $success['phone'] =  $existing_user->phone;
+
+            return $this->sendResponse($success, 'You successfully logged into your account');
+
+        }
 
 
     }

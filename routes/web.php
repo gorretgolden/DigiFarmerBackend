@@ -63,6 +63,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::delete('sellers/{id}', [App\Http\Controllers\SellerController::class, 'destroy'])->name('sellers.destroy');
 
 
+    //admin-profile
+    Route::get('admin/profile', [App\Http\Controllers\AdminProfileController::class, 'adminProfile'])->name('admin-profile');
+
+
     //buyers
     Route::get('buyers', [App\Http\Controllers\BuyerController::class, 'index'])->name('buyers.index');
     Route::get('buyers/create', [App\Http\Controllers\BuyerController::class, 'create'])->name('buyers.create');
@@ -159,3 +163,27 @@ Route::resource('userTypes', App\Http\Controllers\UserTypeController::class);
 
 
 Route::resource('finaceVendorServices', App\Http\Controllers\FinaceVendorServiceController::class);
+
+
+Route::resource('onboardings', App\Http\Controllers\OnboardingController::class);
+
+
+Route::resource('commissions', App\Http\Controllers\CommissionController::class);
+
+
+Route::resource('vendorCategories', App\Http\Controllers\VendorCategoryController::class);
+
+
+Route::resource('statuses', App\Http\Controllers\StatusController::class);
+
+
+Route::resource('financeVendorCategories', App\Http\Controllers\FinanceVendorCategoriesController::class);
+
+
+Route::resource('periodUnits', App\Http\Controllers\PeriodUnitController::class);
+
+
+Route::resource('animalCategories', App\Http\Controllers\AnimalCategoryController::class);
+
+
+Route::resource('userVerifications', App\Http\Controllers\UserVerificationController::class);

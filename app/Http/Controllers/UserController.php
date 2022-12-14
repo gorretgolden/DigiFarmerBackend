@@ -11,7 +11,8 @@ use Flash;
 use Response;
 use App\Models\User;
 use Hash;
-
+use App\Models\UserUserType;
+require_once('../external/AfricasTalkingGateway.php');
 class UserController extends AppBaseController
 {
     /** @var UserRepository $userRepository*/
@@ -31,7 +32,7 @@ class UserController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $farmers = User::where('user_type_id',2)->paginate(8);
+        $farmers = User::where('user_type',"farmer")->latest()->paginate(8);
 
         return view('users.index')
             ->with('farmers', $farmers);
@@ -76,6 +77,31 @@ class UserController extends AppBaseController
 
 
 
+    public function sendSms($content,$tell){
+
+
+
+        $rand = "3242";
+
+        $message    = $content;
+        $apikey = "32e6988167f57dc60e425bb7ff9808f6fa322d017c2341be040c6bf9f881bb3c";
+        $username='medaasi';
+
+        $gateway    = new \AfricasTalkingGateway($username, $apikey);
+       try
+       {
+         $recipients='+'.$tell;
+         //$recipients='+256779815657';
+         $results = $gateway->sendMessage($recipients, $message);
+
+       }
+       catch ( \AfricasTalkingGatewayException $e )
+       {
+        echo "Encountered an error while sending: ".$e->getMessage();
+      }
+
+
+    }
 
     public function store(Request $request)
     {
@@ -87,9 +113,8 @@ class UserController extends AppBaseController
             'image_url' => 'nullable',
             'country_id' => 'nullable',
             'phone' => 'required|unique:users,id',
-            'password' => 'required',
             'email_verified_at' => 'datetime',
-            'confirm-password'=>'required|same:password'
+
         ];
         $request->validate($farmer_rules);
 
@@ -104,8 +129,8 @@ class UserController extends AppBaseController
           $user->email = $request->input('email');
           $user->phone = $request->input('phone');
           $user->image_url = $request->input('image_url');
-          $user->user_type_id= 2;
-          $password = $request->input('password');
+          $user->user_type= "farmer";
+          $password = '12345678';
           $user->password = Hash::make($password);
 
           //assign a user a role depending on the user type
@@ -118,16 +143,23 @@ class UserController extends AppBaseController
 
            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
            $user->save();
+           $content = "Digi Farmer App login password - ". $request->password;
+           $this->sendSms($content,$request->phone);
 
-           Flash::success('User saved successfully.');
+
+           Flash::success('Farmer saved successfully.');
+
+
+           return redirect(route('farmers.index'));
 
 
         }
 
         else{
             Flash::error('User already exists');
+            return redirect(route('farmers.index'));
+
         }
-        return redirect(route('farmers.index'));
 
 
     }

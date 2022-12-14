@@ -31,7 +31,8 @@ class InsuaranceVendorService extends Model
         'name',
         'terms',
         'description',
-        'user_id'
+        'user_id',
+        'vendor_category_id'
     ];
 
     /**
@@ -43,7 +44,8 @@ class InsuaranceVendorService extends Model
         'name' => 'string',
         'terms' => 'string',
         'description' => 'string',
-        'user_id' => 'integer'
+        'user_id' => 'integer',
+        'vendor_category_id'=>'integer'
     ];
 
     /**
@@ -55,7 +57,8 @@ class InsuaranceVendorService extends Model
         'name' => 'required|string',
         'terms' => 'required|string',
         'description' => 'required|string',
-        'user_id' => 'required|integer'
+        'user_id' => 'required|integer',
+        'vendor_category_id' => 'required|integer'
     ];
 
 

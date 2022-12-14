@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubCategoriesTable extends Migration
+class CreateOtpPhoneNumbersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSubCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sub_categories', function (Blueprint $table) {
+        Schema::create('otp_phone_numbers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('category_id')->constrained()->onDelete('CASCADE');
+            $table->integer('otp');
+            $table->string('phone');
             $table->timestamps();
         });
     }
@@ -28,7 +28,6 @@ class CreateSubCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sub_categories');
+        Schema::dropIfExists('otp_phone_numbers');
     }
 }
-

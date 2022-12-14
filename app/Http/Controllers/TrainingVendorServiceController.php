@@ -10,6 +10,8 @@ use App\Repositories\TrainingVendorServiceRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Http\Request;
+use App\Models\TrainingVendorService;
 
 class TrainingVendorServiceController extends AppBaseController
 {
@@ -50,15 +52,83 @@ class TrainingVendorServiceController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateTrainingVendorServiceRequest $request)
+    public function store(Request $request)
     {
-        $input = $request->all();
 
-        $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
+        $rules = [
+            'name' => 'required|string|unique:training_vendor_services',
+            'charge' => 'required|integer',
+            'description' => 'required|string',
+            'period' => 'required|integer',
+            'access' => 'required|string',
+            'starting_date' => 'required|date',
+            'ending_date' => 'required|after_or_equal:starting_date',
+            'starting_time' => 'required|before:ending_time',
+            'ending_time' => 'required|after:starting_time',
+            'location_details' => 'nullable',
+            'vendor_category_id' => 'required|integer',
+            'period_unit_id'  => 'required|integer',
+        ];
+        $request->validate($rules);
 
-        Flash::success('Training Vendor Service saved successfully.');
+        //access
+        if($request->access == 'Online'){
 
-        return redirect(route('trainingVendorServices.index'));
+            $request->validate(['zoom_details' => 'required|string']);
+            $input['zoom_details'] = $request->zoom_details;
+            $online_training = new TrainingVendorService();
+            $online_training->name = $request->name;
+            $online_training->charge = $request->charge;
+            $online_training->description = $request->description;
+            $online_training->period = $request->period;
+            $online_training->period_unit_id = $request->period_unit_id;
+            $online_training->access = $request->access;
+            $online_training->starting_time = $request->starting_time;
+            $online_training->ending_time = $request->ending_time;
+            $online_training->starting_date = $request->starting_date;
+            $online_training->ending_date = $request->ending_date;
+            $online_training->vendor_category_id = $request->vendor_category_id;
+            $online_training->user_id = $request->user_id;
+            $online_training->zoom_details = $request->zoom_details;
+            $online_training->save();
+
+            Flash::success('Training Vendor Service saved successfully.');
+            return redirect(route('trainingVendorServices.index'));
+
+
+        }else{
+            if($request->access =='Offline'){
+
+                $request->validate(['location_details' => 'required|string']);
+                $input['location_details'] = $request->location_details;
+
+
+                $online_training = new TrainingVendorService();
+                $online_training->name = $request->name;
+                $online_training->charge = $request->charge;
+                $online_training->description = $request->description;
+                $online_training->period = $request->period;
+                $online_training->period_unit_id = $request->period_unit_id;
+                $online_training->access = $request->access;
+                $online_training->starting_time = $request->starting_time;
+                $online_training->ending_time = $request->ending_time;
+                $online_training->starting_date = $request->starting_date;
+                $online_training->ending_date = $request->ending_date;
+                $online_training->vendor_category_id = $request->vendor_category_id;
+                $online_training->user_id = $request->user_id;
+                $online_training->location_details = $request->location_details;
+                $online_training->save();
+
+                Flash::success('Training Vendor Service saved successfully.');
+
+                return redirect(route('trainingVendorServices.index'));
+
+            }
+
+
+        }
+
+
     }
 
     /**

@@ -65,6 +65,7 @@ class RentVendorServiceController extends AppBaseController
         $rent_vendor_service->user_id = $request->user_id;
         $rent_vendor_service->charge_frequency = $request->charge_frequency;
         $rent_vendor_service->description = $request->description;
+        $rent_vendor_service->vendor_category_id = $request->vendor_category_id;
         $rent_vendor_service->total_charge = (int) ($request->charge_day * $request->charge);
         $rent_vendor_service->save();
 

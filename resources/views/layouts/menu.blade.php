@@ -26,12 +26,6 @@
             </a>
         </li>
 
-        <li class="nav-item">
-            <a href="{{ route('userTypes.index') }}"
-               class="nav-link ">
-                <p>User Types</p>
-            </a>
-        </li>
 
 
         <li class="nav-item">
@@ -41,7 +35,7 @@
         </li>
 
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('buyers.index') }}" class="nav-link">
                 <p>Buyers</p>
             </a>
@@ -51,7 +45,7 @@
             <a href="{{ route('sellers.index') }}" class="nav-link">
                 <p>Vendors</p>
             </a>
-        </li>
+        </li> --}}
 
 
 
@@ -78,13 +72,37 @@
             </a>
         </li>
 
-
+        <li class="nav-item">
+            <a href="{{ route('statuses.index') }}"
+               class="nav-link ">
+                <p>Statuses</p>
+            </a>
+        </li>
         <li class="nav-item">
             <a href="{{ route('sliders.index') }}" class="nav-link">
                 <p>Sliders</p>
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('onboardings.index') }}"
+               class="nav-link ">
+                <p>Onboardings</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('periodUnits.index') }}"
+               class="nav-link ">
+                <p>Period Units</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('commissions.index') }}"
+               class="nav-link ">
+                <p>Commissions</p>
+            </a>
+        </li>
 
     </ul>
 </li>
@@ -369,6 +387,7 @@
 </li>
 
 
+
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link ">
         <i class="fa fa-users mr-2" aria-hidden="true"></i>
@@ -389,12 +408,10 @@
         </li>
 
 
-
-
-
-
     </ul>
 </li>
+
+
 
 <li class="nav-item-one nav-item">
     <a href="javascript:;" class="waves-effect nav-link ">
@@ -434,6 +451,34 @@
 
     </ul>
 </li>
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link ">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>Finance Vendor Services</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+      <li class="nav-item">
+      <a href="{{ route('financeVendorCategories.index') }}"
+        class="nav-link">
+         <p>Finance Vendor Categories</p>
+      </a>
+       </li>
+
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('finaceVendorServices.index') }}"
+               class="nav-link">
+                <p>Add Finance Vendor</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
 
 
 
@@ -503,10 +548,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <li class="nav-item">
-    <a href="{{ route('finaceVendorServices.index') }}"
-       class="nav-link {{ Request::is('finaceVendorServices*') ? 'active' : '' }}">
-        <p>Finace Vendor Services</p>
+    <a href="{{ route('userVerifications.index') }}"
+       class="nav-link ">
+        <p>User Verifications</p>
     </a>
 </li>
 

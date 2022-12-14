@@ -8,13 +8,13 @@ $crops = App\Models\Crop::pluck('name','id');
 <!-- Quantity Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('quantity', 'Quantity:') !!}
-    {!! Form::number('quantity', null, ['class' => 'form-control','placeholder'=>"Quantity is obtained from your plot stock harvest for a crop you post for sale", 'readonly']) !!}
+    {!! Form::number('quantity', null, ['class' => 'form-control','placeholder'=>"Enter quantity"]) !!}
 </div>
 
 <!-- Selling Price Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('selling_price', 'Selling Price:') !!}
-    {!! Form::number('selling_price', null, ['class' => 'form-control']) !!}
+    {!! Form::number('selling_price', null, ['class' => 'form-control','placeholder'=>"Enter crop selling price"]) !!}
 </div>
 
 <!-- Quantity Unit Field -->

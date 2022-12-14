@@ -46,9 +46,9 @@ class UserType extends Model
         'name' => 'required|string'
     ];
 
-   //user type has many users
+   //user type belongs to many users
    public function users()
       {
-          return $this->hasMany(\App\Models\User::class, 'user_type_id');
+          return $this->hasMany(\App\Models\User::class,'user_type_id');
       }
 }

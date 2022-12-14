@@ -1,5 +1,6 @@
 <?php
-$vendors = App\Models\User::where('user_type','seller')->pluck('username','id');
+$vendors = App\Models\User::where('user_type_id',4)->pluck('username','id');
+$vendor_categories = App\Models\VendorCategory::pluck('name','id');
 ?>
 
 
@@ -26,4 +27,11 @@ $vendors = App\Models\User::where('user_type','seller')->pluck('username','id');
 <div class="form-group col-sm-6">
     {!! Form::label('user_id', 'Vendors:') !!}
     {!! Form::select('user_id', $vendors, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+
+<!-- Vendor Category Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
+    {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
 </div>

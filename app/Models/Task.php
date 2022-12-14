@@ -30,7 +30,8 @@ class Task extends Model
     public $fillable = [
         'name',
         'task_date',
-        'plot_id'
+        'plot_id',
+        'status_id'
     ];
 
     /**
@@ -41,7 +42,8 @@ class Task extends Model
     protected $casts = [
         'name' => 'string',
         'task_date' => 'string',
-        'plot_id' => 'integer'
+        'plot_id' => 'integer',
+        'status_id' => 'integer'
     ];
 
     /**
@@ -52,7 +54,8 @@ class Task extends Model
     public static $rules = [
         'name' => 'required|string',
         'task_date' => 'required|string',
-        'plot_id' => 'required|integer'
+        'plot_id' => 'required|integer',
+        'status_id' => 'required|integer'
     ];
 
     //a task belongs to plot
@@ -61,4 +64,9 @@ class Task extends Model
      return $this->belongsTo(\App\Models\Plot::class,'plot_id');
   }
 
+  //a task belongs to a status
+  public function status()
+  {
+     return $this->belongsTo(\App\Models\Status::class,'status_id');
+  }
 }
