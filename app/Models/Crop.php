@@ -6,6 +6,8 @@ use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use URL;
+use Storage;
 /**
  * Class Crop
  * @package App\Models
@@ -23,6 +25,8 @@ class Crop extends Model
     use HasFactory;
 
     public $table = 'crops';
+
+    protected $appends = ['image'];
 
 
 
@@ -89,5 +93,13 @@ class Crop extends Model
        }
 
 
+       public function getImageAttribute($image)
+       {
+
+        if($image){
+            $url = env('APP_NAME').Storage::disk('local')->url('public/crops/'.$image);
+            return $url;
+        }
+       }
 
 }

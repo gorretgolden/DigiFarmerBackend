@@ -1,6 +1,6 @@
 <?php
 $sub_categories= App\Models\AnimalFeedSubCategory::pluck('name','id');
-$vendors = App\Models\User::where('user_type_id',4)->pluck('username','id');
+$vendors = App\Models\User::where('user_type','farmer')->pluck('username','id');
 ?>
 
 <!-- Name Field -->

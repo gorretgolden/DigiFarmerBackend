@@ -31,19 +31,21 @@ class FinanceVendorService extends Model
 
 
 
+
     public $fillable = [
-        'user_id',
         'name',
         'principal',
         'interest_rate',
         'interest_rate_unit',
-        'duration',
-        'duration_unit',
+        'payment_frequency_pay',
         'status',
         'simple_interest',
         'total_amount_paid_back',
         'vendor_category_id',
-        'payment_frequency'
+        'user_id',
+        'loan_plan_id',
+        'finance_vendor_category_id',
+        'loan_number'
     ];
 
     /**
@@ -52,18 +54,19 @@ class FinanceVendorService extends Model
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer',
         'name' => 'string',
         'principal' => 'integer',
         'interest_rate' => 'integer',
         'interest_rate_unit' => 'string',
-        'duration' => 'integer',
-        'duration_unit' => 'string',
         'status' => 'string',
         'simple_interest' => 'integer',
         'total_amount_paid_back' => 'integer',
         'vendor_category_id' => 'integer',
-        'payment_frequency' => 'string'
+        'user_id' => 'integer',
+        'loan_plan_id' => 'integer',
+        'loan_pay_back_id' => 'integer',
+        'finance_vendor_category_id' => 'integer',
+
     ];
 
     /**
@@ -72,17 +75,19 @@ class FinanceVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'principal' => 'required|integer',
-        'name' => 'string|unique:finance_vendor_services',
-        'interest_rate' => 'required|integer',
+        'name' => 'required|string',
+        'principal' => 'required|numeric|min:10000',
+        'interest_rate' => 'required|integer|numeric|min:1|max:20',
         'interest_rate_unit' => 'nullable',
-        'duration' => 'required|integer',
-        'duration_unit' => 'nullable',
-        'status' => 'nullable',
+        'payment_frequency_pay' => 'nullable',
+        'status' => 'required',
         'simple_interest' => 'nullable',
         'total_amount_paid_back' => 'nullable',
         'vendor_category_id' => 'required|integer',
-        'payment_frequency' => 'required|string'
+        'user_id' => 'required|integer',
+        'loan_plan_id' => 'integer|required',
+        'loan_pay_back_id' => 'integer|required',
+        'finance_vendor_category_id' => 'required|integer',
     ];
 
 
@@ -99,5 +104,26 @@ class FinanceVendorService extends Model
         {
            return $this->belongsTo(\App\Models\User::class,'user_id');
         }
+
+        //belongs to a loan plan
+        public function loan_plan()
+        {
+           return $this->belongsTo(\App\Models\LoanPlan::class,'loan_plan_id');
+        }
+
+         //belongs to a loan pay back frequency
+          public function loan_pay_back()
+        {
+           return $this->belongsTo(\App\Models\LoanPayBack::class,'loan_pay_back_id');
+          }
+
+        //belongs to a finance vendor category
+        public function finance_vendor_category()
+        {
+         return $this->belongsTo(\App\Models\FinanceVendorCategories::class,'finance_vendor_category_id');
+        }
+
+
+
 
 }

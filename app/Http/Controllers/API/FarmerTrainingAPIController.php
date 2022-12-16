@@ -9,6 +9,7 @@ use App\Repositories\FarmerTrainingRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Zepson\Dpo\Dpo;
 
 /**
  * Class FarmerTrainingController
@@ -51,13 +52,30 @@ class FarmerTrainingAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateFarmerTrainingAPIRequest $request)
+    public function store(Request $request)
     {
-        $input = $request->all();
 
-        $farmerTraining = $this->farmerTrainingRepository->create($input);
+        $dpo = new Dpo();
+        $order = [
+                 'paymentAmount'=>"10000",
+                 'paymentCurrency'=> "TZS",
+                 'customerFirstName'=> "Novath",
+                 'customerLastName'=> "Thomas",
+                 'customerAddress'=> "Tanzania",
+                  'customerCity'=>"Dodoma",
+                 'customerPhone'=> "0752771650",
+                 'customerEmail'=> "novath@zepson.co.tz",
+                 'companyRef'=> "34TESTREFF"
+             ];
+         //Now make  payment
+         $d = $dpo->directPayment($order);
+         dd( $d);
 
-        return $this->sendResponse($farmerTraining->toArray(), 'Farmer Training saved successfully');
+        // $input = $request->all();
+
+        // $farmerTraining = $this->farmerTrainingRepository->create($input);
+
+        // return $this->sendResponse($farmerTraining->toArray(), 'Farmer Training saved successfully');
     }
 
     /**

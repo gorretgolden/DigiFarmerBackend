@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use Carbon\Carbon;
+use App\Models\User;
 /**
  * Class TrainingVendorServiceController
  * @package App\Http\Controllers\API
@@ -66,6 +67,7 @@ class TrainingVendorServiceAPIController extends AppBaseController
             'ending_time' => 'required|after:starting_time',
             'location_details' => 'nullable',
             'period_unit_id'  => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ];
         $request->validate($rules);
         $input = $request->all();
@@ -76,7 +78,11 @@ class TrainingVendorServiceAPIController extends AppBaseController
             $request->validate(['zoom_details' => 'required|string']);
             $input['zoom_details'] = $request->zoom_details;
             $input['vendor_category_id'] = 5;
+            $input['image'] = $request->image;
             $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
+
+            $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'training-services');
+            $trainingVendorService->save();
             return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
 
 
@@ -94,6 +100,32 @@ class TrainingVendorServiceAPIController extends AppBaseController
         }
 
 
+
+    }
+
+    public function vendorTrainings(Request $request){
+
+        $vendor = User::find(auth()->user()->id);
+        $training_services = $vendor->training_vendor_services;
+        if($training_services->count()== 0){
+
+            $response = [
+                'success'=>true,
+                'message'=>'Vendor has no training vendor services'
+               ];
+
+               return response()->json($response,200);
+        }
+        else{
+            $response = [
+                'success'=>true,
+                'data' => $training_services,
+                'message'=>'Training vendor services retrieved successfully'
+               ];
+
+               return response()->json($response,200);
+
+        }
 
     }
 

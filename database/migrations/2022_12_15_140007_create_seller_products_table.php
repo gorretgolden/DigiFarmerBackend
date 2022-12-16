@@ -14,7 +14,7 @@ class CreateSellerProductsTable extends Migration
     public function up()
     {
         Schema::create('seller_products', function (Blueprint $table) {
-            $table->id();
+             $table->id();
              $table->string('name',100)->unique();
              $table->string('image')->nullable();
              $table->integer('price');
@@ -25,6 +25,8 @@ class CreateSellerProductsTable extends Migration
              $table->enum('status',['on-sale','sold'])->default('on-sale');
              $table->timestamps();
         });
+
+
     }
 
     /**
@@ -37,5 +39,3 @@ class CreateSellerProductsTable extends Migration
         Schema::dropIfExists('seller_products');
     }
 }
-
-

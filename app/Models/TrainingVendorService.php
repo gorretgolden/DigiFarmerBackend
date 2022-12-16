@@ -52,7 +52,8 @@ class TrainingVendorService extends Model
         'location_details',
         'vendor_category_id',
         'user_id',
-        'period_unit_id'
+        'period_unit_id',
+        'image'
     ];
 
     /**
@@ -75,7 +76,8 @@ class TrainingVendorService extends Model
         'location_details' => 'string',
         'vendor_category_id' => 'integer',
         'user_id' => 'integer',
-        'period_unit_id' => 'integer'
+        'period_unit_id' => 'integer',
+        'image' => 'string'
     ];
 
     /**
@@ -99,6 +101,7 @@ class TrainingVendorService extends Model
         'vendor_category_id' => 'required|integer',
         'user_id' => 'required|integer',
         'period_unit_id'  => 'required|integer',
+        'image' => 'required|string'
     ];
 
 

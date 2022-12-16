@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPeriodToTrainingTable extends Migration
+class CreateSellerProductCategories extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddPeriodToTrainingTable extends Migration
      */
     public function up()
     {
-        Schema::table('training_vendor_services', function (Blueprint $table) {
-            $table->unsignedInteger('period_unit_id')->nullable()->references('id')->on('statuses');
+        Schema::create('seller_product_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('image')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddPeriodToTrainingTable extends Migration
      */
     public function down()
     {
-        Schema::table('training_vendor_services', function (Blueprint $table) {
-            $table->dropColumn('period_unit_id');
-        });
+        Schema::dropIfExists('seller_product_categories');
     }
 }

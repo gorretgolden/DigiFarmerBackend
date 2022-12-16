@@ -17,7 +17,7 @@ class CreateUserVerificationsTable extends Migration
         Schema::create('user_verifications', function (Blueprint $table) {
             $table->id('id');
             $table->string('image');
-            $table->booleab('verified')->default(false);
+            $table->boolean('verified')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
 

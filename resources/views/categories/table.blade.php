@@ -13,7 +13,7 @@
             @foreach ($categories as $category)
                 <tr>
                     <td>
-                        <img src="{{ $category->image ? asset('/storage/categories/' . $category->image) : asset('img/crop.png') }}"
+                        <img src="{{ $category->image ?  $category->image : asset('img/crop.png') }}"
                             width="50px" height="50px" />
                     </td>
 

@@ -5,7 +5,8 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use URL;
+use Storage;
 /**
  * Class Category
  * @package App\Models
@@ -61,4 +62,13 @@ class Category extends Model
         return $this->hasMany(\App\Models\Crop::class, 'category_id');
     }
 
+
+    public function getImageAttribute($image)
+       {
+
+        if($image){
+            $url = Storage::disk('local')->url('public/categories/'.$image);
+            return $url;
+        }
+       }
 }

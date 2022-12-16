@@ -7,13 +7,13 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
-    {!! Form::text('name', null, ['class' => 'form-control']) !!}
+    {!! Form::text('name', null, ['class' => 'form-control','placeholder'=>'Enter training name']) !!}
 </div>
 
 <!-- Charge Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('charge', 'Charge:') !!}
-    {!! Form::number('charge', null, ['class' => 'form-control']) !!}
+    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>'10000']) !!}
 </div>
 
 <!-- Description Field -->
@@ -35,7 +35,16 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
     {!! Form::select('access', ['Online'=>'Online','Offline'=>'Offline'],null, ['class' => 'form-control select select-access'] ) !!}
 </div>
 
-
+<!-- Image Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('image', 'Image:') !!}
+    <div class="input-group">
+        <div class="custom-file">
+            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {!! Form::label('image', 'Choose file', ['class' => 'custom-file-label']) !!}
+        </div>
+    </div>
+</div>
 
 
 <!-- Vendor Category Id Field -->
@@ -54,7 +63,7 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 <!-- Starting Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('starting_date', 'Starting Date:') !!}
-    {!! Form::text('starting_date', null, ['class' => 'form-control','id'=>'starting_date']) !!}
+    {!! Form::text('starting_date', null, ['class' => 'form-control','id'=>'starting_date','placeholder'=>'Select starting date']) !!}
 </div>
 
 @push('page_scripts')
@@ -71,7 +80,7 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 <!-- Starting Time Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('starting_time', 'Starting Time:') !!}
-    {!! Form::text('starting_time', null, ['class' => 'form-control','id'=>'starting_time']) !!}
+    {!! Form::text('starting_time', null, ['class' => 'form-control','id'=>'starting_time','placeholder'=>'Select starting time']) !!}
 </div>
 
 @push('page_scripts')
@@ -87,7 +96,7 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 <!-- Ending Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('ending_date', 'Ending Date:') !!}
-    {!! Form::text('ending_date', null, ['class' => 'form-control','id'=>'ending_date']) !!}
+    {!! Form::text('ending_date', null, ['class' => 'form-control','id'=>'ending_date','placeholder'=>'Select ending date']) !!}
 </div>
 
 @push('page_scripts')
@@ -104,7 +113,7 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 <!-- Ending Time Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('ending_time', 'Ending Time:') !!}
-    {!! Form::text('ending_time', null, ['class' => 'form-control','id'=>'ending_time']) !!}
+    {!! Form::text('ending_time', null, ['class' => 'form-control','id'=>'ending_time','placeholder'=>'Select ending time']) !!}
 </div>
 
 @push('page_scripts')
@@ -115,17 +124,6 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
             sideBySide: true
         })
     </script>
-<!-- Zoom Details Field -->
-<div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('zoom_details', 'Zoom Details:') !!}
-    {!! Form::textarea('zoom_details', null, ['class' => 'form-control find']) !!}
-</div>
-
-<!-- Location Details Field -->
-<div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('location_details', 'Location Details:') !!}
-    {!! Form::textarea('location_details', null, ['class' => 'form-control rep']) !!}
-</div>
 
 <script>
     $(document).ready(function(){
@@ -158,11 +156,13 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 <!-- Zoom Details Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('zoom_details', 'Zoom Details:') !!}
-    {!! Form::textarea('zoom_details', null, ['class' => 'form-control find']) !!}
+    {!! Form::textarea('zoom_details', null, ['class' => 'form-control find','placeholder'=>'Zoom details for online access']) !!}
 </div>
 
 <!-- Location Details Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('location_details', 'Location Details:') !!}
-    {!! Form::textarea('location_details', null, ['class' => 'form-control rep']) !!}
+    {!! Form::textarea('location_details', null, ['class' => 'form-control ','placeholder'=>'Location details for offline access']) !!}
 </div>
+
+

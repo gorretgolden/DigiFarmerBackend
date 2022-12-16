@@ -8,6 +8,9 @@ use App\Models\FinanceVendorService;
 use App\Repositories\FinanceVendorServiceRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Models\LoanPlan;
+use App\Models\LoanPayback;
+use Illuminate\Support\Str;
 
 /**
  * Class FinanceVendorServiceController
@@ -50,41 +53,110 @@ class FinanceVendorServiceAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateFinanceVendorServiceAPIRequest $request)
+
+     public function random_strings($length_of_string)
+     {
+
+         // String of all alphanumeric character
+         $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+
+         return substr(str_shuffle($str_result),0, $length_of_string);
+     }
+
+    public function store(Request $request)
     {
          //existing finance
-       $existing_finance = FinanceVendorService::where('name',$request->name)->first();
-       if(!$existing_finance){
-           $new_finance_service = new FinanceVendorService();
-           $new_finance_service->name = $request->name;
-           $new_finance_service->principal = $request->principal;
-           $new_finance_service->interest_rate = $request->interest_rate;
-           $new_finance_service->duration = $request->duration;
 
-           //simple interest
-           $percentage_interest_rate = ($request->interest_rate / 100);
-           $calculate_simple_interest = (int)($request->principal * $percentage_interest_rate * $request->duration);
+        $rules = [
+            'name' => 'required|string',
+            'principal' => 'required|numeric|min:100000',
+            'interest_rate' => 'required|integer|numeric|min:1|max:20',
+            'status' => 'required',
+            'loan_plan_id' => 'integer|required',
+            'loan_pay_back_id' => 'integer|required',
+            'finance_vendor_category_id' => 'required|integer',
+        ];
 
-           $new_finance_service->simple_interest = $calculate_simple_interest;
-           $new_finance_service->interest_rate = $request->interest_rate;
+        $request->validate($rules);
+        $existing_finance = FinanceVendorService::where('name',$request->name)->first();
+        if(!$existing_finance){
 
-           if($request->payment_frequency == 'Monthly'){
-            $monthly_pay =  ($request->principal * (((int)$request->duration) /365) * 30);
-            dd($monthly_pay);
-            $new_finance_service->total_amount_paid_back = $request->total_amount_paid_back;
-           }
+            $new_finance_service = new FinanceVendorService();
+            $new_finance_service->name = $request->name;
+            $new_finance_service->principal = $request->principal;
+            $new_finance_service->interest_rate = $request->interest_rate;
+            $new_finance_service->interest_rate_unit = "%";
+            $new_finance_service->loan_plan_id = $request->loan_plan_id;
+            $new_finance_service->loan_pay_back_id = $request->loan_pay_back_id;
+            $new_finance_service->status = $request->status;
+            $new_finance_service->vendor_category_id = 3;
+            $new_finance_service->finance_vendor_category_id = $request->finance_vendor_category_id;
+            $new_finance_service->user_id = auth()->user()->id;
 
-           $new_finance_service->vendor_category_id = $request->vendor_category_id;
-           $new_finance_service->user_id = auth()->user()->id;
-           $new_finance_service->save();
 
+            //simple interest
+            $percentage_interest_rate = ($request->interest_rate / 100);
+
+            //calculate duration
+            $loan_plan = LoanPlan::find($request->loan_plan_id);
+            $loan_plan_duration =$loan_plan->value;
+            $time = ($loan_plan_duration/12);
+
+            $calculated_year_simple_interest = (int)($request->principal * $percentage_interest_rate * $time);
+            $total_pay_amount = $calculated_year_simple_interest + $request->principal;
+
+
+            $new_finance_service->simple_interest = $calculated_year_simple_interest;
+            $new_finance_service->total_amount_paid_back = $total_pay_amount;
+
+
+            $loan_number = $this->random_strings(10);
+            $new_finance_service->loan_number = $loan_number;
+
+            $new_finance_service->save();
+
+
+            //frequency pay
+            $loan_pay_back = LoanPayBack::find($request->loan_pay_back_id);
+
+            if($loan_pay_back->name == "Daily"){
+
+                $payment_frequency_pay =  $percentage_interest_rate * $request->principal;
+                #a month has 30.417 days
+                $total_days = $loan_plan_duration * 30.417 ;
+                $daily_pay = ($total_pay_amount / $total_days);
+                $new_finance_service->payment_frequency_pay = $daily_pay;
+                $new_finance_service->save();
+
+
+            }elseif($loan_pay_back->name == "Weekly"){
+                #a month has 4 weeks
+                $total_weeks = $loan_plan_duration * 4;
+                $weekly_pay = ($total_pay_amount / $total_weeks);
+                $new_finance_service->payment_frequency_pay = $weekly_pay;
+                $new_finance_service->save();
+
+            }elseif($loan_pay_back->name == "Monthly"){
+
+                $monthly_payment =  $percentage_interest_rate * $request->principal;
+                $new_finance_service->payment_frequency_pay = $monthly_payment;
+                $new_finance_service->save();
+
+
+            }
+            $success['loan_number'] = $new_finance_service->loan_number;
             $success['name'] = $new_finance_service->name;
             $success['principal'] = $new_finance_service->principal;
-            $success['interest_rate'] = $new_finance_service->interest_rate;
-            $success['duration'] = $new_finance_service->duration;
-            $success['payment_frequency'] = $new_finance_service->payment_frequency;
+            $success['interest_rate'] = $new_finance_service->interest_rate.$new_finance_service->interest_rate_unit;
+            $success['simple_interest'] = $new_finance_service->simple_interest;
+            $success['duration'] = $new_finance_service->loan_plan->value." ".$new_finance_service->loan_plan->period_unit;
+            $success['total_amount_paid_back'] = $new_finance_service->total_amount_paid_back;
+            $success['status'] = $new_finance_service->status;
+            $success['payment_frequency'] = $new_finance_service->loan_pay_back->value;
             $success['vendor_category'] = $new_finance_service->vendor_category;
-            $success['vendor'] = $new_finance_service->user;
+            $success['finance_category'] = $new_finance_service->finance_vendor_category;
+            $success['vendor'] = $new_finance_service->username;
 
             $response = [
                'success'=>true,

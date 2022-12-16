@@ -5,6 +5,8 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use URL;
+use Storage;
 
 /**
  * Class AnimalCategory
@@ -53,4 +55,15 @@ class AnimalCategory extends Model
     ];
 
 
+    //Accessors
+    public function getImageAttribute($image)
+       {
+        //  $image = $this->attributes['image'] ? URL::to('/animal_categories/' . $this->attributes['image']) : null;
+        //  return $image;
+
+        if($image){
+            $url = Storage::disk('local')->url('public/animal_categories/'.$image);
+            return $url;
+        }
+       }
 }

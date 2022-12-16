@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\UserType;
 use App\Models\OtpPhoneNumber;
+use App\Models\UserVerification;
 require_once('../external/AfricasTalkingGateway.php');
 
 
@@ -213,25 +214,10 @@ class UserAPIController extends AppBaseController
     }
 
 
-    public function store(Request $request)
+    public function createNewAccount(Request $request)
     {
 
-        $rules = [
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|unique:users,id|email',
-            'image_url' => 'nullable',
-            'user_type_id' =>'required',
-            'phone' => 'required|unique:users,id',
-            'password' => 'required',
-            'email_verified_at' => 'datetime',
-            'confirm-password'=>'required|same:password'
-        ];
 
-        $request->validate($rules);
-
-
-        //existing user
         $existing_email = User::where('email',$request->email)->first();
         $existing_phone = User::where('phone',$request->phone)->first();
        // dd($existing_phone);
@@ -256,13 +242,29 @@ class UserAPIController extends AppBaseController
         }
         else{
 
+            $rules = [
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                'email' => 'required|unique:users,id|email',
+                'image_url' => 'nullable',
+                'phone' => 'required|unique:users,id',
+                'password' => 'required',
+                'email_verified_at' => 'datetime',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
             $user = new User();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->username = $request->last_name . " " .$request->first_name;
             $user->email = $request->email;
             $user->phone = $request->phone;
-            $user->user_type_id = $request->user_type_id;
+            $user->user_type = 'farmer';
             $user->isAdmin = 0;
             $user->image_url = $request->image_url;
             $password = $request->password;
@@ -288,17 +290,16 @@ class UserAPIController extends AppBaseController
              }
 
              $user->save();
+
              $user_token = Str::random(60);
              $success['token'] = $user->createToken($user_token)->plainTextToken;
-             $success['id'] = $user->id;
+             $success['username'] = $user->username;
              $success['first_name'] = $user->first_name;
              $success['last_name'] = $user->last_name;
              $success['email'] = $user->email;
              $success['phone'] = $user->phone;
-             $success['user_type'] = $user->userType->name;
+             $success['user_type'] = $user->user_type;
              $success['image_url'] = $user->image_url;
-
-
              $user = User::find($user->id);
 
              $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
@@ -322,33 +323,6 @@ class UserAPIController extends AppBaseController
 
     }
 
-
-    // public function verifyUserOtp(Request $request){
-
-    //     $check_user_otp = User::where('otp',$request->otp)->first();
-
-    //     if($check_user_otp){
-    //       $check_user_otp->is_verified_otp = true;
-    //       $check_user_otp->save();
-    //       $response = [
-    //         'success'=>true,
-    //         'message'=> 'Phone number verified successfully'
-    //      ];
-    //      return response()->json($response,200);
-
-    //     }
-    //     else{
-
-    //       $response = [
-    //         'success'=>false,
-    //         'message'=> 'Invalid Otp'
-    //      ];
-    //      return response()->json($response);
-    //     }
-
-
-
-    // }
 
 
     public function login(Request $request)
@@ -376,9 +350,15 @@ class UserAPIController extends AppBaseController
             }else{
 
             $user = Auth::user();
-            $success['token'] =  $existing_user->createToken('Farmer')->plainTextToken;
+            $user_token = Str::random(60);
+            $success['token'] =  $existing_user->createToken($user_token)->plainTextToken;
             $success['email'] =  $existing_user->email;
             $success['phone'] =  $existing_user->phone;
+            $success['image_url'] =  $existing_user->image_url;
+            $success['first_name'] =  $existing_user->first_name;
+            $success['last_name'] =  $existing_user->last_name;
+            $success['username'] =  $existing_user->username;
+            $success['is_verified'] =  $existing_user->is_verified;
 
             return $this->sendResponse($success, 'You successfully logged into your account');
 
@@ -468,6 +448,9 @@ class UserAPIController extends AppBaseController
 
         return response()->json($response,200);
     }
+
+
+
 
     /**
      * Update the specified User in storage.
@@ -575,4 +558,95 @@ class UserAPIController extends AppBaseController
         return response()->json($response,200);
         }
     }
+
+
+    //user upload profile image
+    public function updateProfileImage(Request $request){
+
+        $user = User::find(auth()->user()->id);
+        $image =  $request->image;
+
+        $rules = [
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ];
+        $request->validate($rules);
+
+        $user->image_url= \App\Models\ImageUploader::upload($request->file('image'),'user-profiles');
+        $user->save();
+        $response = [
+            'success'=>true,
+            'message'=>'Profile image updated successfully'
+           ];
+
+           return response()->json($response,200);
+
+    }
+
+
+    public function userVerifications(Request $request)
+    {
+
+
+        $validator = Validator::make($request->all(),
+       [
+
+        'image.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+       ]);
+
+        if($validator->fails())
+        {
+           return response()->json(['message'=>$validator->errors()->all(),'success'=>0]);
+        }
+
+         $user = User::where('id', auth()->user()->id)->first();
+
+         if($user){
+          $this->validate($request, [
+           'image.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+         ]);
+
+
+        if($request->hasfile('image'))
+        {
+
+            $image = $request->image;
+           foreach ($image as $key => $value) {
+              $name = time().$key.'.'.$value->getClientOriginalExtension();
+              $path = public_path('images/user-docs');
+              $value->move($path,$name);
+
+              $existing_user = UserVerification::where('user_id',auth()->user()->id)->first();
+              if(!$existing_user){
+
+                $verification = new UserVerification();
+                $verification->user_id = auth()->user()->id;
+                $verification->verified = false;
+                $verification->image = $name ;
+                $verification->save();
+              }else{
+
+                $response = [
+                    'success'=>false,
+                    'message'=>'You already uploaded your documents for verification'
+                   ];
+
+                   return response()->json($response,200);
+              }
+           }
+
+
+
+           $response = [
+            'success'=>true,
+            'message'=> 'Documents uploaded successfully'
+           ];
+
+           return response()->json($response,200);
+
+
+        }
+
+
+    }
+}
 }

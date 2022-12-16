@@ -16,14 +16,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class FinanceVendorCategories extends Model
 {
-    use SoftDeletes;
 
     use HasFactory;
 
     public $table = 'finance_vendor_categories';
-    
 
-    protected $dates = ['deleted_at'];
+
+
 
 
 
@@ -48,9 +47,17 @@ class FinanceVendorCategories extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|text',
+        'name' => 'required|string',
         'image' => 'nullable'
     ];
 
-    
+
+    public function finances()
+    {
+       return $this->hasMany(\App\Models\FinanceVendorService::class,'finance_vendor_category_id');
+      }
+
+
+
+
 }

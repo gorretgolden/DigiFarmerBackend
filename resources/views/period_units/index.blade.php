@@ -8,7 +8,7 @@
                     <h1>Period Units</h1>
                 </div>
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right disabled"
+                    <a class="btn btn-primary float-right "
                        href="{{ route('periodUnits.create') }}">
                         Add New
                     </a>

@@ -18,6 +18,7 @@ class CreateTrainingVendorServices extends Migration
             $table->string('name')->unique();
             $table->integer('charge');
             $table->text('description');
+            $table->string('image')->nullable();
             $table->integer('period')->default(1);
             $table->string('period_unit')->default('Days');
             $table->enum('access',['Online','Offline'])->default('Online');

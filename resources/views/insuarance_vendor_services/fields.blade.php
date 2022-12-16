@@ -1,5 +1,5 @@
 <?php
-$vendors = App\Models\User::where('user_type_id',4)->pluck('username','id');
+$vendors = App\Models\User::where('user_type','farmer')->pluck('username','id');
 $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 ?>
 

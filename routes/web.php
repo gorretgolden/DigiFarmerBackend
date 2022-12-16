@@ -187,3 +187,9 @@ Route::resource('animalCategories', App\Http\Controllers\AnimalCategoryControlle
 
 
 Route::resource('userVerifications', App\Http\Controllers\UserVerificationController::class);
+
+
+Route::resource('loanPlans', App\Http\Controllers\LoanPlanController::class);
+
+
+Route::resource('loanPayBacks', App\Http\Controllers\LoanPayBackController::class);

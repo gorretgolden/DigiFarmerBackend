@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFarmerBuySellerProductsTable extends Migration
+class CreateLoanPlansTable extends Migration
 {
 
     /**
@@ -14,11 +14,10 @@ class CreateFarmerBuySellerProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('farmer_buy_seller_products', function (Blueprint $table) {
+        Schema::create('loan_plans', function (Blueprint $table) {
             $table->id('id');
-            $table->boolean('is_product_bought')->default(false);
-            $table->foreignId('seller_product_id')->constrained()->onDelete('CASCADE');
-            $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
+            $table->integer('value')->default(1);
+            $table->string('period_unit')->default('Months');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateFarmerBuySellerProductsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('farmer_buy_seller_products');
+        Schema::drop('loan_plans');
     }
 }

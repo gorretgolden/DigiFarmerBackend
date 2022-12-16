@@ -1,6 +1,6 @@
 
 <?php
-$buyers = App\Models\User::where('user_type_id',2)->pluck('username','id');
+$buyers = App\Models\User::where('user_type','farmer')->pluck('username','id');
 $crops_on_sales = App\Models\CropOnSale::all();
 ?>
 

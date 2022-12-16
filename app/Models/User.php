@@ -209,4 +209,6 @@ class User extends Authenticable implements  MustVerifyEmail
     return $this->hasMany(\App\Models\UserVerification::class, 'user_id');
     }
 
+
+
 }

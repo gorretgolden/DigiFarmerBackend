@@ -73,6 +73,20 @@
         </li>
 
         <li class="nav-item">
+            <a href="{{ route('loanPlans.index') }}"
+               class="nav-link ">
+                <p>Loan Plans</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a href="{{ route('loanPayBacks.index') }}"
+               class="nav-link">
+                <p>Loan Pay Backs</p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('statuses.index') }}"
                class="nav-link ">
                 <p>Statuses</p>
@@ -564,5 +578,8 @@
         <p>User Verifications</p>
     </a>
 </li>
+
+
+
 
 

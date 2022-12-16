@@ -4,8 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSellerProductCategoriesTable extends Migration
+class CreateLoanPayBacksTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,8 +14,8 @@ class CreateSellerProductCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('seller_product_categories', function (Blueprint $table) {
-            $table->id();
+        Schema::create('loan_pay_backs', function (Blueprint $table) {
+            $table->id('id');
             $table->string('name');
             $table->timestamps();
         });
@@ -27,6 +28,6 @@ class CreateSellerProductCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seller_product_categories');
+        Schema::drop('loan_pay_backs');
     }
 }

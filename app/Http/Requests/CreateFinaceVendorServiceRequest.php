@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\FinaceVendorService;
+use App\Models\FinanceVendorService;
 
 class CreateFinaceVendorServiceRequest extends FormRequest
 {
@@ -24,6 +24,6 @@ class CreateFinaceVendorServiceRequest extends FormRequest
      */
     public function rules()
     {
-        return FinaceVendorService::$rules;
+        return FinanceVendorService::$rules;
     }
 }

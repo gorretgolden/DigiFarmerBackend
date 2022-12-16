@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\FinaceVendorService;
+use App\Models\FinanceVendorService;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
@@ -27,9 +27,9 @@ class FinaceVendorServiceDataTable extends DataTable
      * @param \App\Models\FinaceVendorService $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(FinaceVendorService $model)
+    public function query(FinanceVendorService $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['vendor_category','user','loan_plan','loan_pay_back']);
     }
 
     /**
@@ -70,14 +70,13 @@ class FinaceVendorServiceDataTable extends DataTable
             'interest_rate',
             'interest_rate_unit',
             'payment_frequency_pay',
-            'duration_unit',
-            'duration',
-            'payment_frequency',
             'status',
             'simple_interest',
             'total_amount_paid_back',
-            'vendor_category_id',
-            'user_id'
+            'vendor_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor Category",'data'=>'vendor_category.name']),
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'user.username']),
+            'loan_Plan'=> new \Yajra\DataTables\Html\Column(['title'=>"Loan Plan",'data'=>'loan_plan.value','loan_plan.period_unit']),
+            'loan_pay_back_id' => new \Yajra\DataTables\Html\Column(['title'=>"Pay Back Period",'data'=>'loan_pay_back.name','loan_pay_back.name'])
         ];
     }
 

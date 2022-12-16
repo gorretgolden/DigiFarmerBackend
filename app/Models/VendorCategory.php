@@ -51,4 +51,10 @@ class VendorCategory extends Model
     ];
 
 
+    //has many finance vendor services
+    public function finance_vendor_services()
+    {
+        return $this->hasMany(\App\Models\FinanceVendorService::class,'vendor_category_id');
+    }
+
 }

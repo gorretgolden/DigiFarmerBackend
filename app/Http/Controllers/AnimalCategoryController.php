@@ -72,9 +72,11 @@ class AnimalCategoryController extends AppBaseController
             $animalCategory->image = $request->image;
             $animalCategory->save();
 
+            $file = $request->file('image');
             $animalCategory  = AnimalCategory::find($animalCategory->id);
+            $filename = $animalCategory->name . '-' . $animalCategory->id . '.' . $file->extension();
 
-            $animalCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_categories');
+            $animalCategory->image = \App\Models\ImageUploader::upload($filename,'animal_categories');
             $animalCategory->save();
 
 

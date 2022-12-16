@@ -12,6 +12,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use Illuminate\Http\Request;
 use App\Models\TrainingVendorService;
+use App\Models\User;
 
 class TrainingVendorServiceController extends AppBaseController
 {
@@ -61,6 +62,9 @@ class TrainingVendorServiceController extends AppBaseController
             'description' => 'required|string',
             'period' => 'required|integer',
             'access' => 'required|string',
+            'user_id' => 'required|integer',
+            'image'=>'required',
+            'image.*' => 'image|mimes:png,jpg,jpeg|max:2048',
             'starting_date' => 'required|date',
             'ending_date' => 'required|after_or_equal:starting_date',
             'starting_time' => 'required|before:ending_time',
@@ -138,6 +142,9 @@ class TrainingVendorServiceController extends AppBaseController
      *
      * @return Response
      */
+
+
+
     public function show($id)
     {
         $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
@@ -189,7 +196,13 @@ class TrainingVendorServiceController extends AppBaseController
             return redirect(route('trainingVendorServices.index'));
         }
 
-        $trainingVendorService = $this->trainingVendorServiceRepository->update($request->all(), $id);
+        $trainingVendorService->fill($request->all());
+
+        if(!empty($request->file('image'))){
+            $trainingVendorService->image = \App\Models\ImageUploader::upload($request->file('image'),'training-services');
+        }
+        $trainingVendorService->save();
+
 
         Flash::success('Training Vendor Service updated successfully.');
 
