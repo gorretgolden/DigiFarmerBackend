@@ -83,6 +83,8 @@ Route::group(['prefix'=>'v1'], function(){
     //protected routes
     Route::middleware(['auth:api','cors'])->group(function () {
 
+        Route::resource('chat',App\Http\Controllers\API\ChatAPIController::class)->only(['index','store','show']);
+
         Route::post('users/verifications',[App\Http\Controllers\API\UserAPIController::class,'userVerifications']);
 
         Route::post('account/profile-image',[App\Http\Controllers\API\UserAPIController::class,'updateProfileImage']);
@@ -190,3 +192,6 @@ Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFi
 
 
 Route::resource('onboardings', App\Http\Controllers\API\OnboardingAPIController::class);
+
+
+Route::resource('chats', App\Http\Controllers\API\ChatAPIController::class);

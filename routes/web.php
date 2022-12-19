@@ -193,3 +193,6 @@ Route::resource('loanPlans', App\Http\Controllers\LoanPlanController::class);
 
 
 Route::resource('loanPayBacks', App\Http\Controllers\LoanPayBackController::class);
+
+
+Route::resource('chats', App\Http\Controllers\ChatController::class);

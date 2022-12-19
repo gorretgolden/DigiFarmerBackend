@@ -18,7 +18,8 @@ use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\UserType;
 use App\Models\OtpPhoneNumber;
 use App\Models\UserVerification;
-require_once('../external/AfricasTalkingGateway.php');
+ require_once('../external/AfricasTalkingGateway.php');
+use AfricasTalking\SDK\AfricasTalking;
 
 
 /**
@@ -77,6 +78,9 @@ class UserAPIController extends AppBaseController
      * @return Response
      */
 
+
+
+
     public function sendSms($content,$tell){
 
 
@@ -90,7 +94,7 @@ class UserAPIController extends AppBaseController
         $gateway    = new \AfricasTalkingGateway($username, $apikey);
        try
        {
-         $recipients='+'.$tell;
+         $recipients=$tell;
          //$recipients='+256779815657';
          $results = $gateway->sendMessage($recipients, $message);
 
@@ -136,7 +140,20 @@ class UserAPIController extends AppBaseController
             $new_phone_otp->otp = $otp;
             $new_phone_otp->phone = $request->phone;
             $new_phone_otp->save();
-          //  dd($content,$request->phone);
+
+
+            //sms gateway
+            // $username = 'digifarmer';
+            // $apiKey   = '9573978d923d7e24177203b1ba6e946c5802ac0f79766eb7eb0f5cbd0e4b62e8';
+            // $new_africa_talking      = new AfricasTalking($username, $apiKey);
+            // $sms      = $new_africa_talking->sms();
+
+            // $sms->send([
+            //     'to'      =>  $request->phone,
+            //     'message' => $content
+            // ]);
+
+          //  dd($content);
 
             $this->sendSms($content,$request->phone);
 

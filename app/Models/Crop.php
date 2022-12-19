@@ -93,13 +93,13 @@ class Crop extends Model
        }
 
 
-       public function getImageAttribute($image)
-       {
+    //    public function getImageAttribute($image)
+    //    {
 
-        if($image){
-            $url = env('APP_NAME').Storage::disk('local')->url('public/crops/'.$image);
-            return $url;
-        }
-       }
+    //     if($image){
+    //         $url = env('APP_NAME').Storage::disk('local')->url('public/crops/'.$image);
+    //         return $url;
+    //     }
+    //    }
 
 }

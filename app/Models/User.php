@@ -209,6 +209,12 @@ class User extends Authenticable implements  MustVerifyEmail
     return $this->hasMany(\App\Models\UserVerification::class, 'user_id');
     }
 
+    //has many chats
+    public function chats()
+    {
+    return $this->hasMany(\App\Models\Chat::class, 'created_by');
+    }
+
 
 
 }

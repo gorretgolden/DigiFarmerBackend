@@ -572,14 +572,22 @@
 
 
 
-<li class="nav-item">
+{{-- <li class="nav-item">
     <a href="{{ route('userVerifications.index') }}"
        class="nav-link ">
         <p>User Verifications</p>
     </a>
 </li>
+ --}}
 
 
 
 
+{{-- <li class="nav-item">
+    <a href="{{ route('chats.index') }}"
+       class="nav-link {{ Request::is('chats*') ? 'active' : '' }}">
+        <p>Chats</p>
+    </a>
+</li>
+ --}}
 
