@@ -134,6 +134,83 @@ class VendorCategoryAPIController extends AppBaseController
      }
 
 
+     //rent services
+
+     public function vendor_rent_services($id)
+     {
+
+         $vendor_category = VendorCategory::where('id',$id)->with('rent_vendors')->get();
+         $rent_services =collect($vendor_category)->pluck('rent_vendors')[0];
+
+
+
+
+        //maping through the collection to concatanate rent images
+        $rent_services = $rent_services->map(function ($item){
+            return collect([
+                'id' => $item->id,
+                'name' => $item->name,
+                'location' => $item->location,
+                'charge' => $item->charge . " ". "per day" ,
+                'quantity' => $item->quantity,
+                'days' => $item->charge_day,
+                'total_charge' => $item->total_charge,
+                'description' => $item->description,
+                'vendor' => $item->vendor->username,
+                'category' => $item->rent_vendor_sub_category->name,
+                'created_at' => $item->created_at->format('d/m/Y'),
+
+                'rent_images' => $item->images()->get()->map(function ($details){
+                    return [
+                        'id' => $details->id,
+                        'url' => $details->url,
+
+                    ];
+                }),
+            ]);
+        });
+
+       // dd($rent_services);
+
+
+
+
+         if (empty($vendor_category)) {
+
+             return $this->sendError(' Vendor category not found');
+
+         }else{
+
+
+             if($vendor_category->count()==0){
+                $response = [
+                    'success'=>true,
+                    'message'=> 'No rent services posted yet '
+                 ];
+                 return response()->json($response,200);
+
+             }else{
+                $response = [
+                    'success'=>true,
+                    'data'=> [
+                        'total-rent-services' => $rent_services->count(),
+                        'rent-services'=> $rent_services,
+
+
+                    ],
+                    'message'=> 'rent services retrieved successfully'
+                 ];
+                 return response()->json($response,200);
+
+             }
+
+
+
+         }
+
+
+     }
+
      //get insuarance services
 
      public function vendor_insuarances($id)
@@ -157,6 +234,36 @@ class VendorCategoryAPIController extends AppBaseController
 
                  ],
                  'message'=> 'insuarance services retrieved successfully'
+              ];
+              return response()->json($response,200);
+
+         }
+
+
+     }
+
+     //get agronomist services
+     public function vendor_agronomists($id)
+     {
+
+         $vendor_category = VendorCategory::find($id);
+
+         if (empty($vendor_category)) {
+
+             return $this->sendError(' Vendor category not found');
+
+         }else{
+
+             $agro_services = $vendor_category->agronomist_vendors;
+             //dd(agronomist_vendors);
+             $response = [
+                 'success'=>true,
+                 'data'=> [
+                     'total-agronomist-services' => $agro_services->count(),
+                     'agronomist-services'=> $agro_services
+
+                 ],
+                 'message'=> 'agronomist services retrieved successfully'
               ];
               return response()->json($response,200);
 

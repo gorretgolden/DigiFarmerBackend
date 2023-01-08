@@ -29,6 +29,7 @@ class AgronomistVendorService extends Model
     use HasFactory;
 
     public $table = 'agronomist_vendor_services';
+    public $dir = 'storage/agronomists/';
 
 
 
@@ -105,6 +106,12 @@ class AgronomistVendorService extends Model
         return $this->hasMany(\App\Models\AgronomistShedule::class, 'agronomist_vendor_service_id');
     }
 
+    public function getImageAttribute($value)
+    {
+
+
+     return $this->dir.$value;
+    }
 
 
 }

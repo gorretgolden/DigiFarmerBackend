@@ -23,6 +23,7 @@ class SellerProduct extends Model
     use HasFactory;
 
     public $table = 'seller_products';
+    public $dir = 'storage/seller_products/';
 
 
 
@@ -89,5 +90,12 @@ class SellerProduct extends Model
      public function vendor_category()
     {
         return $this->hasMany(\App\Models\VendorCategory::class,'vendor_category_id');
+    }
+
+    public function getImageAttribute($value)
+    {
+
+
+     return $this->dir.$value;
     }
 }

@@ -81,28 +81,57 @@ class ExpenseAPIController extends AppBaseController
     public function expensePlots(Request $request)
     {
 
-      $farms = Farm::where('owner',auth()->user()->username)->get();
+      $farms = Farm::where('owner',auth()->user()->username)->with('plots')->get();
+      $farm_plot_expenses = collect($farms)->pluck('plots')[0];
 
 
-      $plot_expenses = [];
-      foreach( collect($farms) as $farm){
-         $plots = $farm->plots;
 
-         foreach($farm->plots as $plot){
-            $plot_expenses[] = $plot->expenses;
-           // dd($plot_expenses);
 
-         };
+     //maping through the collection to concatnate plots with expenses
+       $farm_plot_expenses = $farm_plot_expenses->map(function ($item){
+        return collect([
+            'id' => $item->id,
+            'name' => $item->name,
+            'location' => $item->location,
+            'size' => $item->size . " ". $item->size_unit ,
+            'farm' => $item->farm->name,
+            'crop' => $item->crop->name,
+            'expenses' => $item->expenses->map(function ($details){
+                return [
+                    'id' => $details->id,
+                    'amount' => $details->amount,
+                    'category' => $details->expense_category->name,
+                    'plot'=> $details->plot->name
 
-      }
 
-      $response = [
-        'success'=>false,
-        'data' =>$plot_expenses,
-        'message'=> 'retrieved'
-      ];
+                ];
+              }),
+          ]);
+        });
 
-      return response()->json($response,202);
+
+        //dd($farm_plot_expenses);
+
+      if(empty($farms)){
+          $response = [
+            'success'=>false,
+            'message'=> 'farmer has no farms'
+          ];
+
+          return response()->json($response,200);
+
+      }else{
+        $response = [
+            'success'=>false,
+            'data' =>$farm_plot_expenses,
+            'message'=> 'Expenses on farm plot retrieved'
+          ];
+
+          return response()->json($response,200);
+
+    }
+
+
 
 
 

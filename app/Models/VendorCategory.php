@@ -74,6 +74,19 @@ class VendorCategory extends Model
         return $this->hasMany(\App\Models\InsuaranceVendorService::class,'vendor_category_id');
     }
 
+    //has many rent services
+     public function rent_vendors()
+     {
+         return $this->hasMany(\App\Models\RentVendorService::class,'vendor_category_id');
+     }
+
+     //has many agronomist services
+     public function agronomist_vendors()
+     {
+         return $this->hasMany(\App\Models\AgronomistVendorService::class,'vendor_category_id');
+     }
+
+
 
     //has many finance vendor services
     public function finance_vendor_services()

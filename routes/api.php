@@ -36,12 +36,15 @@ Route::group(['prefix'=>'v1'], function(){
     Route::get('seller_product_categories', [App\Http\Controllers\API\SellerProductCategoryAPIController::class,'index']);
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
 
-    //vendor categories
+    //vendor categories with vendor services
     Route::resource('vendor_categories', App\Http\Controllers\API\VendorCategoryAPIController::class)->only(['index','show']);
     Route::get('vendor_categories/{id}/farmer_trainings', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_training_services']);
     Route::get('vendor_categories/{id}/farm_equipments', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_seller_products']);
     Route::get('vendor_categories/{id}/animal_feeds', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_animal_feeds']);
     Route::get('vendor_categories/{id}/insuarance', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_insuarances']);
+    Route::get('vendor_categories/{id}/rent', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_rent_services']);
+
+    Route::get('vendor_categories/{id}/agronomists', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_agronomists']);
 
 
 
@@ -127,16 +130,19 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('farmer/plots', [App\Http\Controllers\API\PlotAPIController::class,'farmPlots']);
 
         Route::resource('plots', App\Http\Controllers\API\PlotAPIController::class);
-        Route::get('plot/{id}/expenses',[App\Http\Controllers\API\PlotAPIController::class,'plot_expenses'] );
-        Route::get('plot/{id}/tasks',[App\Http\Controllers\API\PlotAPIController::class,'plot_tasks'] );
-        Route::get('plot/{id}/crop_harvests', [App\Http\Controllers\API\PlotAPIController::class,'getTotalHarvestForPlot']);
-        Route::get('plot/{id}/animals', [App\Http\Controllers\API\PlotAPIController::class,'animals_on_plot']);
+        // Route::get('plot/{id}/expenses',[App\Http\Controllers\API\PlotAPIController::class,'plot_expenses'] );
+        // Route::get('plot/{id}/tasks',[App\Http\Controllers\API\PlotAPIController::class,'plot_tasks'] );
+        // Route::get('plot/{id}/crop_harvests', [App\Http\Controllers\API\PlotAPIController::class,'getTotalHarvestForPlot']);
+        // Route::get('plot/{id}/animals', [App\Http\Controllers\API\PlotAPIController::class,'animals_on_plot']);
 
         Route::get('farm/{id}/plots', [App\Http\Controllers\API\FarmAPIController::class,'farm_plots']);
         Route::resource('farm/animals', App\Http\Controllers\API\AnimalAPIController::class)->only(['store','update','show','destroy']);
 
         Route::resource('expenses', App\Http\Controllers\API\ExpenseAPIController::class);
-        Route::get('plot/expenses', [App\Http\Controllers\API\ExpenseAPIController::class,'expensePlots']);
+        Route::get('farmer/plots/expenses', [App\Http\Controllers\API\ExpenseAPIController::class,'expensePlots']);
+        Route::get('farmer/plots/tasks', [App\Http\Controllers\API\PlotAPIController::class,'plot_tasks']);
+        Route::get('farmer/plots/animals', [App\Http\Controllers\API\PlotAPIController::class,'plot_animals']);
+
 
         Route::resource('tasks', App\Http\Controllers\API\TaskAPIController::class);
 

@@ -83,10 +83,10 @@ class RentVendorService extends Model
 
     ];
 
-//rent vendor service has many images
+    //rent vendor service has many images
     public function images()
     {
-    return $this->hasMany(\App\Models\RentVendorImage::class, 'rent_vendor_service_id');
+    return $this->hasMany(\App\Models\RentVendorImage::class, 'rent_vendor_service_id','id');
     }
 
 
@@ -102,5 +102,11 @@ class RentVendorService extends Model
      return $this->belongsTo(\App\Models\RentVendorSubCategory::class, 'rent_vendor_sub_category_id');
      }
 
+
+     //belongs to a vendor category'
+     public function vendor_category()
+     {
+        return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
+     }
 
 }

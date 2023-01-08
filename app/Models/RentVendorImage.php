@@ -52,7 +52,7 @@ class RentVendorImage extends Model
    //rent image belongs to a rent vendor service
     public function rent_vendor_service()
     {
-    return $this->belongsTo(\App\Models\RentVendorService::class, 'rent_vendor_service_id');
+      return $this->belongsTo(\App\Models\RentVendorService::class, 'rent_vendor_service_id');
     }
 
     public function getImageAttribute($value)
