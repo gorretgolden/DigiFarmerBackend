@@ -57,7 +57,7 @@ class CategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $categories = Category::with('crops')->get();
+        $categories = Category::all();
         $response = [
             'success'=>true,
             'data'=> $categories,

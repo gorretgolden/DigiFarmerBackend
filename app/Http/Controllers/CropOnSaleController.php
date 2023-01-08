@@ -11,9 +11,6 @@ use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\CropOnSale;
-use App\Models\Plot;
-use App\Models\Farm;
-use App\Models\User;
 
 class CropOnSaleController extends AppBaseController
 {
@@ -56,8 +53,7 @@ class CropOnSaleController extends AppBaseController
      */
     public function store(CreateCropOnSaleRequest $request)
     {
-
-             $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->where('is_sold',false)->first();
+        $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->where('is_sold',false)->first();
 
              if($existing_crop){
 
@@ -68,23 +64,24 @@ class CropOnSaleController extends AppBaseController
              }
              else{
 
+               // dd($request->all());
+
                 $new_crop_on_sale = new CropOnSale();
                 $new_crop_on_sale->quantity = $request->quantity;
                 $new_crop_on_sale->selling_price = $request->selling_price;
                 $new_crop_on_sale->quantity_unit = 'kg';
                 $new_crop_on_sale->price_unit = 'UGX';
+                $new_crop_on_sale->description = $request->description;
                 $new_crop_on_sale->is_sold = false;
                 $new_crop_on_sale->crop_id= $request->crop_id;
                 $new_crop_on_sale->user_id= $request->user_id;
+                $new_crop_on_sale->address_id = $request->address_id ;
                 $new_crop_on_sale->save();
 
                 Flash::success('Crop posted for sale');
 
                 return redirect(route('cropOnSales.index'));
              }
-
-
-
 
     }
 
@@ -177,5 +174,3 @@ class CropOnSaleController extends AppBaseController
         return redirect(route('cropOnSales.index'));
     }
 }
-
-// foreach ($farmer->farms as $farm) { if($farm->plots->count() != null){ Flash::error('Farm for the selected farmer has no plots'); }else{ dd('no'); } } // dd($farm->plots);//check for plots //dd($farmer); $crop_plot = Plot::where('crop_id',$request->crop_id)->first(); if(collect($farm->plots)->contains('crop_id',$request->crop_id)){ //dd($crop_plot->total_harvest); $total_stock = $crop_plot->total_harvest; $crop_on_sale = new CropOnSale(); $crop_on_sale->quantity = $total_stock; $crop_on_sale->selling_price = $request->selling_price; $crop_on_sale->crop_id = $request->crop_id; $crop_on_sale->user_id = $request->user_id; $crop_on_sale->save(); Flash::success('Crop posted for sale successfully.'); return redirect(route('cropOnSales.index')); } else{ Flash::error('This crop doesnt exit on your farm plot'); return redirect(route('cropOnSales.index')); }

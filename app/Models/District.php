@@ -3,20 +3,19 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class District
  * @package App\Models
- * @version October 31, 2022, 7:54 am UTC
+ * @version December 23, 2022, 9:33 am CET
  *
  * @property string $name
- * @property integer $country_id
+ * @property integer $region_id
  */
 class District extends Model
 {
-
 
     use HasFactory;
 
@@ -25,11 +24,9 @@ class District extends Model
 
 
 
-
-
     public $fillable = [
         'name',
-        'country_id'
+        'region_id'
     ];
 
     /**
@@ -39,7 +36,7 @@ class District extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'country_id' => 'integer'
+        'region_id' => 'integer'
     ];
 
     /**
@@ -49,28 +46,15 @@ class District extends Model
      */
     public static $rules = [
         'name' => 'required|string',
-        'country_id' => 'nullable'
+        'region_id' => 'required|integer'
     ];
 
-    //a district belongs to a country
-    public function country()
-      {
-          return $this->belongsTo(\App\Models\Country::class, 'country_id');
-      }
-
-    //a district has many users
-    public function users()
+    //belongs to a region
+    public function region()
     {
-        return $this->belongsTo(\App\Models\User::class, 'district_id');
+       return $this->belongsTo(\App\Models\Region::class,'region_id');
     }
 
-
-
-    //a district has many plots
-    public function plots()
-    {
-       return $this->hasMany(\App\Models\Plot::class,'district_id');
-    }
 
 
 }

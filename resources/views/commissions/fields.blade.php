@@ -1,7 +1,7 @@
 <!-- Amount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('amount', 'Amount:') !!}
-    {!! Form::number('amount', null, ['class' => 'form-control']) !!}
+    {!! Form::label('amount', 'Commission value:') !!}
+    {!! Form::number('amount', null, ['class' => 'form-control','placeholder'=>'1']) !!}
 </div>
 
 <!-- Unit Field -->

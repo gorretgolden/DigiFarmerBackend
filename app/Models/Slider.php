@@ -16,20 +16,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Slider extends Model
 {
-    use SoftDeletes;
+
 
     use HasFactory;
 
     public $table = 'sliders';
-    
+    public $dir = 'storage/sliders/';
 
-    protected $dates = ['deleted_at'];
+
 
 
 
     public $fillable = [
         'title',
-        'image'
+        'image',
+        'type'
     ];
 
     /**
@@ -39,7 +40,8 @@ class Slider extends Model
      */
     protected $casts = [
         'title' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'type' =>'string'
     ];
 
     /**
@@ -49,8 +51,13 @@ class Slider extends Model
      */
     public static $rules = [
         'title' => 'required|string',
-        'image' => 'nullable'
+        'image' => 'image|required',
+        'type' => "required|string"
     ];
 
-    
+    public function getImageAttribute($value)
+       {
+
+        return $this->dir.$value;
+       }
 }

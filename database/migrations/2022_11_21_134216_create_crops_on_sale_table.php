@@ -17,6 +17,8 @@ class CreateCropsOnSaleTable extends Migration
             $table->id('id');
             $table->integer('quantity')->nullable();
             $table->integer('selling_price');
+            $table->text('description');
+            $table->string('image')->nullable();
             $table->string('quantity_unit')->default('kg');
             $table->string('price_unit')->default('UGX');
             $table->boolean('is_sold')->default(false);

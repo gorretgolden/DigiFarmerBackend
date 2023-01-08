@@ -31,7 +31,7 @@ $statuses = App\Models\Status::pluck('name','id');
     <option value="" selected disabled hidden>Select Plot for task</option>
     @foreach ($plots as $plot)
         <option value="{{ $plot->id }}">
-            {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->user->username}}
+            {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->address->user->username}}
         </option>
     @endforeach
 

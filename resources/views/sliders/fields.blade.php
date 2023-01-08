@@ -4,6 +4,13 @@
     {!! Form::text('title', null, ['class' => 'form-control']) !!}
 </div>
 
+<!--type-->
+
+<div class="form-group col-sm-6">
+    {!! Form::label('type') !!}
+    {!! Form::select('type', ['Home' => 'Home', 'Farm' => 'Farm','Market'=>'Market'],null, ['class' => 'form-control','placeholder'=>'Select type'] ) !!}
+</div>
+
 <!-- Image Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('image', 'Image:') !!}

@@ -1,5 +1,5 @@
 <?php
-$rent_sub_categories = App\Models\RentVendorSubCategory::pluck('name', 'id');
+$rent_categories = App\Models\RentVendorCategory::pluck('name', 'id');
 $vendors = App\Models\User::where('user_type','farmer')->pluck('username','id');
 $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 ?>
@@ -12,19 +12,28 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
     {!! Form::text('name', null, ['class' => 'form-control','placeholder'=>'Enter rent service name']) !!}
 </div>
 
-<!-- Rent Vendor Sub Category Id Field -->
+<!-- Charge Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('rent_vendor_sub_category_id', 'Rent Vendor Sub Category :') !!}
-    {!! Form::select('rent_vendor_sub_category_id', $rent_sub_categories, null, [
+    {!! Form::label('charge', 'Charge:') !!}
+    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>'Enter service charge']) !!}
+</div>
+
+
+<!-- Rent Vendor  Category Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('rent_vendor_category_id', 'Rent Vendor  Category :') !!}
+    {!! Form::select('rent_vendor_category_id', $rent_categories, null, [
         'class' => 'form-control custom-select',
     ]) !!}
 </div>
 
 
-<!-- Charge Field -->
+<!-- Rent Vendor sub  Category Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('charge', 'Charge:') !!}
-    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>10000]) !!}
+    {!! Form::label('rent_vendor_sub_category_id', 'Rent Vendor sub Category:') !!}
+    <select id="sub_category" name="rent_vendor_sub_category_id" class="form-control">
+
+    </select>
 </div>
 
 <!-- Charge Days Field -->
@@ -33,32 +42,51 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
     {!! Form::number('charge_day', null, ['class' => 'form-control','placeholder'=>1]) !!}
 </div>
 
+
+
 <!-- Charge Day Frequency-->
 <div class="form-group col-sm-6">
     {!! Form::label('charge_frequency', 'Charge Frequency:') !!}
-    {!! Form::select('charge_frequency', ['day' => 'Day', 'days' => 'Days'],null, ['class' => 'form-control','placeholder'=>'Select Charge frequency','required'=>'true'] ) !!}
+    {!! Form::select('charge_frequency', [ 'days' => 'Days'],null, ['class' => 'form-control','placeholder'=>'Select Charge frequency','required'=>'true'] ) !!}
 </div>
+
+
 
 
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'Vendors:') !!}
+    {!! Form::label('user_id', 'farmers:') !!}
     {!! Form::select('user_id', $vendors, null, ['class' => 'form-control custom-select']) !!}
 </div>
+<!-- Address Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('address_id', 'Address:') !!}
+    <select id="farmer-address" name="address_id" class="form-control">
 
-<!-- Vendor Category Id Field -->
+    </select>
+</div>
+
+
+<!-- Charge Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('quantity', 'quantity:') !!}
+    {!! Form::number('quantity', null, ['class' => 'form-control','placeholder'=>'Enter number of items for rent','min'=>1,'max'=>20]) !!}
+</div>
+
+
+
+{{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
     {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
-</div>
+</div> --}}
 
 
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}
-    {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
+    {!! Form::textarea('description', null, ['class' => 'form-control','min'=>20,'max'=>1000]) !!}
 </div>
-
 
 
 
@@ -72,15 +100,116 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 
 
 
-<!-- Image Field -->
-{{-- <div class="form-group col-sm-6">
-    {!! Form::label('images', 'Image:') !!}
-    <div class="input-group">
-        <div class="custom-file">
-            {!! Form::file('images', ['class' => 'custom-file-input']) !!}
-            {!! Form::label('images', 'Choose file', ['class' => 'custom-file-label', 'multiple']) !!}
-        </div>
-    </div>
-</div> --}}
+
+
+
+@push('scripts')
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+    <script>
+
+        $(document).ready(function() {
+
+            $('#rent_vendor_category_id').on('change', function() {
+                var id_rent = this.value;
+
+                $('#sub_category').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('rent.sub-categories')}}",
+                    type: "get",
+                    data: {
+                        rent_vendor_category_id: id_rent
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#sub_category').html('<option value="">-- Select sub category --</option>');
+
+                        $.each(result.Sub_categories, function(key, value) {
+                            console.log(result)
+
+                            $("#sub_category").append('<option value="' + value
+                                .id + '">' + value.name  + '</option>');
+
+                                console.log('hello',value.name)
+
+                        });
+
+                    }
+                });
+            });
+        })
+    </script>
+
+      <script>
+        console.log('hfgkkk');
+        $(document).ready(function() {
+
+            $('#owner').on('change', function() {
+                var idFarmer = this.value;
+
+                $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('farmers.fetch-address') }}",
+                    type: "get",
+                    data: {
+                        owner: idFarmer
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#farmer-address').html('<option value="">-- Select farmer address --</option>');
+
+                        $.each(result.addresses, function(key, value) {
+
+                            $("#farmer-address").append('<option value="' + value
+                                .id + '">' + value.address_name + " " + value.district_name + '</option>');
+
+                                console.log('hello',value.district_name)
+
+                        });
+
+                    }
+                });
+            });
+        })
+    </script>
+
+<script>
+
+    $(document).ready(function() {
+
+        $('#user_id').on('change', function() {
+            var idFarmer = this.value;
+
+            $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
+            $.ajax({
+                url: "{{ route('sellers.fetch-address') }}",
+                type: "get",
+                data: {
+                    user_id: idFarmer
+                },
+                dataType: 'json',
+                success: function(result) {
+
+                    $('#farmer-address').html('<option value="">-- Select vendor address --</option>');
+
+                    $.each(result.addresses, function(key, value) {
+                        console.log(result)
+
+                        $("#farmer-address").append('<option value="' + value
+                            .id + '">' + value.address_name + " " + value.district_name + '</option>');
+
+                            console.log('hello',value.district_name)
+
+                    });
+
+                }
+            });
+        });
+    })
+</script>
+@endpush
+
+
 
 <div class="clearfix"></div>

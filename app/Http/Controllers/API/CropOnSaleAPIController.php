@@ -36,18 +36,53 @@ class CropOnSaleAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cropsOnSale = CropOnSale::with('user','crop','crop_orders')->get();
+        $cropsOnSale = CropOnSale::with('user','crop','address')->get();
 
       //  $data = collect($cropsOnSale);
         //dd($data->min('buying_price'));
 
         $response = [
             'success'=>true,
-            'data'=> $cropsOnSale,
+            'data'=> [
+                'total-crops-on-sale'=>$cropsOnSale->count(),
+                'crops-on-sale'=>$cropsOnSale
+
+            ],
 
             'message'=> 'cropsOnSale retrieved successfully'
          ];
          return response()->json($response,200);
+    }
+
+    //crops on sale for a single farmer
+    public function famerCropsOnSale(Request $request)
+    {
+        $cropsOnSale = CropOnSale::with('crop','address')->where('user_id',auth()->user()->id)->get();
+
+        if($cropsOnSale->count()==0){
+            $response = [
+                'success'=>false,
+
+                'message'=> 'farmer has no crops on sale'
+             ];
+             return response()->json($response,200);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-crops-on-sale'=>$cropsOnSale->count(),
+                    'crops-on-sale'=>$cropsOnSale
+
+                ],
+
+                'message'=> 'farmer crops on sale retrieved successfully'
+             ];
+             return response()->json($response,200);
+
+        }
+
+
     }
 
     /**
@@ -59,7 +94,19 @@ class CropOnSaleAPIController extends AppBaseController
      * @return Response
      */
 
-    public function store(CreateCropOnSaleAPIRequest $request){
+    public function store(Request $request){
+
+        $rules = [
+            'quantity' => 'required|integer',
+            'selling_price' => 'required|integer',
+            'price_unit' => 'nullable',
+            'description' => 'required|string',
+            'is_sold' => 'nullable',
+            'crop_id' => 'required|integer',
+            'address_id' => 'required|integer'
+        ];
+        $request->validate($rules);
+
 
 
         $existing_crop = CropOnSale::where('crop_id',$request->crop_id)->where('is_sold',false)->first();
@@ -83,8 +130,10 @@ class CropOnSaleAPIController extends AppBaseController
                 $new_crop_on_sale->quantity_unit = 'kg';
                 $new_crop_on_sale->price_unit = 'UGX';
                 $new_crop_on_sale->is_sold = false;
+                $new_crop_on_sale->description = $request->description;
+                $new_crop_on_sale->address_id = $request->address_id;
                 $new_crop_on_sale->crop_id= $request->crop_id;
-                $new_crop_on_sale->user_id= auth()->user()-id;
+                $new_crop_on_sale->user_id= auth()->user()->id;
                 $new_crop_on_sale->save();
 
                 $response = [

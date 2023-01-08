@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class TaskRepository
  * @package App\Repositories
- * @version November 30, 2022, 1:21 pm UTC
+ * @version December 30, 2022, 10:42 am CET
 */
 
 class TaskRepository extends BaseRepository
@@ -19,7 +19,8 @@ class TaskRepository extends BaseRepository
     protected $fieldSearchable = [
         'name',
         'task_date',
-        'plot_id'
+        'plot_id',
+        'status_id'
     ];
 
     /**

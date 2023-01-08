@@ -4,28 +4,10 @@
     <p>{{ $farm->name }}</p>
 </div>
 
-<!-- Address Field -->
+<!-- Owner Field -->
 <div class="col-sm-12">
-    {!! Form::label('address', 'Address:') !!}
-    <p>{{ $farm->address }}</p>
-</div>
-
-<!-- Latitude Field -->
-<div class="col-sm-12">
-    {!! Form::label('latitude', 'Latitude:') !!}
-    <p>{{ $farm->latitude }}</p>
-</div>
-
-<!-- Longitude Field -->
-<div class="col-sm-12">
-    {!! Form::label('longitude', 'Longitude:') !!}
-    <p>{{ $farm->longitude }}</p>
-</div>
-
-<!-- User Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $farm->user->username}}</p>
+    {!! Form::label('owner', 'Owner:') !!}
+    <p>{{ $farm->owner }}</p>
 </div>
 
 <!-- Field Area Field -->
@@ -40,23 +22,10 @@
     <p>{{ $farm->size_unit }}</p>
 </div>
 
-<!-- Image Field -->
+<!-- Address Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('image', 'Image:') !!}
-    <p>{{ $farm->image }}</p>
-</div>
-
-
-
-
-<!--farm plots-->
-<div class="col-sm-12">
-    {!! Form::label('plots', 'Total Plots:') !!}  {{ $farm->plots->count() }}
-    @foreach($farm->plots as $plot)
-    <p>{{$plot->name}}</p>
-
-    @endforeach
-
+    {!! Form::label('address_id', 'Address Id:') !!}
+    <p>{{ $farm->address_id }}</p>
 </div>
 
 <!-- Created At Field -->
@@ -70,3 +39,4 @@
     {!! Form::label('updated_at', 'Updated At:') !!}
     <p>{{ $farm->updated_at }}</p>
 </div>
+

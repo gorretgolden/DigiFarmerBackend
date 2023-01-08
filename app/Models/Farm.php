@@ -9,15 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Farm
  * @package App\Models
- * @version November 4, 2022, 1:52 pm UTC
+ * @version December 23, 2022, 12:49 pm CET
  *
  * @property string $name
- * @property string $address
- * @property number $latitude
- * @property number $longitude
- * @property number $field_area
- * @property string $image
- * @property integer $user_id
+ * @property string $owner
+ * @property integer $field_area
+ * @property string $size_unit
+ * @property integer $address_id
  */
 class Farm extends Model
 {
@@ -31,12 +29,10 @@ class Farm extends Model
 
     public $fillable = [
         'name',
-        'address',
-        'latitude',
-        'longitude',
+        'owner',
         'field_area',
-        'image',
-        'user_id'
+        'size_unit',
+        'address_id'
     ];
 
     /**
@@ -46,12 +42,10 @@ class Farm extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'address' => 'string',
-        'latitude' => 'double',
-        'longitude' => 'double',
-        'field_area' => 'double',
-        'image' => 'string',
-        'user_id' => 'integer'
+        'owner' => 'string',
+        'field_area' => 'integer',
+        'size_unit' => 'string',
+        'address_id' => 'integer'
     ];
 
     /**
@@ -60,27 +54,26 @@ class Farm extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:100|unique:farms',
-        'address' => 'required|string',
-        'latitude' => 'required',
-        'longitude' => 'required',
-        'field_area' => 'required',
-        'image' => 'nullable',
-        'user_id' => 'required|integer'
+        'name' => 'required|string|max:20',
+        'owner' => 'required|string',
+        'field_area' => 'required|integer',
+        'size_unit' => 'required|string',
+        'address_id' => 'integer'
     ];
 
 
-     //a Farm belongs to a user
-     public function user()
-     {
-         return $this->belongsTo(\App\Models\User::class, 'user_id');
-     }
+    //belongs to an address
+    public function address()
+    {
+       return $this->belongsTo(\App\Models\Address::class,'address_id');
+    }
 
-       //a Farm has many plots
-       public function plots()
-       {
-           return $this->hasMany(\App\Models\Plot::class, 'farm_id');
-       }
+
+    //has many plots
+    public function plots()
+    {
+       return $this->hasMany(\App\Models\Plot::class,'farm_id');
+    }
 
 
 }

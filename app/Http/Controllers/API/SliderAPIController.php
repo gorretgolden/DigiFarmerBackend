@@ -34,12 +34,7 @@ class SliderAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sliders = $this->sliderRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $sliders = Slider::all('id','type','image');
         return $this->sendResponse($sliders->toArray(), 'Sliders retrieved successfully');
     }
 

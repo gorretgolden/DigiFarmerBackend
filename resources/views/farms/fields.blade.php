@@ -1,63 +1,78 @@
-
 <?php
-$users = App\Models\User::where('user_type','farmer')->pluck('username','id');
+$farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 ?>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
-    {!! Form::text('name', null, ['class' => 'form-control']) !!}
+    {!! Form::text('name', null, ['class' => 'form-control', 'maxlength' => 20, 'placeholder' => 'Enter farm name']) !!}
 </div>
 
-
-
-<!-- Address Field -->
+<!-- Owner Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('address', 'Address:') !!}
-    {!! Form::text('address', null, ['class' => 'form-control']) !!}
+    {!! Form::label('owner', 'Farmer:') !!}
+    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
-<!-- Field Area -->
+
+
+
+<!-- Field Area Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('field_area', 'Field Area:') !!}
-    {!! Form::number('field_area', null, ['class' => 'form-control']) !!}
+    {!! Form::number('field_area', null, ['class' => 'form-control', 'placeholder' => 'Enter farm field area']) !!}
 </div>
 
 <!--Field Size Unit-->
 <div class="form-group col-sm-6">
     {!! Form::label('size_unit', 'Size Unit:') !!}
-    {!! Form::select('size_unit',['Acres' => 'Acres','Hectares'=>'Hectares'] ,null, ['class' => 'form-control']) !!}
+    {!! Form::select('size_unit', ['Acres' => 'Acres', 'Hectares' => 'Hectares'], null, ['class' => 'form-control']) !!}
 </div>
 
-
-<!-- Latitude Field -->
+<!-- Address Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('latitude', 'Latitude:') !!}
-    {!! Form::text('latitude', null, ['class' => 'form-control']) !!}
+    {!! Form::label('address_id', 'Address:') !!}
+    <select id="farmer-address" name="address_id" class="form-control">
+
+    </select>
 </div>
 
 
 
-<!-- Longitude Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('longitude', 'Longitude:') !!}
-    {!! Form::text('longitude', null, ['class' => 'form-control']) !!}
-</div>
 
-<!-- User Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'User:') !!}
-    {!! Form::select('user_id', $users, null, ['class' => 'form-control custom-select']) !!}
-</div>
+@push('scripts')
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+    <script>
+        console.log('hfgkkk');
+        $(document).ready(function() {
 
+            $('#owner').on('change', function() {
+                var idFarmer = this.value;
 
-<!-- Image Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('image', 'Image:') !!}
-    <div class="input-group">
-        <div class="custom-file">
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
-            {!! Form::label('image', 'Choose file', ['class' => 'custom-file-label']) !!}
-        </div>
-    </div>
-</div>
+                $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('farmers.fetch-address') }}",
+                    type: "get",
+                    data: {
+                        owner: idFarmer
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#farmer-address').html('<option value="">-- Select farmer address --</option>');
+
+                        $.each(result.addresses, function(key, value) {
+
+                            $("#farmer-address").append('<option value="' + value
+                                .id + '">' + value.address_name + " " + value.district_name + '</option>');
+
+                                console.log('hello',value.district_name)
+
+                        });
+
+                    }
+                });
+            });
+        })
+    </script>
+@endpush

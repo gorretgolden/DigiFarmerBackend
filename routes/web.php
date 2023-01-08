@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 /*
 |--------------------------------------------------------------------------
+
 | Web Routes
 |--------------------------------------------------------------------------
 |
@@ -196,3 +197,73 @@ Route::resource('loanPayBacks', App\Http\Controllers\LoanPayBackController::clas
 
 
 Route::resource('chats', App\Http\Controllers\ChatController::class);
+
+
+Route::resource('faqCategories', App\Http\Controllers\FaqCategoryController::class);
+
+
+Route::resource('faqs', App\Http\Controllers\FaqController::class);
+
+
+Route::resource('terms', App\Http\Controllers\TermsController::class);
+
+
+Route::resource('privacyPolicies', App\Http\Controllers\PrivacyPolicyController::class);
+
+
+Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);
+
+
+Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);
+
+
+Route::resource('days', App\Http\Controllers\DayController::class);
+
+
+
+
+Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
+
+
+Route::resource('agronomistSlots', App\Http\Controllers\AgronomistSlotController::class);
+
+
+Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
+
+
+Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
+
+
+Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
+
+
+Route::resource('regions', App\Http\Controllers\RegionController::class);
+
+
+Route::resource('addresses', App\Http\Controllers\AddressController::class);
+
+
+Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);
+
+
+Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class);
+
+
+Route::get('api/fetch-farmer-address', [App\Http\Controllers\FarmController::class, 'fetchUserAddresses']);
+
+
+Route::get('/farmer/fetch-address', 'App\Http\Controllers\FarmController@fetchUserAddresses')->name('farmers.fetch-address');
+
+Route::get('/rent/sub_categories', 'App\Http\Controllers\RentVendorServiceController@fetchSubCategories')->name('rent.sub-categories');
+
+Route::get('/seller/fetch-address', 'App\Http\Controllers\SellerProductController@fetchUserAddresses')->name('sellers.fetch-address');
+
+
+
+Route::resource('sellerProductCategories', App\Http\Controllers\SellerProductCategoryController::class);
+
+//settings
+Route::resource('generalSettings', App\Http\Controllers\GeneralSettingController::class);
+Route::get('general-settings', [App\Http\Controllers\GeneralSettingController::class,'getSettings'])->name('general-settings');
+Route::get('general-settings/edit', [App\Http\Controllers\GeneralSettingController::class,'edit'])->name('general-settings-edit');
+Route::patch('general-settings/update', [App\Http\Controllers\GeneralSettingController::class,'updateSettings'])->name('general-settings-update');

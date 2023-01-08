@@ -141,11 +141,24 @@ class VendorCategoryController extends AppBaseController
             return redirect(route('vendorCategories.index'));
         }
 
-        $vendorCategory = $this->vendorCategoryRepository->update($request->all(), $id);
 
-        Flash::success('Vendor Category updated successfully.');
+        if($vendorCategory){
 
-        return redirect(route('vendorCategories.index'));
+            $vendorCategory->name = $request->name;
+
+            if(!empty($request->file('image'))){
+                $vendorCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'vendor_categories');
+            }
+            $vendorCategory->save();
+            Flash::success('Vendor Category updated successfully.');
+
+            return redirect(route('vendorCategories.index'));
+
+        }
+
+
+
+
     }
 
     /**

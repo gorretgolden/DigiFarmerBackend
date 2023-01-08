@@ -34,11 +34,7 @@ class SellerProductCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sellerProductCategories = $this->sellerProductCategoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $sellerProductCategories = SellerProductCategory::all('id','name','image');
 
         return $this->sendResponse($sellerProductCategories->toArray(), 'Seller Product Categories retrieved successfully');
     }

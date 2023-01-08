@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\SellerProductCategory;
 
 class SellerProductCategoryController extends AppBaseController
 {
@@ -56,7 +57,15 @@ class SellerProductCategoryController extends AppBaseController
     {
         $input = $request->all();
 
-        $sellerProductCategory = $this->sellerProductCategoryRepository->create($input);
+        $sellerProductCategory = new SellerProductCategory() ;
+        $sellerProductCategory->name = $request->name;
+        $sellerProductCategory->image = $request->image;
+        $sellerProductCategory->save();
+
+        $sellerProductCategory = SellerProductCategory::find($sellerProductCategory->id);
+
+        $sellerProductCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_product_categories');
+        $sellerProductCategory->save();
 
         Flash::success('Seller Product Category saved successfully.');
 

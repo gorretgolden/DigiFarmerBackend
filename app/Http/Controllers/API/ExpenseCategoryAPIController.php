@@ -34,11 +34,7 @@ class ExpenseCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $expenseCategories = $this->expenseCategoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $expenseCategories = ExpenseCategory::all('id','name');
 
         return $this->sendResponse($expenseCategories->toArray(), 'Expense Categories retrieved successfully');
     }

@@ -9,7 +9,8 @@ use App\Repositories\ExpenseRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
-
+use App\Models\Farm;
+use DB;
 /**
  * Class ExpenseController
  * @package App\Http\Controllers\API
@@ -54,7 +55,8 @@ class ExpenseAPIController extends AppBaseController
     public function store(CreateExpenseAPIRequest $request)
     {
         $input = $request->all();
-        $existing_expense = Expense::where('expense_category_id',$request->expense_category_id)->first();
+        $existing_expense = Expense::where('expense_category_id',$request->expense_category_id)->where('plot_id',$request->plot_id)->first();
+
         if(!$existing_expense){
             $expense = $this->expenseRepository->create($input);
 
@@ -65,7 +67,7 @@ class ExpenseAPIController extends AppBaseController
             $response = [
                 'success'=>false,
 
-                'message'=> 'An expense with this expense category exists'
+                'message'=> 'An expense with this expense category exists on the plot'
              ];
 
              return response()->json($response,409);
@@ -73,6 +75,39 @@ class ExpenseAPIController extends AppBaseController
 
 
     }
+
+
+    //get expenses on a farmer plot
+    public function expensePlots(Request $request)
+    {
+
+      $farms = Farm::where('owner',auth()->user()->username)->get();
+
+
+      $plot_expenses = [];
+      foreach( collect($farms) as $farm){
+         $plots = $farm->plots;
+
+         foreach($farm->plots as $plot){
+            $plot_expenses[] = $plot->expenses;
+           // dd($plot_expenses);
+
+         };
+
+      }
+
+      $response = [
+        'success'=>false,
+        'data' =>$plot_expenses,
+        'message'=> 'retrieved'
+      ];
+
+      return response()->json($response,202);
+
+
+
+    }
+
 
     /**
      * Display the specified Expense.

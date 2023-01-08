@@ -18,13 +18,9 @@
          Schema::create('farms', function (Blueprint $table) {
              $table->id('id');
              $table->string('name')->unique();
-             $table->string('address');
-             $table->string('latitude');
-             $table->string('longitude');
+             $table->string('owner');
              $table->integer('field_area');
              $table->enum('size_unit',['Hectares','Acres'])->default('Acres');
-             $table->string('image')->nullable();
-             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
              $table->timestamps();
 
 

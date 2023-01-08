@@ -9,7 +9,7 @@ use App\Repositories\AnimalRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
-use App\Models\User;
+use App\Models\Address;
 use Auth;
 use App\Models\Farm;
 
@@ -48,6 +48,65 @@ class AnimalAPIController extends AppBaseController
          return response()->json($response,200);
     }
 
+    //get animals for a farm
+    public function farmAnimals(Request $request)
+    {
+        $farmer = Address::where('user_id',auth()->user()->id)->first();
+
+        //check if farmer has farms
+        if($farmer->farms->count()==0){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Farmer has no farms'
+             ];
+
+             return response()->json($response,404);
+
+        }
+        else{
+
+            foreach ($farmer->farms as $farm){
+
+
+                 if($farm->animals->count() == 0){
+
+                     $response = [
+                         'success'=>false,
+                         'data'=> $success,
+                         'message'=> 'No animals exit on this farm'
+                      ];
+
+                      return response()->json($response,404);
+
+
+                 }else{
+
+                    $total_farm_animals = $farm->animals->count();
+                    $animals = $farm->animals;
+
+
+                    $response = [
+                     'success'=>true,
+                     'data'=>[
+                        'total_farm_animals'=>$total_farm_animals,
+                        'animals' => $animals
+
+                     ],
+                     'message'=> 'farm animals retrieved successfully'
+                  ];
+
+                  return response()->json($response,201);
+                 }
+
+             }
+
+
+
+        }
+
+    }
+
     /**
      * Store a newly created Animal in storage.
      * POST /animals
@@ -62,13 +121,12 @@ class AnimalAPIController extends AppBaseController
 
         $input = $request->all();
 
-        $farmer = User::where('id', auth()->user()->id)->first();
-
-        //dd($user_farms->count());
-
+        //get farmer based on address
+        $farmer = Address::where('user_id', auth()->user()->id)->first();
+        //dd($farmer->farms->count());
 
         $animal_plot = Animal::where('animal_category_id',$request->animal_category_id)->first();
-
+       // dd($animal_plot);
 
         if( $animal_plot){
             $response = [
@@ -80,7 +138,6 @@ class AnimalAPIController extends AppBaseController
         }
         elseif($farmer->farms->count()== 0){
 
-            //dd('Farmer has no farms');
             $response = [
                 'success'=>false,
                 'message'=> 'Farmer has no farms'
@@ -92,9 +149,11 @@ class AnimalAPIController extends AppBaseController
 
              foreach ($farmer->farms as $farm){
 
+               // dd($farm->plots->count());
+
+
                 if($farm->plots->count() == 0){
 
-                   // dd('No plots exit on this farm');
                     $response = [
                         'success'=>false,
                         'data'=> $success,

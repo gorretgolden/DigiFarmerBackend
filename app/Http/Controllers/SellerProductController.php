@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Flash;
 use App\Models\SellerProduct;
 use Response;
+use App\Models\VendorCategory;
+use App\Models\Address;
 
 class SellerProductController extends AppBaseController
 {
@@ -53,10 +55,22 @@ class SellerProductController extends AppBaseController
      *
      * @return Response
      */
+
+     //fetch user addresses
+    public function fetchUserAddresses(Request $request)
+    {
+
+
+      $data['addresses'] = Address::where("user_id", $request->user_id)->get(["district_name","address_name", "id"]);
+
+        return response()->json($data);
+    }
+
     public function store(CreateSellerProductRequest $request)
     {
-       //existing seller crop
+       //existing seller products
        $existing_seller_product = SellerProduct::where('name',$request->name)->first();
+       $vendor_category = VendorCategory::where('name','Farm Equipments')->first();
 
        if(!$existing_seller_product){
           $request->validate(SellerProduct::$rules);
@@ -67,7 +81,8 @@ class SellerProductController extends AppBaseController
           $new_seller_product->image = $request->image;
           $new_seller_product->user_id = $request->user_id;
           $new_seller_product->seller_product_category_id = $request->seller_product_category_id;
-          $new_seller_product->vendor_category_id = $request->vendor_category_id;
+          $new_seller_product->vendor_category_id = $vendor_category->id;
+          $new_seller_product->address_id = $request->address_id;
           $new_seller_product->save();
 
           $new_seller_product = SellerProduct::find($new_seller_product->id);

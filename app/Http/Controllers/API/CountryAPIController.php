@@ -34,13 +34,14 @@ class CountryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $countries = $this->countryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($countries->toArray(), 'Countries retrieved successfully');
+        $countries = Country::all(['id','name','short_code','country_code']);
+        $response = [
+            'success'=>true,
+            'data'=> $countries,
+            'message'=> 'countries retrieved successfully'
+         ];
+         return response()->json($response,200,['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8']
+      );
     }
 
     /**

@@ -68,4 +68,11 @@ class Country extends Model
           return $this->hasMany(\App\Models\District::class, 'country_id');
       }
 
+
+      //has many address
+      public function addresses()
+      {
+          return $this->belongsToMany(\App\Models\Address::class,'country_id');
+      }
+
 }

@@ -10,6 +10,8 @@ use App\Repositories\InsuaranceVendorServiceRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\VendorCategory;
+use App\Models\InsuaranceVendorService;
 
 class InsuaranceVendorServiceController extends AppBaseController
 {
@@ -52,10 +54,24 @@ class InsuaranceVendorServiceController extends AppBaseController
      */
     public function store(CreateInsuaranceVendorServiceRequest $request)
     {
-        $input = $request->all();
-        $input['vendor_category_id'] = $request->vendor_category_id;
 
-        $insuaranceVendorService = $this->insuaranceVendorServiceRepository->create($input);
+        $vendor_category = VendorCategory::where('name','Insuarance')->first();
+
+
+        $new_insuarance = new InsuaranceVendorService();
+        $new_insuarance->name = $request->name;
+        $new_insuarance->terms = $request->terms;
+        $new_insuarance->description = $request->description;
+        $new_insuarance->user_id = $request->user_id;
+        $new_insuarance->vendor_category_id = $vendor_category->id;
+        $new_insuarance->image = $request->image;
+        $new_insuarance->save();
+
+
+        if(!empty($request->file('image'))){
+            $new_insuarance->image = \App\Models\ImageUploader::upload($request->file('image'),'insuarance_services');
+        }
+        $new_insuarance->save();
 
         Flash::success('Insuarance Vendor Service saved successfully.');
 

@@ -3,26 +3,26 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class CropOnSale
  * @package App\Models
- * @version November 9, 2022, 11:04 pm UTC
+ * @version December 29, 2022, 7:44 am CET
  *
  * @property integer $quantity
  * @property integer $selling_price
  * @property string $price_unit
  * @property string $description
  * @property string $image
- * @property string $status
+ * @property boolean $is_sold
  * @property integer $crop_id
  * @property integer $user_id
+ * @property integer $address_id
  */
 class CropOnSale extends Model
 {
-
 
     use HasFactory;
 
@@ -30,13 +30,17 @@ class CropOnSale extends Model
 
 
 
+
     public $fillable = [
         'quantity',
         'selling_price',
         'price_unit',
+        'description',
+        'image',
         'is_sold',
         'crop_id',
-        'user_id'
+        'user_id',
+        'address_id'
     ];
 
     /**
@@ -48,9 +52,12 @@ class CropOnSale extends Model
         'quantity' => 'integer',
         'selling_price' => 'integer',
         'price_unit' => 'string',
+        'description' => 'string',
+        'image' => 'string',
         'is_sold' => 'boolean',
         'crop_id' => 'integer',
-        'user_id' => 'integer'
+        'user_id' => 'integer',
+        'address_id' => 'integer'
     ];
 
     /**
@@ -59,9 +66,14 @@ class CropOnSale extends Model
      * @var array
      */
     public static $rules = [
+        'quantity' => 'required|integer',
         'selling_price' => 'required|integer',
-        'crop_id' => 'required:integer',
-
+        'price_unit' => 'nullable',
+        'description' => 'required|string',
+        'is_sold' => 'nullable',
+        'crop_id' => 'required|integer',
+        'user_id' => 'required|integer',
+        'address_id' => 'required|integer'
     ];
 
 
@@ -88,6 +100,16 @@ class CropOnSale extends Model
 // {
 //     return $this->collect(crop_orders()->min('buying_price'));
 // }
+
+
+//belongs to an address
+public function address()
+{
+   return $this->belongsTo(\App\Models\Address::class,'address_id');
+}
+
+
+
 
 
 }

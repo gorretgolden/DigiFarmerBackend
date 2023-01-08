@@ -83,7 +83,7 @@ class PlotController extends AppBaseController
             $new_plot->name = $request->name;
             $new_plot->farm_id = $request->farm_id;
             $new_plot->crop_id = $request->crop_id;
-            $new_plot->district = $farm->address;
+            $new_plot->district = $farm->address->district_name;
             $new_plot->size = $request->size;
             $new_plot->size_unit = $request->size_unit;
             $new_plot->save();

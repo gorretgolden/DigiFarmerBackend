@@ -3,30 +3,31 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class SellerProductCategory
  * @package App\Models
- * @version November 4, 2022, 12:27 pm UTC
+ * @version January 6, 2023, 9:28 am CET
  *
  * @property string $name
+ * @property string $image
  */
 class SellerProductCategory extends Model
 {
 
-
     use HasFactory;
 
     public $table = 'seller_product_categories';
-
+    public $dir = 'storage/seller_product_categories/';
 
 
 
 
     public $fillable = [
-        'name'
+        'name',
+        'image'
     ];
 
     /**
@@ -35,7 +36,8 @@ class SellerProductCategory extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string'
+        'name' => 'string',
+        'image' => 'string'
     ];
 
     /**
@@ -44,15 +46,18 @@ class SellerProductCategory extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:100'
+        'name' => 'required|string|max:20|unique:seller_product_categories',
+        'image' => 'required|image'
     ];
 
-     //a seller product category has many products
-     public function products()
-     {
-        return $this->hasMany(\App\Models\SellerProduct::class);
-     }
+    public function getImageAttribute($image)
+    {
 
+        if ($image) {
+            return $this->dir.$image;
+         }
+
+    }
 
 
 }

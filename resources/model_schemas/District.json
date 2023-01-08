@@ -24,8 +24,8 @@
         "inView": true
     },
     {
-        "name": "country_id",
-        "dbType": "integer:unsigned:foreign,countries,id",
+        "name": "region_id",
+        "dbType": "integer:unsigned:foreign,regions,id",
         "htmlType": "select",
         "validations": "required|integer",
         "searchable": true,

@@ -23,6 +23,7 @@ class InsuaranceVendorService extends Model
     use HasFactory;
 
     public $table = 'insuarance_vendor_services';
+    public $dir = 'storage/insuarance_services/';
 
 
 
@@ -32,7 +33,8 @@ class InsuaranceVendorService extends Model
         'terms',
         'description',
         'user_id',
-        'vendor_category_id'
+        'vendor_category_id',
+        'image'
     ];
 
     /**
@@ -45,7 +47,8 @@ class InsuaranceVendorService extends Model
         'terms' => 'string',
         'description' => 'string',
         'user_id' => 'integer',
-        'vendor_category_id'=>'integer'
+        'vendor_category_id'=>'integer',
+        'image'=> 'string'
     ];
 
     /**
@@ -54,12 +57,35 @@ class InsuaranceVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
+        'name' => 'required|string|unique:insuarance_vendor_services',
         'terms' => 'required|string',
         'description' => 'required|string',
         'user_id' => 'required|integer',
-        'vendor_category_id' => 'required|integer'
+        'image' => 'required|string',
+
+
     ];
+
+    //belongs to a vendor category
+    public function vendor_category()
+    {
+        return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
+    }
+
+
+    //belongs to a user
+    public function user()
+      {
+          return $this->belongsTo(\App\Models\User::class,'user_id');
+      }
+
+
+      public function getImageAttribute($value)
+      {
+
+
+       return $this->dir.$value;
+      }
 
 
 }

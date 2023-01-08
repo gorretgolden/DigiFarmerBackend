@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
 
+
 /**
  * Class VendorCategoryController
  * @package App\Http\Controllers\API
@@ -34,14 +35,135 @@ class VendorCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $vendorCategories = $this->vendorCategoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $vendorCategories = VendorCategory::all('id','name','image');
         return $this->sendResponse($vendorCategories->toArray(), 'Vendor Categories retrieved successfully');
     }
+
+
+    //get training vendor services
+    public function vendor_training_services($id)
+    {
+
+        $vendor_category = VendorCategory::find($id);
+
+        if (empty($vendor_category)) {
+
+            return $this->sendError(' Vendor category not found');
+
+        }else{
+
+            $trainings = $vendor_category->training_vendor_services;
+           // dd($trainings);
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-trainings' => $trainings->count(),
+                    'training-vendor-services'=> $trainings
+
+                ],
+                'message'=> 'Training Vendor Service retrieved successfully'
+             ];
+             return response()->json($response,200);
+
+        }
+
+
+    }
+
+
+    //get seller vendor products
+
+    public function vendor_seller_products($id)
+    {
+
+        $vendor_category = VendorCategory::find($id);
+
+        if (empty($vendor_category)) {
+
+            return $this->sendError(' Vendor category not found');
+
+        }else{
+
+            $seller_products = $vendor_category->farm_equipments;
+            //dd($seller_products);
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-trainings' => $seller_products->count(),
+                    'training-vendor-services'=> $seller_products
+
+                ],
+                'message'=> 'seller farm products retrieved successfully'
+             ];
+             return response()->json($response,200);
+
+        }
+
+
+    }
+
+     //get animal feeds
+
+     public function vendor_animal_feeds($id)
+     {
+
+         $vendor_category = VendorCategory::find($id);
+
+         if (empty($vendor_category)) {
+
+             return $this->sendError(' Vendor category not found');
+
+         }else{
+
+             $animal_feeds = $vendor_category->animal_feeds;
+             //dd($animal_feeds);
+             $response = [
+                 'success'=>true,
+                 'data'=> [
+                     'total-animal-feeds' => $animal_feeds->count(),
+                     'animal-feeds'=> $animal_feeds
+
+                 ],
+                 'message'=> 'animal feeds retrieved successfully'
+              ];
+              return response()->json($response,200);
+
+         }
+
+
+     }
+
+
+     //get insuarance services
+
+     public function vendor_insuarances($id)
+     {
+
+         $vendor_category = VendorCategory::find($id);
+
+         if (empty($vendor_category)) {
+
+             return $this->sendError(' Vendor category not found');
+
+         }else{
+
+             $insuarance_services = $vendor_category->insuarance_vendors;
+             //dd($insuarance_services);
+             $response = [
+                 'success'=>true,
+                 'data'=> [
+                     'total-insuarance-services' => $insuarance_services->count(),
+                     'insuarance-services'=> $insuarance_services
+
+                 ],
+                 'message'=> 'insuarance services retrieved successfully'
+              ];
+              return response()->json($response,200);
+
+         }
+
+
+     }
 
     /**
      * Store a newly created VendorCategory in storage.

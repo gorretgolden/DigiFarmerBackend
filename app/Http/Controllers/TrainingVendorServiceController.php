@@ -13,6 +13,7 @@ use Response;
 use Illuminate\Http\Request;
 use App\Models\TrainingVendorService;
 use App\Models\User;
+use App\Models\VendorCategory;
 
 class TrainingVendorServiceController extends AppBaseController
 {
@@ -70,10 +71,10 @@ class TrainingVendorServiceController extends AppBaseController
             'starting_time' => 'required|before:ending_time',
             'ending_time' => 'required|after:starting_time',
             'location_details' => 'nullable',
-            'vendor_category_id' => 'required|integer',
             'period_unit_id'  => 'required|integer',
         ];
         $request->validate($rules);
+        $vendor_category = VendorCategory::where('name','Training')->first();
 
         //access
         if($request->access == 'Online'){
@@ -85,15 +86,28 @@ class TrainingVendorServiceController extends AppBaseController
             $online_training->charge = $request->charge;
             $online_training->description = $request->description;
             $online_training->period = $request->period;
+            $online_training->image = $request->image;
             $online_training->period_unit_id = $request->period_unit_id;
             $online_training->access = $request->access;
             $online_training->starting_time = $request->starting_time;
             $online_training->ending_time = $request->ending_time;
             $online_training->starting_date = $request->starting_date;
             $online_training->ending_date = $request->ending_date;
-            $online_training->vendor_category_id = $request->vendor_category_id;
+            $online_training->vendor_category_id = $vendor_category->id;
             $online_training->user_id = $request->user_id;
+            $online_training->image = $request->image;
             $online_training->zoom_details = $request->zoom_details;
+
+            $online_training->save();
+
+
+
+            $online_training = TrainingVendorService::find($online_training->id);
+
+            if(!empty($request->file('image'))){
+                $online_training->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
+            }
+
             $online_training->save();
 
             Flash::success('Training Vendor Service saved successfully.');
@@ -107,20 +121,30 @@ class TrainingVendorServiceController extends AppBaseController
                 $input['location_details'] = $request->location_details;
 
 
+
+
                 $online_training = new TrainingVendorService();
                 $online_training->name = $request->name;
                 $online_training->charge = $request->charge;
                 $online_training->description = $request->description;
-                $online_training->period = $request->period;
+                $online_training->image = $request->image;
                 $online_training->period_unit_id = $request->period_unit_id;
                 $online_training->access = $request->access;
                 $online_training->starting_time = $request->starting_time;
                 $online_training->ending_time = $request->ending_time;
                 $online_training->starting_date = $request->starting_date;
                 $online_training->ending_date = $request->ending_date;
-                $online_training->vendor_category_id = $request->vendor_category_id;
+                $online_training->vendor_category_id = $vendor_category->id;
                 $online_training->user_id = $request->user_id;
                 $online_training->location_details = $request->location_details;
+                $online_training->save();
+
+
+                $online_training = TrainingVendorService::find($online_training->id);
+                if(!empty($request->file('image'))){
+                    $online_training->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
+                }
+
                 $online_training->save();
 
                 Flash::success('Training Vendor Service saved successfully.');

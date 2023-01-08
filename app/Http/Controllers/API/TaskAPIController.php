@@ -5,10 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateTaskAPIRequest;
 use App\Http\Requests\API\UpdateTaskAPIRequest;
 use App\Models\Task;
+use App\Models\Status;
 use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\Plot;
 
 /**
  * Class TaskController
@@ -34,22 +36,18 @@ class TaskAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        // $tasks = $this->taskRepository->all(
-        //     $request->except(['skip', 'limit']),
-        //     $request->get('skip'),
-        //     $request->get('limit')
-        // );
+        $tasks = $this->taskRepository->all(
+            $request->except(['skip', 'limit']),
+            $request->get('skip'),
+            $request->get('limit')
+        );
 
-        // return $this->sendResponse($tasks->toArray(), 'Tasks retrieved successfully');
-
-        $tasks = Task::with('plot')->get();
-        $response = [
-            'success'=>true,
-            'data'=> $tasks,
-            'message'=> 'Tasks retrieved successfully'
-         ];
-         return response()->json($response,200);
+        return $this->sendResponse($tasks->toArray(), 'Tasks retrieved successfully');
     }
+
+
+    //get tasks for a plot
+
 
     /**
      * Store a newly created Task in storage.
@@ -59,13 +57,40 @@ class TaskAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateTaskAPIRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
+        $rules = [
+            'name' => 'required|string',
+            'task_date' => 'required|string',
+            'plot_id' => 'required|integer',
 
-        $task = $this->taskRepository->create($input);
+        ];
+        $request->validate($rules);
 
-        return $this->sendResponse($task->toArray(), 'Task saved successfully');
+        $task = new Task();
+        $task->name = $request->name;
+        $task->task_date = $request->task_date;
+        $task->plot_id = $request->plot_id;
+
+        //get status
+        $status = Status::where('name','Pending')->first();
+
+        $status_id = Status::find(1);
+        $task->status_id = $status_id->id;
+        $task->save();
+        $success['name'] = $task->name;
+        $success['plot'] = $task->plot->name;
+        $success['status'] = $task->status->name;
+        $response = [
+            'success'=>true,
+            'data'=>$success,
+            'message'=> 'taks  added successfully on the plot'
+         ];
+
+         return response()->json($response,201);
+
+
     }
 
     /**

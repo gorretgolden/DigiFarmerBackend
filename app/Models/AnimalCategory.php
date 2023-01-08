@@ -23,6 +23,7 @@ class AnimalCategory extends Model
     use HasFactory;
 
     public $table = 'animal_categories';
+    public $dir = 'storage/animal_categories/';
 
 
 
@@ -51,19 +52,15 @@ class AnimalCategory extends Model
      */
     public static $rules = [
         'name' => 'required|string',
-        'image' => 'nullable'
+        'image' => 'required'
     ];
 
 
     //Accessors
-    public function getImageAttribute($image)
-       {
-        //  $image = $this->attributes['image'] ? URL::to('/animal_categories/' . $this->attributes['image']) : null;
-        //  return $image;
+    public function getImageAttribute($value)
+    {
 
-        if($image){
-            $url = Storage::disk('local')->url('public/animal_categories/'.$image);
-            return $url;
-        }
-       }
+
+     return $this->dir.$value;
+    }
 }

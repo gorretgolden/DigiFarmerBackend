@@ -14,7 +14,7 @@
                 <tr>
                     <td>
                         <img
-                            src="{{ $vendorCategory->image ? asset('/storage/vendor_categories/' . $vendorCategory->image) : asset('img/crop.png') }}"
+                            src="{{ $vendorCategory->image ? $vendorCategory->image  : asset('img/crop.png') }}"
                             width="50px" height="50px"/>
                     </td>
                     <td>{{ $vendorCategory->name }}</td>

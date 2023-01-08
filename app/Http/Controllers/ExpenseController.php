@@ -57,7 +57,7 @@ class ExpenseController extends AppBaseController
     {
         $input = $request->all();
 
-        $existing_expense = Expense::where('expense_category_id',$request->expense_category_id)->first();
+        $existing_expense = Expense::where('expense_category_id',$request->expense_category_id)->where('plot_id',$request->plot_id)->first();
 
         if(!$existing_expense){
             $expense = $this->expenseRepository->create($input);

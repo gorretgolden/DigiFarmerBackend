@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $location_details
  * @property integer $vendor_category_id
  * @property integer $user_id
+ *  @property string image
  */
 class TrainingVendorService extends Model
 {
@@ -32,6 +33,8 @@ class TrainingVendorService extends Model
     use HasFactory;
 
     public $table = 'training_vendor_services';
+    public $dir = 'storage/insuarance_services/';
+
 
 
 
@@ -122,5 +125,12 @@ class TrainingVendorService extends Model
      {
         return $this->belongsTo(\App\Models\User::class,'user_id');
      }
+
+     public function getImageAttribute($value)
+      {
+
+
+       return $this->dir.$value;
+      }
 
 }

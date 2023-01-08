@@ -12,7 +12,10 @@
             @foreach ($userVerifications as $userVerification)
                 <tr>
                     <td>
-                        <img class="w-25" src="{{ $userVerification->image }}" />
+                        <img style="width: 20%" src=" {{$userVerification->image}}"/>
+
+                    </td>
+
                     </td>
                     <td>{{ $userVerification->user_id }}</td>
                     <td>{{ $userVerification->verified }}</td>

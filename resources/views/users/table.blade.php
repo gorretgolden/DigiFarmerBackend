@@ -2,6 +2,7 @@
     <table class="table" id="users-table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Image</th>
                 <th>Username</th>
                 <th>First Name</th>
@@ -10,14 +11,17 @@
                 <th>Phone</th>
 
                 <th>Role</th>
-                <th>Total Farms</th>
+                {{-- <th>Total Farms</th> --}}
                 <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($farmers as $farmer)
                 <tr>
-                    <td>  <img src="{{$farmer->image_url ? asset('/storage/users/'.$farmer->image_url) : asset('img/avatar-1.png') }}" width="50px" height="50px"></td>
+                    <td>{{ $farmer->id}}</td>
+                    <td>
+                        <img src="{{ $farmer->image_url ? $farmer->image_url : asset('img/avatar-1.png') }}" width="50px" height="50px"/>
+                    </td>
                     <td>{{ $farmer->username}}</td>
                     <td>{{ $farmer->first_name }}</td>
                     <td>{{ $farmer->last_name }}</td>
@@ -37,10 +41,10 @@
                             @endforeach
                         @endif
                     </td>
-                    <td class="text-center">
+                    {{-- <td class="text-center">
                         {{ $farmer->farms->count()}}
 
-                    </td>
+                    </td> --}}
                     <td width="120">
                         {!! Form::open(['route' => ['farmers.destroy', $farmer->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

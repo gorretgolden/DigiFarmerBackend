@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'cropOnSales.store']) !!}
+            {!! Form::open(['route' => 'cropOnSales.store', 'files' => true]) !!}
 
             <div class="card-body">
 

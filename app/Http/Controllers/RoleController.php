@@ -31,7 +31,7 @@ class RoleController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $roles = $this->roleRepository->all();
+        $roles = Role::latest()->paginate(6) ;
 
         return view('roles.index')
             ->with('roles', $roles);

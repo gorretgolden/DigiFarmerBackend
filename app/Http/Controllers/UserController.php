@@ -11,8 +11,11 @@ use Flash;
 use Response;
 use App\Models\User;
 use Hash;
+use App\Mail\SendUserPasswordMail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\UserUserType;
 require_once('../external/AfricasTalkingGateway.php');
+use URL;
 class UserController extends AppBaseController
 {
     /** @var UserRepository $userRepository*/
@@ -106,13 +109,16 @@ class UserController extends AppBaseController
     public function store(Request $request)
     {
 
+        $file = URL::asset('storage/users/user.png');
+        //dd($file);
+
         $farmer_rules = [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|unique:users,id|email',
             'image_url' => 'nullable',
             'country_id' => 'nullable',
-            'phone' => 'required|unique:users,id',
+            'phone' => 'required|unique:users,id|min:9',
             'email_verified_at' => 'datetime',
 
         ];
@@ -128,10 +134,11 @@ class UserController extends AppBaseController
           $user->username = $request->last_name ." " . $request->first_name;
           $user->email = $request->input('email');
           $user->phone = $request->input('phone');
-          $user->image_url = $request->input('image_url');
+          $user->image_url = $request->image_url;
           $user->user_type= "farmer";
-          $password = '12345678';
+          $password = "12345678";
           $user->password = Hash::make($password);
+
 
           //assign a user a role depending on the user type
 
@@ -140,11 +147,19 @@ class UserController extends AppBaseController
            $user->save();
 
            $user = User::find($user->id);
-
-           $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
+           if(!empty($request->file('image_url'))){
+            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
+          }
            $user->save();
            $content = "Digi Farmer App login password - ". $request->password;
            $this->sendSms($content,$request->phone);
+
+           $data = [
+            'password' => $password,
+            'subject' => "user auto generated password"
+
+          ];
+          Mail::to($user->email)->send(new SendUserPasswordMail($data));
 
 
            Flash::success('Farmer saved successfully.');
@@ -215,7 +230,6 @@ class UserController extends AppBaseController
     public function update($id, Request $request)
     {
 
-        $request->validate(User::$rules);
         $user = User::find($id);
 
         if (empty($user)) {
@@ -223,25 +237,14 @@ class UserController extends AppBaseController
 
             return redirect(route('farmers.index'));
         }
+        $user->fill($request->all());
 
 
-        if($user){
-
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->country_id = $request->country_id;
-            $user->phone = $request->phone;
-            $user->user_type = $request->user_type;
-            $user->image_url = $request->image_url;
-            $password = $request->password;
-            $user->password = Hash::make($password);
-
-            if(!empty($request->file('image_url'))){
-                $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
-            }
-            $user->save();
+        $user->username = $request->last_name." ".$request->first_name;
+        if(!empty($request->file('image_url'))){
+            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
         }
+        $user->save();
 
         Flash::success('User updated successfully.');
 

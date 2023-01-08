@@ -26,7 +26,7 @@ class Crop extends Model
 
     public $table = 'crops';
 
-    protected $appends = ['image'];
+    public $dir = 'storage/crops/';
 
 
 
@@ -93,13 +93,11 @@ class Crop extends Model
        }
 
 
-    //    public function getImageAttribute($image)
-    //    {
+       public function getImageAttribute($value)
+       {
 
-    //     if($image){
-    //         $url = env('APP_NAME').Storage::disk('local')->url('public/crops/'.$image);
-    //         return $url;
-    //     }
-    //    }
+
+        return $this->dir.$value;
+       }
 
 }

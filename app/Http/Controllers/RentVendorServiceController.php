@@ -12,6 +12,11 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\RentVendorService;
 use App\Models\RentVendorImage;
+use App\Models\VendorCategory;
+use Illuminate\Http\Request;
+use App\Models\RentVendorSubCategory;
+use App\Models\Address;
+
 
 class RentVendorServiceController extends AppBaseController
 {
@@ -45,6 +50,17 @@ class RentVendorServiceController extends AppBaseController
         return view('rent_vendor_services.create');
     }
 
+      //fetch user addresses
+      public function fetchSubCategories(Request $request)
+      {
+
+
+        $data['Sub_categories'] = RentVendorSubCategory::where("rent_vendor_category_id", $request->rent_vendor_category_id)->get(["name", "id"]);
+
+
+          return response()->json($data);
+      }
+
     /**
      * Store a newly created RentVendorService in storage.
      *
@@ -55,17 +71,27 @@ class RentVendorServiceController extends AppBaseController
     public function store(CreateRentVendorServiceRequest $request)
     {
         $input = $request->all();
+        $vendor_category = VendorCategory::where('name','Rent')->first();
+        $location = Address::where('id',$request->address_id)->first();
 
 
         $rent_vendor_service = new RentVendorService();
         $rent_vendor_service->name = $request->name;
         $rent_vendor_service->rent_vendor_sub_category_id = $request->rent_vendor_sub_category_id;
         $rent_vendor_service->charge = $request->charge;
-        $rent_vendor_service->charge_day = $request->charge_day;
+        $rent_vendor_service->quantity = $request->quantity;
+
+        //charge unit
+        if($request->charge == 1){
+            $rent_vendor_service->charge_day = "day";
+        }else{
+            $rent_vendor_service->charge_day = $request->charge_day;
+        }
         $rent_vendor_service->user_id = $request->user_id;
+        $rent_vendor_service->location = $location->district_name;
         $rent_vendor_service->charge_frequency = $request->charge_frequency;
         $rent_vendor_service->description = $request->description;
-        $rent_vendor_service->vendor_category_id = $request->vendor_category_id;
+        $rent_vendor_service->vendor_category_id = $vendor_category->id;
         $rent_vendor_service->total_charge = (int) ($request->charge_day * $request->charge);
         $rent_vendor_service->save();
 
@@ -73,7 +99,7 @@ class RentVendorServiceController extends AppBaseController
 
             foreach ($request->file('images') as $imagefile) {
                 $image = new RentVendorImage();
-                $path = $imagefile->store('/images/resource', ['disk' =>   'rent-images']);
+                $path = $imagefile->store('/storage/rent', ['disk' =>   'rent-images']);
                 $image->url = $path;
                 $image->rent_vendor_service_id = $rent_vendor_service->id;
                 $image->save();

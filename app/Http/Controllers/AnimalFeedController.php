@@ -10,6 +10,8 @@ use App\Repositories\AnimalFeedRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\VendorCategory;
+use App\Models\AnimalFeed;
 
 class AnimalFeedController extends AppBaseController
 {
@@ -53,11 +55,34 @@ class AnimalFeedController extends AppBaseController
     public function store(CreateAnimalFeedRequest $request)
     {
         $input = $request->all();
-        $input['price_unit'] = "kg";
+        $vendor_category = VendorCategory::where('name','Animal Feeds')->first();
 
-        $animalFeed = $this->animalFeedRepository->create($input);
 
-        Flash::success('Animal Feed saved successfully.');
+        //new animal feed
+        $new_animal_feed = new AnimalFeed();
+
+
+        $new_animal_feed->quantity_unit = "kg";
+        $new_animal_feed->name = $request->name;
+        $new_animal_feed->price = $request->price;
+        $new_animal_feed->animal_feed_category_id = $request->animal_feed_category_id;
+        $new_animal_feed->animal_category_id = $request->animal_category_id;
+        $new_animal_feed->vendor_category_id = $vendor_category->id;
+        $new_animal_feed->address_id = $request->address_id;
+        $new_animal_feed->description = $request->description;
+        $new_animal_feed->user_id = $request->user_id;
+        $new_animal_feed->quantity = $request->quantity;
+        $new_animal_feed->image = $request->image;
+
+        $new_animal_feed->save();
+
+        if(!empty($request->file('image'))){
+            $new_animal_feed->image= \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
+        }
+
+        $new_animal_feed->save();
+
+        Flash::success('Animal Feed posted successfully.');
 
         return redirect(route('animalFeeds.index'));
     }

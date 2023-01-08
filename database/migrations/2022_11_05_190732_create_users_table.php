@@ -25,8 +25,6 @@ class CreateUsersTable extends Migration
             $table->boolean('isAdmin')->default(false);
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_verified_otp')->default(false);
-            $table->foreignId('country_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->foreignId('district_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->string('password')->nullable();
             $table->string('google_id')->unique()->nullable();
             $table->string('facebook_id')->unique()->nullable();

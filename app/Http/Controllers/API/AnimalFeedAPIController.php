@@ -9,6 +9,7 @@ use App\Repositories\AnimalFeedRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\VendorCategory;
 use App\Models\User;
 
 /**
@@ -36,7 +37,7 @@ class AnimalFeedAPIController extends AppBaseController
     public function index(Request $request)
     {
 
-        $animalFeeds = AnimalFeed::with('sub_category','vendor')->get();
+        $animalFeeds = AnimalFeed::with('category','vendor')->get();
         $response = [
             'success'=>true,
             'data'=> $animalFeeds,
@@ -57,20 +58,45 @@ class AnimalFeedAPIController extends AppBaseController
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|string',
-            'animal_feed_sub_category_id' => 'required|integer',
+            'name' => 'required|string|unique:animal_feeds',
             'price' => 'required|integer',
             'price_unit' => 'nullable',
-            'description' => 'nullable'
+            'description' => 'required|string',
+            'image' => 'required',
+            'quantity' => 'required|integer',
+            'animal_category_id' => 'integer|required',
+            'animal_feed_category_id' => 'required|integer',
+            'address_id'  => 'required|integer'
 
         ];
         $request->validate($rules);
         $input = $request->all();
-        $input['user_id'] = auth()->user()->id;
+        $vendor_category = VendorCategory::where('name','Animal Feeds')->first();
+          //new animal feed
+          $new_animal_feed = new AnimalFeed();
 
-        $animalFeed = $this->animalFeedRepository->create($input);
 
-        return $this->sendResponse($animalFeed->toArray(), 'Animal Feed saved successfully');
+          $new_animal_feed->quantity_unit = "kg";
+          $new_animal_feed->name = $request->name;
+          $new_animal_feed->price = $request->price;
+          $new_animal_feed->animal_feed_category_id = $request->animal_feed_category_id;
+          $new_animal_feed->animal_category_id = $request->animal_category_id;
+          $new_animal_feed->vendor_category_id = $vendor_category->id;
+          $new_animal_feed->address_id = $request->address_id;
+          $new_animal_feed->description = $request->description;
+          $new_animal_feed->user_id = auth()->user()->id;
+          $new_animal_feed->quantity = $request->quantity;
+          $new_animal_feed->image = $request->image;
+
+          $new_animal_feed->save();
+
+          if(!empty($request->file('image'))){
+            $new_animal_feed->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
+          }
+
+          $new_animal_feed->save();
+
+        return $this->sendResponse($new_animal_feed->toArray(), 'Animal Feed saved successfully');
     }
 
     /**

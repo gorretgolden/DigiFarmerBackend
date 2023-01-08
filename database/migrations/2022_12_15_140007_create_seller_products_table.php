@@ -22,6 +22,7 @@ class CreateSellerProductsTable extends Migration
              $table->foreignId('seller_product_category_id')->nullable()->constrained()->onDelete('CASCADE');
              $table->foreignId('vendor_category_id')->nullable()->constrained()->onDelete('CASCADE');
              $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
+             $table->foreignId('address_id')->constrained()->onDelete('CASCADE');
              $table->enum('status',['on-sale','sold'])->default('on-sale');
              $table->timestamps();
         });

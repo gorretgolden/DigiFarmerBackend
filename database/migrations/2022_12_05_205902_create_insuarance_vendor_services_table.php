@@ -17,6 +17,7 @@ class CreateInsuaranceVendorServicesTable extends Migration
         Schema::create('insuarance_vendor_services', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
+            $table->string('image')->nullable();
             $table->text('terms');
             $table->text('description');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');

@@ -34,13 +34,13 @@ class AnimalCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $animalCategories = $this->animalCategoryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($animalCategories->toArray(), 'Animal Categories retrieved successfully');
+        $animalCategories = AnimalCategory::all(['id','name','image']);
+        $response = [
+            'success'=>true,
+            'data'=> $animalCategories,
+            'message'=> 'Animal Categories retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**
@@ -54,6 +54,7 @@ class AnimalCategoryAPIController extends AppBaseController
     public function store(CreateAnimalCategoryAPIRequest $request)
     {
         $input = $request->all();
+        $input['image'] = $request->image;
 
         $animalCategory = $this->animalCategoryRepository->create($input);
 

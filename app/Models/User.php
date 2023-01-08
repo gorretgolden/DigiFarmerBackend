@@ -13,6 +13,8 @@ use App\Notifications\ResetPasswordNotification;
 use Spatie\Permission\Models\Role;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Stephenjude\Wallet\Interfaces\Wallet;
+use Stephenjude\Wallet\Traits\HasWallet;
 
 /**
  * Class User
@@ -27,14 +29,15 @@ use Illuminate\Auth\Notifications\ResetPassword;
  * @property integer $role_id
  * @property string $password
  */
-class User extends Authenticable implements  MustVerifyEmail
+class User extends Authenticable implements  Wallet
 
 {
-    use Notifiable,HasRoles,HasFactory,HasApiTokens;
+    use Notifiable,HasRoles,HasFactory,HasApiTokens,HasWallet;
 
 
 
     public $table = 'users';
+    public $dir = 'storage/users/';
 
 
 
@@ -81,7 +84,7 @@ class User extends Authenticable implements  MustVerifyEmail
         'email' => 'required|unique:users,id|email',
         'image_url' => 'nullable',
         'country_id' => 'nullable',
-        'phone' => 'required|unique:users,id',
+        'phone' => 'required|unique:users,id|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:9',
         'password' => 'required',
         'email_verified_at' => 'datetime',
         'user_type_id' => 'required|integer',
@@ -214,6 +217,44 @@ class User extends Authenticable implements  MustVerifyEmail
     {
     return $this->hasMany(\App\Models\Chat::class, 'created_by');
     }
+
+
+    //has many contact  us
+    public function contact_us()
+    {
+        return $this->hasMany(\App\Models\Contact::class,'user_id');
+    }
+
+
+    //has many agro services
+    public function agronomist_services()
+    {
+        return $this->hasMany(\App\Models\AgronomistVendorService::class,'user_id');
+    }
+
+    public function getImageUrlAttribute($image)
+    {
+
+        if ($image) {
+            return $this->dir.$image;
+         }
+
+    }
+
+
+    //has many users
+    public function addresses()
+    {
+        return $this->hasMany(\App\Models\Address::class,'user_id');
+    }
+
+    //has many insuarance services
+    public function insuarance_services()
+      {
+          return $this->hasMany(\App\Models\InsuaranceVendorService::class,'user_id');
+      }
+
+
 
 
 

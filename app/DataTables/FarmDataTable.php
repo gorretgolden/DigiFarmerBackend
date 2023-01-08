@@ -29,7 +29,7 @@ class FarmDataTable extends DataTable
      */
     public function query(Farm $model)
     {
-        return $model->newQuery()->with(['user']);
+        return $model->newQuery()->with('address');
     }
 
     /**
@@ -66,13 +66,10 @@ class FarmDataTable extends DataTable
     {
         return [
             'name',
-            'address',
-            'latitude',
-            'longitude',
-            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farm Owner",'data'=>'user.username','email'=>'user.username']),
+            'owner',
             'field_area',
             'size_unit',
-            'image'
+            'address'=> new \Yajra\DataTables\Html\Column(['title'=>"Address",'data'=>'address.district_name']),
         ];
     }
 

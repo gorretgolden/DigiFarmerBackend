@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => date_default_timezone_get(),
 
     /*
     |--------------------------------------------------------------------------
@@ -236,6 +236,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
         'Datatables' => Yajra\DataTables\Facades\Datatables::class,
+        'Carbon' => Illuminate\Support\Carbon::class,
 
     ],
 

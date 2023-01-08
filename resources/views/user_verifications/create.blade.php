@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'userVerifications.store', 'files' => true]) !!}
+            {!! Form::open(['route' => 'userVerifications.store', 'files' => true,'enctype'=>'multipart/form-data']) !!}
 
             <div class="card-body">
 

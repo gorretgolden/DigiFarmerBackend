@@ -17,7 +17,6 @@ class CreateExpenseCategoriesTable extends Migration
             $table->id('id');
             $table->string('name')->unique();
             $table->integer('standard_value');
-            $table->text('description')->nullable();
             $table->timestamps();
 
         });

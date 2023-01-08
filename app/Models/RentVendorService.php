@@ -29,14 +29,16 @@ class RentVendorService extends Model
 
     public $fillable = [
         'name',
-        'rent_vendor_sub_category_id',
+        'rent_vendor_category_id',
         'charge',
         'description',
-        'string',
         'charge_day',
         'charge_frequency',
         'charge_unit',
-        'total_charge'
+        'total_charge',
+        'location',
+        'user_id',
+        'quantity'
 
     ];
 
@@ -47,11 +49,15 @@ class RentVendorService extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'rent_vendor_sub_category_id' => 'integer',
+        'rent_vendor_category_id' => 'integer',
         'charge' => 'integer',
         'description' => 'string',
         'images' => 'string',
-        'total_charge' => 'integer'
+        'total_charge' => 'integer',
+        'location' => 'string',
+        'user_id' => 'integer',
+        'charge_day' => 'string',
+        'quantity' => 'integer'
 
     ];
 
@@ -61,15 +67,19 @@ class RentVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
+        'name' => 'required|string|unique:rent_vendor_services|min:10|max:30',
+        'rent_vendor_category_id' => 'required|integer',
         'rent_vendor_sub_category_id' => 'required|integer',
         'charge' => 'required|integer',
-        'description' => 'required|string',
+        'description' => 'required|string|min:20|max:1000',
         'images' => 'required',
         'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         'images' => 'max:3',
         'charge_day'=>'required|integer',
-        'charge_frequency'=>'required|string'
+        'charge_frequency'=>'required|string',
+        'user_id' => 'required|integer',
+        'address_id' => 'required|integer',
+        'quantity'=> 'required|integer'
 
     ];
 

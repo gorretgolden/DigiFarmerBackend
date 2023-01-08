@@ -1,7 +1,6 @@
 
 <?php
 $users = App\Models\User::where('user_type',"farmer")->pluck('username','id');
-$vendor_categories = App\Models\VendorCategory::pluck('name','id');
 $period_units = App\Models\PeriodUnit::pluck('name','id');
 ?>
 <!-- Name Field -->
@@ -30,6 +29,12 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
     {!! Form::text('period', null, ['class' => 'form-control','placeholder'=>'1']) !!}
 </div>
 
+<!-- Period Unit Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('period_unit_id', 'Period Unit:') !!}
+    {!! Form::select('period_unit_id', $period_units, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
 <div class="form-group col-sm-6">
     {!! Form::label('Access') !!}
     {!! Form::select('access', ['Online'=>'Online','Offline'=>'Offline'],null, ['class' => 'form-control select select-access'] ) !!}
@@ -47,17 +52,13 @@ $period_units = App\Models\PeriodUnit::pluck('name','id');
 </div>
 
 
-<!-- Vendor Category Id Field -->
+{{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
     {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
-</div>
+</div> --}}
 
-<!-- Period Unit Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('period_unit_id', 'Period Unit:') !!}
-    {!! Form::select('period_unit_id', $period_units, null, ['class' => 'form-control custom-select']) !!}
-</div>
+
 
 
 <!-- Starting Date Field -->

@@ -2,6 +2,7 @@
     <table class="table" id="roles-table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Name</th>
                 <th colspan="3">Action</th>
             </tr>
@@ -9,6 +10,7 @@
         <tbody>
             @foreach ($roles as $role)
                 <tr>
+                    <th>{{ $role->id}}</th>
                     <td>{{ $role->name }}</td>
                     <td width="120">
                         @role('admin')

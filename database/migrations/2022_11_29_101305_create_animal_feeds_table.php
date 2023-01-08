@@ -17,12 +17,13 @@ class CreateAnimalFeedsTable extends Migration
         Schema::create('animal_feeds', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
+            $table->string('image');
             $table->integer('price');
             $table->integer('quantity');
             $table->string('price_unit')->default('kg');
             $table->text('description')->nullable();
+            $table->foreignId('animal_feed_category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->foreignId('animal_feed_sub_category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('vendor_category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
         });

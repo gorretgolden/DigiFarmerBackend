@@ -20,7 +20,7 @@ $animal_categories = App\Models\AnimalCategory::pluck('name','id');
 
       @else
       <option value="{{ $plot->id }}">
-        {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->user->username}}
+        {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->address->user->username}}
     </option>
     @endif
 

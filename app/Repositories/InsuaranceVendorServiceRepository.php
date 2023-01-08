@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class InsuaranceVendorServiceRepository
  * @package App\Repositories
- * @version December 5, 2022, 8:59 pm UTC
+ * @version January 7, 2023, 1:41 pm CET
 */
 
 class InsuaranceVendorServiceRepository extends BaseRepository

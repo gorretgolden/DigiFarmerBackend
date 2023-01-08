@@ -17,6 +17,8 @@ class CreateRentVendorServicesTable extends Migration
         Schema::create('rent_vendor_services', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
+            $table->string('location');
+            $table->integer('quantity');
             $table->integer('charge');
             $table->integer('charge_day')->default(1);
             $table->string('charge_unit')->default('UGX');
@@ -24,7 +26,6 @@ class CreateRentVendorServicesTable extends Migration
             $table->integer('total_charge')->default(0);
             $table->text('description');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->foreignId('rent_vendor_sub_category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();
         });

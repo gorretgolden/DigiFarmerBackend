@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class StatusRepository
  * @package App\Repositories
- * @version December 13, 2022, 1:51 am UTC
+ * @version December 30, 2022, 3:15 pm CET
 */
 
 class StatusRepository extends BaseRepository

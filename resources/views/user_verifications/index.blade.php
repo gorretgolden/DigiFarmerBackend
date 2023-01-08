@@ -8,7 +8,7 @@
                     <h1>User Verifications</h1>
                 </div>
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
+                    <a class="btn btn-primary float-right disabled"
                        href="{{ route('userVerifications.create') }}">
                         Add New
                     </a>
@@ -29,7 +29,7 @@
 
                 <div class="card-footer clearfix">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>

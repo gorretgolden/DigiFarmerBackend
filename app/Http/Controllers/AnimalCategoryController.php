@@ -74,9 +74,11 @@ class AnimalCategoryController extends AppBaseController
 
             $file = $request->file('image');
             $animalCategory  = AnimalCategory::find($animalCategory->id);
-            $filename = $animalCategory->name . '-' . $animalCategory->id . '.' . $file->extension();
+            $animalCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_categories');
+            $animalCategory->save();
 
-            $animalCategory->image = \App\Models\ImageUploader::upload($filename,'animal_categories');
+
+
             $animalCategory->save();
 
 
@@ -140,18 +142,29 @@ class AnimalCategoryController extends AppBaseController
     public function update($id, UpdateAnimalCategoryRequest $request)
     {
         $animalCategory = $this->animalCategoryRepository->find($id);
+        $animalCategory->fill($request->all());
+
 
         if (empty($animalCategory)) {
             Flash::error('Animal Category not found');
 
             return redirect(route('animalCategories.index'));
+        }else{
+
+            $animalCategory->name = $request->name;
+            if(!empty($request->file('image'))){
+                $animalCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_categories');
+            }
+            $animalCategory->save();
+
+            Flash::success('Animal Category updated successfully.');
+
+            return redirect(route('animalCategories.index'));
         }
 
-        $animalCategory = $this->animalCategoryRepository->update($request->all(), $id);
 
-        Flash::success('Animal Category updated successfully.');
 
-        return redirect(route('animalCategories.index'));
+
     }
 
     /**

@@ -2,6 +2,7 @@
     <table class="table" id="permissions-table">
         <thead>
         <tr>
+
             <th>Name</th>
             <th colspan="3">Action</th>
         </tr>

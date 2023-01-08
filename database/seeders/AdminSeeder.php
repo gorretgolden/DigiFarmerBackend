@@ -26,7 +26,6 @@ class AdminSeeder extends Seeder
             'phone'=>'0751547654',
             'password'=> Hash::make($password),
             'user_type'=>"admin",
-            'country_id'=> 225,
             'isAdmin' => 1
 
         ]);

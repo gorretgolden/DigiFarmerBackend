@@ -15,7 +15,7 @@
                 <tr>
                     <td>{{ $plot->name }}</td>
                     <td>{{ $plot->size }}  {{ $plot->size_unit }}</td>
-                    <td>{{ $plot->farm->address}}</td>
+                    <td>{{ $plot->farm->address->district_name}}</td>
                     <td>{{ $plot->farm->name }}</td>
                     <td>{{ $plot->crop->name }}</td>
                     <td width="120">
@@ -39,8 +39,8 @@
             @endforeach
         </tbody>
     </table>
-
+{{--
     <div class="float-right">
         {{ $plots->links() }}
-    </div>
+    </div> --}}
 </div>

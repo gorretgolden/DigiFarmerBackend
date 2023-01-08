@@ -22,9 +22,7 @@ class Category extends Model
     use HasFactory;
 
     public $table = 'categories';
-
-
-
+    public $dir = 'storage/categories/';
 
 
 
@@ -63,12 +61,12 @@ class Category extends Model
     }
 
 
-    public function getImageAttribute($image)
+    public function getImageAttribute($value)
        {
 
-        if($image){
-            $url = Storage::disk('local')->url('public/categories/'.$image);
-            return $url;
-        }
+
+        return $this->dir.$value;
        }
+
+
 }

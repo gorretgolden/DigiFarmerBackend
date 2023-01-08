@@ -20,8 +20,9 @@
              $table->id('id');
              $table->string('image')->nullable();
              $table->string('title');
+             $table->string('type');
              $table->timestamps();
-             $table->softDeletes();
+
          });
      }
 

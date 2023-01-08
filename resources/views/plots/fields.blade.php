@@ -1,7 +1,7 @@
 <?php
 $crops = App\Models\Crop::pluck('name','id');
 $farms = App\Models\Farm::pluck('name','id');
-$districts = App\Models\District::pluck('name','id');
+
 ?>
 
 <!-- Name Field -->

@@ -6,19 +6,19 @@ $roles =    Spatie\Permission\Models\Role::pluck('name','id');
 <!-- First Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('first_name', 'First Name:') !!}
-    {!! Form::text('first_name', null, ['class' => 'form-control','maxlength' => 100]) !!}
+    {!! Form::text('first_name', null, ['class' => 'form-control','maxlength' => 100,'placeholder'=>'Enter user first name']) !!}
 </div>
 
 <!-- Last Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('last_name', 'Last Name:') !!}
-    {!! Form::text('last_name', null, ['class' => 'form-control','maxlength' => 100]) !!}
+    {!! Form::text('last_name', null, ['class' => 'form-control','maxlength' => 100,'placeholder'=>'Enter user last name']) !!}
 </div>
 
 <!-- Email Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('email', 'Email:') !!}
-    {!! Form::text('email', null, ['class' => 'form-control','maxlength' => 100]) !!}
+    {!! Form::text('email', null, ['class' => 'form-control','maxlength' => 100,'placeholder'=>'Enter user email address']) !!}
 </div>
 
 <!-- Image Url Field -->
@@ -37,13 +37,13 @@ $roles =    Spatie\Permission\Models\Role::pluck('name','id');
 <!-- Phone Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('phone', 'Phone:') !!}
-    {!! Form::text('phone', null, ['class' => 'form-control']) !!}
+    {!! Form::text('phone', null, ['class' => 'form-control','placeholder'=>'256751547654']) !!}
 </div>
 
 <!-- User type -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_type_id', 'User Type:') !!}
-    {!! Form::text('user_type_id',null,['class' => 'form-control','placeholder' => 'farmer','readonly']) !!}
+    {!! Form::label('user_type', 'User Type:') !!}
+    {!! Form::text('user_type',null,['class' => 'form-control','placeholder' => 'farmer','readonly']) !!}
 </div>
 
 {{-- <!-- Country Id Field -->

@@ -53,7 +53,115 @@ class DistrictTableSeeder extends Seeder
             ],
             [
                 'id'         => 7,
-                'name'       => 'Gomba',
+                'name'       => 'Kalangala',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 8,
+                'name'       => 'Kampala',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 9,
+                'name'       => 'Kayunga',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 10,
+                'name'       => 'Kiboga',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 11,
+                'name'       => 'Kyankwanzi',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 12,
+                'name'       => 'Luwero',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 13,
+                'name'       => 'Lwengo',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 14,
+                'name'       => 'Lyantode',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 15,
+                'name'       => 'Masaka',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 16,
+                'name'       => 'Mityana',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 17,
+                'name'       => 'Mpigi',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 18,
+                'name'       => 'Mubende',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 19,
+                'name'       => 'Mukono',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 20,
+                'name'       => 'Nakaseke',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 21,
+                'name'       => 'Nakasongola',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 22,
+                'name'       => 'Rakai',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 23,
+                'name'       => 'Ssembabule',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 24,
+                'name'       => 'Wakiso',
+                'country_id'=> '225'
+
+            ],
+            [
+                'id'         => 25,
+                'name'       => 'Jinja',
                 'country_id'=> '225'
 
             ],

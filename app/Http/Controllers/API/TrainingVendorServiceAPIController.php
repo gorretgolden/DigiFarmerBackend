@@ -11,6 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\VendorCategory;
 /**
  * Class TrainingVendorServiceController
  * @package App\Http\Controllers\API
@@ -52,6 +53,40 @@ class TrainingVendorServiceAPIController extends AppBaseController
      *
      * @return Response
      */
+
+
+      //training vendor services for a single vendor
+    public function vendorTrainings(Request $request)
+    {
+        $vendor_trainings = TrainingVendorService::with('vendor_category')->where('user_id',auth()->user()->id)->get();
+
+        if($vendor_trainings->count()==0){
+            $response = [
+                'success'=>false,
+
+                'message'=> 'vendor has no training services'
+             ];
+             return response()->json($response,200);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-training-services'=>$vendor_trainings->count(),
+                    'training-vendor-services'=>$vendor_trainings
+
+                ],
+
+                'message'=> 'vendor training services retrieved successfully'
+             ];
+             return response()->json($response,200);
+
+        }
+
+
+    }
+
+
     public function store(Request $request)
     {
 
@@ -72,12 +107,14 @@ class TrainingVendorServiceAPIController extends AppBaseController
         $request->validate($rules);
         $input = $request->all();
         $input['user_id'] = auth()->user()->id;
+        $vendor_category = VendorCategory::where('name','Training')->first();
 
         //access
         if($input['access']=='Online'){
             $request->validate(['zoom_details' => 'required|string']);
             $input['zoom_details'] = $request->zoom_details;
-            $input['vendor_category_id'] = 5;
+
+            $input['vendor_category_id'] = $vendor_category->id;
             $input['image'] = $request->image;
             $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
 
@@ -91,7 +128,7 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
                 $request->validate(['location_details' => 'required|string']);
                 $input['location_details'] = $request->location_details;
-                $input['vendor_category_id'] = 5;
+                $input['vendor_category_id'] = $vendor_category->id;
                 $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
                 return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
             }
@@ -103,31 +140,31 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
     }
 
-    public function vendorTrainings(Request $request){
+    // public function vendorTrainings(Request $request){
 
-        $vendor = User::find(auth()->user()->id);
-        $training_services = $vendor->training_vendor_services;
-        if($training_services->count()== 0){
+    //     $vendor = User::find(auth()->user()->id);
+    //     $training_services = $vendor->training_vendor_services;
+    //     if($training_services->count()== 0){
 
-            $response = [
-                'success'=>true,
-                'message'=>'Vendor has no training vendor services'
-               ];
+    //         $response = [
+    //             'success'=>true,
+    //             'message'=>'Vendor has no training vendor services'
+    //            ];
 
-               return response()->json($response,200);
-        }
-        else{
-            $response = [
-                'success'=>true,
-                'data' => $training_services,
-                'message'=>'Training vendor services retrieved successfully'
-               ];
+    //            return response()->json($response,200);
+    //     }
+    //     else{
+    //         $response = [
+    //             'success'=>true,
+    //             'data' => $training_services,
+    //             'message'=>'Training vendor services retrieved successfully'
+    //            ];
 
-               return response()->json($response,200);
+    //            return response()->json($response,200);
 
-        }
+    //     }
 
-    }
+    // }
 
     /**
      * Display the specified TrainingVendorService.

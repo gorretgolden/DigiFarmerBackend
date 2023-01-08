@@ -21,6 +21,7 @@ class RentVendorImage extends Model
     use HasFactory;
 
     public $table = 'rent_vendor_images';
+    public $dir = 'storage/rent/';
 
 
     public $fillable = [
@@ -52,6 +53,13 @@ class RentVendorImage extends Model
     public function rent_vendor_service()
     {
     return $this->belongsTo(\App\Models\RentVendorService::class, 'rent_vendor_service_id');
+    }
+
+    public function getImageAttribute($value)
+    {
+
+
+     return $this->dir.$value;
     }
 
 }

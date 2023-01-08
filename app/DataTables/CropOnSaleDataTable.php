@@ -18,18 +18,22 @@ class CropOnSaleDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'crop_on_sales.datatables_actions');
-    }
+        return $dataTable->addColumn('image', function (CropOnSale $crop_on_sale) {
+            $url=asset("storage/crops_on_sale/$crop_on_sale->image");
+            return '<img src='.$url.' border="0" width="40" class="img-rounded" align="center" />';
 
+        })->rawColumns(['image', 'action']);
+
+    }
     /**
      * Get query source of dataTable.
-     *
+     *   })->addColumn('action', 'crop_on_sales.datatables_actions')->
      * @param \App\Models\CropOnSale $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(CropOnSale $model)
     {
-        return $model->newQuery()->with(['user','crop']);
+        return $model->newQuery()->with(['user','crop','address']);
     }
 
     /**
@@ -66,12 +70,15 @@ class CropOnSaleDataTable extends DataTable
     {
         return [
             'quantity',
-            'selling_price',
             'quantity_unit',
+            'selling_price',
             'price_unit',
             'is_sold',
             'crop'=> new \Yajra\DataTables\Html\Column(['title'=>"Crop",'data'=>'crop.name','email'=>'crop.name']),
-            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username'])
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username']),
+            'address'=> new \Yajra\DataTables\Html\Column(['title'=>"location",'data'=>'address.district_name']),
+
+
         ];
     }
 

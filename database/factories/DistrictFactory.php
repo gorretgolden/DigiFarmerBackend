@@ -23,7 +23,7 @@ class DistrictFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-        'country_id' => $this->faker->randomDigitNotNull,
+        'region_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

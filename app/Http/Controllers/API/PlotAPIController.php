@@ -11,7 +11,9 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\CropHarvest;
 use App\Models\Farm;
+use App\Models\Address;
 use App\Models\User;
+//use App\Models\District;
 
 /**
  * Class PlotController
@@ -37,7 +39,7 @@ class PlotAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $plots = Plot::with(['farm','crop','crop_harvests','district'])->get();
+        $plots = Plot::with(['farm','crop','crop_harvests','expenses'])->get();
         $response = [
             'success'=>true,
             'data'=> $plots,
@@ -46,65 +48,177 @@ class PlotAPIController extends AppBaseController
          return response()->json($response,200);
     }
 
+
+    //get animals on plot
+    public function animals_on_plot(Request $request,$id)
+    {
+
+        $plot = Plot::find($id);
+        if (empty($plot)) {
+            return $this->sendError('Plot not found');
+        }
+        $success = $plot->animals;
+
+        if($plot->animals->count()==0){
+            $response = [
+                'success'=>false,
+                'message'=> 'plot has no animals'
+             ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'animals'=>$success,
+                    'total' =>$plot->animals->count()
+                ],
+                'message'=> 'plot animals retrieved successfully '
+             ];
+
+             return response()->json($response,200);
+
+        }
+
+
+    }
+
+
    //get farm farmer plots
     public function farmPlots(Request $request)
     {
-        $farm_plots = [];//farm plots
 
-        $farmer = User::where('id', auth()->user()->id)->first();
-        //dd($user_farms->count());
+        $farms = Farm::where('owner', auth()->user()->username)->with('plots')->get();
+        $farm_plots =collect($farms)->pluck('plots');
 
-
-        if($farmer->farms->count()== 0){
-
-            //dd('Farmer has no farms');
+        $success = $farms;
+        if(empty($farms)){
             $response = [
                 'success'=>false,
-                'data'=> $success,
-                'message'=> 'Farmer has no farms'
+                'message'=> 'farmer has no farms'
              ];
 
              return response()->json($response,404);
 
+        }elseif($farm_plots == []){
+            $response = [
+                'success'=>false,
+                'message'=> 'no plots exit on the farms'
+             ];
+
+             return response()->json($response,404);
+
+        }
+        else{
+            $response = [
+                'success'=>false,
+                'data'=> $success,
+                'message'=> ' farms'
+             ];
+
+             return response()->json($response,404);
+
+        }
+
+
+
+
+
+    }
+
+
+    //get plot harvest
+    public function getTotalHarvestForPlot(Request $request,$id)
+    {
+
+        $totalPlotHarvest =  CropHarvest::where('plot_id',$request->id)->first();
+        //dd( $totalPlotHarvest);
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-harvest'=> $totalPlotHarvest->sum('quantity'),
+                'harvest-unit' => 'kg'
+            ],
+            'message'=> 'Total plot harvest retrieved'
+         ];
+
+         return response()->json($response,200);
+
+    }
+
+    //tasks on plot
+    public function plot_tasks(Request $request,$id)
+    {
+
+        $plot = Plot::find($id);
+        if (empty($plot)) {
+            return $this->sendError('Plot not found');
+        }
+        $success = $plot->tasks;
+
+        if($plot->tasks->count()==0){
+            $response = [
+                'success'=>false,
+                'message'=> 'plot has no tasks'
+             ];
+             return response()->json($response,404);
+
         }else{
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'tasks'=>$success,
+                    'total' =>$plot->tasks->count()
+                ],
+                'message'=> 'plot tasks retrieved successfully '
+             ];
 
-             foreach ($farmer->farms as $farm){
+             return response()->json($response,200);
 
-                if($farm->plots->count() == 0){
-
-                   //dd('No plots exit on this farm');
-                    $response = [
-                        'success'=>false,
-                        'data'=> $success,
-                        'message'=> 'No plots exit on this farm'
-                     ];
-
-                     return response()->json($response,404);
+        }
 
 
-                }else{
-                    $data = collect($farm->plots);
+    }
 
-                    $farm_plots = $data;
 
-                   $response = [
+        //get expense for a plot
+
+        public function plot_expenses(Request $request,$id)
+        {
+
+            $plot = Plot::find($id);
+            if (empty($plot)) {
+                return $this->sendError('Plot not found');
+            }
+
+            $success = $plot->expenses;
+
+
+            if($plot->expenses->count()==0){
+                $response = [
+                    'success'=>false,
+                    'message'=> 'plot has no expenses'
+                 ];
+                 return response()->json($response,404);
+
+            }else{
+                $response = [
                     'success'=>true,
-                    'data'=> [
-                        'total-plots'=>$farm_plots->count(),
-                        'farm-plots'=>$farm_plots,
-                        'farmer'=>$farmer,
-
-
+                    'data'=>[
+                        'expenses'=>$success,
+                        'total' =>$plot->expenses->count(),
+                        'total-plot-expense' =>$success->sum('amount')
                     ],
-                    'message'=> 'Farm plots retrieved successfully'
+                    'message'=> 'plot expenses retrieved successfully '
                  ];
 
                  return response()->json($response,200);
-                }
 
             }
+
+
         }
-    }
     /**
      * Store a newly created Plot in storage.
      * POST /plots
@@ -115,8 +229,10 @@ class PlotAPIController extends AppBaseController
      */
     public function store(CreatePlotAPIRequest $request)
     {
+
          //get the farm
          $farm = Farm::where('id',$request->farm_id)->first();
+
 
          if(!$farm){
 
@@ -152,10 +268,12 @@ class PlotAPIController extends AppBaseController
              $new_plot->name = $request->name;
              $new_plot->farm_id = $request->farm_id;
              $new_plot->crop_id = $request->crop_id;
-             $new_plot->district = $farm->address;
+             $new_plot->district = $farm->address->district_name;
              $new_plot->size = $request->size;
              $new_plot->size_unit = $request->size_unit;
              $new_plot->save();
+
+
 
 
              $success['name'] = $request->name;

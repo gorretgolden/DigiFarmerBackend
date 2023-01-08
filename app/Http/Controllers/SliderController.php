@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Slider;
 
 class SliderController extends AppBaseController
 {
@@ -56,7 +57,15 @@ class SliderController extends AppBaseController
     {
         $input = $request->all();
 
-        $slider = $this->sliderRepository->create($input);
+        $new_slider = new Slider();
+        $new_slider->title = $request->title;
+        $new_slider->type = $request->type;
+        $new_slider->save();
+
+        $new_slider = Slider::find($new_slider->id);
+
+        $new_slider->image = \App\Models\ImageUploader::upload($request->file('image'),'sliders');
+        $new_slider->save();
 
         Flash::success('Slider saved successfully.');
 
@@ -119,13 +128,25 @@ class SliderController extends AppBaseController
             Flash::error('Slider not found');
 
             return redirect(route('sliders.index'));
+        }else{
+
+            $slider->title = $request->title;
+            $slider->type = $request->type;
+            $user->fill($request->all());
+
+            if(!empty($request->file('image'))){
+                $slider->image = \App\Models\ImageUploader::upload($request->file('image'),'sliders');
+            }
+            $slider->save();
+            Flash::success('Slider updated successfully.');
+
+            return redirect(route('sliders.index'));
         }
 
-        $slider = $this->sliderRepository->update($request->all(), $id);
 
-        Flash::success('Slider updated successfully.');
 
-        return redirect(route('sliders.index'));
+
+
     }
 
     /**

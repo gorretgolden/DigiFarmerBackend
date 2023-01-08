@@ -78,4 +78,16 @@ class SellerProduct extends Model
      {
          return $this->belongsTo(\App\Models\User::class,'user_id');
      }
+
+     //belongs to an address
+     public function address()
+     {
+        return $this->belongsTo(\App\Models\Address::class,'address_id');
+     }
+
+     //belongs to a vendor category
+     public function vendor_category()
+    {
+        return $this->hasMany(\App\Models\VendorCategory::class,'vendor_category_id');
+    }
 }

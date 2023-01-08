@@ -30,8 +30,19 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 </div>
 
 
-<!-- Vendor Category Id Field -->
+
+<!-- Image Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('image', 'Image:') !!}
+    <div class="input-group">
+        <div class="custom-file">
+            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {!! Form::label('image', 'Choose file', ['class' => 'custom-file-label']) !!}
+        </div>
+    </div>
+</div>
+{{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
     {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
-</div>
+</div> --}}

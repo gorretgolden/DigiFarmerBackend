@@ -29,7 +29,7 @@ class AnimalFeedDataTable extends DataTable
      */
     public function query(AnimalFeed $model)
     {
-        return $model->newQuery()->with(['sub_category','vendor']);
+        return $model->newQuery()->with(['category','vendor','address']);
     }
 
     /**
@@ -66,11 +66,12 @@ class AnimalFeedDataTable extends DataTable
     {
         return [
             'name',
-            'sub_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Animal Feed Sub Category",'data'=>'sub_category.name']),
+            'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Animal Feed  Category",'data'=>'category.name']),
             'price',
-            'price_unit',
+            'quantity_unit',
             'description',
-            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username'])
+            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
+            'address_id'
         ];
     }
 

@@ -68,4 +68,6 @@ class Expense extends Model
       {
          return $this->belongsTo(\App\Models\Plot::class,'plot_id');
       }
+
+
 }

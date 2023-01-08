@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class CropOnSaleRepository
  * @package App\Repositories
- * @version November 26, 2022, 6:38 pm UTC
+ * @version December 29, 2022, 7:44 am CET
 */
 
 class CropOnSaleRepository extends BaseRepository
@@ -19,11 +19,13 @@ class CropOnSaleRepository extends BaseRepository
     protected $fieldSearchable = [
         'quantity',
         'selling_price',
-        'quantity_unit',
         'price_unit',
+        'description',
+        'image',
         'is_sold',
         'crop_id',
-        'user_id'
+        'user_id',
+        'address_id'
     ];
 
     /**

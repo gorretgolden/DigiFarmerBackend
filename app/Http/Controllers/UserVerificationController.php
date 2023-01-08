@@ -70,6 +70,19 @@ class UserVerificationController extends AppBaseController
             if($request->hasFile('image')){
 
                 foreach ($request->file('image') as $imagefile) {
+
+                    $existing_user = UserVerification::where('user_id',auth()->user()->id)->first();
+
+                    if($existing_user){
+                        $response = [
+                            'success'=>false,
+                            'message'=>'You already uploaded your documents for verification'
+                           ];
+
+                        return response()->json($response,200);
+                    }else{
+
+                    }
                     $verification = new UserVerification();
                     $path = $imagefile->store('/images/resource', ['disk' =>   'user-verification-documents']);
                     $verification->image = $path;
