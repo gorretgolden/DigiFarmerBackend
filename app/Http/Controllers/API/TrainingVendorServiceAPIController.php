@@ -91,22 +91,28 @@ class TrainingVendorServiceAPIController extends AppBaseController
     {
 
         $rules = [
+
             'name' => 'required|string|unique:training_vendor_services',
             'charge' => 'required|integer',
             'description' => 'required|string',
-            'period' => 'required|integer',
             'access' => 'required|string',
             'starting_date' => 'required|date',
             'ending_date' => 'required|after_or_equal:starting_date',
             'starting_time' => 'required|before:ending_time',
             'ending_time' => 'required|after:starting_time',
-            'location_details' => 'nullable',
-            'period_unit_id'  => 'required|integer',
+            'location' => 'nullable',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ];
+
         $request->validate($rules);
         $input = $request->all();
         $input['user_id'] = auth()->user()->id;
+
+        $user = User::find(auth()->user()->id);
+        if(!$user->is_vendor ==1){
+         $user->is_vendor = 1;
+         $user->save();
+        }
         $vendor_category = VendorCategory::where('name','Training')->first();
 
         //access
@@ -126,9 +132,10 @@ class TrainingVendorServiceAPIController extends AppBaseController
         }else{
             if($input['access']=='Offline'){
 
-                $request->validate(['location_details' => 'required|string']);
-                $input['location_details'] = $request->location_details;
+                $request->validate(['address_id' => 'required|integer']);
+                $location = Address::find($request->address_id);
                 $input['vendor_category_id'] = $vendor_category->id;
+                $input['location'] = $location->district_name;
                 $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
                 return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
             }
@@ -181,9 +188,31 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
         if (empty($trainingVendorService)) {
             return $this->sendError('Training Vendor Service not found');
+        }else{
+            $success['id'] = $trainingVendorService->id;
+            $success['name'] = $trainingVendorService->name;
+            $success['charge'] = $trainingVendorService->charge;
+            $success['description'] = $trainingVendorService->description;
+            $success['location'] = $trainingVendorService->location;
+            $success['charge'] = $trainingVendorService->charge;
+            $success['vendor'] = $trainingVendorService->vendor->username;
+            $success['image'] = $trainingVendorService->image;
+            $success['access'] = $trainingVendorService->access;
+            $success['starting_date'] = $trainingVendorService->starting_date;
+            $success['starting_time'] = $trainingVendorService->starting_time;
+            $success['ending_date'] = $trainingVendorService->ending_date;
+            $success['ending_time'] = $trainingVendorService->ending_time;
+            $success['zoom_details'] = $trainingVendorService->zoom_details;
+            $success['vendor_category'] = $trainingVendorService->vendor_category->name;
+            $success['created_at'] = $trainingVendorService->created_at->format('d/m/Y');
+            $success['time_since'] = $trainingVendorService->created_at->diffForHumans();
         }
-
-        return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service retrieved successfully');
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Training Vendor Service retrieved successfully'
+         ];
+         return response()->json($response,200);
     }
 
     /**

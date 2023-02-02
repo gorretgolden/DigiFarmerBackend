@@ -5,6 +5,7 @@
                 <th>Title</th>
                 <th>Type</th>
                 <th>Image</th>
+                <th>status</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -18,6 +19,14 @@
                         <img src="{{ $slider->image ? $slider->image : asset('img/crop.png') }}" width="50px"
                             height="50px" />
                     </td>
+                    <td>
+                        @if ($slider->is_active == 1)
+                            <p class="badge rounded-pill bg-success">enabled</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">disabled</p>
+                        @endif
+                    </td>
+
                     <td width="120">
                         {!! Form::open(['route' => ['sliders.destroy', $slider->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

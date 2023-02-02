@@ -68,10 +68,11 @@ class AnimalFeedDataTable extends DataTable
             'name',
             'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Animal Feed  Category",'data'=>'category.name']),
             'price',
-            'quantity_unit',
-            'description',
+            'weight',
+            'weight_unit',
+            'status',
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
-            'address_id'
+            'location'
         ];
     }
 

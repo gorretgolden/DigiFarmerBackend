@@ -37,8 +37,10 @@ class AnimalFeed extends Model
         'description',
         'user_id',
         'image',
-        'quantity',
-        'address_id'
+        'weight',
+        'weight_unit',
+        'address_id',
+
     ];
 
     /**
@@ -54,10 +56,13 @@ class AnimalFeed extends Model
         'description' => 'string',
         'user_id' => 'integer',
         'image' => 'string',
-        'quantity' => 'integer',
+        'weight' => 'integer',
         'animal_category_id' => 'integer',
         'address_id' => 'integer',
-        'vendor_category_id' => 'integer'
+        'vendor_category_id' => 'integer',
+        'weight_unit' => 'string'
+
+
 
     ];
 
@@ -74,9 +79,9 @@ class AnimalFeed extends Model
         'description' => 'required|min:10',
         'user_id' => 'required|integer',
         'image' => 'required',
-        'quantity' => 'required|integer',
-        'animal_category_id' => 'integer|required',
-        'address_id' => 'integer|required',
+        'weight' => 'required|integer',
+        'weight_unit' => 'required|string'
+
 
     ];
 
@@ -106,6 +111,11 @@ class AnimalFeed extends Model
         return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
     }
 
+    //belongs to an animal feed category
+    public function animal_feed_category()
+    {
+        return $this->belongsTo(\App\Models\AnimalFeedCategory::class, 'animal_feed_category_id');
+    }
 
 
     //Accessors

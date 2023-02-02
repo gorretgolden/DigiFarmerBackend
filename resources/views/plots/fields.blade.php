@@ -1,6 +1,6 @@
 <?php
 $crops = App\Models\Crop::pluck('name','id');
-$farms = App\Models\Farm::pluck('name','id');
+$farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 ?>
 
@@ -13,21 +13,14 @@ $farms = App\Models\Farm::pluck('name','id');
 <!-- Size Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('size', 'Size:') !!}
-    {!! Form::number('size', null, ['class' => 'form-control']) !!}
+    {!! Form::number('size', null, ['class' => 'form-control','min'=>1]) !!}
 </div>
 
-<!-- Size Unit Field -->
+<!--Field Size Unit-->
 <div class="form-group col-sm-6">
     {!! Form::label('size_unit', 'Size Unit:') !!}
-    {!! Form::select('size_unit',['Acres'=>'Acres','Hectares'=>'Hectares'],null, ['class' => 'form-control','placeholder'=>'Select  Plot Size Unit']) !!}
+    {!! Form::text('size_unit', null, ['class' => 'form-control','placeholder'=>'Acres','readonly']) !!}
 </div>
-
-<!-- Farm Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('farm_id', 'Farm :') !!}
-    {!! Form::select('farm_id',$farms, null, ['class' => 'form-control custom-select']) !!}
-</div>
-
 
 <!-- Crop Id Field -->
 <div class="form-group col-sm-6">
@@ -35,10 +28,61 @@ $farms = App\Models\Farm::pluck('name','id');
     {!! Form::select('crop_id', $crops, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
-
-{{-- <!-- District Id Field -->
+<!-- Owner Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('district_id', 'District:') !!}
-    {!! Form::select('district_id', $districts, null, ['class' => 'form-control custom-select']) !!}
-</div> --}}
+    {!! Form::label('owner', 'Farmer:') !!}
+    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+<!-- farm id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('farm_id', 'Farm:') !!}
+    <select id="farm" name="farm_id" class="form-control">
+
+    </select>
+</div>
+
+
+
+
+@push('scripts')
+
+    <script>
+
+        $(document).ready(function() {
+
+            $('#owner').on('change', function() {
+                var idFarmer = this.value;
+
+                $('#farm').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('farmers.fetch-farms') }}",
+                    type: "get",
+                    data: {
+                        owner: idFarmer
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        console.log(result)
+
+                        $('#farm').html('<option value="">-- Select a farm --</option>');
+
+                        $.each(result.farms, function(key, value) {
+
+                            $("#farm").append('<option value="' + value
+                                .id + '">' + value.name  + '</option>');
+
+
+                        });
+
+                    }
+                });
+            });
+
+
+
+        })
+    </script>
+@endpush
 

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateFaqRequest;
 use App\Repositories\FaqRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Models\Faq;
 use Flash;
 use Response;
 
@@ -29,7 +30,7 @@ class FaqController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $faqs = $this->faqRepository->all();
+        $faqs = Faq::latest()->get();
 
         return view('faqs.index')
             ->with('faqs', $faqs);

@@ -13,7 +13,7 @@
     },
     {
         "name": "day_id",
-        "dbType": "integer:unsigned:foreign,days,id",
+        "dbType": "integer:foreign:unsigned,days,id",
         "htmlType": "select",
         "validations": "required|integer",
         "searchable": true,
@@ -24,9 +24,9 @@
         "inView": true
     },
     {
-        "name": "start_time",
+        "name": "starting_time",
         "dbType": "string",
-        "htmlType": "date",
+        "htmlType": "time",
         "validations": "required",
         "searchable": true,
         "fillable": true,
@@ -36,9 +36,21 @@
         "inView": true
     },
     {
-        "name": "end_time",
+        "name": "ending_time",
         "dbType": "string",
-        "htmlType": "date",
+        "htmlType": "time",
+        "validations": "required",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "time_interval",
+        "dbType": "integer",
+        "htmlType": "number",
         "validations": "required",
         "searchable": true,
         "fillable": true,

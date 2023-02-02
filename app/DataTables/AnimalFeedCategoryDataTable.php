@@ -29,7 +29,7 @@ class AnimalFeedCategoryDataTable extends DataTable
      */
     public function query(AnimalFeedCategory $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('animal_category');
     }
 
     /**
@@ -65,7 +65,8 @@ class AnimalFeedCategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name'
+            'name',
+            'animal_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Animal Category",'data'=>'animal_category.name']),
         ];
     }
 

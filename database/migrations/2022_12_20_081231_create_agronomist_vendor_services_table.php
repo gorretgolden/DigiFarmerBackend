@@ -14,16 +14,16 @@ class CreateAgronomistVendorServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('agronomist_vendor_services', function (Blueprint $table) {
+        Schema::create('agronomists', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('expertise',255);
             $table->integer('charge');
             $table->string('charge_unit')->default('Per Hour');
             $table->enum('availability',['Chat','Online','Call','In-Person'])->default('In-Person');
             $table->text('description');
             $table->text('zoom_details')->nullable();
-            $table->text('location_details')->nullable();
+            $table->string('location')->nullable();
             $table->string('image')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('vendor_category_id')->nullable()->constrained()->onDelete('CASCADE');
@@ -38,6 +38,6 @@ class CreateAgronomistVendorServicesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('agronomist_vendor_services');
+        Schema::drop('agronomists');
     }
 }

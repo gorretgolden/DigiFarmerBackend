@@ -1,6 +1,7 @@
 <?php
 $expense_categories= App\Models\ExpenseCategory::pluck('name','id');
 $plots= App\Models\Plot::all();
+$farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 ?>
 <!-- Amount Field -->
 <div class="form-group col-sm-6">
@@ -15,19 +16,94 @@ $plots= App\Models\Plot::all();
 </div>
 
 
-{{-- <!-- Plot Id Field -->
+<!-- Owner Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('owner', 'Farmer:') !!}
+    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+
+<!-- farm id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('farm_id', 'Farm:') !!}
+    <select id="farm" name="farm_id" class="form-control">
+
+    </select>
+</div>
+
+<!-- farm plots Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('plot_id', 'Plot:') !!}
-    {!! Form::select('plot_id', $plots, null, ['class' => 'form-control custom-select']) !!}
-</div> --}}
+    <select id="plot" name="plot_id" class="form-control">
 
-<!-- Plot Id Field -->
-<select class="custom-select" name="plot_id" >
-    <option value="" selected disabled hidden>Select Plot for expense</option>
-    @foreach ($plots as $plot)
-        <option value="{{ $plot->id }}">
-            {{ $plot->name}}  on {{ $plot->farm->name}} by Farmer: {{ $plot->farm->address->district_name}}
-        </option>
-    @endforeach
+    </select>
+</div>
 
-</select>
+
+@push('scripts')
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+    <script>
+        console.log('hfgkkk');
+        $(document).ready(function() {
+
+            $('#owner').on('change', function() {
+                var idFarmer = this.value;
+
+                $('#farm').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('farmers.fetch-farms') }}",
+                    type: "get",
+                    data: {
+                        owner: idFarmer
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        console.log(result)
+
+                        $('#farm').html('<option value="">-- Select a farm --</option>');
+
+                        $.each(result.farms, function(key, value) {
+
+                            $("#farm").append('<option value="' + value
+                                .id + '">' + value.name  + '</option>');
+
+
+                        });
+
+                    }
+                });
+            });
+
+
+            $('#farm').on('change', function() {
+                var idFarm = this.value;
+                console.log(idFarm)
+
+                $('#plot').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('farmers.fetch-farm-plots') }}",
+                    type: "get",
+                    data: {
+                        farm_id: idFarm
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#plot').html('<option value="">-- Select a plot --</option>');
+
+                        $.each(result.plots, function(key, value) {
+
+                            $("#plot").append('<option value="' + value
+                                .id + '">' + value.name  + '</option>');
+
+
+                        });
+
+                    }
+                });
+            });
+        })
+    </script>
+@endpush
+

@@ -11,6 +11,9 @@ use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\CropOnSale;
+use App\Models\Crop;
+use Illuminate\Http\Request;
+use App\Models\Address;
 
 class CropOnSaleController extends AppBaseController
 {
@@ -65,7 +68,7 @@ class CropOnSaleController extends AppBaseController
              else{
 
                // dd($request->all());
-
+                $location = Address::find($request->address_id);
                 $new_crop_on_sale = new CropOnSale();
                 $new_crop_on_sale->quantity = $request->quantity;
                 $new_crop_on_sale->selling_price = $request->selling_price;
@@ -73,9 +76,14 @@ class CropOnSaleController extends AppBaseController
                 $new_crop_on_sale->price_unit = 'UGX';
                 $new_crop_on_sale->description = $request->description;
                 $new_crop_on_sale->is_sold = false;
+
+                //crop
+                $crop = Crop::find($request->crop_id);
+                $new_crop_on_sale->name = $crop->name;
+                $new_crop_on_sale->image = $crop->image;
                 $new_crop_on_sale->crop_id= $request->crop_id;
                 $new_crop_on_sale->user_id= $request->user_id;
-                $new_crop_on_sale->address_id = $request->address_id ;
+                $new_crop_on_sale->location = $location->district_name; ;
                 $new_crop_on_sale->save();
 
                 Flash::success('Crop posted for sale');
@@ -103,6 +111,14 @@ class CropOnSaleController extends AppBaseController
         }
 
         return view('crop_on_sales.show')->with('cropOnSale', $cropOnSale);
+    }
+
+    public function farmer_crops_on_sale(Request $request){
+
+        $data['crops'] = CropOnSale::with('user')->where("user_id", $request->user_id)->where('is_sold',false)->get();
+
+         return response()->json($data);
+
     }
 
     /**

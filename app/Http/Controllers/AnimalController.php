@@ -11,7 +11,7 @@ use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\Animal;
-
+use Illuminate\Http\Request;
 class AnimalController extends AppBaseController
 {
     /** @var AnimalRepository $animalRepository*/
@@ -54,7 +54,8 @@ class AnimalController extends AppBaseController
     public function store(CreateAnimalRequest $request)
     {
         $input = $request->all();
-        $animal_plot = Animal::where('plot_id',$request->plot_id)->first();
+        //dd($input);
+        $animal_plot = Animal::where('plot_id',$request->plot_id)->where('animal_category_id',$request->animal_category_id)->first();
         //dd($animal_plot);
         if($animal_plot){
             Flash::error('Animal already exists on this plot.');
@@ -64,7 +65,12 @@ class AnimalController extends AppBaseController
         }
 
 
-        $animal = $this->animalRepository->create($input);
+        $animal = new Animal;
+        $animal->total = $request->total;
+        $animal->animal_category_id = $request->animal_category_id;
+        $animal->plot_id = $request->plot_id;
+        $animal->save();
+
 
         Flash::success('Animal saved successfully.');
 

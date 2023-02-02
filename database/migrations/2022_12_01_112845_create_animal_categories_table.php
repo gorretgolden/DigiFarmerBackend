@@ -17,6 +17,7 @@ class CreateAnimalCategoriesTable extends Migration
         Schema::create('animal_categories', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
+            $table->boolean('is_active')->default(1);
             $table->string('image')->nullable();
             $table->timestamps();
 

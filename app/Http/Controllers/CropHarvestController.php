@@ -55,6 +55,7 @@ class CropHarvestController extends AppBaseController
     public function store(CreateCropHarvestRequest $request)
     {
         $input = $request->all();
+        $input['quantity_unit'] = 'kg';
 
         $cropHarvest = $this->cropHarvestRepository->create($input);
         $totalPlotHarvest =  CropHarvest::where('plot_id',$request->plot_id)->sum('quantity');

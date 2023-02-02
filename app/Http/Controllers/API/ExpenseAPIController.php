@@ -82,35 +82,28 @@ class ExpenseAPIController extends AppBaseController
     {
 
       $farms = Farm::where('owner',auth()->user()->username)->with('plots')->get();
-      $farm_plot_expenses = collect($farms)->pluck('plots')[0];
+      $farm_plots = collect($farms)->pluck('plots')[0];
+
+      $plot_expenses =[];
+
+
+      foreach($farm_plots as $plot){
+        $plot_expenses =  $plot->expenses->map(function ($item){
+            return collect([
+                'id' => $item->id,
+                'amount' => $item->amount,
+                'plot' => $item->plot->name,
+                'farm' => $item->plot->farm->name,
+                'expense_category' => $item->expense_category->name,
+                'created_at' => $item->created_at->format('d/m/Y'),
+
+              ]);
+            });
+
+      }
 
 
 
-
-     //maping through the collection to concatnate plots with expenses
-       $farm_plot_expenses = $farm_plot_expenses->map(function ($item){
-        return collect([
-            'id' => $item->id,
-            'name' => $item->name,
-            'location' => $item->location,
-            'size' => $item->size . " ". $item->size_unit ,
-            'farm' => $item->farm->name,
-            'crop' => $item->crop->name,
-            'expenses' => $item->expenses->map(function ($details){
-                return [
-                    'id' => $details->id,
-                    'amount' => $details->amount,
-                    'category' => $details->expense_category->name,
-                    'plot'=> $details->plot->name
-
-
-                ];
-              }),
-          ]);
-        });
-
-
-        //dd($farm_plot_expenses);
 
       if(empty($farms)){
           $response = [
@@ -121,10 +114,16 @@ class ExpenseAPIController extends AppBaseController
           return response()->json($response,200);
 
       }else{
+
+
+
         $response = [
-            'success'=>false,
-            'data' =>$farm_plot_expenses,
-            'message'=> 'Expenses on farm plot retrieved'
+            'success'=>true,
+            'data' =>[
+                'total-expenses'=>$plot_expenses->count(),
+                'expenses'=>$plot_expenses
+            ],
+            'message'=> 'Expenses on farm plots retrieved'
           ];
 
           return response()->json($response,200);
@@ -156,8 +155,9 @@ class ExpenseAPIController extends AppBaseController
         }
         else{
             $success['amount'] = $expense->amount;
-            $success['expense_category'] = $expense->expense_category;
-            $success['plot'] = $expense->plot;
+            $success['expense_category'] = $expense->expense_category->name;
+            $success['plot'] = $expense->plot->name;
+            $success['created_at'] = $expense->created_at->format('d/m/Y');
 
 
             $response = [
@@ -180,7 +180,7 @@ class ExpenseAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateExpenseAPIRequest $request)
+    public function update($id, Request $request)
     {
         $input = $request->all();
 
@@ -189,6 +189,11 @@ class ExpenseAPIController extends AppBaseController
 
         if (empty($expense)) {
             return $this->sendError('Expense not found');
+        }else{
+
+                $request->validate(['amount'=>'required|integer']);
+                $expense->amount = $request->amount;
+                $expense->save();
         }
 
         $expense = $this->expenseRepository->update($input, $id);

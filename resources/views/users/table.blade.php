@@ -9,8 +9,8 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-
-                <th>Role</th>
+                <th>Status</th>
+                <th>Vendor</th>
                 {{-- <th>Total Farms</th> --}}
                 <th colspan="3">Action</th>
             </tr>
@@ -18,29 +18,46 @@
         <tbody>
             @foreach ($farmers as $farmer)
                 <tr>
-                    <td>{{ $farmer->id}}</td>
+                    <td>{{ $farmer->id }}</td>
                     <td>
-                        <img src="{{ $farmer->image_url ? $farmer->image_url : asset('img/avatar-1.png') }}" width="50px" height="50px"/>
+                        <img src="{{ $farmer->image_url ? $farmer->image_url : asset('img/avatar-1.png') }}"
+                            width="50px" height="50px" />
                     </td>
-                    <td>{{ $farmer->username}}</td>
+                    <td>{{ $farmer->username }}</td>
                     <td>{{ $farmer->first_name }}</td>
                     <td>{{ $farmer->last_name }}</td>
                     <td>{{ $farmer->email }}</td>
 
                     <td>{{ $farmer->phone }}</td>
-
-
-
-
-
                     <td>
+                        @if ($farmer->is_active == 1)
+                            <p class="badge rounded-pill bg-success">Active</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">Inactive</p>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($farmer->is_vendor == 1)
+                            <p class="badge rounded-pill bg-success">Yes</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">No</p>
+                        @endif
+                    </td>
+
+
+
+
+
+
+
+                    {{-- <td>
 
                         @if (!empty($farmer->getRoleNames()))
                             @foreach ($farmer->getRoleNames() as $name)
                                 <span class="badge rounded-pill bg-success">{{ $name }}</span>
                             @endforeach
                         @endif
-                    </td>
+                    </td> --}}
                     {{-- <td class="text-center">
                         {{ $farmer->farms->count()}}
 

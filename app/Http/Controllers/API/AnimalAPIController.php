@@ -123,9 +123,9 @@ class AnimalAPIController extends AppBaseController
 
         //get farmer based on address
         $farmer = Address::where('user_id', auth()->user()->id)->first();
-        //dd($farmer->farms->count());
 
-        $animal_plot = Animal::where('animal_category_id',$request->animal_category_id)->first();
+
+        $animal_plot = Animal::where('animal_category_id',$request->animal_category_id)->where('plot_id',$request->plot_id)->first();
        // dd($animal_plot);
 
         if( $animal_plot){
@@ -206,9 +206,21 @@ class AnimalAPIController extends AppBaseController
 
         if (empty($animal)) {
             return $this->sendError('Animal not found');
+        }else{
+            $success['animal_category'] = $animal->animal_category->name;
+            $success['plot'] = $animal->plot->name;
+            $success['total'] = $animal->total;
+            $success['created_at'] = $animal->created_at->format('d/m/Y');
         }
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Animal type retrieved successfully'
+         ];
 
-        return $this->sendResponse($animal->toArray(), 'Animal retrieved successfully');
+         return response()->json($response,200);
+
+
     }
 
     /**
@@ -220,7 +232,7 @@ class AnimalAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateAnimalAPIRequest $request)
+    public function update($id, Request $request)
     {
         $input = $request->all();
 
@@ -229,11 +241,16 @@ class AnimalAPIController extends AppBaseController
 
         if (empty($animal)) {
             return $this->sendError('Animal not found');
+        }else{
+            $request->validate(['total'=>'required|integer']);
+            $animal->total = $request->total;
+            $animal->save();
+
+          return $this->sendResponse($animal->toArray(), 'Animal updated successfully');
         }
 
-        $animal = $this->animalRepository->update($input, $id);
 
-        return $this->sendResponse($animal->toArray(), 'Animal updated successfully');
+
     }
 
     /**

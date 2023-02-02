@@ -35,7 +35,8 @@ class Crop extends Model
         'standard_price',
         'category_id',
         'image',
-        'price_unit'
+        'price_unit',
+        'is_active'
     ];
 
     /**
@@ -48,7 +49,8 @@ class Crop extends Model
         'standard_price' => 'integer',
         'category_id' => 'integer',
         'image' => 'string',
-        'price_unit'=>'string'
+        'price_unit'=>'string',
+        'is_active'=>'boolean'
 
     ];
 
@@ -100,4 +102,10 @@ class Crop extends Model
         return $this->dir.$value;
        }
 
+
+       //belongs to many agronomists
+       public function agronomists()
+       {
+           return $this->belongsToMany(\App\Models\AgronomistVendorService::class,'agronomist_crop','agronomist_id','crop_id');
+       }
 }

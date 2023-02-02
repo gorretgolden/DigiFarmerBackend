@@ -57,7 +57,7 @@ class Farm extends Model
         'name' => 'required|string|max:20',
         'owner' => 'required|string',
         'field_area' => 'required|integer',
-        'size_unit' => 'required|string',
+        'size_unit' => 'nullable|string',
         'address_id' => 'integer'
     ];
 

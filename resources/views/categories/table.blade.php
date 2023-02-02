@@ -5,6 +5,7 @@
                 <th>Id</th>
                 <th>Image</th>
                 <th>Name</th>
+                <th>status</th>
 
 
                 <th colspan="3">Action</th>
@@ -20,6 +21,15 @@
                     </td>
 
                     <td>{{ $category->name }}</td>
+                    <td>
+                        @if ($category->is_active == 1)
+                            <p class="badge rounded-pill bg-success">enabled</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">disabled</p>
+                        @endif
+                    </td>
+
+
 
                     <td width="120">
                         {!! Form::open(['route' => ['categories.destroy', $category->id], 'method' => 'delete']) !!}

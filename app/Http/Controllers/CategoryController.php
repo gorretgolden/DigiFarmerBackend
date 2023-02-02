@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Flash;
 use Response;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends AppBaseController
 {
@@ -129,25 +130,36 @@ class CategoryController extends AppBaseController
      */
     public function update($id, UpdateCategoryRequest $request)
     {
+
         $category = Category::find($id);
 
         if (empty($category)) {
             Flash::error('Category not found');
-
             return redirect(route('categories.index'));
-        }
-
-        if($category){
+        }else{
 
             $category->name = $request->name;
-
-
-            if(!empty($request->file('image'))){
-                $category->image = \App\Models\ImageUploader::upload($request->file('image'),'categories');
-            }
+            $category->is_active = $request->is_active;
             $category->save();
 
+            if(!empty($request->file('image'))){
+                File::delete('storage/categories/'.$category->image);
+                $category->image = \App\Models\ImageUploader::upload($request->file('image'),'categories');
+                $category->save();
+            }else{
+
+                $category->image = $request->image;
+            }
+
         }
+
+
+
+
+
+
+
+
 
 
 

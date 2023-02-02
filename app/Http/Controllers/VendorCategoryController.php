@@ -66,7 +66,9 @@ class VendorCategoryController extends AppBaseController
               $new_vendor_category = new VendorCategory();
               $new_vendor_category->name = $request->name;
               $new_vendor_category->image = $request->image;
+              $new_vendor_category->enabled = $request->enabled;
               $new_vendor_category->save();
+              //dd($new_vendor_category);
 
               $new_vendor_category = VendorCategory::find($new_vendor_category->id);
 
@@ -77,7 +79,7 @@ class VendorCategoryController extends AppBaseController
               return redirect(route('vendorCategories.index'));
            }
            else{
-              Flash::error('Crop already exists');
+              Flash::error('Vendor Category already exists');
               return redirect(route('vendorCategories.index'));
            }
 
@@ -131,7 +133,7 @@ class VendorCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateVendorCategoryRequest $request)
+    public function update($id, Request $request)
     {
         $vendorCategory = $this->vendorCategoryRepository->find($id);
 
@@ -145,6 +147,9 @@ class VendorCategoryController extends AppBaseController
         if($vendorCategory){
 
             $vendorCategory->name = $request->name;
+            $vendorCategory->enabled = $request->enabled;
+            $vendorCategory->image = $vendorCategory->image;
+            $vendorCategory->save();
 
             if(!empty($request->file('image'))){
                 $vendorCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'vendor_categories');

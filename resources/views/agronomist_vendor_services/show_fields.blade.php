@@ -40,10 +40,10 @@
     <p>{{ $agronomistVendorService->zoom_details }}</p>
 </div>
 
-<!-- Location Details Field -->
+<!-- Location Field -->
 <div class="col-sm-12">
-    {!! Form::label('location_details', 'Location Details:') !!}
-    <p>{{ $agronomistVendorService->location_details }}</p>
+    {!! Form::label('location', 'Location:') !!}
+    <p>{{ $agronomistVendorService->location }}</p>
 </div>
 
 <!-- Image Field -->

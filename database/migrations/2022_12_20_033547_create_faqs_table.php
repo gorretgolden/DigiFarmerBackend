@@ -16,6 +16,7 @@ class CreateFaqsTable extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id('id');
+            $table->boolean('is_active')->default(0);
             $table->string('question');
             $table->text('answer');
             $table->foreignId('faq_category_id')->nullable()->constrained()->onDelete('CASCADE');

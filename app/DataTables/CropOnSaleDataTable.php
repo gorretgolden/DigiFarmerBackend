@@ -33,7 +33,7 @@ class CropOnSaleDataTable extends DataTable
      */
     public function query(CropOnSale $model)
     {
-        return $model->newQuery()->with(['user','crop','address']);
+        return $model->newQuery()->with(['user','crop']);
     }
 
     /**
@@ -76,7 +76,7 @@ class CropOnSaleDataTable extends DataTable
             'is_sold',
             'crop'=> new \Yajra\DataTables\Html\Column(['title'=>"Crop",'data'=>'crop.name','email'=>'crop.name']),
             'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username']),
-            'address'=> new \Yajra\DataTables\Html\Column(['title'=>"location",'data'=>'address.district_name']),
+            'location'
 
 
         ];

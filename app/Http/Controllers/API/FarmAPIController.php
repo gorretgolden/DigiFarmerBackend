@@ -105,8 +105,9 @@ class FarmAPIController extends AppBaseController
              $response = [
                  'success'=>true,
                  'data'=>[
-                     'plots'=>$success,
-                     'total' =>$farm->plots->count()
+                    'total' =>$farm->plots->count(),
+                     'plots'=>$success
+
                  ],
                  'message'=> 'farm plots retrieved successfully '
               ];
@@ -124,7 +125,7 @@ class FarmAPIController extends AppBaseController
         $rules = [
             'name' => 'required|string|max:20|unique:farms,id',
             'field_area' => 'required',
-            'size_unit' => 'required|string',
+            'size_unit' => 'nullable|string',
             'address_id' => 'required|integer'
         ];
         $request->validate($rules);
@@ -140,7 +141,7 @@ class FarmAPIController extends AppBaseController
             $farm->name = $request->name;
             $farm->address_id = $request->address_id;
             $farm->field_area = $request->field_area;
-            $farm->size_unit = $request->size_unit;
+
             $farm->save();
 
             return $this->sendResponse($farm->toArray(), 'Farm saved successfully');
@@ -165,9 +166,23 @@ class FarmAPIController extends AppBaseController
 
         if (empty($farm)) {
             return $this->sendError('Farm not found');
+        }else{
+            $success['name'] = $farm->name;
+            $success['owner'] = $farm->owner;
+            $success['field_area'] = $farm->field_area." ".$farm->size_unit;
+            $success['location'] = $farm->address->district_nam;
+            $success['created_at'] = $farm->created_at->format('d/m/Y');
         }
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Farm retrieved successfully'
+         ];
 
-        return $this->sendResponse($farm->toArray(), 'Farm retrieved successfully');
+         return response()->json($response,200);
+
+
+
     }
 
     /**
@@ -179,7 +194,7 @@ class FarmAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateFarmAPIRequest $request)
+    public function update($id, Request $request)
     {
         $input = $request->all();
 
@@ -190,7 +205,17 @@ class FarmAPIController extends AppBaseController
             return $this->sendError('Farm not found');
         }
 
-        $farm = $this->farmRepository->update($input, $id);
+        $rules = [
+            'name' => 'required|string',
+            'field_area' => 'required|integer'
+
+        ];
+        $request->validate($rules);
+
+        $farm->name = $request->name;
+        $farm->field_area = $request->field_area;
+        $farm->owner = auth()->user()->username;
+        $farm->save();
 
         return $this->sendResponse($farm->toArray(), 'Farm updated successfully');
     }

@@ -12,6 +12,8 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\VendorCategory;
 use App\Models\InsuaranceVendorService;
+use App\Models\Address;
+use App\Models\User;
 
 class InsuaranceVendorServiceController extends AppBaseController
 {
@@ -56,15 +58,24 @@ class InsuaranceVendorServiceController extends AppBaseController
     {
 
         $vendor_category = VendorCategory::where('name','Insuarance')->first();
-
+        $location = Address::find($request->address_id);
 
         $new_insuarance = new InsuaranceVendorService();
         $new_insuarance->name = $request->name;
         $new_insuarance->terms = $request->terms;
         $new_insuarance->description = $request->description;
+
+         //set user as a vendor
+         $user = User::find($request->user_id);
+         if(!$user->is_vendor ==1){
+            $user->is_vendor =1;
+            $user->save();
+         }
         $new_insuarance->user_id = $request->user_id;
+
         $new_insuarance->vendor_category_id = $vendor_category->id;
         $new_insuarance->image = $request->image;
+        $new_insuarance->location = $location->district_name;
         $new_insuarance->save();
 
 

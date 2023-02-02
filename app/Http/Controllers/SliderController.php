@@ -59,6 +59,7 @@ class SliderController extends AppBaseController
 
         $new_slider = new Slider();
         $new_slider->title = $request->title;
+        $new_slider->is_active = $request->is_active;
         $new_slider->type = $request->type;
         $new_slider->save();
 
@@ -128,16 +129,26 @@ class SliderController extends AppBaseController
             Flash::error('Slider not found');
 
             return redirect(route('sliders.index'));
+
         }else{
 
             $slider->title = $request->title;
+            $slider->is_active = $request->is_active;
             $slider->type = $request->type;
-            $user->fill($request->all());
+            $slider->fill($request->all());
+            $slide->save();
 
             if(!empty($request->file('image'))){
+                File::delete('storage/sliders/'.$slider->image);
                 $slider->image = \App\Models\ImageUploader::upload($request->file('image'),'sliders');
+                $slider->save();
+
             }
-            $slider->save();
+            else{
+
+                $slider->image = $request->image;
+             }
+
             Flash::success('Slider updated successfully.');
 
             return redirect(route('sliders.index'));

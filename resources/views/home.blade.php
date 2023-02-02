@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_sellers}}</h2>
+                                    <h2>{{$total_vendors}}</h2>
                                     <p>Vendors</p>
                                 </div>
 
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="float-right  mt-3 text-white">
 
-                                    <h2>{{$total_farms}}</h2>
+                                    <h2>{{$total_users}}</h2>
                                     <p>Buyers</p>
                                 </div>
 

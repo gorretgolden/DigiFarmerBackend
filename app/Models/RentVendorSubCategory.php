@@ -56,5 +56,12 @@ class RentVendorSubCategory extends Model
     return $this->hasMany(\App\Models\RentVendorServices::class, 'rent_vendor_sub_category_id');
     }
 
+    //belongs to a rent category
+    public function rent_category()
+    {
+    return $this->belongsTo(\App\Models\RentVendorCategory::class, 'rent_vendor_category_id');
+    }
+
+
 
 }

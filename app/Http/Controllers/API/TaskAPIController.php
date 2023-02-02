@@ -71,17 +71,13 @@ class TaskAPIController extends AppBaseController
         $task = new Task();
         $task->name = $request->name;
         $task->task_date = $request->task_date;
+        $task->status = "pending";
         $task->plot_id = $request->plot_id;
-
-        //get status
-        $status = Status::where('name','Pending')->first();
-
-        $status_id = Status::find(1);
-        $task->status_id = $status_id->id;
         $task->save();
+
         $success['name'] = $task->name;
         $success['plot'] = $task->plot->name;
-        $success['status'] = $task->status->name;
+        $success['status'] = $task->status;
         $response = [
             'success'=>true,
             'data'=>$success,
@@ -108,9 +104,25 @@ class TaskAPIController extends AppBaseController
 
         if (empty($task)) {
             return $this->sendError('Task not found');
+        }else{
+            $success['name'] = $task->name;
+            $success['task_date'] = $task->task_date;
+            $success['plot'] = $task->plot->name;
+            $success['status'] = $task->status;
+            $success['created_at'] = $task->created_at->format('d/m/Y');
+
+
         }
 
-        return $this->sendResponse($task->toArray(), 'Task retrieved successfully');
+
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Task retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+
     }
 
     /**
@@ -122,7 +134,7 @@ class TaskAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateTaskAPIRequest $request)
+    public function update($id, Request $request)
     {
         $input = $request->all();
 
@@ -132,6 +144,20 @@ class TaskAPIController extends AppBaseController
         if (empty($task)) {
             return $this->sendError('Task not found');
         }
+        $rules = [
+            'name' => 'required|string',
+            'task_date' => 'required|string',
+            'plot_id' => 'required|integer',
+            'status' =>'required|string'
+
+        ];
+        $request->validate($rules);
+
+        $task->name = $request->name;
+        $task->task_date = $request->task_date;
+        $task->status = $request->status;
+        $task->plot_id = $request->plot_id;
+        $task->save();
 
         $task = $this->taskRepository->update($input, $id);
 

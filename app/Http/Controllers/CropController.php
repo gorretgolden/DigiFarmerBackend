@@ -62,6 +62,7 @@ class CropController extends AppBaseController
             $request->validate(Crop::$rules);
             $new_crop = new Crop();
             $new_crop->name = $request->name;
+            $new_crop->is_active = $request->is_active;
             $new_crop->standard_price = $request->standard_price;
             $new_crop->category_id = $request->category_id;
             $new_crop->image = $request->image;

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\AgronomistSheduleDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateAgronomistSheduleRequest;
 use App\Http\Requests\UpdateAgronomistSheduleRequest;
 use App\Repositories\AgronomistSheduleRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\AgronomistShedule;
 use App\Models\AgronomistSlot;
-
+use Label84\HoursHelper\Facades\HoursHelper;
 
 class AgronomistSheduleController extends AppBaseController
 {
@@ -26,16 +27,13 @@ class AgronomistSheduleController extends AppBaseController
     /**
      * Display a listing of the AgronomistShedule.
      *
-     * @param Request $request
+     * @param AgronomistSheduleDataTable $agronomistSheduleDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(AgronomistSheduleDataTable $agronomistSheduleDataTable)
     {
-        $agronomistShedules = $this->agronomistSheduleRepository->all();
-
-        return view('agronomist_shedules.index')
-            ->with('agronomistShedules', $agronomistShedules);
+        return $agronomistSheduleDataTable->render('agronomist_shedules.index');
     }
 
     /**
@@ -57,37 +55,60 @@ class AgronomistSheduleController extends AppBaseController
      */
     public function store(CreateAgronomistSheduleRequest $request)
     {
-        $input = $request->all();
-        //dd($input);
 
-        $existing_schedule = AgronomistShedule::where('day_id',$request->day_id)->where('agronomist_vendor_service_id',$request->agronomist_vendor_service_id)->first();
+        $input = $request->all();
+        //dd($request->all());
+        $trimed_start =$request->starting_time;
+        $trimed_end =$request->ending_time;
+        $slots = [];
+
+
+        $hours = HoursHelper::create(trim($trimed_start,' AM'),trim($trimed_end,' PM'),$request->time_interval, 'g:i A');
+        $slots = $hours;
+     //   dd($slots);
+        $existing_schedule = AgronomistShedule::where('date',$request->date)->where('agronomist_id',$request->agronomist_id)->first();
+
 
         if($existing_schedule){
-            Flash::error('Agronomist day schedule for this service exists.');
+            Flash::error('Agronomist date schedule for this service exists.');
+
 
             return redirect(route('agronomistShedules.index'));
+
 
         }
         else{
 
+
+
             $appointment = AgronomistShedule::create([
-                'agronomist_vendor_service_id' => $request->agronomist_vendor_service_id,
-                'day_id' => $request->day_id
+                'agronomist_id' => $request->agronomist_id,
+                'date' => $request->date,
+                'starting_time'=>$request->starting_time,
+                'ending_time'=>$request->ending_time,
+                'time_interval'=>$request->time_interval
             ]);
 
-            foreach ($request->time as $time) {
+
+            foreach ($slots as $slot) {
                 AgronomistSlot::create([
                     'agronomist_shedule_id' => $appointment->id,
-                    'time' => $time
+                    'time' => $slot
+
 
                 ]);
             }
 
+
             Flash::success('Agronomist Schedule saved successfully.');
+
 
             return redirect(route('agronomistShedules.index'));
 
+
         }
+
+
 
     }
 
@@ -160,8 +181,6 @@ class AgronomistSheduleController extends AppBaseController
      * Remove the specified AgronomistShedule from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

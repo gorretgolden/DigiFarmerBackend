@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Models\Expense;
+use DB;
 
 class ExpenseController extends AppBaseController
 {
@@ -30,8 +31,19 @@ class ExpenseController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $expenses = $this->expenseRepository->all();
 
+        $expenses = Expense::join('plots', 'expenses.plot_id', '=', 'plots.id')
+              ->join('farms', 'plots.farm_id', '=', 'farms.id')
+              ->get();
+        // $expenses = DB::table('expenses')
+        //   ->leftJoin('expense_categories', 'expense_categories.id', '=', 'expenses.expense_category_id')
+        //     ->leftJoin('plots', 'plots.id', '=', 'expenses.plot_id')
+        //     ->leftJoin('farms', 'farms.id', '=', 'plots.farm_id')
+        //     ->select('expenses.amount','expense_categories.name','plots.name','farms.name','farms.owner')
+        //     ->get();
+
+
+        dd($expenses);
         return view('expenses.index')
             ->with('expenses', $expenses);
     }

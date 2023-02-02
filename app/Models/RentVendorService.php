@@ -32,13 +32,12 @@ class RentVendorService extends Model
         'rent_vendor_category_id',
         'charge',
         'description',
-        'charge_day',
         'charge_frequency',
         'charge_unit',
-        'total_charge',
         'location',
         'user_id',
-        'quantity'
+        'quantity',
+        'status'
 
     ];
 
@@ -53,11 +52,12 @@ class RentVendorService extends Model
         'charge' => 'integer',
         'description' => 'string',
         'images' => 'string',
-        'total_charge' => 'integer',
         'location' => 'string',
         'user_id' => 'integer',
-        'charge_day' => 'string',
-        'quantity' => 'integer'
+        'charge_frequency' => 'string',
+        'quantity' => 'integer',
+        'status' =>'string',
+        'created_at' => 'datetime:d-m-Y'
 
     ];
 
@@ -75,8 +75,6 @@ class RentVendorService extends Model
         'images' => 'required',
         'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         'images' => 'max:3',
-        'charge_day'=>'required|integer',
-        'charge_frequency'=>'required|string',
         'user_id' => 'required|integer',
         'address_id' => 'required|integer',
         'quantity'=> 'required|integer'

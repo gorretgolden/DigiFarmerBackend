@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Terms;
 
 class TermsController extends AppBaseController
 {
@@ -29,7 +30,7 @@ class TermsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $terms = $this->termsRepository->all();
+        $terms = Terms::latest()->get();
 
         return view('terms.index')
             ->with('terms', $terms);

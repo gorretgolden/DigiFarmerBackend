@@ -13,7 +13,9 @@ use Response;
 use Illuminate\Http\Request;
 use App\Models\TrainingVendorService;
 use App\Models\User;
+use Carbon;
 use App\Models\VendorCategory;
+use App\Models\Address;
 
 class TrainingVendorServiceController extends AppBaseController
 {
@@ -61,7 +63,7 @@ class TrainingVendorServiceController extends AppBaseController
             'name' => 'required|string|unique:training_vendor_services',
             'charge' => 'required|integer',
             'description' => 'required|string',
-            'period' => 'required|integer',
+            'period' => 'nullable|integer',
             'access' => 'required|string',
             'user_id' => 'required|integer',
             'image'=>'required',
@@ -70,13 +72,20 @@ class TrainingVendorServiceController extends AppBaseController
             'ending_date' => 'required|after_or_equal:starting_date',
             'starting_time' => 'required|before:ending_time',
             'ending_time' => 'required|after:starting_time',
-            'location_details' => 'nullable',
-            'period_unit_id'  => 'required|integer',
+            'location' => 'nullable',
+            'period_unit_id'  => 'nullable|integer',
         ];
         $request->validate($rules);
         $vendor_category = VendorCategory::where('name','Training')->first();
 
-        //access
+        //get days and ending date
+    //     if($request->ending_date> Carbon::now()->subDays(2)->toDateTimeString()){
+    //         dd('yes');
+    //    }else{
+    //        dd('no');
+    //    }
+
+        //access if (DateTime.Now.AddDays(-30).CompareTo(date) > 0)
         if($request->access == 'Online'){
 
             $request->validate(['zoom_details' => 'required|string']);
@@ -85,22 +94,25 @@ class TrainingVendorServiceController extends AppBaseController
             $online_training->name = $request->name;
             $online_training->charge = $request->charge;
             $online_training->description = $request->description;
-            $online_training->period = $request->period;
             $online_training->image = $request->image;
-            $online_training->period_unit_id = $request->period_unit_id;
             $online_training->access = $request->access;
             $online_training->starting_time = $request->starting_time;
             $online_training->ending_time = $request->ending_time;
             $online_training->starting_date = $request->starting_date;
             $online_training->ending_date = $request->ending_date;
             $online_training->vendor_category_id = $vendor_category->id;
+
+             //set user as a vendor
+            $user = User::find($request->user_id);
+            if(!$user->is_vendor ==1){
+             $user->is_vendor =1;
+             $user->save();
+            }
             $online_training->user_id = $request->user_id;
+
             $online_training->image = $request->image;
             $online_training->zoom_details = $request->zoom_details;
-
             $online_training->save();
-
-
 
             $online_training = TrainingVendorService::find($online_training->id);
 
@@ -117,26 +129,32 @@ class TrainingVendorServiceController extends AppBaseController
         }else{
             if($request->access =='Offline'){
 
-                $request->validate(['location_details' => 'required|string']);
-                $input['location_details'] = $request->location_details;
 
-
-
+                $request->validate(['address_id' => 'required|integer']);
+                $location = Address::find($request->address_id);
 
                 $online_training = new TrainingVendorService();
                 $online_training->name = $request->name;
                 $online_training->charge = $request->charge;
                 $online_training->description = $request->description;
                 $online_training->image = $request->image;
-                $online_training->period_unit_id = $request->period_unit_id;
                 $online_training->access = $request->access;
                 $online_training->starting_time = $request->starting_time;
                 $online_training->ending_time = $request->ending_time;
                 $online_training->starting_date = $request->starting_date;
                 $online_training->ending_date = $request->ending_date;
                 $online_training->vendor_category_id = $vendor_category->id;
+
+                //set user as a vendor
+                $user = User::find($request->user_id);
+                if(!$user->is_vendor ==1){
+                 $user->is_vendor =1;
+                 $user->save();
+                }
+
+
                 $online_training->user_id = $request->user_id;
-                $online_training->location_details = $request->location_details;
+                $online_training->location = $location->district_name;
                 $online_training->save();
 
 

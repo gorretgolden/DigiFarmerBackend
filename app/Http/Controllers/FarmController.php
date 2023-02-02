@@ -14,6 +14,8 @@ use Response;
 use App\Models\User;
 use App\Models\Farm;
 use App\Models\Address;
+use App\Models\Plot;
+
 
 class FarmController extends AppBaseController
 {
@@ -43,6 +45,27 @@ class FarmController extends AppBaseController
     {
         $farmers = User::where('user_type','farmer')->get(["username", "id"]);
         return view('farms.create')->with('farmers',$farmers);
+    }
+
+    //fetch farmer farms
+    public function fetch_farmer_farms(Request $request)
+    {
+
+      $user = User::find($request->owner);
+
+      $data['farms'] = Farm::where("owner", $user->username)->get(["name","id"]);
+
+      return response()->json($data);
+    }
+
+    //fetch plots for a farm
+    public function fetch_farm_plots(Request $request)
+    {
+
+
+      $data['plots'] = Plot::where("farm_id", $request->farm_id)->get(["name","id"]);
+
+      return response()->json($data);
     }
 
    //fetch user addresses
@@ -93,7 +116,6 @@ class FarmController extends AppBaseController
             $farm->name = $request->name;
             $farm->address_id = $request->address_id;
             $farm->field_area = $request->field_area;
-            $farm->size_unit = $request->size_unit;
             $farm->save();
             Flash::success('Farm saved successfully.');
 

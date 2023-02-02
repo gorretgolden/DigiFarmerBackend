@@ -20,7 +20,7 @@
              $table->string('name')->unique();
              $table->string('owner');
              $table->integer('field_area');
-             $table->enum('size_unit',['Hectares','Acres'])->default('Acres');
+             $table->string('size_unit')->default('Acres');
              $table->timestamps();
 
 

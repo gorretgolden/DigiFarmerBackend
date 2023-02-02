@@ -46,6 +46,16 @@ $roles =    Spatie\Permission\Models\Role::pluck('name','id');
     {!! Form::text('user_type',null,['class' => 'form-control','placeholder' => 'farmer','readonly']) !!}
 </div>
 
+
+
+<!-- Enabled Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('enabled', 'Enabled:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_active', 0) !!}
+        {!! Form::checkbox('is_active', '1', null) !!}
+    </label>
+</div>
 {{-- <!-- Country Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('country_id', 'Country Id:') !!}

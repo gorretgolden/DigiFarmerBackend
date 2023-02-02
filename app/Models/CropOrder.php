@@ -29,7 +29,8 @@ class CropOrder extends Model
         'buying_price',
         'is_accepted',
         'is_bought',
-        'user_id'
+        'user_id',
+        'address_id'
     ];
 
     /**
@@ -41,7 +42,8 @@ class CropOrder extends Model
         'buying_price' => 'integer',
         'is_accepted' => 'boolean',
         'is_bought' => 'boolean',
-        'user_id' => 'integer'
+        'user_id' => 'integer',
+        'crop_on_sale_id' => 'integer'
     ];
 
     /**
@@ -51,15 +53,18 @@ class CropOrder extends Model
      */
     public static $rules = [
 
+        'buying_price'=>'required|numeric',
         'is_bought' => 'nullable',
-        'is_accepted' => 'nullable'
+        'is_accepted' => 'nullable',
+        'crop_on_sale_id' => 'integer|required',
+
     ];
 
 
-  //a crop order belongs to many crops on sale
-   public function crops_on_sale()
+  //a crop order belongs to a crop on sale
+   public function crop_on_sale()
    {
-      return $this->belongsToMany(\App\Models\CropOnSale::class)->withPivot('buying_price');
+      return $this->belongsTo(\App\Models\CropOnSale::class,'crop_on_sale_id');
    }
 
 

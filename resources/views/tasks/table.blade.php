@@ -18,7 +18,7 @@
                     <td>{{ $task->name }}</td>
                     <td>{{ $task->plot->name }}</td>
                     <td>{{ $task->task_date }}</td>
-                    <td>{{ $task->status->name}}</td>
+                    <td>{{ $task->status}}</td>
 
 
 

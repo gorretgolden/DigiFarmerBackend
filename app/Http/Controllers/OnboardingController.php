@@ -64,6 +64,7 @@ class OnboardingController extends AppBaseController
 
            $new_onboarding = new Onboarding();
            $new_onboarding->title = $request->title;
+           $new_onboarding->is_active = $request->is_active;
            $new_onboarding->description = $request->description;
            $new_onboarding->image = $request->image;
            $new_onboarding->save();
@@ -142,6 +143,10 @@ class OnboardingController extends AppBaseController
             return redirect(route('onboardings.index'));
         }
 
+        if(!empty($request->file('image'))){
+            $onboarding->image = \App\Models\ImageUploader::upload($request->file('image'),'onboardings');
+        }
+        $onboarding->save();
         $onboarding = $this->onboardingRepository->update($request->all(), $id);
 
         Flash::success('Onboarding updated successfully.');

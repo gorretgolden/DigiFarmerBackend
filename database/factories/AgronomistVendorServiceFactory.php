@@ -29,7 +29,7 @@ class AgronomistVendorServiceFactory extends Factory
         'availability' => $this->faker->word,
         'description' => $this->faker->text,
         'zoom_details' => $this->faker->text,
-        'location_details' => $this->faker->text,
+        'location' => $this->faker->word,
         'image' => $this->faker->word,
         'user_id' => $this->faker->randomDigitNotNull,
         'vendor_category_id' => $this->faker->randomDigitNotNull,

@@ -51,5 +51,13 @@ class Day extends Model
         return $this->hasMany(\App\Models\AgronomistShedule::class, 'day_id');
     }
 
+    //has many vet schedules
+     //a day has many agronomist shedules
+     public function vet_shedules()
+     {
+         return $this->hasMany(\App\Models\VeterinaryShedule::class, 'day_id');
+     }
+
+
 
 }

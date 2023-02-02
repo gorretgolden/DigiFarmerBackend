@@ -25,39 +25,10 @@ class CategoryAPIController extends AppBaseController
         $this->categoryRepository = $categoryRepo;
     }
 
-    /**
-     * Display a listing of the Category.
-     * GET|HEAD /categories
-     *
-     * @param Request $request
-     * @return Response
-     */
 
-     /**
-     * @OA\Get(
-     *      path="/categories",
-     *      operationId="getAllCategories",
-     *      tags={"Categories"},
-     *      summary="Get list of crop categories",
-     *      description="Returns list of crop categories",
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *
-     *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden"
-     *      )
-     *     )
-     */
     public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('is_active',1)->latest()->get(['id','name','image']);
         $response = [
             'success'=>true,
             'data'=> $categories,
@@ -116,6 +87,28 @@ class CategoryAPIController extends AppBaseController
         }
 
         return $this->sendResponse($category->toArray(), 'Category retrieved successfully');
+    }
+
+    //get crop crops under a crop category
+    public function crops($id)
+    {
+        /** @var Category $category */
+        $category = Category::find($id);
+        $crops = $category->crops;
+        //dd($crops);
+
+
+        if (empty($category)) {
+            return $this->sendError('Category not found');
+        }
+        else{
+            $response = [
+                'success'=>true,
+                'data'=>$crops,
+                'message'=> 'Crop details retrieved successfully'
+             ];
+        }
+        return response()->json($response,200);
     }
 
     /**

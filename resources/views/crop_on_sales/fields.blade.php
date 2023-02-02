@@ -52,7 +52,7 @@ $addresses = App\Models\Address::pluck('address_name','id');
 
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'User:') !!}
+    {!! Form::label('user_id', 'Farmer:') !!}
     {!! Form::select('user_id', $users, null, ['class' => 'form-control custom-select']) !!}
 </div>
 

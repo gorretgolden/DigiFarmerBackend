@@ -67,15 +67,13 @@ class TrainingVendorServiceDataTable extends DataTable
         return [
             'name',
             'charge',
-            'period',
-            'period_unit',
             'access',
             'starting_date',
             'ending_date',
             'starting_time',
             'ending_time',
             'zoom_details',
-            'location_details',
+            'location',
             'vendor_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor Category",'data'=>'vendor_category.name']),
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username'])
         ];

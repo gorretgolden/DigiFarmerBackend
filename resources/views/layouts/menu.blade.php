@@ -91,11 +91,11 @@
         </li>
 
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('days.index') }}" class="nav-link">
                 <p>Days</p>
             </a>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
             <a href="{{ route('loanPlans.index') }}" class="nav-link ">
@@ -126,11 +126,11 @@
             </a>
         </li>
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('periodUnits.index') }}" class="nav-link ">
                 <p>Period Units</p>
             </a>
-        </li>
+        </li> --}}
         <li class="nav-item">
             <a href="{{ route('commissions.index') }}" class="nav-link ">
                 <p>Commissions</p>
@@ -294,13 +294,6 @@
     <ul class="menu-content" style="display: none">
 
 
-        <li class="nav-item">
-            <a href="{{ route('vendorCategories.index') }}" class="nav-link">
-                <p>Vendor Categories</p>
-            </a>
-        </li>
-
-
 
         <li class="nav-item">
             <a href="{{ route('cropOnSales.index') }}" class="nav-link">
@@ -330,6 +323,14 @@
     </a>
 
     <ul class="menu-content" style="display: none">
+
+        <li class="nav-item">
+            <a href="{{ route('vendorCategories.index') }}" class="nav-link">
+                <p>Vendor Categories</p>
+            </a>
+        </li>
+
+
 
         <li class="nav-item-one nav-item">
             <a href="javascript:;" class="waves-effect nav-link ">
@@ -515,16 +516,22 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('agronomistVendorServices.index') }}" class="nav-link">
-                <p>Add Agronomist</p>
+            <a href="{{ route('agronomistVendorServices.index') }}"
+               class="nav-link ">
+               <p>Add Agronomist</p>
             </a>
         </li>
 
+
+
+
         <li class="nav-item">
-            <a href="{{ route('agronomistShedules.index') }}" class="nav-link">
-                <p>Add Shedules</p>
+            <a href="{{ route('agronomistShedules.index') }}"
+               class="nav-link">
+                <p>Agronomist Shedules</p>
             </a>
         </li>
+
         <li class="nav-item">
             <a href="{{ route('agronomistSlots.index') }}"
                class="nav-link">
@@ -536,6 +543,45 @@
 
     </ul>
 </li>
+
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link ">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p>Veterinary Services</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+        <li class="nav-item">
+            <a href="{{ route('veterinaries.index') }}"
+               class="nav-link">
+                <p>Add  Vet service</p>
+            </a>
+        </li>
+
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('veterinaryShedules.index') }}"
+               class="nav-link">
+                <p>Veterinary Shedules</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('veterinarySlots.index') }}"
+               class="nav-link">
+                <p>Veterinary Slots</p>
+            </a>
+        </li>
+
+
+
+    </ul>
+</li>
+
+
     </ul>
 </li>
 
@@ -567,7 +613,7 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('faqs.index') }}" class="nav-link {{ Request::is('faqs*') ? 'active' : '' }}">
+            <a href="{{ route('faqs.index') }}" class="nav-link ">
                 <p>Add Faqs</p>
             </a>
         </li>
@@ -663,26 +709,6 @@
     });
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-{{-- <li class="nav-item">
-    <a href="{{ route('chats.index') }}"
-       class="nav-link {{ Request::is('chats*') ? 'active' : '' }}">
-        <p>Chats</p>
-    </a>
-</li>
- --}}
 
 
 

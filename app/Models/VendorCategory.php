@@ -27,7 +27,8 @@ class VendorCategory extends Model
 
     public $fillable = [
         'name',
-        'image'
+        'image',
+        'enabled'
     ];
 
     /**
@@ -37,7 +38,8 @@ class VendorCategory extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'enabled'=>'boolean'
     ];
 
     /**
@@ -85,6 +87,14 @@ class VendorCategory extends Model
      {
          return $this->hasMany(\App\Models\AgronomistVendorService::class,'vendor_category_id');
      }
+
+     //has many vet services
+      //has many agronomist services
+      public function vet_services()
+      {
+          return $this->hasMany(\App\Models\Veterinary::class,'vendor_category_id');
+      }
+
 
 
 

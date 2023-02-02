@@ -17,30 +17,35 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
     {!! Form::number('price', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Animal Feed  Category  Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('animal_feed_category_id', 'Animal Feed  Category :') !!}
-    {!! Form::select('animal_feed_category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
-</div>
 
 <!-- Animal Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('animal_category_id', 'Animal  Category :') !!}
-    {!! Form::select('animal_category_id', $animal_categories, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('animal_category_id', $animal_categories, null, ['class' => 'form-control custom-select animal_category_id']) !!}
+</div>
+
+
+<!-- Animal Category Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('animal_feed_category_id', 'Animal Feed  Category :') !!}
+    <select id="animal-feed" name="animal_feed_category_id" class="form-control" >
+
+
+    </select>
+
 </div>
 
 
 
-
-<!--quantity Field -->
+<!--weight Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('quantity', 'Quantity:') !!}
-    {!! Form::number('quantity', null, ['class' => 'form-control']) !!}
+    {!! Form::label('weight', 'Weight:') !!}
+    {!! Form::number('weight', null, ['class' => 'form-control']) !!}
 </div>
-<!-- aunatity Unit Field -->
+<!--    Weight Unit Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('quantity_unit', 'Quantity Unit:') !!}
-    {!! Form::text('quantity_unit', null, ['class' => 'form-control', 'placeholder' => 'kg', 'readonly']) !!}
+    {!! Form::label('weight_unit', 'Weight Unit:') !!}
+    {!! Form::select('weight_unit', ['kg'=>'kg',' ml'=>' ml','g'=>'g','l'=>'l'],null, ['class' => 'form-control']) !!}
 </div>
 
 
@@ -86,6 +91,7 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 
             $('#user_id').on('change', function() {
                 var idFarmer = this.value;
+                console.log(idFarmer)
 
                 $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
                 $.ajax({
@@ -114,6 +120,45 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
                     }
                 });
             });
+
+
+            $('.animal_category_id').on('change', function() {
+                var category_id = this.value;
+                console.log(category_id)
+
+
+                $('#animal-feed').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('animal-categories.feeds') }}",
+                    type: "get",
+                    data: {
+                        animal_category_id: category_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#animal-feed').html('<option value="">-- Select animal feed--</option>');
+
+                        $.each(result.animal_feed_categories, function(key, value) {
+                            console.log(result)
+
+                            $("#animal-feed").append('<option value="' + value
+                                .id + '">' + value.name  + '</option>');
+
+                            console.log('hello', value.name)
+
+                        });
+
+                    }
+                });
+            });
+
+
+
+
         })
     </script>
+
+
+
 @endpush

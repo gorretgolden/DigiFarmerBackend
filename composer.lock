@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd2a0a4816075efde484265d55002f8b",
+    "content-hash": "c36e0d02a860f805825e4cc8fa3a0196",
     "packages": [
         {
             "name": "africastalking/africastalking",
@@ -1196,6 +1196,66 @@
                 "source": "https://github.com/ezyang/htmlpurifier/tree/v4.16.0"
             },
             "time": "2022-09-18T07:06:19+00:00"
+        },
+        {
+            "name": "flutterwavedev/flutterwave-v3",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Flutterwave/PHP.git",
+                "reference": "e8dfd50fa8c697d475b134aea101f2682519bb3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Flutterwave/PHP/zipball/e8dfd50fa8c697d475b134aea101f2682519bb3b",
+                "reference": "e8dfd50fa8c697d475b134aea101f2682519bb3b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^7.5",
+                "monolog/monolog": "^2.0 || ^3.0",
+                "php": "^7.4 || ^8.0 || ^8.1",
+                "psr/http-client": "^1.0",
+                "vlucas/phpdotenv": "^2.5 || ^3.0 || ^5.0"
+            },
+            "require-dev": {
+                "mockery/mockery": ">=1.2",
+                "nunomaduro/phpinsights": "^2.6",
+                "pestphp/pest": "^1.22",
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpunit": ">=6.0",
+                "symfony/var-dumper": "5.4.13"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flutterwave\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Flutterwave Developers",
+                    "email": "developers@flutterwavego.com"
+                }
+            ],
+            "description": "A simple SDK for integrating to Flutterwave Payment",
+            "homepage": "https://github.com/Flutterwave/Flutterwave-PHP-v3",
+            "keywords": [
+                "africa",
+                "flutterwave",
+                "payment",
+                "transfers"
+            ],
+            "support": {
+                "issues": "https://github.com/Flutterwave/PHP/issues",
+                "source": "https://github.com/Flutterwave/PHP/tree/1.0.4"
+            },
+            "time": "2022-11-22T14:04:46+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",

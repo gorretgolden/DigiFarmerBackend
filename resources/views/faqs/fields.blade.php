@@ -20,3 +20,12 @@ $categories= App\Models\FaqCategory::pluck('name','id');
     {!! Form::label('answer', 'Answer:') !!}
     {!! Form::textarea('answer', null, ['class' => 'form-control','maxlength' => 255]) !!}
 </div>
+
+<!-- Enabled Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('enabled', 'Enabled:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_active', 0) !!}
+        {!! Form::checkbox('is_active', '1', null) !!}
+    </label>
+</div>

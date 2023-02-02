@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Faq;
 use App\Models\FaqCategory;
 
 class FaqCategoryController extends AppBaseController
@@ -30,7 +31,7 @@ class FaqCategoryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $faqCategories = Faq::latest()->paginate(5);
+        $faqCategories = FaqCategory::latest()->get();
 
         return view('faq_categories.index')
             ->with('faqCategories', $faqCategories);

@@ -10,6 +10,8 @@ use App\Repositories\AnimalFeedCategoryRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Http\Request;
+use App\Models\AnimalFeedCategory;
 
 class AnimalFeedCategoryController extends AppBaseController
 {
@@ -33,6 +35,26 @@ class AnimalFeedCategoryController extends AppBaseController
         return $animalFeedCategoryDataTable->render('animal_feed_categories.index');
     }
 
+
+    //get animal feeds for an animal category
+
+    public function fetch_animal_category_feeds(Request $request)
+    {
+
+
+      $data['animal_feed_categories'] = AnimalFeedCategory::where("animal_category_id", $request->animal_category_id)->get(['name','id']);
+
+        return response()->json($data);
+    }
+
+    public function animal_category_feeds(Request $request,$id)
+    {
+
+
+      $data['animal_feed_categories'] = AnimalFeedCategory::where("animal_category_id", $id)->get(['name','id']);
+
+        return response()->json($data);
+    }
     /**
      * Show the form for creating a new AnimalFeedCategory.
      *
@@ -53,6 +75,7 @@ class AnimalFeedCategoryController extends AppBaseController
     public function store(CreateAnimalFeedCategoryRequest $request)
     {
         $input = $request->all();
+        //dd($input);
 
         $animalFeedCategory = $this->animalFeedCategoryRepository->create($input);
 

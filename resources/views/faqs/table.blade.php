@@ -5,6 +5,7 @@
                 <th>Faq Category</th>
                 <th>Question</th>
                 <th>Answer</th>
+                <th>status</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -14,6 +15,13 @@
                     <td>{{ $faq->faq_category->name }}</td>
                     <td>{{ $faq->question }}</td>
                     <td>{{ $faq->answer }}</td>
+                    <td>
+                        @if ($faq->is_active == 1)
+                            <p class="badge rounded-pill bg-success">enabled</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">disabled</p>
+                        @endif
+                    </td>
                     <td width="120">
                         {!! Form::open(['route' => ['faqs.destroy', $faq->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

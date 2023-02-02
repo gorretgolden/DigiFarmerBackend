@@ -4,6 +4,8 @@
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 
+
+
 <!-- Image Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('image', 'Image:') !!}
@@ -13,5 +15,14 @@
             {!! Form::label('image', 'Choose file', ['class' => 'custom-file-label']) !!}
         </div>
     </div>
+</div>
+
+<!-- Enabled Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('enabled', 'Enabled:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('enabled', 0) !!}
+        {!! Form::checkbox('enabled', '1', null) !!}
+    </label>
 </div>
 <div class="clearfix"></div>

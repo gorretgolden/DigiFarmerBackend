@@ -19,15 +19,13 @@ class CreateTrainingVendorServices extends Migration
             $table->integer('charge');
             $table->text('description');
             $table->string('image')->nullable();
-            $table->integer('period')->default(1);
-            $table->string('period_unit')->default('Days');
             $table->enum('access',['Online','Offline'])->default('Online');
             $table->string('starting_date');
             $table->string('ending_date')->nullable();
-            $table->time('starting_time');
-            $table->time('ending_time');
+            $table->string('starting_time');
+            $table->string('ending_time');
             $table->text('zoom_details')->nullable();
-            $table->text('location_details')->nullable();
+            $table->string('location')->nullable();
             $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();

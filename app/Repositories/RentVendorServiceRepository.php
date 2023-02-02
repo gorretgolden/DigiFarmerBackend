@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class RentVendorServiceRepository
  * @package App\Repositories
- * @version December 3, 2022, 9:01 am UTC
+ * @version January 12, 2023, 12:15 pm CET
 */
 
 class RentVendorServiceRepository extends BaseRepository
@@ -20,8 +20,15 @@ class RentVendorServiceRepository extends BaseRepository
         'name',
         'rent_vendor_sub_category_id',
         'charge',
+        'charge_unit',
+        'total_charge',
         'description',
-        'image'
+        'location',
+        'quantity',
+        'charge_day',
+        'charge_frequency',
+        'user_id',
+        'vendor_category_id'
     ];
 
     /**

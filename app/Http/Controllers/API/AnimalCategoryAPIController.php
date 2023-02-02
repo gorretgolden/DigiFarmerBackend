@@ -34,7 +34,7 @@ class AnimalCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $animalCategories = AnimalCategory::all(['id','name','image']);
+        $animalCategories = AnimalCategory::where('is_active',1)->latest()->get(['id','name','image']);
         $response = [
             'success'=>true,
             'data'=> $animalCategories,

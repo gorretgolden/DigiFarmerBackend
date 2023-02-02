@@ -68,13 +68,12 @@ class RentVendorServiceDataTable extends DataTable
             'name',
             'rent_vendor_sub_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Sub Category",'data'=>'rent_vendor_sub_category.name']),
             'charge',
+            'charge_frequency',
             'location',
             'quantity',
-            'charge_day',
-            'charge_frequency',
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
 
-            'total_charge'
+
 
         ];
     }

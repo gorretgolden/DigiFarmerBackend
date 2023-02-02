@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\UserUserType;
 require_once('../external/AfricasTalkingGateway.php');
 use URL;
+use Illuminate\Support\Facades\File;
 class UserController extends AppBaseController
 {
     /** @var UserRepository $userRepository*/
@@ -134,6 +135,7 @@ class UserController extends AppBaseController
           $user->username = $request->last_name ." " . $request->first_name;
           $user->email = $request->input('email');
           $user->phone = $request->input('phone');
+          $user->is_active = $request->input('is_active');
           $user->image_url = $request->image_url;
           $user->user_type= "farmer";
           $password = "12345678";
@@ -241,10 +243,23 @@ class UserController extends AppBaseController
 
 
         $user->username = $request->last_name." ".$request->first_name;
-        if(!empty($request->file('image_url'))){
-            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
-        }
+        $user->last_name= $request->last_name;
+        $user->first_name= $request->first_name;
+        $user->email = $request->email ;
+        $user->phone = $request->phone;
+        $user->is_active = $request->is_active;
         $user->save();
+
+        if(!empty($request->file('image_url'))){
+            File::delete('storage/users/'.$user->image_url);
+            $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
+            $user->save();
+        }else{
+
+            $user->image_url= $request->image_url;
+        }
+
+
 
         Flash::success('User updated successfully.');
 

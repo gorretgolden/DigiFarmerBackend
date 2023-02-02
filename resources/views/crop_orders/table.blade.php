@@ -47,13 +47,13 @@
                     <td>{{ $order->user->username }}</td>
                     <td class="text-center"><span class="badge rounded-pill bg-success text-center">{{ $order->user->crop_orders->count() }}</span></td>
 
-                    <td>
+                    {{-- <td>
                         <ul>
-                        @foreach($order->crops_on_sale as $item)
+                        @foreach($order->crop_on_sale as $item)
                             <li> Crop:  {{ $item->crop->name}} Farmer: {{ $item->user->username}}   Buying Price Request: UGX {{ $item->pivot->buying_price}} Quantity: {{ $item->quantity }}{{ $item->quantity_unit }}</li>
                         @endforeach
                         </ul>
-                    </td>
+                    </td> --}}
                     <td>
 
 

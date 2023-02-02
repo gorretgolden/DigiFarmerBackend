@@ -28,7 +28,8 @@ class Onboarding extends Model
     public $fillable = [
         'title',
         'description',
-        'image'
+        'image',
+        'is_active'
     ];
 
     /**
@@ -39,7 +40,8 @@ class Onboarding extends Model
     protected $casts = [
         'title' => 'string',
         'description' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'is_active'=>'boolean'
     ];
 
     /**

@@ -58,10 +58,16 @@ class CropOrderAPIController extends AppBaseController
     {
 
 
-        $existing_buyer = CropOrder::where('user_id',auth()->user()->id)->first();
-        $existing_crop = CropOrderCropOnSale::where('crop_on_sale_id',$id)->first();
+        $crop_on_sale = CropOnSale::find($id);
 
-        if($existing_buyer && $existing_crop ){
+        if (empty($crop_on_sale)) {
+            return $this->sendError('Crop on sale not found');
+        }
+
+        $existing_buy_request = CropOrder::where('user_id',auth()->user()->id)->where('crop_on_sale_id',$id)->first();
+
+
+        if($existing_buy_request ){
 
             $response = [
                 'success'=>false,
@@ -72,35 +78,22 @@ class CropOrderAPIController extends AppBaseController
         else{
 
 
-        $crop_buyer = new CropOrder();
-        $crop_buyer->buying_price = $request->buying_price;
-        $crop_buyer->user_id = auth()->user()->id;
-        $crop_buyer->save();
+        $crop_buy_request = new CropOrder();
+        $crop_buy_request->buying_price = $request->buying_price;
+        $crop_buy_request->user_id = auth()->user()->id;
+        $crop_buy_request->crop_on_sale_id = $request->crop_on_sale_id;
+        $crop_buy_request->save();
 
-        $crop = CropOnSale::find($id);
 
-        $crop_buyer->crops_on_sale()->attach($crop);
-        $crop_buyer->save();
-
-         $success['buying_price'] = $crop_buyer->buying_price;
+         $success['buying_price'] = $crop_buy_request->buying_price;
          $success['has_bought'] = false;
          $success['is_accepted'] = false;
-         $success['crop'] = $crop_buyer->crops;
-         $success['buyer'] = auth()->user();
+         $success['buyer'] = auth()->user()->username;
 
-
-         $buyer_user_id = CropOrder::where('user_id',auth()->user()->id)->get();
-         $crops_to_the_buyer = CropOrder::where('user_id',auth()->user()->id)->first();
-
-         $buyer_crops = $crops_to_the_buyer->crops_on_sale;
          $response = [
             'success'=>true,
-            'data'=> [
-                'success'=>$success,
-                'buyer crops'=>$buyer_crops
-            ],
-
-            'message'=> 'Crop Buying request sent to farmer'
+            'data'=> $success,
+            'message'=> 'Crop Buy request sent to farmer'
          ];
 
          return response()->json($response,200);

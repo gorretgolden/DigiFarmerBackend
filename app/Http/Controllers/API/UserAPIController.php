@@ -333,6 +333,7 @@ class UserAPIController extends AppBaseController
             $user->phone = $request->phone;
             $user->user_type = 'farmer';
             $user->isAdmin = 0;
+            $user->is_active = 1;
             $user->image_url = $request->image_url;
             $password = $request->password;
             $user->password = Hash::make($password);

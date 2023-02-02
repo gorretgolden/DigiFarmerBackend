@@ -16,6 +16,7 @@ class CreateTermsTable extends Migration
     {
         Schema::create('terms', function (Blueprint $table) {
             $table->id('id');
+            $table->boolean('is_active')->default(0);
             $table->string('title');
             $table->text('description');
             $table->timestamps();

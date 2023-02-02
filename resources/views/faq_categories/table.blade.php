@@ -1,8 +1,9 @@
 <div class="table-responsive">
+
     <table class="table" id="faqCategories-table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Name </th>
                 <th>Image</th>
                 <th colspan="3">Action</th>
             </tr>
@@ -12,11 +13,11 @@
                 <tr>
                     <td>{{ $faqCategory->name }}</td>
                     <td>
+                        <img src="{{ $faqCategory->image ? $faqCategory->image : asset('img/crop.png') }}" width="50px"
+                            height="50px" />
 
-                        <img
-                        src="{{$faqCategory->image}}"
-                        width="50px" height="50px"/>
                     </td>
+
                     <td width="120">
                         {!! Form::open(['route' => ['faqCategories.destroy', $faqCategory->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

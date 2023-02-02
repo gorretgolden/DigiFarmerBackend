@@ -23,8 +23,9 @@ class AgronomistSheduleFactory extends Factory
     {
         return [
             'day_id' => $this->faker->randomDigitNotNull,
-        'start_time' => $this->faker->word,
-        'end_time' => $this->faker->word,
+        'starting_time' => $this->faker->word,
+        'ending_time' => $this->faker->word,
+        'time_interval' => $this->faker->randomDigitNotNull,
         'agronomist_vendor_service_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')

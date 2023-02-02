@@ -6,6 +6,7 @@
                 <th>Name</th>
                 <th>Standard Price</th>
                 <th>Category</th>
+                <th>Status</th>
 
                 <th colspan="3">Action</th>
             </tr>
@@ -21,6 +22,13 @@
                     <td>{{ $crop->name }}</td>
                     <td>{{ $crop->standard_price }} {{ $crop->price_unit}}</td>
                     <td>{{ $crop->category->name }}</td>
+                    <td>
+                        @if ($crop->is_active == 1)
+                            <p class="badge rounded-pill bg-success">enabled</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">disabled</p>
+                        @endif
+                    </td>
 
 
 

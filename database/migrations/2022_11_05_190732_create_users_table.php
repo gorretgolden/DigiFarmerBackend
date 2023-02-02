@@ -24,6 +24,8 @@ class CreateUsersTable extends Migration
             $table->string('user_type')->default('farmer');
             $table->boolean('isAdmin')->default(false);
             $table->boolean('is_verified')->default(false);
+            $table->boolean('is_active')->default(false);
+            $table->boolean('is_vendor')->default(false);
             $table->boolean('is_verified_otp')->default(false);
             $table->string('password')->nullable();
             $table->string('google_id')->unique()->nullable();

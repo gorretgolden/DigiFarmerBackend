@@ -20,13 +20,13 @@ $farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 <!-- Field Area Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('field_area', 'Field Area:') !!}
-    {!! Form::number('field_area', null, ['class' => 'form-control', 'placeholder' => 'Enter farm field area']) !!}
+    {!! Form::number('field_area', null, ['class' => 'form-control', 'placeholder' => 'Enter farm field area','min'=>1]) !!}
 </div>
 
 <!--Field Size Unit-->
 <div class="form-group col-sm-6">
     {!! Form::label('size_unit', 'Size Unit:') !!}
-    {!! Form::select('size_unit', ['Acres' => 'Acres', 'Hectares' => 'Hectares'], null, ['class' => 'form-control']) !!}
+    {!! Form::text('size_unit', null, ['class' => 'form-control','placeholder'=>'Acres','readonly']) !!}
 </div>
 
 <!-- Address Id Field -->

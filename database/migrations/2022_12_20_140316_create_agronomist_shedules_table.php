@@ -16,8 +16,11 @@ class CreateAgronomistShedulesTable extends Migration
     {
         Schema::create('agronomist_shedules', function (Blueprint $table) {
             $table->id('id');
-            $table->foreignId('day_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->foreignId('agronomist_vendor_service_id')->nullable()->constrained()->onDelete('CASCADE');
+            $table->string('date');
+            $table->string('starting_time');
+            $table->string('ending_time');
+            $table->integer('time_interval');
+            $table->foreignId('agronomist_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->timestamps();
 
         });

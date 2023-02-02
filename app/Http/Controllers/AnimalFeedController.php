@@ -12,6 +12,8 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\VendorCategory;
 use App\Models\AnimalFeed;
+use App\Models\Address;
+use App\Models\User;
 
 class AnimalFeedController extends AppBaseController
 {
@@ -56,25 +58,37 @@ class AnimalFeedController extends AppBaseController
     {
         $input = $request->all();
         $vendor_category = VendorCategory::where('name','Animal Feeds')->first();
+        $location = Address::find($request->address_id);
 
 
         //new animal feed
         $new_animal_feed = new AnimalFeed();
-
-
-        $new_animal_feed->quantity_unit = "kg";
+        $new_animal_feed->weight = $request->weight;
+        $new_animal_feed->weight_unit = $request->weight_unit;
         $new_animal_feed->name = $request->name;
         $new_animal_feed->price = $request->price;
         $new_animal_feed->animal_feed_category_id = $request->animal_feed_category_id;
-        $new_animal_feed->animal_category_id = $request->animal_category_id;
         $new_animal_feed->vendor_category_id = $vendor_category->id;
-        $new_animal_feed->address_id = $request->address_id;
+        $new_animal_feed->location = $location->district_name;
         $new_animal_feed->description = $request->description;
+
+        //set user as a vendor
+        $user = User::find($request->user_id);
+        if(!$user->is_vendor ==1){
+           $user->is_vendor =1;
+           $user->save();
+        }
+
+
         $new_animal_feed->user_id = $request->user_id;
-        $new_animal_feed->quantity = $request->quantity;
+        $new_animal_feed->status = "on-sale";
         $new_animal_feed->image = $request->image;
 
         $new_animal_feed->save();
+
+         //update time since
+         $new_animal_feed->time_since = $new_animal_feed->created_at->diffForHumans();
+         $new_animal_feed->save();
 
         if(!empty($request->file('image'))){
             $new_animal_feed->image= \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');

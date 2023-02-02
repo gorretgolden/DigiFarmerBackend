@@ -66,7 +66,7 @@ class TaskController extends AppBaseController
     public function store(CreateTaskRequest $request)
     {
         $input = $request->all();
-        $input['status_id'] = $request->status_id;
+        $input['status'] = 'pending';
         //dd($input['status_id']);
 
         $existing_name = Task::where('name',$request->name)->first();
@@ -80,7 +80,12 @@ class TaskController extends AppBaseController
         }
         else{
 
-            $task = $this->taskRepository->create($input);
+            $task = new Task();
+            $task->name = $request->name;
+            $task->task_date = $request->task_date;
+            $task->status = "pending";
+            $task->plot_id = $request->plot_id;
+            $task->save();
 
             Flash::success('Task saved successfully.');
 

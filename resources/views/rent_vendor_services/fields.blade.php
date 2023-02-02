@@ -12,11 +12,13 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
     {!! Form::text('name', null, ['class' => 'form-control','placeholder'=>'Enter rent service name']) !!}
 </div>
 
+
 <!-- Charge Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('charge', 'Charge:') !!}
-    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>'Enter service charge']) !!}
+    {!! Form::label('quantity', 'Quantity:') !!}
+    {!! Form::number('quantity', null, ['class' => 'form-control','placeholder'=>'Enter number of items for rent','min'=>1,'max'=>20]) !!}
 </div>
+
 
 
 <!-- Rent Vendor  Category Id Field -->
@@ -36,18 +38,24 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
     </select>
 </div>
 
-<!-- Charge Days Field -->
+{{-- <!-- Charge Days Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('charge_day', 'Charge Number of Days:') !!}
     {!! Form::number('charge_day', null, ['class' => 'form-control','placeholder'=>1]) !!}
+</div> --}}
+
+
+
+<!-- Charge Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('charge', 'Charge:') !!}
+    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>'Enter service charge']) !!}
 </div>
-
-
 
 <!-- Charge Day Frequency-->
 <div class="form-group col-sm-6">
     {!! Form::label('charge_frequency', 'Charge Frequency:') !!}
-    {!! Form::select('charge_frequency', [ 'days' => 'Days'],null, ['class' => 'form-control','placeholder'=>'Select Charge frequency','required'=>'true'] ) !!}
+    {!! Form::text('charge_frequency',null, ['class' => 'form-control','placeholder'=>'Per day','readonly'] ) !!}
 </div>
 
 
@@ -55,7 +63,7 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('user_id', 'farmers:') !!}
+    {!! Form::label('user_id', 'Vendors') !!}
     {!! Form::select('user_id', $vendors, null, ['class' => 'form-control custom-select']) !!}
 </div>
 <!-- Address Id Field -->
@@ -67,11 +75,6 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 </div>
 
 
-<!-- Charge Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('quantity', 'quantity:') !!}
-    {!! Form::number('quantity', null, ['class' => 'form-control','placeholder'=>'Enter number of items for rent','min'=>1,'max'=>20]) !!}
-</div>
 
 
 

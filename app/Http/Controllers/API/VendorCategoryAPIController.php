@@ -35,7 +35,7 @@ class VendorCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $vendorCategories = VendorCategory::all('id','name','image');
+        $vendorCategories = VendorCategory::where('enabled',1)->latest()->get('id','name','image');
         return $this->sendResponse($vendorCategories->toArray(), 'Vendor Categories retrieved successfully');
     }
 
@@ -89,8 +89,8 @@ class VendorCategoryAPIController extends AppBaseController
             $response = [
                 'success'=>true,
                 'data'=> [
-                    'total-trainings' => $seller_products->count(),
-                    'training-vendor-services'=> $seller_products
+                    'total-services' => $seller_products->count(),
+                    'farm-equipments-services'=> $seller_products
 
                 ],
                 'message'=> 'seller farm products retrieved successfully'
@@ -264,6 +264,37 @@ class VendorCategoryAPIController extends AppBaseController
 
                  ],
                  'message'=> 'agronomist services retrieved successfully'
+              ];
+              return response()->json($response,200);
+
+         }
+
+
+     }
+
+
+     //ge veterinary vendor services
+     public function vet_services($id)
+     {
+
+         $vendor_category = VendorCategory::find($id);
+
+         if (empty($vendor_category)) {
+
+             return $this->sendError(' Vendor category not found');
+
+         }else{
+
+             $vet_services = $vendor_category->vet_services;
+             //dd(agronomist_vendors);
+             $response = [
+                 'success'=>true,
+                 'data'=> [
+                     'total-vet-services' => $vet_services->count(),
+                     'vet-services'=> $vet_services
+
+                 ],
+                 'message'=> 'vet services retrieved successfully'
               ];
               return response()->json($response,200);
 

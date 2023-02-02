@@ -60,6 +60,32 @@ class PlotController extends AppBaseController
 
         //get the farm
         $farm = Farm::where('id',$request->farm_id)->first();
+        $total_plot_sizes =$farm->plots->sum('size');
+
+        $balance = $farm->field_area - $total_plot_sizes;
+
+
+
+       if($total_plot_sizes==$farm->field_area){
+          Flash::error('No available space on the farm');
+          return redirect(route('plots.index'));
+
+
+     }elseif($request->size>$farm->field_area){
+
+        Flash::error('Plot size cannot be greater than farm size');
+        return redirect(route('plots.index'));
+
+
+
+     }elseif(($total_plot_sizes + $request->size) > $farm->field_area){
+
+        Flash::error(" 'farm is left with'.' '. $balance .' '.'acres' ");
+        return redirect(route('plots.index'));
+
+
+     }
+
 
         if(!$farm){
 
@@ -78,20 +104,15 @@ class PlotController extends AppBaseController
 
         }else{
 
-
             $new_plot = new Plot();
             $new_plot->name = $request->name;
             $new_plot->farm_id = $request->farm_id;
             $new_plot->crop_id = $request->crop_id;
             $new_plot->district = $farm->address->district_name;
             $new_plot->size = $request->size;
-            $new_plot->size_unit = $request->size_unit;
+            $new_plot->size_unit = "Acres";
             $new_plot->save();
 
-            //$totalPlotHarvest =  CropHarvest::where('plot_id',$new_plot->$id)->sum('quantity');
-
-           // $plot->total_harvest =  $totalPlotHarvest;
-           // $new_plot->save();
 
             Flash::success('Plot saved successfuly');
             return redirect(route('plots.index'));

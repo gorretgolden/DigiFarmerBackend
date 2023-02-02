@@ -12,6 +12,8 @@ use App\Models\SellerProduct;
 use Response;
 use App\Models\VendorCategory;
 use App\Models\Address;
+use App\Models\User;
+
 
 class SellerProductController extends AppBaseController
 {
@@ -79,10 +81,22 @@ class SellerProductController extends AppBaseController
           $new_seller_product->description = $request->description;
           $new_seller_product->price = $request->price;
           $new_seller_product->image = $request->image;
+          $new_farm_product->price_unit = "UGX";
+          $new_farm_product->status = "on-sale";
+
+           //set user as a vendor
+          $user = User::find($request->user_id);
+          if(!$user->is_vendor ==1){
+            $user->is_vendor =1;
+            $user->save();
+          }
+
           $new_seller_product->user_id = $request->user_id;
           $new_seller_product->seller_product_category_id = $request->seller_product_category_id;
           $new_seller_product->vendor_category_id = $vendor_category->id;
-          $new_seller_product->address_id = $request->address_id;
+           //location
+          $location = Address::find($request->address_id);
+          $new_seller_product->address_id = $location->district_name;
           $new_seller_product->save();
 
           $new_seller_product = SellerProduct::find($new_seller_product->id);

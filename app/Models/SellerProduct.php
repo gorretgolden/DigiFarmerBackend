@@ -35,7 +35,9 @@ class SellerProduct extends Model
         'price',
         'seller_product_category_id',
         'image',
-         'user_id'
+        'user_id',
+        'address_id'
+
     ];
 
     /**
@@ -49,7 +51,8 @@ class SellerProduct extends Model
         'price' => 'integer',
         'seller_product_category_id' => 'integer',
         'image' => 'string',
-        'user_id'=> 'integer'
+        'user_id'=> 'integer',
+        'address_id'=>'integer'
     ];
 
     /**
@@ -59,11 +62,12 @@ class SellerProduct extends Model
      */
     public static $rules = [
         'name' => 'required|string|unique:seller_products',
-        'description' => 'required|string',
+        'description' => 'required|string|min:10',
         'price' => 'required|integer',
         'seller_product_category_id' => 'required|integer',
         'image' => 'required',
-        'user_id'=> 'required'
+        'user_id'=> 'required',
+        'address_id'=>'required|integer'
     ];
 
      //a seller product belongs to a seller product category

@@ -16,7 +16,7 @@
             @foreach ($sellerProducts as $sellerProduct)
                 <tr>
                     <td>
-                        <img src="{{ $sellerProduct->image ? asset('/storage/seller_products/' . $sellerProduct->image) : asset('img/crop.png') }}"
+                        <img src="{{ $sellerProduct->image ?  $sellerProduct->image : asset('img/crop.png') }}"
                             width="50px" height="50px" />
                     </td>
                     <td>{{ $sellerProduct->name }}</td>
@@ -25,7 +25,7 @@
 
                     <td>{{ $sellerProduct->seller_product_category->name }}</td>
                     <td>{{ $sellerProduct->user->username }}</td>
-                    <td>{{ $sellerProduct->address->district_name }}</td>
+                    <td>{{ $sellerProduct->location }}</td>
                     <td width="120">
                         {!! Form::open(['route' => ['sellerProducts.destroy', $sellerProduct->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

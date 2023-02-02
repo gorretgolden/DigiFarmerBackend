@@ -5,6 +5,7 @@
                 <th>Image</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th>status</th>
 
 
                 <th colspan="3">Action</th>
@@ -20,6 +21,14 @@
                     </td>
                     <td>{{ $onBoarding->title}}</td>
                     <td>{{ $onBoarding->description }} </td>
+                    <td>
+                        @if ($onBoarding->is_active == 1)
+                            <p class="badge rounded-pill bg-success">enabled</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">disabled</p>
+                        @endif
+                    </td>
+
 
 
 

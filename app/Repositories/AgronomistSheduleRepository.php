@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class AgronomistSheduleRepository
  * @package App\Repositories
- * @version December 21, 2022, 9:15 am CET
+ * @version January 22, 2023, 12:41 pm CET
 */
 
 class AgronomistSheduleRepository extends BaseRepository
@@ -18,8 +18,9 @@ class AgronomistSheduleRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'day_id',
-        'start_time',
-        'end_time',
+        'starting_time',
+        'ending_time',
+        'time_interval',
         'agronomist_vendor_service_id'
     ];
 

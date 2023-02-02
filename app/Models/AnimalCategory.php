@@ -63,4 +63,18 @@ class AnimalCategory extends Model
 
      return $this->dir.$value;
     }
+
+
+
+    //belongs to an animal category
+    public function animal_feed_categories()
+    {
+        return $this->hasMany(\App\Models\AnimalFeedCategory::class, 'animal_category_id');
+    }
+
+    //belongs to many vet services
+    public function vet_services()
+    {
+        return $this->belongsToMany(\App\Models\Veterinary::class);
+    }
 }

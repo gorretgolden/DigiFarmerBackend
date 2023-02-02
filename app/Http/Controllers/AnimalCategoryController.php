@@ -69,6 +69,7 @@ class AnimalCategoryController extends AppBaseController
 
             $animalCategory = new AnimalCategory();
             $animalCategory->name = $request->name;
+            $animalCategory->is_active = $request->is_active;
             $animalCategory->image = $request->image;
             $animalCategory->save();
 

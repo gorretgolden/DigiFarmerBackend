@@ -30,7 +30,8 @@ class Slider extends Model
     public $fillable = [
         'title',
         'image',
-        'type'
+        'type',
+        'is_active'
     ];
 
     /**
@@ -41,7 +42,8 @@ class Slider extends Model
     protected $casts = [
         'title' => 'string',
         'image' => 'string',
-        'type' =>'string'
+        'type' =>'string',
+        'is_active'=>'boolean'
     ];
 
     /**

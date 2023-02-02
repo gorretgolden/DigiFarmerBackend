@@ -55,7 +55,7 @@ class Task extends Model
         'name' => 'required|string',
         'task_date' => 'required|string',
         'plot_id' => 'required|integer',
-        'status_id' => 'required|integer'
+
     ];
 
     //a task belongs to plot

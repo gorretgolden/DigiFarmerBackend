@@ -28,7 +28,8 @@ class Faq extends Model
     public $fillable = [
         'faq_category_id',
         'question',
-        'answer'
+        'answer',
+        'is_active'
     ];
 
     /**
@@ -39,7 +40,8 @@ class Faq extends Model
     protected $casts = [
         'faq_category_id' => 'integer',
         'question' => 'string',
-        'answer' => 'string'
+        'answer' => 'string',
+        'is_active' => 'boolean'
     ];
 
     /**

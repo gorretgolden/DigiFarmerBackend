@@ -16,6 +16,7 @@ class CreateOnboardingsTable extends Migration
     {
         Schema::create('onboardings', function (Blueprint $table) {
             $table->id('id');
+            $table->boolean('is_active')->default(0);
             $table->string('title');
             $table->text('description');
             $table->string('image')->nullable();

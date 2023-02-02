@@ -1,23 +1,114 @@
-
 <?php
-$days= App\Models\Day::pluck('name','id');
+// $days= App\Models\Day::pluck('name','id');
 $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','id');
 ?>
 
 
+
+{{--
 <!-- Day Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('day_id', 'Day:') !!}
     {!! Form::select('day_id', $days, null, ['class' => 'form-control custom-select']) !!}
 </div>
+ --}}
 
 
-
-<!-- Agronomist Vendor Service Id Field -->
+<!--  Date Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('agronomist_vendor_service_id', 'Agronomist Vendor Service:') !!}
-    {!! Form::select('agronomist_vendor_service_id', $agronomist_vendor_services, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('date', 'Starting Date:') !!}
+    {!! Form::text('date', null, [
+        'class' => 'form-control',
+        'id' => 'date',
+        'placeholder' => 'Select appointment date',
+    ]) !!}
 </div>
+
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#date').datetimepicker({
+            format: 'DD-MM-YYYY',
+            useCurrent: true,
+            sideBySide: true
+        })
+    </script>
+@endpush
+
+
+<!-- Agronomist Vendsor Service Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('agronomist_id', 'Agronomist Vendor Service:') !!}
+    {!! Form::select('agronomist_id', $agronomist_vendor_services, null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+
+<div class="form-group col-sm-12">
+    {!! Form::label('agronomist_vendor_service_id', 'Generate slots:') !!}
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Starting Time Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('starting_time', 'Starting Time:') !!}
+    {!! Form::text('starting_time', null, ['class' => 'form-control','id'=>'starting_time','placeholder'=>'Select starting time']) !!}
+</div>
+
+
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#starting_time').datetimepicker({
+            format: 'hh:mm A',
+            useCurrent: true,
+            sideBySide: true
+        })
+    </script>
+@endpush
+
+
+
+
+<!-- Ending Time Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('ending_time', 'Ending Time:') !!}
+    {!! Form::text('ending_time', null, [
+        'class' => 'form-control',
+        'id' => 'ending_time',
+        'placeholder' => 'Select ending time',
+    ]) !!}
+</div>
+
+
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#ending_time').datetimepicker({
+            format: 'hh:mm A',
+            useCurrent: true,
+            sideBySide: true
+        })
+    </script>
+
+
+
+
+@endpush
+<!-- interval Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('time_interval', 'time_interval:') !!}
+    {!! Form::number('time_interval', null, ['class' => 'form-control','min'=>20,'max'=>30]) !!}
+</div>
+
+
+
+
+{{--
 
 
 <div class="card">
@@ -30,7 +121,10 @@ $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','
     </div>
     <div class="card-body">
 
+
         <table class="table table-striped">
+
+
 
 
             <tbody>
@@ -53,6 +147,7 @@ $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','
                     <td><input type="checkbox" name="time[]" value="8.40am"> 8:40am</td>
                 </tr>
 
+
                 <tr>
                     <th scope="row">4</th>
                     <td><input type="checkbox" name="time[]" value="9am"> 9:00am</td>
@@ -60,12 +155,14 @@ $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','
                     <td><input type="checkbox" name="time[]" value="9.40am"> 9:40am</td>
                 </tr>
 
+
                 <tr>
                     <th scope="row">5</th>
                     <td><input type="checkbox" name="time[]" value="10am"> 10:00am</td>
                     <td><input type="checkbox" name="time[]" value="10.20am"> 10:20am</td>
                     <td><input type="checkbox" name="time[]" value="10.40am"> 10:40am</td>
                 </tr>
+
 
                 <tr>
                     <th scope="row">6</th>
@@ -75,10 +172,13 @@ $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','
                 </tr>
 
 
+
+
             </tbody>
         </table>
     </div>
 </div>
+
 
 <div class="card ml-5">
     <div class="card-header">
@@ -86,7 +186,10 @@ $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','
     </div>
     <div class="card-body">
 
+
         <table class="table table-striped">
+
+
 
 
             <tbody>
@@ -153,4 +256,6 @@ $agronomist_vendor_services = App\Models\AgronomistVendorService::pluck('name','
             </tbody>
         </table>
     </div>
-</div>
+</div> --}}
+
+

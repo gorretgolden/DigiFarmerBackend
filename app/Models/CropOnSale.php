@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon;
 
 /**
  * Class CropOnSale
@@ -40,7 +41,9 @@ class CropOnSale extends Model
         'is_sold',
         'crop_id',
         'user_id',
-        'address_id'
+        'address_id',
+        'name',
+
     ];
 
     /**
@@ -57,7 +60,8 @@ class CropOnSale extends Model
         'is_sold' => 'boolean',
         'crop_id' => 'integer',
         'user_id' => 'integer',
-        'address_id' => 'integer'
+        'address_id' => 'integer',
+        'created_at' => 'datetime:d-m-Y'
     ];
 
     /**
@@ -83,10 +87,10 @@ class CropOnSale extends Model
         return $this->belongsTo(\App\Models\Crop::class,'crop_id');
      }
 
-   //a crop  on sale belongs to many crop buyers
-   public function crop_orders()
+   //a crop  on sale has many crop buy requests
+   public function crop_buy_requests()
    {
-      return $this->belongsToMany(\App\Models\CropOrder::class,'crop_on_sale_crop_order', 'crop_on_sale_id', 'crop_order_id')->withPivot('buying_price');
+      return $this->hasMany(\App\Models\CropOrder::class,'crop_on_sale_id');
    }
 
    //a crop on sale belongs to a user
@@ -107,6 +111,14 @@ public function address()
 {
    return $this->belongsTo(\App\Models\Address::class,'address_id');
 }
+
+//belongs to many saved crops
+    //belongs to a crop on sale
+    public function saved_crops()
+    {
+       return $this->hasMany(\App\Models\CropOnSale::class,'crop_on_sale_id');
+    }
+
 
 
 

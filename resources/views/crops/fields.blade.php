@@ -39,4 +39,14 @@ $categories= App\Models\Category::pluck('name','id');
         </div>
     </div>
 </div>
+
+
+<!-- Enabled Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('enabled', 'Enabled:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_active', 0) !!}
+        {!! Form::checkbox('is_active', '1', null) !!}
+    </label>
+</div>
 <div class="clearfix"></div>

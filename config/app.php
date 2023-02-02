@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
+        KingFlamez\Rave\RaveServiceProvider::class,
 
 
         /*
@@ -237,6 +238,7 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         'Datatables' => Yajra\DataTables\Facades\Datatables::class,
         'Carbon' => Illuminate\Support\Carbon::class,
+        'Rave' => KingFlamez\Rave\Facades\Rave::class,
 
     ],
 

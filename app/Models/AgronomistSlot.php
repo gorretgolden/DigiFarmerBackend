@@ -59,7 +59,7 @@ class AgronomistSlot extends Model
     //belongs to an agronomist schedule
     public function agronomist_schedule()
     {
-        return $this->hasMany(\App\Models\AgronomistShedule::class, 'agronomist_shedule_id');
+        return $this->belongsTo(\App\Models\AgronomistShedule::class, 'agronomist_shedule_id');
     }
 
 

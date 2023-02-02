@@ -62,8 +62,8 @@ class Plot extends Model
         'name' => 'required',
         'crop_id' => 'required',
         'size' => 'required|min:1|integer',
-        'size_unit' => 'required|string',
-        'farm_id' => 'required',
+        'size_unit' => 'nullable|string',
+        'farm_id' => 'required|integer',
 
     ];
 

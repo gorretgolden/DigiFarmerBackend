@@ -34,7 +34,7 @@ class SliderAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sliders = Slider::all('id','type','image');
+        $sliders = Slider::where('is_active',1)->latest()->get('id','type','image');
         return $this->sendResponse($sliders->toArray(), 'Sliders retrieved successfully');
     }
 

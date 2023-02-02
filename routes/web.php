@@ -211,11 +211,6 @@ Route::resource('terms', App\Http\Controllers\TermsController::class);
 Route::resource('privacyPolicies', App\Http\Controllers\PrivacyPolicyController::class);
 
 
-Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);
-
-
-Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);
-
 
 Route::resource('days', App\Http\Controllers\DayController::class);
 
@@ -228,13 +223,6 @@ Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleCont
 Route::resource('agronomistSlots', App\Http\Controllers\AgronomistSlotController::class);
 
 
-Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
-
-
-Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
-
-
-Route::resource('agronomistShedules', App\Http\Controllers\AgronomistSheduleController::class);
 
 
 Route::resource('regions', App\Http\Controllers\RegionController::class);
@@ -254,9 +242,13 @@ Route::get('api/fetch-farmer-address', [App\Http\Controllers\FarmController::cla
 
 Route::get('/farmer/fetch-address', 'App\Http\Controllers\FarmController@fetchUserAddresses')->name('farmers.fetch-address');
 
+Route::get('/farmer/fetch-farms', 'App\Http\Controllers\FarmController@fetch_farmer_farms')->name('farmers.fetch-farms');
+Route::get('/farmer/fetch-farm-plots', 'App\Http\Controllers\FarmController@fetch_farm_plots')->name('farmers.fetch-farm-plots');
+
 Route::get('/rent/sub_categories', 'App\Http\Controllers\RentVendorServiceController@fetchSubCategories')->name('rent.sub-categories');
 
 Route::get('/seller/fetch-address', 'App\Http\Controllers\SellerProductController@fetchUserAddresses')->name('sellers.fetch-address');
+Route::get('/farmer/crops-on-sale', 'App\Http\Controllers\CropOnSaleController@farmer_crops_on_sale')->name('farmer.crops-on-sale');
 
 
 
@@ -267,3 +259,38 @@ Route::resource('generalSettings', App\Http\Controllers\GeneralSettingController
 Route::get('general-settings', [App\Http\Controllers\GeneralSettingController::class,'getSettings'])->name('general-settings');
 Route::get('general-settings/edit', [App\Http\Controllers\GeneralSettingController::class,'edit'])->name('general-settings-edit');
 Route::patch('general-settings/update', [App\Http\Controllers\GeneralSettingController::class,'updateSettings'])->name('general-settings-update');
+
+
+//payments
+Route::get('/pay', [App\Http\Controllers\RaveController::class,'initialize'])->name('pay');
+Route::post('/rave/callback', 'RaveController@callback')->name('callback');
+
+
+//get animal feed categories
+Route::get('animalcategory/feeds', [App\Http\Controllers\AnimalFeedCategoryController::class,'fetch_animal_category_feeds'])->name('animal-categories.feeds');
+
+
+// The page that displays the payment form
+Route::get('/test', function () {
+    return view('test');
+});
+// The route that the button calls to initialize payment
+Route::post('/pay', [App\Http\Controllers\RaveController::class, 'initialize'])->name('pay');
+// The callback url after a payment
+Route::get('/rave/callback', [App\Http\Controllers\RaveController::class, 'callback'])->name('callback');
+Route::post('/webhook/flutterwave', [FlutterwaveController::class, 'webhook'])->name('webhook');
+
+
+Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);
+
+
+Route::resource('veterinaries', App\Http\Controllers\VeterinaryController::class);
+
+
+Route::resource('veterinaryShedules', App\Http\Controllers\VeterinarySheduleController::class);
+
+
+Route::resource('veterinaryShedules', App\Http\Controllers\VeterinarySheduleController::class);
+
+
+Route::resource('veterinarySlots', App\Http\Controllers\VeterinarySlotController::class);

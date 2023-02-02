@@ -27,10 +27,11 @@ class AgronomistShedule extends Model
 
 
     public $fillable = [
-        'day_id',
-        'start_time',
-        'end_time',
-        'agronomist_vendor_service_id'
+        'date',
+        'starting_time',
+        'ending_time',
+        'time_interval',
+        'agronomist_id'
     ];
 
     /**
@@ -39,10 +40,11 @@ class AgronomistShedule extends Model
      * @var array
      */
     protected $casts = [
-        'day_id' => 'integer',
-        'start_time' => 'string',
-        'end_time' => 'string',
-        'agronomist_vendor_service_id' => 'integer'
+        'date' => 'string',
+        'starting_time' => 'string',
+        'ending_time' => 'string',
+        'time_interval'=>'integer',
+        'agronomist_id' => 'integer'
     ];
 
     /**
@@ -51,16 +53,18 @@ class AgronomistShedule extends Model
      * @var array
      */
     public static $rules = [
-        'day_id' => 'required|integer',
-        'agronomist_vendor_service_id' => 'required|integer',
-        'time' => 'required'
+        'date' => 'required|string',
+        'agronomist_id' => 'required|integer',
+        'starting_time' => 'required|before:ending_time',
+        'ending_time' => 'required|after:starting_time',
+        'time_interval'=>'required|integer|min:20|max:40',
     ];
 
 
     //belongs to an agronomist vendor service
     public function agronomist_vendor_service()
     {
-        return $this->belongsTo(\App\Models\AgronomistVendorService::class, 'agronomist_vendor_service_id');
+        return $this->belongsTo(\App\Models\AgronomistVendorService::class, 'agronomist_id');
     }
 
     //belongs to a day
@@ -72,7 +76,7 @@ class AgronomistShedule extends Model
     //has may slots
     public function slots()
     {
-        return $this->hasMany(\App\Models\Slot::class, 'agronomist_shedule_id');
+        return $this->hasMany(\App\Models\AgronomistSlot::class, 'agronomist_shedule_id');
     }
 
 

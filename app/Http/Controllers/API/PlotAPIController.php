@@ -54,10 +54,27 @@ class PlotAPIController extends AppBaseController
     {
 
         $plot = Plot::find($id);
+
         if (empty($plot)) {
             return $this->sendError('Plot not found');
         }
-        $success = $plot->animals;
+
+
+
+        $plot_animals =  $plot->animals->map(function ($item){
+                return collect([
+                    'id' => $item->id,
+                    'total' => $item->total,
+                    'animal_category' => $item->animal_category->name,
+                    'plot'=> $item->plot->name,
+                    'farm'=> $item->plot->farm->name,
+                    'created_at' => $item->created_at->format('d/m/Y'),
+
+                  ]);
+        });
+
+
+
 
         if($plot->animals->count()==0){
             $response = [
@@ -67,11 +84,14 @@ class PlotAPIController extends AppBaseController
              return response()->json($response,404);
 
         }else{
+
             $response = [
                 'success'=>true,
                 'data'=>[
-                    'animals'=>$success,
-                    'total' =>$plot->animals->count()
+                    'total-animal-types' =>$plot->animals->count(),
+                    'total-plot-animals'=>$plot->animals->sum('total'),
+                    'animals'=>$plot_animals,
+
                 ],
                 'message'=> 'plot animals retrieved successfully '
              ];
@@ -84,200 +104,158 @@ class PlotAPIController extends AppBaseController
     }
 
 
-   //get farm farmer plots
-    public function farmPlots(Request $request)
+    //get expenses on a plot
+    public function expenses_on_plot(Request $request,$id)
     {
 
-        $farms = Farm::where('owner', auth()->user()->username)->with('plots')->get();
-        $farm_plots =collect($farms)->pluck('plots');
+        $plot = Plot::find($id);
 
-        $success = $farms;
-        if(empty($farms)){
-            $response = [
-                'success'=>false,
-                'message'=> 'farmer has no farms'
-             ];
-
-             return response()->json($response,404);
-
-        }elseif($farm_plots == []){
-            $response = [
-                'success'=>false,
-                'message'=> 'no plots exit on the farms'
-             ];
-
-             return response()->json($response,404);
-
-        }
-        else{
-            $response = [
-                'success'=>false,
-                'data'=> $success,
-                'message'=> ' farms'
-             ];
-
-             return response()->json($response,404);
-
+        if (empty($plot)) {
+            return $this->sendError('Plot not found');
         }
 
+        $plot_expenses =  $plot->expenses->map(function ($item){
+                return collect([
+                    'id' => $item->id,
+                    'amount' => $item->amount,
+                    'expense_category' => $item->expense_category->name,
+                    'plot'=> $item->plot->name,
+                    'created_at' => $item->created_at->format('d/m/Y'),
+
+                  ]);
+        });
 
 
+        if($plot->expenses->count()==0){
+            $response = [
+                'success'=>false,
+                'message'=> 'plot has no expenses'
+             ];
+             return response()->json($response,404);
+
+        }else{
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total' =>$plot->expenses->count(),
+                    'total-expense-cost' =>$plot->expenses->sum('amount'),
+                    'expenses'=>$plot_expenses,
+
+                ],
+                'message'=> 'plot expenses retrieved successfully '
+             ];
+
+             return response()->json($response,200);
+
+        }
 
 
     }
 
 
-    //get plot harvest
-    public function getTotalHarvestForPlot(Request $request,$id)
+    public function tasks_on_plot(Request $request,$id)
     {
 
-        $totalPlotHarvest =  CropHarvest::where('plot_id',$request->id)->first();
-        //dd( $totalPlotHarvest);
+        $plot = Plot::find($id);
 
-        $response = [
-            'success'=>true,
-            'data'=> [
-                'total-harvest'=> $totalPlotHarvest->sum('quantity'),
-                'harvest-unit' => 'kg'
-            ],
-            'message'=> 'Total plot harvest retrieved'
-         ];
+        if (empty($plot)) {
+            return $this->sendError('Plot not found');
+        }
 
-         return response()->json($response,200);
+        $plot_tasks =  $plot->tasks->map(function ($item){
+                return collect([
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'task_date' => $item->task_date,
+                    'status'=>$item->status,
+                    'plot'=> $item->plot->name,
+                    'created_at' => $item->created_at->format('d/m/Y'),
 
-    }
-
-  //tasks on a plot
-  public function plot_tasks(Request $request)
-  {
-
-    $farms = Farm::where('owner',auth()->user()->username)->with('plots')->get();
-    $farm_plot_tasks = collect($farms)->pluck('plots')[0];
-    //dd($farm_plot_tasks);
-
-
-    if($farms->count() == 0){
-        $response = [
-        'success'=>false,
-        'message'=> 'farmer has no farms'
-      ];
-
-      return response()->json($response,200);
-
-    }elseif($farm_plot_tasks->count()==0){
-        $response = [
-            'success'=>false,
-            'message'=> 'farmer has no plots'
-          ];
-
-          return response()->json($response,200);
-
-    }
-    else{
-
-        //maping through the collection to concatnate plots with tasks
-     $farm_plot_tasks = $farm_plot_tasks->map(function ($item){
-        return collect([
-            'id' => $item->id,
-            'name' => $item->name,
-            'location' => $item->location,
-            'size' => $item->size . " ". $item->size_unit ,
-            'farm' => $item->farm->name,
-            'crop' => $item->crop->name,
-            'tasks' => $item->tasks->map(function ($details){
-                return [
-                    'id' => $details->id,
-                    'name' => $details->name,
-                    'task_date' => $details->task_date,
-                    'plot'=> $details->plot->name
-
-
-                ];
-              }),
-          ]);
+                  ]);
         });
-       $response = [
-        'success'=>false,
-        'data' =>$farm_plot_tasks,
-        'message'=> 'Tasks on farm plots retrieved'
-      ];
-
-      return response()->json($response,200);
-
-     }
 
 
+        if($plot->tasks->count()==0){
+            $response = [
+                'success'=>false,
+                'message'=> 'plot has no tasks'
+             ];
+             return response()->json($response,404);
 
+        }else{
 
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total' =>$plot->tasks->count(),
+                    'tasks'=>$plot_tasks,
 
+                ],
+                'message'=> 'plot tasks retrieved successfully '
+             ];
 
-}
+             return response()->json($response,200);
 
-//animals on plot
-public function plot_animals(Request $request)
-  {
+        }
 
-    $farms = Farm::where('owner',auth()->user()->username)->with('plots')->get();
-    $farm_plot_animals = collect($farms)->pluck('plots')[0];
-    //dd($farm_plot_animals);
-
-
-    if($farms->count() == 0){
-        $response = [
-        'success'=>false,
-        'message'=> 'farmer has no farms'
-      ];
-
-      return response()->json($response,200);
-
-    }elseif($farm_plot_animals->count()==0){
-        $response = [
-            'success'=>false,
-            'message'=> 'farmer has no plots'
-          ];
-
-          return response()->json($response,200);
 
     }
-    else{
-
-        //maping through the collection to concatnate plots with tasks
-     $farm_plot_animals = $farm_plot_animals->map(function ($item){
-        return collect([
-            'id' => $item->id,
-            'name' => $item->name,
-            'location' => $item->location,
-            'size' => $item->size . " ". $item->size_unit ,
-            'farm' => $item->farm->name,
-            'crop' => $item->crop->name,
-            'animals' => $item->animals->map(function ($details){
-                return [
-                    'id' => $details->id,
-                    'total' => $details->total,
-                    'animal_category' => $details->animal_category->name,
-                    'plot'=> $details->plot->name
 
 
-                ];
-              }),
-          ]);
+    //get plot harvests
+    public function crop_harvests_on_plot(Request $request,$id)
+    {
+
+        $plot = Plot::find($id);
+
+        if (empty($plot)) {
+            return $this->sendError('Plot not found');
+        }
+
+        $plot_harvests =  $plot->crop_harvests->map(function ($item){
+                return collect([
+                    'id' => $item->id,
+                    'quantity' => $item->quantity.$item->quantity_unit,
+                    'plot'=> $item->plot->name,
+                    'created_at' => $item->created_at->format('d/m/Y'),
+
+                  ]);
         });
-       $response = [
-        'success'=>false,
-        'data' =>$farm_plot_animals,
-        'message'=> 'Animals on farm plots retrieved'
-      ];
-
-      return response()->json($response,200);
-
-     }
 
 
+        if($plot->crop_harvests->count()==0){
+            $response = [
+                'success'=>false,
+                'message'=> 'plot has no crop harvests'
+             ];
+             return response()->json($response,404);
+
+        }else{
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-number-of-harvests' =>$plot->crop_harvests->count(),
+                    'total-harvest-amount' =>$plot->crop_harvests->sum('quantity')."kg",
+                    'crop_harvests'=>$plot_harvests,
+
+                ],
+                'message'=> 'plot crop harvests retrieved successfully '
+             ];
+
+             return response()->json($response,200);
+
+        }
+
+
+    }
 
 
 
 
-}
+
+
 
 
     /**
@@ -293,6 +271,38 @@ public function plot_animals(Request $request)
 
          //get the farm
          $farm = Farm::where('id',$request->farm_id)->first();
+         $total_plot_sizes =$farm->plots->sum('size');
+
+         $balance = $farm->field_area - $total_plot_sizes;
+
+
+         if($total_plot_sizes==$farm->field_area){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'No available space on the farm'
+             ];
+             return response()->json($response,404);
+
+         }elseif($request->size>$farm->field_area){
+            $response = [
+                'success'=>false,
+                'message'=> 'Plot size cannot be greater than farm size'
+             ];
+
+             return response()->json($response,400);
+
+         }elseif(($total_plot_sizes + $request->size) > $farm->field_area){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'farm is left with'.' '. $balance .' '.'acres'
+             ];
+             return response()->json($response,400);
+         }
+
+
+
 
 
          if(!$farm){
@@ -331,18 +341,15 @@ public function plot_animals(Request $request)
              $new_plot->crop_id = $request->crop_id;
              $new_plot->district = $farm->address->district_name;
              $new_plot->size = $request->size;
-             $new_plot->size_unit = $request->size_unit;
+             $new_plot->size_unit ='Acres';
              $new_plot->save();
 
 
-
-
              $success['name'] = $request->name;
-             $success['size'] = $request->size;
-             $success['size_unit'] = $request->size_unit;
-             $success['farm'] = $new_plot->farm;
-             $success['crop'] = $new_plot->crop;
-             $success['district'] = $farm->address;
+             $success['size'] = $request->size." "."Acres";
+             $success['farm'] = $new_plot->farm->name;
+             $success['crop'] = $new_plot->crop->name;
+             $success['district'] = $farm->address->district_name;
 
              $response = [
                 'success'=>true,
@@ -381,18 +388,14 @@ public function plot_animals(Request $request)
             $success['size'] = $plot->size;
             $success['size_unit'] = $plot->size_unit;
             $success['district'] = $plot->district;
-            $success['farm'] = $plot->farm;
-            $success['crop'] = $plot->crop;
-            $success['animals'] = $plot->animals;
-            $success['crop-harvests'] = $plot->crop_harvests;
-            $success['total-harvest'] = $totalPlotHarvest;
+            $success['farm'] = $plot->farm->name;
+            $success['crop'] = $plot->crop->name;
+            $success['created_at'] = $plot->created_at->format('d/m/Y');
+
 
             $response = [
                 'success'=>true,
-                'data'=>[
-                    'success'=>$success
-
-                ],
+                'data'=>$success,
                 'message'=> 'Plot details retrieved successfully'
              ];
 
@@ -431,6 +434,99 @@ public function plot_animals(Request $request)
 
 
     }
+
+    public function farmPlots(Request $request)
+    {
+
+
+        $farms = Farm::where('owner', auth()->user()->username)->with('plots')->get();
+        $farm_plots =collect($farms)->pluck('plots')[0];
+
+
+
+
+
+
+
+
+        $trials = $farm_plots->map(function ($item){
+            return collect([
+                'id' => $item->id,
+                'name' => $item->name,
+                'crop' => $item->crop->name,
+                'farm' => $item->farm->name,
+                'size' => $item->size,
+                'size_unit' => $item->size_unit,
+                'location' => $item->district,
+                'created_at' =>$item->created_at->format('d/m/y')
+
+
+
+
+            ]);
+        });
+
+
+       // dd($trials->toarray());
+
+
+
+
+        $success = $farms;
+        if(empty($farms)){
+            $response = [
+                'success'=>false,
+                'message'=> 'farmer has no farms'
+             ];
+
+
+             return response()->json($response,404);
+
+
+        }elseif($farm_plots == []){
+            $response = [
+                'success'=>false,
+                'message'=> 'no plots exit on the farms'
+             ];
+
+
+             return response()->json($response,404);
+
+
+        }
+        else{
+
+
+
+
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-plots'=>$trials->count(),
+                    'plots'=>$trials->toarray()
+
+
+                ],
+                'message'=> 'plots on farms retrieved '
+             ];
+
+
+             return response()->json($response,200);
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+
 
     /**
      * Update the specified Plot in storage.

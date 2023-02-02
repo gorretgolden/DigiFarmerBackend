@@ -26,7 +26,8 @@ class AnimalFeedCategory extends Model
 
 
     public $fillable = [
-        'name'
+        'name',
+        'animal_category_id'
     ];
 
     /**
@@ -35,7 +36,8 @@ class AnimalFeedCategory extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string'
+        'name' => 'string',
+        'animal_category_id'=>'integer'
     ];
 
     /**
@@ -44,7 +46,8 @@ class AnimalFeedCategory extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string'
+        'name' => 'required|string',
+        'animal_category_id'=>'required|integer'
     ];
 
     //has many animal feed sub categories
@@ -52,4 +55,18 @@ class AnimalFeedCategory extends Model
     {
         return $this->hasMany(\App\Models\AnimalFeedSubCategory::class, 'animal_feed_category_id');
     }
+
+   //has many animal feed categories
+    public function animal_category()
+    {
+        return $this->belongsTo(\App\Models\AnimalCategory::class, 'animal_category_id');
+    }
+
+
+    //has many animal feeds
+    public function animal_feeds()
+    {
+        return $this->hasMany(\App\Models\AnimalFeed::class, 'animal_feed_category_id');
+    }
+
 }

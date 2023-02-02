@@ -5,7 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Http\Request;
 /**
  * Class Animal
  * @package App\Models
@@ -27,7 +27,9 @@ class Animal extends Model
     public $fillable = [
         'animal_category_id',
         'plot_id',
-        'total'
+        'total',
+        'farm_id'
+
     ];
 
     /**
@@ -38,7 +40,10 @@ class Animal extends Model
     protected $casts = [
         'animal_category_id' => 'integer',
         'plot_id' => 'integer',
-        'total' => 'integer'
+        'total' => 'integer',
+        'owner' => 'integer',
+        'farm_id'=>'integer'
+
     ];
 
     /**

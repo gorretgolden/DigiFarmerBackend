@@ -37,7 +37,7 @@ class TrainingVendorService extends Model
 
 
 
-
+ //   Carbon::now()->subDays(2)->toDateTimeString())->get();
 
 
     public $fillable = [
@@ -92,7 +92,7 @@ class TrainingVendorService extends Model
         'name' => 'required|string|unique:training_vendor_services',
         'charge' => 'required|integer',
         'description' => 'required|string',
-        'period' => 'required|integer',
+        'period' => 'nullable|integer',
         'period_unit' => 'nullable|string',
         'access' => 'required|string',
         'starting_date' => 'required',
@@ -103,7 +103,7 @@ class TrainingVendorService extends Model
         'location_details' => 'nullable',
         'vendor_category_id' => 'required|integer',
         'user_id' => 'required|integer',
-        'period_unit_id'  => 'required|integer',
+        'period_unit_id'  => 'nullable|integer',
         'image' => 'required|string'
     ];
 

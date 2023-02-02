@@ -15,9 +15,11 @@ class CreateCropsOnSaleTable extends Migration
     {
         Schema::create('crop_on_sales', function (Blueprint $table) {
             $table->id('id');
+            $table->string('name');
             $table->integer('quantity')->nullable();
             $table->integer('selling_price');
             $table->text('description');
+            $table->string('location');
             $table->string('image')->nullable();
             $table->string('quantity_unit')->default('kg');
             $table->string('price_unit')->default('UGX');

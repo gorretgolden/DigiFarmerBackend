@@ -16,6 +16,7 @@ class CreateCropsTable extends Migration
         Schema::create('crops', function (Blueprint $table) {
             $table->id();
             $table->string('name',100)->unique();
+            $table->boolean('is_active')->default(0);
             $table->integer('standard_price');
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->enum('price_unit',['per-kg','per-item'])->default('per-kg');

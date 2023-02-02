@@ -16,6 +16,7 @@ use App\Models\VendorCategory;
 use Illuminate\Http\Request;
 use App\Models\RentVendorSubCategory;
 use App\Models\Address;
+use App\Models\User;
 
 
 class RentVendorServiceController extends AppBaseController
@@ -80,20 +81,29 @@ class RentVendorServiceController extends AppBaseController
         $rent_vendor_service->rent_vendor_sub_category_id = $request->rent_vendor_sub_category_id;
         $rent_vendor_service->charge = $request->charge;
         $rent_vendor_service->quantity = $request->quantity;
+        $rent_vendor_service->status = 'available for rent';
 
         //charge unit
-        if($request->charge == 1){
-            $rent_vendor_service->charge_day = "day";
-        }else{
-            $rent_vendor_service->charge_day = $request->charge_day;
-        }
+        $rent_vendor_service->charge_frequency = "per day";
+
+         //set user as a vendor
+         $user = User::find($request->user_id);
+         if(!$user->is_vendor ==1){
+            $user->is_vendor =1;
+            $user->save();
+         }
         $rent_vendor_service->user_id = $request->user_id;
+
         $rent_vendor_service->location = $location->district_name;
-        $rent_vendor_service->charge_frequency = $request->charge_frequency;
         $rent_vendor_service->description = $request->description;
         $rent_vendor_service->vendor_category_id = $vendor_category->id;
-        $rent_vendor_service->total_charge = (int) ($request->charge_day * $request->charge);
+        // $rent_vendor_service->total_charge = (int) ($request->charge_day * $request->charge);
         $rent_vendor_service->save();
+
+        //update time since
+        $rent_vendor_service->time_since = $rent_vendor_service->created_at->diffForHumans();
+        $rent_vendor_service->save();
+
 
         if($request->hasFile('images')){
 

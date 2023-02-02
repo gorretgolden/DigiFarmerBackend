@@ -17,6 +17,7 @@ class CreateVendorCategoriesTable extends Migration
         Schema::create('vendor_categories', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
+            $table->boolean('enabled')->default(0);
             $table->string('image')->nullable();
             $table->timestamps();
 

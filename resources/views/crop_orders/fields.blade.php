@@ -1,27 +1,48 @@
 
 <?php
 $buyers = App\Models\User::where('user_type','farmer')->pluck('username','id');
-$crops_on_sales = App\Models\CropOnSale::all();
+$crops_on_sale = App\Models\CropOnSale::where('is_sold',false)->pluck('name','id');
 ?>
 
-<!-- Is Paid Field -->
+{{-- <!-- Is Paid Field -->
 <div class="form-group col-sm-6">
     <div class="form-check">
         {!! Form::hidden('is_paid', 0, ['class' => 'form-check-input']) !!}
         {!! Form::checkbox('is_paid', '1', null, ['class' => 'form-check-input']) !!}
         {!! Form::label('is_paid', 'Is Paid', ['class' => 'form-check-label']) !!}
     </div>
-</div>
+</div> --}}
 
 
-<!-- Is Accepted Field -->
+{{-- <!-- Is Accepted Field -->
 <div class="form-group col-sm-6">
     <div class="form-check">
         {!! Form::hidden('is_accepted', 0, ['class' => 'form-check-input']) !!}
         {!! Form::checkbox('is_accepted', '1', null, ['class' => 'form-check-input']) !!}
         {!! Form::label('is_accepted', 'Is Accepted', ['class' => 'form-check-label']) !!}
     </div>
+</div> --}}
+
+
+
+<!-- User Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('user_id', 'Farmers:') !!}
+    {!! Form::select('user_id', $buyers, null, ['class' => 'form-control custom-select']) !!}
 </div>
+
+
+
+
+
+<!--crops on sale-->
+<div class="form-group col-sm-6">
+    {!! Form::label('crop_on_sale_id', 'Crop On Sale') !!}
+    <select id="crop_on_sale" name="crop_on_sale_id" class="form-control">
+
+    </select>
+</div>
+
 
 
 <!-- User Id Field -->
@@ -30,13 +51,17 @@ $crops_on_sales = App\Models\CropOnSale::all();
     {!! Form::select('user_id', $buyers, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
-
-<div class="card">
+<div class="form-group col-sm-6">
+    {!! Form::label('buying_price', 'Buying Price:') !!}
+    {!! Form::number('buying_price', null, ['class' => 'form-control','placeholder'=>"Enter crop buying price"]) !!}
+</div>
+{{--
+{{-- <div class="card">
     <div class="card-header">
         Crops On Sale
     </div>
 
-    <div class="card-body">
+    {{-- <div class="card-body">
         <table class="table" id="products_table">
             <thead>
                 <tr>
@@ -70,8 +95,9 @@ $crops_on_sales = App\Models\CropOnSale::all();
                 <button id='delete_row' class="pull-right btn btn-danger">- Delete Row</button>
             </div>
         </div>
-    </div>
-</div>
+    </div> --}}
+{{-- </div> --}}
+
 
 
 <script>
@@ -95,3 +121,84 @@ $(document).ready(function(){
     });
   });
 </script>
+
+
+@push('scripts')
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+    <script>
+        $(document).ready(function() {
+
+            $('#user_id').on('change', function() {
+                var idFarmer = this.value;
+                console.log(idFarmer)
+
+                $('#crop_on_sale').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('farmer.crops-on-sale') }}",
+                    type: "get",
+                    data: {
+                        user_id: idFarmer
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#crop_on_sale').html(
+                            '<option value="">-- Select crop on sale --</option>');
+
+                        $.each(result.crops, function(key, value) {
+                            console.log(result)
+
+
+
+                            $("#crop_on_sale").append('<option value="' + value
+                                .id + '">' + value.quantity +value.quantity_unit +  " " +  " of " +  value.name +  " " +  "sold at " + value
+                                .selling_price +  " " + "by" +  " " + value.user.username + '</option>');
+
+
+                        });
+
+                    }
+                });
+            });
+
+
+            $('.animal_category_id').on('change', function() {
+                var category_id = this.value;
+                console.log(category_id)
+
+
+                $('#animal-feed').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('animal-categories.feeds') }}",
+                    type: "get",
+                    data: {
+                        animal_category_id: category_id
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+                        $('#animal-feed').html('<option value="">-- Select animal feed--</option>');
+
+                        $.each(result.animal_feed_categories, function(key, value) {
+                            console.log(result)
+
+                            $("#animal-feed").append('<option value="' + value
+                                .id + '">' + value.name  + '</option>');
+
+                            console.log('hello', value.name)
+
+                        });
+
+                    }
+                });
+            });
+
+
+
+
+        })
+    </script>
+
+
+
+@endpush

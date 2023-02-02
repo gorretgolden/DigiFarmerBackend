@@ -12,7 +12,8 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\CropOrder;
 use App\Models\CropOrderCropOnSale;
-
+use App\Models\CropOnSale;
+use Illuminate\Http\Request;
 class CropOrderController extends AppBaseController
 {
     /** @var CropOrderRepository $cropOrderRepository*/
@@ -37,7 +38,7 @@ class CropOrderController extends AppBaseController
 
     public function index()
     {
-    $orders = CropOrder::with('crops_on_sale')->get();
+    $orders = CropOrder::with('crop_on_sale')->latest()->get();
     return view('crop_orders.index', compact('orders'));
    }
 
@@ -61,11 +62,11 @@ class CropOrderController extends AppBaseController
     public function store(CreateCropOrderRequest $request)
     {
 
-        $existing_buyer = CropOrder::where('user_id',$request->user_id)->first();
-        $existing_crop_on_sale = CropOrderCropOnSale::where('crop_on_sale_id', $request->crops_on_sales)->first();
-       // dd($existing_crop_on_sale );
 
-        if($existing_buyer && $existing_crop_on_sale ){
+        $existing_crop_on_sale = CropOnSale::where('crop_id',$request->crop_id)->where('user_id',auth()->user()->id)->where('is_sold',false)->first();
+
+
+        if($existing_crop_on_sale ){
 
             Flash::error('You already made an order for'. " ". $existing_crop_on_sale->crop_on_sale->quantity.$existing_crop_on_sale->crop_on_sale->quantity_unit. " ". 'of'. " ". $existing_crop_on_sale->crop_on_sale->crop->name. " ". 'sold by' ." ". 'farmer:'. " ". $existing_crop_on_sale->crop_on_sale->user->username );
 
@@ -74,25 +75,24 @@ class CropOrderController extends AppBaseController
         }
         else{
 
+
             $order = CropOrder::create($request->all());
 
-            //dd($order);
+        //      $crop_orders = $request->input('crops_on_sales', []);
+        //    //dd($crop_orders);
 
-            $crop_orders = $request->input('crops_on_sales', []);
-           //dd($crop_orders);
+        //     $buying_prices = $request->input('buying_prices', []);
+        //     dd($buying_prices);
+        //     for ($crop_order=0; $crop_order < count($crop_orders); $crop_order++) {
+        //       if ($crop_orders[$crop_order] != '') {
 
-            $buying_prices = $request->input('buying_prices', []);
-           //dd($buying_prices);
-            for ($crop_order=0; $crop_order < count($crop_orders); $crop_order++) {
-              if ($crop_orders[$crop_order] != '') {
-                //dd($crop_orders[$crop_order]);
+        //         $order->crop_on_sale()->save($crop_orders[$crop_order], ['buying_price' => $buying_prices[$crop_order]]);
 
-                $order->crops_on_sale()->attach($crop_orders[$crop_order], ['buying_price' => $buying_prices[$crop_order]]);
-              }
-            }
+        //       }
+        //     }
 
 
-             Flash::success('Crop Order saved successfully.');
+             Flash::success('Crop buy request sent to farmer.');
 
              return redirect(route('cropOrders.index'));
         }

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class AgronomistVendorService
  * @package App\Models
- * @version December 20, 2022, 8:24 am CET
+ * @version January 22, 2023, 1:19 pm CET
  *
  * @property string $name
  * @property string $expertise
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $availability
  * @property string $description
  * @property string $zoom_details
- * @property string $location_details
+ * @property string $location
  * @property string $image
  * @property integer $user_id
  * @property integer $vendor_category_id
@@ -28,10 +28,8 @@ class AgronomistVendorService extends Model
 
     use HasFactory;
 
-    public $table = 'agronomist_vendor_services';
-    public $dir = 'storage/agronomists/';
-
-
+    public $table = 'agronomists';
+    public $dir = 'storage/agromomists/';
 
 
     public $fillable = [
@@ -42,10 +40,12 @@ class AgronomistVendorService extends Model
         'availability',
         'description',
         'zoom_details',
-        'location_details',
+        'location',
         'image',
         'user_id',
-        'vendor_category_id'
+        'vendor_category_id',
+        'crops',
+        'address_id'
     ];
 
     /**
@@ -61,7 +61,7 @@ class AgronomistVendorService extends Model
         'availability' => 'string',
         'description' => 'string',
         'zoom_details' => 'string',
-        'location_details' => 'string',
+        'location' => 'string',
         'image' => 'string',
         'user_id' => 'integer',
         'vendor_category_id' => 'integer'
@@ -73,17 +73,17 @@ class AgronomistVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:50',
-        'expertise' => 'required|string|max:255|min:20',
+        'name' => 'required|string|max:100',
+        'expertise' => 'required|min:10|string',
         'charge' => 'required|integer',
         'charge_unit' => 'nullable',
         'availability' => 'required|string',
-        'description' => 'required|string|max:255',
+        'description' => 'required|min:10',
         'zoom_details' => 'nullable',
-        'location_details' => 'nullable',
+        'location' => 'nullable',
         'image' => 'required|image',
         'user_id' => 'required|integer',
-        'vendor_category_id' => 'required|integer'
+        'vendor_category_id' => 'nullable'
     ];
 
 
@@ -94,24 +94,42 @@ class AgronomistVendorService extends Model
     }
 
 
+
+
     //belongs to a vendor category
     public function vendor_category()
     {
         return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
     }
 
+
     //has many agronomist schedules
     public function agronomist_schedules()
     {
-        return $this->hasMany(\App\Models\AgronomistShedule::class, 'agronomist_vendor_service_id');
+        return $this->hasMany(\App\Models\AgronomistShedule::class, 'agronomist_id');
     }
+
 
     public function getImageAttribute($value)
     {
 
 
+
+
      return $this->dir.$value;
     }
+
+
+
+
+    //belongs to may crops
+    public function crops()
+    {
+        return $this->belongsToMany(\App\Models\Crop::class,'agronomist_crop','agronomist_id','crop_id');
+    }
+
+
+
 
 
 }

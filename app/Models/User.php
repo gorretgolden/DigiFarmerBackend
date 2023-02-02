@@ -53,6 +53,7 @@ class User extends Authenticable implements  Wallet
         'user_type_id',
         'password',
         'confirm-password',
+        'is_active'
     ];
 
     /**
@@ -70,7 +71,8 @@ class User extends Authenticable implements  Wallet
         'password' => 'string',
         'email_verified_at' => 'datetime',
         'confirm-password' => 'string',
-        'user_type_id' => 'integer'
+        'user_type_id' => 'integer',
+        'is_active'=>'boolean'
     ];
 
     /**
@@ -230,6 +232,13 @@ class User extends Authenticable implements  Wallet
     public function agronomist_services()
     {
         return $this->hasMany(\App\Models\AgronomistVendorService::class,'user_id');
+    }
+
+
+    //has many vet services
+    public function vet_services()
+    {
+        return $this->hasMany(\App\Models\Veterinary::class,'user_id');
     }
 
     public function getImageUrlAttribute($image)

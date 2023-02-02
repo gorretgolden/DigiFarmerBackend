@@ -20,13 +20,14 @@ class Terms extends Model
     use HasFactory;
 
     public $table = 'terms';
-    
+
 
 
 
     public $fillable = [
         'title',
-        'description'
+        'description',
+        'is_active'
     ];
 
     /**
@@ -36,7 +37,8 @@ class Terms extends Model
      */
     protected $casts = [
         'title' => 'string',
-        'description' => 'string'
+        'description' => 'string',
+        'is_active' =>'boolean'
     ];
 
     /**
@@ -46,8 +48,8 @@ class Terms extends Model
      */
     public static $rules = [
         'title' => 'required|string|max:50',
-        'description' => 'required|string|max:255'
+        'description' => 'required|string'
     ];
 
-    
+
 }

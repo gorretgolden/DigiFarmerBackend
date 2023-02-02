@@ -46,4 +46,11 @@ class RentVendorCategory extends Model
     ];
 
 
+    //has many rent sub categories
+    public function rent_sub_categories()
+    {
+    return $this->hasMany(\App\Models\RentVendorSubCategory::class, 'rent_vendor_sub_category_id');
+    }
+
+
 }
