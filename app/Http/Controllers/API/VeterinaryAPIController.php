@@ -38,11 +38,7 @@ class VeterinaryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $veterinaries = $this->veterinaryRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $veterinaries = Veterinary::where('is_verified',1)->latest()->get();
 
         return $this->sendResponse($veterinaries->toArray(), 'Veterinaries retrieved successfully');
     }
@@ -107,7 +103,7 @@ class VeterinaryAPIController extends AppBaseController
             $response = [
                 'success'=>false,
                 'data'=>$new_vet_service,
-                'message'=> 'Veterinary Service saved successfully.'
+                'message'=> 'Veterinary Service saved successfully, waiting for verification'
              ];
 
              return response()->json($response,200);
@@ -164,7 +160,8 @@ class VeterinaryAPIController extends AppBaseController
             $success['expertise'] = $veterinary->expertise;
             $success['description'] = $veterinary->description;
             $success['location'] = $veterinary->location;
-            $success['charge'] = $veterinary->charge."".$veterinary->charge_unit;
+            $success['charge'] = $veterinary->charge;
+            $success['charge_unit'] = $veterinary->charge_unit;
             $success['vendor'] = $veterinary->user->username;
             $success['image'] = $veterinary->image;
             $success['animal_categories'] = $veterinary->animal_categories()->orderBy('name')->get(['name']);
@@ -227,6 +224,48 @@ class VeterinaryAPIController extends AppBaseController
     }
 
 
+    public function vet_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,400);
+
+        }
+
+        $all_vets = Veterinary::where('is_verified',1)->get();
+        $vets = Veterinary::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('expertise','like', '%' . $search.'%')->get();
+
+
+        if(count($vets) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($vets)." "."results found out of"." ".count($all_vets),
+                    'search-results'=>$vets,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
     //get vet shedules
     public function vet_schedules(Request $request,$id)
     {

@@ -87,6 +87,8 @@ Route::group(['middleware' => 'admin'], function () {
 
  });
 
+ Route::get('notifications', [App\Http\Controllers\NotificationController::class,'index'])->name('notifications');
+
 
 
 //google login

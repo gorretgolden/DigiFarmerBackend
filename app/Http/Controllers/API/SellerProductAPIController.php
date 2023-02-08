@@ -12,7 +12,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
-
+use Illuminate\Support\Facades\File;
 
 /**
  * Class SellerProductController
@@ -38,12 +38,7 @@ class SellerProductAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sellerProducts = $this->sellerProductRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $sellerProducts = SellerProduct::where('is_verified',1)->latest()->get();
         return $this->sendResponse($sellerProducts->toArray(), 'Seller Products retrieved successfully');
     }
 
@@ -63,7 +58,8 @@ class SellerProductAPIController extends AppBaseController
             'price' => 'required|integer',
             'seller_product_category_id' => 'required|integer',
             'image' => 'required',
-            'address_id'=>'required|integer'
+            'address_id'=>'required|integer',
+            'stock_amount'=>'required|integer'
         ];
         $request->validate($rules);
 
@@ -75,6 +71,7 @@ class SellerProductAPIController extends AppBaseController
         $new_farm_product->price_unit = "UGX";
         $new_farm_product->status = "on-sale";
         $new_farm_product->image = $request->image;
+        $new_farm_product->stock_amount = $request->stock_amount;
 
 
         $user = User::find(auth()->user()->id);
@@ -100,7 +97,7 @@ class SellerProductAPIController extends AppBaseController
         $new_farm_product->save();
 
 
-        return $this->sendResponse($new_farm_product->toArray(), 'Seller Product saved successfully');
+        return $this->sendResponse($new_farm_product->toArray(), 'Product created successfully, waiting for verification');
     }
 
     /**
@@ -121,9 +118,11 @@ class SellerProductAPIController extends AppBaseController
         }else{
             $success['name'] = $sellerProduct->name;
             $success['location'] = $sellerProduct->location;
-            $success['price'] = $sellerProduct->price_unit." ".$sellerProduct ->price;
+            $success['price'] = $sellerProduct->price;
+            $success['price_unit'] = $sellerProduct->price_unit;
             $success['status'] = $sellerProduct->status;
             $success['image'] = $sellerProduct->image;
+            $success['stock_amount'] = $sellerProduct->stock_amount;
             $success['description'] = $sellerProduct->description;
             $success['category'] = $sellerProduct->seller_product_category->name;
             $success['vendor'] = $sellerProduct->user->username;
@@ -174,6 +173,50 @@ class SellerProductAPIController extends AppBaseController
 
      }
 
+
+
+    public function product_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,200);
+
+        }
+
+        $total_products = SellerProduct::where('is_verified',1)->get();
+        $products = SellerProduct::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+
+
+        if(count($products) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($products)." "."results found out of"." ".count($total_products),
+                    'search-results'=>$products,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
     /**
      * Update the specified SellerProduct in storage.
      * PUT/PATCH /sellerProducts/{id}
@@ -195,6 +238,15 @@ class SellerProductAPIController extends AppBaseController
         }
 
         $sellerProduct = $this->sellerProductRepository->update($input, $id);
+
+        if(!empty($request->file('image'))){
+            File::delete('storage/seller_products/'.$sellerProduct->image);
+            $sellerProduct->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_products');
+            $sellerProduct->save();
+        }else{
+
+            $sellerProduct->image= $request->image;
+        }
 
         return $this->sendResponse($sellerProduct->toArray(), 'SellerProduct updated successfully');
     }

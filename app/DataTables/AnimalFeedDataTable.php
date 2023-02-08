@@ -18,7 +18,12 @@ class AnimalFeedDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'animal_feeds.datatables_actions');
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.'  width="40" height="50"/>';
+
+        })
+        ->addColumn('action', 'animal_feeds.datatables_actions')
+        ->rawColumns(['image','action']);
     }
 
     /**
@@ -53,6 +58,7 @@ class AnimalFeedDataTable extends DataTable
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
+
                 ],
             ]);
     }
@@ -66,13 +72,19 @@ class AnimalFeedDataTable extends DataTable
     {
         return [
             'name',
-            'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Animal Feed  Category",'data'=>'category.name']),
+            'image',
+            'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Category",'data'=>'category.name']),
             'price',
+            'stock_amount' => new \Yajra\DataTables\Html\Column(['title'=>"Stock",'data'=>'stock_amount']),
             'weight',
-            'weight_unit',
+            'weight_unit'=> new \Yajra\DataTables\Html\Column(['title'=>"Unit",'data'=>'weight_unit']),
             'status',
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
-            'location'
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'vendor.phone']),
+            'location',
+            'is_verified'=> new \Yajra\DataTables\Html\Column(['title'=>"Verified",'data'=>'is_verified']),
+
+
         ];
     }
 

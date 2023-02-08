@@ -12,8 +12,10 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\VendorCategory;
 use App\Models\AnimalFeed;
+use Illuminate\Http\Request;
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 
 class AnimalFeedController extends AppBaseController
 {
@@ -57,6 +59,7 @@ class AnimalFeedController extends AppBaseController
     public function store(CreateAnimalFeedRequest $request)
     {
         $input = $request->all();
+        dd($input);
         $vendor_category = VendorCategory::where('name','Animal Feeds')->first();
         $location = Address::find($request->address_id);
 
@@ -71,6 +74,12 @@ class AnimalFeedController extends AppBaseController
         $new_animal_feed->vendor_category_id = $vendor_category->id;
         $new_animal_feed->location = $location->district_name;
         $new_animal_feed->description = $request->description;
+        $new_animal_feed->stock_amount = $request->stock_amount;
+        $new_animal_feed->is_verified = $request->is_verified;
+        $new_animal_feed->user_id = $request->user_id;
+        $new_animal_feed->status = "on-sale";
+        $new_animal_feed->image = $request->image;
+        $new_animal_feed->save();
 
         //set user as a vendor
         $user = User::find($request->user_id);
@@ -80,21 +89,14 @@ class AnimalFeedController extends AppBaseController
         }
 
 
-        $new_animal_feed->user_id = $request->user_id;
-        $new_animal_feed->status = "on-sale";
-        $new_animal_feed->image = $request->image;
-
-        $new_animal_feed->save();
-
-         //update time since
-         $new_animal_feed->time_since = $new_animal_feed->created_at->diffForHumans();
-         $new_animal_feed->save();
 
         if(!empty($request->file('image'))){
             $new_animal_feed->image= \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
-        }
+            $new_animal_feed->save();
 
+        }
         $new_animal_feed->save();
+
 
         Flash::success('Animal Feed posted successfully.');
 
@@ -149,17 +151,60 @@ class AnimalFeedController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateAnimalFeedRequest $request)
+    public function update($id,Request $request)
     {
+
+        $rules = [
+            'name' => 'required|string',
+            'animal_feed_category_id' => 'nullable|integer',
+            'price' => 'required|integer',
+            'price_unit' => 'nullable',
+            'description' => 'required|min:10',
+            'user_id' => 'required|integer',
+            'image' => 'nullable',
+            'weight' => 'required|integer',
+            'weight_unit' => 'required|string',
+            'stock_amount' => 'required|integer',
+
+
+        ];
+
+        $request->validate($rules);
         $animalFeed = $this->animalFeedRepository->find($id);
 
         if (empty($animalFeed)) {
             Flash::error('Animal Feed not found');
-
             return redirect(route('animalFeeds.index'));
         }
 
-        $animalFeed = $this->animalFeedRepository->update($request->all(), $id);
+
+        if(!empty($request->address_id)){
+            $location = Address::find($request->address_id);
+            $animalFeed->location = $location->district_name;
+            $animalFeed->save();
+
+        }elseif(!empty($request->file('image'))){
+            File::delete('storage/animal_feeds/'.$animalFeed->image);
+            $animalFeed->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
+            $animalFeed->save();
+
+        }elseif(!empty($request->animal_feed_category_id)){
+            $animalFeed->animal_feed_category_id = $request->animal_feed_category_id;
+            $animalFeed->is_verified = $request->is_verified;
+            $animalFeed->save();
+        }else{
+
+            $animalFeed->weight = $request->weight;
+            $animalFeed->weight_unit = $request->weight_unit;
+            $animalFeed->name = $request->name;
+            $animalFeed->price = $request->price;
+            $animalFeed->description = $request->description;
+            $animalFeed->stock_amount = $request->stock_amount;
+            $animalFeed->is_verified = $request->is_verified;
+            $animalFeed->save();
+
+        }
+
 
         Flash::success('Animal Feed updated successfully.');
 

@@ -20,11 +20,10 @@ class CreateRentVendorServicesTable extends Migration
             $table->string('location');
             $table->integer('quantity');
             $table->integer('charge');
-            $table->integer('charge_day')->default(1);
             $table->string('charge_unit')->default('UGX');
-            $table->string('charge_frequency')->default('day');
-            $table->integer('total_charge')->default(0);
+            $table->string('charge_frequency')->default('per day');
             $table->text('description');
+            $table->string('image')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();

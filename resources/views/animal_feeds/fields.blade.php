@@ -14,7 +14,7 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
      Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('price', 'Price:') !!}
-    {!! Form::number('price', null, ['class' => 'form-control']) !!}
+    {!! Form::number('price', null, ['class' => 'form-control','min'=>500]) !!}
 </div>
 
 
@@ -40,7 +40,7 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 <!--weight Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('weight', 'Weight:') !!}
-    {!! Form::number('weight', null, ['class' => 'form-control']) !!}
+    {!! Form::number('weight', null, ['class' => 'form-control','min'=>1]) !!}
 </div>
 <!--    Weight Unit Field -->
 <div class="form-group col-sm-6">
@@ -65,6 +65,12 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 </div>
 
 
+
+<!-- Stock Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('stock_amount', 'Stock amount:') !!}
+    {!! Form::number('stock_amount', null, ['class' => 'form-control','min'=>1]) !!}
+</div>
 <!-- Image Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('image', 'Image:') !!}
@@ -83,6 +89,14 @@ $vendors = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 </div>
 
 
+<!-- Is verified Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
+</div>
 
 @push('scripts')
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}

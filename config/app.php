@@ -164,6 +164,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
         KingFlamez\Rave\RaveServiceProvider::class,
+        Darryldecode\Cart\CartServiceProvider::class,
 
 
         /*
@@ -239,6 +240,7 @@ return [
         'Datatables' => Yajra\DataTables\Facades\Datatables::class,
         'Carbon' => Illuminate\Support\Carbon::class,
         'Rave' => KingFlamez\Rave\Facades\Rave::class,
+        'Cart' => Darryldecode\Cart\Facades\CartFacade::class
 
     ],
 

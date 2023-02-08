@@ -19,7 +19,8 @@
 <!-- Image Url Field -->
 <div class="col-sm-12">
     {!! Form::label('image_url', 'Image Url:') !!}
-    <p>{{ $user->image_url }}</p>
+    <img src="{{ $user->image_url ? $user->image_url : asset('img/avatar-1.png') }}"
+                            width="50px" height="50px" />
 </div>
 
 <!-- Phone Field -->
@@ -35,16 +36,13 @@
 </div>
 
 <!-- Country Id Field -->
-<div class="col-sm-12">
+{{-- <div class="col-sm-12">
     {!! Form::label('country_id', 'Country:') !!}
     <p>{{ $user->country->name }}</p>
-</div>
+</div> --}}
 
 <!-- Password Field -->
-<div class="col-sm-12">
-    {!! Form::label('password', 'Password:') !!}
-    <p>{{ $user->password }}</p>
-</div>
+
 
 <!-- Created At Field -->
 <div class="col-sm-12">

@@ -18,7 +18,12 @@ class TrainingVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'training_vendor_services.datatables_actions');
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.'  width="40" height="50"/>';
+
+        })
+        ->addColumn('action', 'training_vendor_services.datatables_actions')
+        ->rawColumns(['image','action']);
     }
 
     /**
@@ -66,6 +71,7 @@ class TrainingVendorServiceDataTable extends DataTable
     {
         return [
             'name',
+            'image',
             'charge',
             'access',
             'starting_date',
@@ -75,7 +81,8 @@ class TrainingVendorServiceDataTable extends DataTable
             'zoom_details',
             'location',
             'vendor_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor Category",'data'=>'vendor_category.name']),
-            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username'])
+            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
+            'is_verified' => new \Yajra\DataTables\Html\Column(['title'=>"Verifiedr",'data'=>'is_verified'])
         ];
     }
 

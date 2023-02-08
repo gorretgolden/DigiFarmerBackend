@@ -18,7 +18,12 @@ class InsuaranceVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'insuarance_vendor_services.datatables_actions');
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.'  width="40" height="50"/>';
+
+        })
+        ->addColumn('action', 'insuarance_vendor_services.datatables_actions')
+        ->rawColumns(['image','action']);
     }
 
     /**
@@ -29,7 +34,7 @@ class InsuaranceVendorServiceDataTable extends DataTable
      */
     public function query(InsuaranceVendorService $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('user');
     }
 
     /**
@@ -66,9 +71,13 @@ class InsuaranceVendorServiceDataTable extends DataTable
     {
         return [
             'name',
+            'image',
             'terms',
             'description',
-            'user_id'
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'user.username']),
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'user.phone']),
+            'location',
+            'is_verified'
         ];
     }
 

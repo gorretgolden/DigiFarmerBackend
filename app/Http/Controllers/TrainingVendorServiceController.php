@@ -16,6 +16,7 @@ use App\Models\User;
 use Carbon;
 use App\Models\VendorCategory;
 use App\Models\Address;
+use Illuminate\Support\Facades\File;
 
 class TrainingVendorServiceController extends AppBaseController
 {
@@ -78,14 +79,6 @@ class TrainingVendorServiceController extends AppBaseController
         $request->validate($rules);
         $vendor_category = VendorCategory::where('name','Training')->first();
 
-        //get days and ending date
-    //     if($request->ending_date> Carbon::now()->subDays(2)->toDateTimeString()){
-    //         dd('yes');
-    //    }else{
-    //        dd('no');
-    //    }
-
-        //access if (DateTime.Now.AddDays(-30).CompareTo(date) > 0)
         if($request->access == 'Online'){
 
             $request->validate(['zoom_details' => 'required|string']);
@@ -110,7 +103,6 @@ class TrainingVendorServiceController extends AppBaseController
             }
             $online_training->user_id = $request->user_id;
 
-            $online_training->image = $request->image;
             $online_training->zoom_details = $request->zoom_details;
             $online_training->save();
 
@@ -118,6 +110,8 @@ class TrainingVendorServiceController extends AppBaseController
 
             if(!empty($request->file('image'))){
                 $online_training->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
+                $online_training->save();
+
             }
 
             $online_training->save();
@@ -161,6 +155,8 @@ class TrainingVendorServiceController extends AppBaseController
                 $online_training = TrainingVendorService::find($online_training->id);
                 if(!empty($request->file('image'))){
                     $online_training->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
+                    $online_training->save();
+
                 }
 
                 $online_training->save();
@@ -228,8 +224,27 @@ class TrainingVendorServiceController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateTrainingVendorServiceRequest $request)
+    public function update($id, Request $request)
     {
+        $rules = [
+            'name' => 'required|string',
+            'charge' => 'required|integer',
+            'description' => 'required|string',
+            'period' => 'nullable|integer',
+            'period_unit' => 'nullable|string',
+            'access' => 'required|string',
+            'starting_date' => 'required',
+            'ending_date' => 'required',
+            'starting_time' => 'required',
+            'ending_time' => 'required',
+            'zoom_details' => 'nullable',
+            'location_details' => 'nullable',
+            'user_id' => 'required|integer',
+            'period_unit_id'  => 'nullable|integer',
+            'image' => 'nullable|string'
+        ];
+        $request->validate($rules);
+
         $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
 
         if (empty($trainingVendorService)) {
@@ -241,9 +256,15 @@ class TrainingVendorServiceController extends AppBaseController
         $trainingVendorService->fill($request->all());
 
         if(!empty($request->file('image'))){
+            File::delete('storage/training-services'.$trainingVendorService->image);
             $trainingVendorService->image = \App\Models\ImageUploader::upload($request->file('image'),'training-services');
+            $trainingVendorService->save();
+        }else{
+
+            $trainingVendorService->image = $request->image;
         }
-        $trainingVendorService->save();
+
+
 
 
         Flash::success('Training Vendor Service updated successfully.');

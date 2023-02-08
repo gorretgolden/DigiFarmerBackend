@@ -30,6 +30,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $notifications = auth()->user()->unreadNotifications()->limit(5)->get();
+        //dd(count($notifications));
         $total_farmers = User::where('user_type','=','farmer')->count();
         $total_vendors = User::where('is_vendor',1)->count();
         $total_users = User::all()->count();
@@ -39,6 +41,7 @@ class HomeController extends Controller
         $total_crops_on_sale = CropOnSale::all()->count();
         $total_crop_orders = CropOrder::all()->count();
 
+        //dd( $notifications);
         //chart
         // $users = User::select(DB::raw("COUNT(*) as count"), DB::raw("MONTHNAME(created_at) as month_name"))
         //             ->whereYear('created_at', date('Y'))
@@ -48,7 +51,7 @@ class HomeController extends Controller
         // $labels = $users->keys();
         // $data = $users->values();
 
-        return view('home',compact('total_farmers','total_vendors','total_users','total_farms','total_crops','total_crops_on_sale','total_crop_orders','total_animals'));
+        return view('home',compact('notifications','total_farmers','total_vendors','total_users','total_farms','total_crops','total_crops_on_sale','total_crop_orders','total_animals'));
     }
 
     public function admin(){

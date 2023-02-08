@@ -8,8 +8,7 @@
                     <h1>Animal Feed Details</h1>
                 </div>
                 <div class="col-sm-6">
-                    <a class="btn btn-default float-right"
-                       href="{{ route('animalFeeds.index') }}">
+                    <a class="btn btn-default float-right" href="{{ route('animalFeeds.index') }}">
                         Back
                     </a>
                 </div>
@@ -17,12 +16,12 @@
         </div>
     </section>
 
-    <div class="content px-3">
+    <div class="content px-2">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    @include('animal_feeds.show_fields')
-                </div>
+
+                @include('animal_feeds.show_fields')
+
             </div>
         </div>
     </div>

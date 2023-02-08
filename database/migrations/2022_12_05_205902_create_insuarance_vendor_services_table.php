@@ -19,6 +19,7 @@ class CreateInsuaranceVendorServicesTable extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->text('terms');
+            $table->boolean('is_verified')->default(false);
             $table->text('description');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->foreignId('vendor_category_id')->constrained()->onDelete('CASCADE');

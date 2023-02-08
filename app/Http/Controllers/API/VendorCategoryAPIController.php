@@ -35,7 +35,7 @@ class VendorCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $vendorCategories = VendorCategory::where('enabled',1)->latest()->get('id','name','image');
+        $vendorCategories = VendorCategory::where('enabled',1)->latest()->get(['id','name','image']);
         return $this->sendResponse($vendorCategories->toArray(), 'Vendor Categories retrieved successfully');
     }
 

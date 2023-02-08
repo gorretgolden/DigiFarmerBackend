@@ -38,7 +38,7 @@ class RentVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $rentVendorServices = RentVendorService::with('images')->latest()->get(['id','name','location','charge','charge_frequency','charge_unit','description','status','created_at']);
+        $rentVendorServices = RentVendorService::where('is_verified',1)->latest()->get(['id','name','location','image','charge','charge_frequency','charge_unit','description','status','created_at']);
         $response = [
             'success'=>true,
             'data'=> [
@@ -57,7 +57,7 @@ class RentVendorServiceAPIController extends AppBaseController
 
     public function home_rent_vendors(Request $request)
     {
-        $rentVendorServices = RentVendorService::with('images')->limit(4)->get();
+        $rentVendorServices = RentVendorService::where('is_verified',1)->latest()->limit(4)->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -74,6 +74,49 @@ class RentVendorServiceAPIController extends AppBaseController
     }
 
 
+    public function rent_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,200);
+
+        }
+
+        $all_rent = RentVendorService::where('is_verified',1)->get();
+        $rent = RentVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+
+
+        if(count($rent) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($rent)." "."results found out of"." ".count($all_rent),
+                    'search-results'=>$rent,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
+
     /**
      * Store a newly created RentVendorService in storage.
      * POST /rentVendorServices
@@ -88,15 +131,15 @@ class RentVendorServiceAPIController extends AppBaseController
         $rules = [
             'name' => 'required|string|unique:rent_vendor_services|min:10|max:30',
             'rent_vendor_sub_category_id' => 'required|integer',
-            'charge' => 'required|integer',
+            'charge' => 'required|integer|min:500',
             'description' => 'required|string|min:20|max:1000',
-            'images' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:5048',
-            'images' => 'max:3',
-            // 'address_id' => 'required|integer',
-            'quantity'=> 'required|integer'
+            'image' => 'required|image',
+            'image.*' => 'image|mimes:jpeg,png,jpg|max:5048',
+            'quantity'=> 'required|integer',
+            'charge_frequency'=> 'required|string'
 
         ];
+
         $request->validate($rules);
         $input = $request->all();
         $vendor_category = VendorCategory::where('name','Rent')->first();
@@ -109,6 +152,8 @@ class RentVendorServiceAPIController extends AppBaseController
         $rent_vendor_service->charge = $request->charge;
         $rent_vendor_service->quantity = $request->quantity;
         $rent_vendor_service->status = 'available for rent';
+        $rent_vendor_service->charge_frequency = $request->charge_frequency;
+        $rent_vendor_service->image = $request->image;
 
         $user = User::find(auth()->user()->id);
         if(!$user->is_vendor ==1){
@@ -117,27 +162,29 @@ class RentVendorServiceAPIController extends AppBaseController
         }
         $rent_vendor_service->user_id = auth()->user()->id;
         $rent_vendor_service->location = $location->district_name;
-        $rent_vendor_service->charge_frequency = "per day";
         $rent_vendor_service->description = $request->description;
         $rent_vendor_service->vendor_category_id = $vendor_category->id;
         $rent_vendor_service->save();
 
-        // //update time since
-        // $rent_vendor_service->time_since = $rent_vendor_service->created_at->diffForHumans();
-        // $rent_vendor_service->save();
 
-        if($request->hasFile('images')){
-
-            foreach ($request->file('images') as $imagefile) {
-                $image = new RentVendorImage();
-                $path = $imagefile->store('/storage/rent', ['disk' =>   'rent-images']);
-                $image->url = $path;
-                $image->rent_vendor_service_id = $rent_vendor_service->id;
-                $image->save();
-              }
+        if(!empty($request->file('image'))){
+            $rent_vendor_service->image = \App\Models\ImageUploader::upload($request->file('image'),'rent');
         }
+        $rent_vendor_service->save();
 
-        return $this->sendResponse($rent_vendor_service->toArray(), 'Rent Vendor Service saved successfully');
+
+        // if($request->hasFile('images')){
+
+        //     foreach ($request->file('images') as $imagefile) {
+        //         $image = new RentVendorImage();
+        //         $path = $imagefile->store('/storage/rent', ['disk' =>   'rent-images']);
+        //         $image->url = $path;
+        //         $image->rent_vendor_service_id = $rent_vendor_service->id;
+        //         $image->save();
+        //       }
+        // }
+
+        return $this->sendResponse($rent_vendor_service->toArray(), 'Rent Vendor Service created, waiting for verification');
     }
 
     /**
@@ -163,7 +210,9 @@ class RentVendorServiceAPIController extends AppBaseController
 
             $success['name'] = $rentVendorService->name;
             $success['location'] = $rentVendorService->location;
-            $success['charge'] = $rentVendorService->charge_unit." ".$rentVendorService ->charge;
+            $success['charge'] = $rentVendorService->charge;
+            $success['charge_unit'] = $rentVendorService->charge_unit;
+            $success['charge_frequency'] = $rentVendorService->charge_frequency;
             $success['status'] = $rentVendorService->status;
             $success['description'] = $rentVendorService->description;
             $success['vendor'] = $rentVendorService->vendor->username;
@@ -171,7 +220,8 @@ class RentVendorServiceAPIController extends AppBaseController
             $success['rent_sub_category'] = $rentVendorService->rent_vendor_sub_category->name;
             $success['created_at'] = $rentVendorService->created_at->format('d/m/Y');
             $success['time_since'] = $rentVendorService->created_at->diffForHumans();
-            $success['images'] = $rentVendorService->images()->get(['id','url']);
+            $success['image']= $rentVendorService->image;
+            // $success['image'] = $rentVendorService->images()->get(['id','url']);
         }
         $response = [
             'success'=>true,

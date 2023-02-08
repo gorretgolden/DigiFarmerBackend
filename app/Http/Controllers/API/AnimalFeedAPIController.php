@@ -12,6 +12,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\User;
 use App\Models\Address;
+
 /**
  * Class AnimalFeedController
  * @package App\Http\Controllers\API
@@ -37,10 +38,13 @@ class AnimalFeedAPIController extends AppBaseController
     public function index(Request $request)
     {
 
-        $animalFeeds = AnimalFeed::with('category','vendor')->latest()->get();
+        $animalFeeds = AnimalFeed::with('category')->where('is_verified',1)->latest()->get();
         $response = [
             'success'=>true,
-            'data'=> $animalFeeds,
+            'data'=> [
+                'total-animal-feeds'=>count($animalFeeds),
+                'animal-feeds'=>$animalFeeds
+            ],
             'message'=> 'Animal Feeds retrieved successfully'
          ];
          return response()->json($response,200);
@@ -65,6 +69,7 @@ class AnimalFeedAPIController extends AppBaseController
             'image' => 'required',
             'weight' => 'required|integer',
             'address_id' => 'required|integer',
+            'stock_amount' => 'required|integer'
 
 
 
@@ -85,6 +90,7 @@ class AnimalFeedAPIController extends AppBaseController
           $new_animal_feed->vendor_category_id = $vendor_category->id;
           $new_animal_feed->location = $location->district_name;
           $new_animal_feed->description = $request->description;
+          $new_animal_feed->stock_amount = $request->stock_amount;
 
           $user = User::find(auth()->user()->id);
           if(!$user->is_vendor ==1){
@@ -93,14 +99,13 @@ class AnimalFeedAPIController extends AppBaseController
           }
           $new_animal_feed->user_id = auth()->user()->id;
           $new_animal_feed->weight = $request->weight;
+          $new_animal_feed->weight_unit = $request->weight_unit;
           $new_animal_feed->image = $request->image;
           $new_animal_feed->status = "on-sale";
           $new_animal_feed->save();
 
 
-        //   //update time since
-        //   $new_animal_feed->time_since = $new_animal_feed->created_at->diffForHumans();
-        //   $new_animal_feed->save();
+
 
           if(!empty($request->file('image'))){
             $new_animal_feed->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
@@ -108,7 +113,7 @@ class AnimalFeedAPIController extends AppBaseController
 
           $new_animal_feed->save();
 
-        return $this->sendResponse($new_animal_feed->toArray(), 'Animal Feed saved successfully');
+        return $this->sendResponse($new_animal_feed->toArray(), 'Animal Feed posted successfully, waiting for verification');
     }
 
     /**
@@ -128,8 +133,9 @@ class AnimalFeedAPIController extends AppBaseController
             return $this->sendError('Animal Feed not found');
         }
         else{
-            $success['name'] = $animalFeed ->name;
-            $success['price'] = $animalFeed ->price." ".$animalFeed ->price_unit;
+            $success['name'] = $animalFeed->name;
+            $success['price'] = $animalFeed->price;
+            $success['price_unit'] = $animalFeed->price_unit;
             $success['weight'] = $animalFeed ->weight." ".$animalFeed ->weight_unit;
             $success['description'] = $animalFeed ->description;
             $success['location'] = $animalFeed ->location;
@@ -187,31 +193,68 @@ class AnimalFeedAPIController extends AppBaseController
 
     }
 
-    //search for an animal feed by name
-    public function search_animal_feed_by_name(Request $request,$name){
+    public function home_animal_feeds(Request $request)
+    {
+        $animal_feeds = AnimalFeed::where('is_verified',1)->limit(4)->get();
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-feeds'=>$animal_feeds->count(),
+                'feeds'=>$animal_feeds
+
+            ],
+
+            'message'=> 'Animal feeds retrieved successfully'
+         ];
+         return response()->json($response,200);
 
 
-        if($name == ''){
-            $animal_feeds = \App\Models\AnimalFeed::orderby('name','asc')->select('id','name')->limit(5)->get();
+    }
+
+
+    public function animal_feed_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,400);
+
         }
-        else{
+        $total_feeds = AnimalFeed::where('is_verified',1)->get();
+        $animal_feeds = AnimalFeed::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
 
-            $animal_feeds = \App\Models\AnimalFeed::orderby('name','asc')->where('name','like','%'.$name.'%')->limit(5)->get();
 
+        if(count($animal_feeds) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
             $response = [
                 'success'=>true,
                 'data'=> [
-                    'total-animal-feeds' =>$animal_feeds->count(),
-                    'search-results'=>$animal_feeds
+                    'total-results'=>count($animal_feeds)." "."results found out of"." ".count($total_feeds),
+                    'search-results'=>$animal_feeds,
+
                 ],
 
-             ];
-
+                'message'=> 'search results'
+              ];
              return response()->json($response,200);
 
         }
 
-    }
+
+
+}
+
+
 
 
 

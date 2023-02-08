@@ -14,7 +14,7 @@ use App\Models\VendorCategory;
 use App\Models\InsuaranceVendorService;
 use App\Models\Address;
 use App\Models\User;
-
+use Illuminate\Http\Request;
 class InsuaranceVendorServiceController extends AppBaseController
 {
     /** @var InsuaranceVendorServiceRepository $insuaranceVendorServiceRepository*/
@@ -64,6 +64,7 @@ class InsuaranceVendorServiceController extends AppBaseController
         $new_insuarance->name = $request->name;
         $new_insuarance->terms = $request->terms;
         $new_insuarance->description = $request->description;
+        $new_insuarance->is_verified = $request->is_verified;
 
          //set user as a vendor
          $user = User::find($request->user_id);
@@ -137,8 +138,19 @@ class InsuaranceVendorServiceController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateInsuaranceVendorServiceRequest $request)
+    public function update($id,Request $request)
     {
+
+        $rules = [
+            'name' => 'required|string',
+            'terms' => 'required|string',
+            'description' => 'required|string',
+            'user_id' => 'required|integer',
+            'image' => 'nullable|string',
+
+
+        ];
+        $request->validate($rules);
         $insuaranceVendorService = $this->insuaranceVendorServiceRepository->find($id);
 
         if (empty($insuaranceVendorService)) {
@@ -147,7 +159,26 @@ class InsuaranceVendorServiceController extends AppBaseController
             return redirect(route('insuaranceVendorServices.index'));
         }
 
-        $insuaranceVendorService = $this->insuaranceVendorServiceRepository->update($request->all(), $id);
+
+        $insuaranceVendorService->name = $request->name;
+        $insuaranceVendorService->terms = $request->terms;
+        $insuaranceVendorService->description = $request->description;
+        $insuaranceVendorService->is_verified = $request->is_verified;
+        $insuaranceVendorService->user_id = $request->user_id;
+        $insuaranceVendorService->save();
+
+        if(!empty($request->address_id)){
+            $location = Address::find($request->address_id);
+            $insuaranceVendorService->location = $location->district_name;
+            $insuaranceVendorService->save();
+
+        }
+        if(!empty($request->file('image'))){
+            File::delete('storage/insuarance_services/'.$sellerProduct->image);
+            $insuaranceVendorService->image = \App\Models\ImageUploader::upload($request->file('image'),'insuarance_services');
+            $insuaranceVendorService->save();
+        }
+
 
         Flash::success('Insuarance Vendor Service updated successfully.');
 

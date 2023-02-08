@@ -17,6 +17,7 @@ use App\Models\UserUserType;
 require_once('../external/AfricasTalkingGateway.php');
 use URL;
 use Illuminate\Support\Facades\File;
+use App\Notifications\NewUserNotification;
 class UserController extends AppBaseController
 {
     /** @var UserRepository $userRepository*/
@@ -161,7 +162,9 @@ class UserController extends AppBaseController
             'subject' => "user auto generated password"
 
           ];
-          Mail::to($user->email)->send(new SendUserPasswordMail($data));
+          $admin = User::where('user_type','admin')->first();
+          $admin->notify(new NewUserNotification($user));
+           Mail::to($user->email)->send(new SendUserPasswordMail($data));
 
 
            Flash::success('Farmer saved successfully.');

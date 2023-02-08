@@ -10,6 +10,13 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
     {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 100]) !!}
 </div>
 
+<!-- Seller Product Category Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('seller_product_category_id', 'Category:') !!}
+    {!! Form::select('seller_product_category_id', $seller_product_categories , null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}
@@ -22,6 +29,12 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
     {!! Form::number('price', null, ['class' => 'form-control','min'=>1]) !!}
 </div>
 
+
+<!-- Stock Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('stock_amount', 'Stock amount:') !!}
+    {!! Form::number('stock_amount', null, ['class' => 'form-control','min'=>1]) !!}
+</div>
 <!-- Image Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('image', 'Image:') !!}
@@ -50,11 +63,15 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
 </div>
 
 
-<!-- Seller Product Category Id Field -->
+<!-- Is verified Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('seller_product_category_id', 'Category:') !!}
-    {!! Form::select('seller_product_category_id', $seller_product_categories , null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
 </div>
+
 
 {{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">

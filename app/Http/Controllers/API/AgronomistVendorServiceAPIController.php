@@ -38,12 +38,7 @@ class AgronomistVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $agronomistVendorServices = $this->agronomistVendorServiceRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $agronomistVendorServices = AgronomistVendorService::where('is_verified',1)->latest()->get();
         return $this->sendResponse($agronomistVendorServices->toArray(), 'Agronomist Vendor Services retrieved successfully');
     }
 
@@ -74,6 +69,49 @@ class AgronomistVendorServiceAPIController extends AppBaseController
         }
     }
 
+
+    public function agronomist_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,404);
+
+        }
+
+        $all_ago_services = AgronomistVendorService::all();
+        $agronomists = AgronomistVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('expertise','like', '%' . $search.'%')->get();
+
+
+        if(count($agronomists) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($agronomists)." "."results found out of"." ".count($all_ago_services),
+                    'search-results'=>$agronomists,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
     /**
      * Store a newly created AgronomistVendorService in storage.
      * POST /agronomistVendorServices
@@ -134,7 +172,7 @@ class AgronomistVendorServiceAPIController extends AppBaseController
             $response = [
                 'success'=>false,
                 'data'=>$new_agro_service,
-                'message'=> 'Agronomist Vendor Service saved successfully.'
+                'message'=> 'Agronomist Vendor Service created, waiting for verification.'
              ];
 
              return response()->json($response,200);
@@ -190,7 +228,8 @@ class AgronomistVendorServiceAPIController extends AppBaseController
             $success['expertise'] = $agronomistVendorService->expertise;
             $success['description'] = $agronomistVendorService->description;
             $success['location'] = $agronomistVendorService->location;
-            $success['charge'] = $agronomistVendorService->charge."".$agronomistVendorService->charge_unit;
+            $success['charge'] = $agronomistVendorService->charge;
+            $success['charge_unit'] =$agronomistVendorService->charge_unit;
             $success['vendor'] = $agronomistVendorService->user->username;
             $success['image'] = $agronomistVendorService->image;
             $success['crops'] = $agronomistVendorService->crops()->orderBy('name')->get(['name']);

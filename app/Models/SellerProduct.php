@@ -36,7 +36,9 @@ class SellerProduct extends Model
         'seller_product_category_id',
         'image',
         'user_id',
-        'address_id'
+        'address_id',
+        'is_verified',
+        'stock_amount',
 
     ];
 
@@ -52,7 +54,9 @@ class SellerProduct extends Model
         'seller_product_category_id' => 'integer',
         'image' => 'string',
         'user_id'=> 'integer',
-        'address_id'=>'integer'
+        'address_id'=>'integer',
+        'is_verified'=>'boolean',
+        'stock_amount' => 'integer'
     ];
 
     /**
@@ -98,8 +102,13 @@ class SellerProduct extends Model
 
     public function getImageAttribute($value)
     {
-
-
      return $this->dir.$value;
     }
+
+    //belongs to many carts
+    public function carts()
+    {
+        return $this->belongsToMany(\App\Models\Cart::class,'cart_seller_product', 'cart_id', 'seller_product_id');
+    }
+
 }

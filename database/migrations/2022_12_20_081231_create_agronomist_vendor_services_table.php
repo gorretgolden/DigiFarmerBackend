@@ -19,6 +19,7 @@ class CreateAgronomistVendorServicesTable extends Migration
             $table->string('name')->unique();
             $table->text('expertise',255);
             $table->integer('charge');
+            $table->boolean('is_verified')->default(false);
             $table->string('charge_unit')->default('Per Hour');
             $table->enum('availability',['Chat','Online','Call','In-Person'])->default('In-Person');
             $table->text('description');

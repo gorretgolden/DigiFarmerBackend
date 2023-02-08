@@ -50,6 +50,16 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
         </div>
     </div>
 </div>
+
+<!-- Is verified Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
+</div>
+
 {{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('vendor_category_id', 'Vendor Category:') !!}

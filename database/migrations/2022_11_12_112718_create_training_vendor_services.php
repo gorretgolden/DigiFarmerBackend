@@ -18,6 +18,7 @@ class CreateTrainingVendorServices extends Migration
             $table->string('name')->unique();
             $table->integer('charge');
             $table->text('description');
+            $table->boolean('is_verified')->default(false);
             $table->string('image')->nullable();
             $table->enum('access',['Online','Offline'])->default('Online');
             $table->string('starting_date');

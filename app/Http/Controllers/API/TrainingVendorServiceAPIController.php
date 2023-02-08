@@ -36,12 +36,7 @@ class TrainingVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $trainingVendorServices = $this->trainingVendorServiceRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $trainingVendorServices =  TrainingVendorService::where('is_verified',1)->latest()->get();
         return $this->sendResponse($trainingVendorServices->toArray(), 'Training Vendor Services retrieved successfully');
     }
 
@@ -86,6 +81,49 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
     }
 
+
+    public function training_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,400);
+
+        }
+
+        $all_trainings = TrainingVendorService::where('is_verified',1)->get();
+        $trainings = TrainingVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+
+
+        if(count($trainings) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($trainings)." "."results found out of"." ".count($all_trainings),
+                    'search-results'=>$trainings,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
 
     public function store(Request $request)
     {
@@ -137,7 +175,7 @@ class TrainingVendorServiceAPIController extends AppBaseController
                 $input['vendor_category_id'] = $vendor_category->id;
                 $input['location'] = $location->district_name;
                 $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
-                return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
+                return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service created successfully, waiting for verification');
             }
 
 

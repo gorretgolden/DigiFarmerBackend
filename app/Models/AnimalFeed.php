@@ -40,6 +40,9 @@ class AnimalFeed extends Model
         'weight',
         'weight_unit',
         'address_id',
+        'location',
+        'stock_amount',
+        'is_verified'
 
     ];
 
@@ -60,7 +63,9 @@ class AnimalFeed extends Model
         'animal_category_id' => 'integer',
         'address_id' => 'integer',
         'vendor_category_id' => 'integer',
-        'weight_unit' => 'string'
+        'weight_unit' => 'string',
+        'stock_amount' => 'integer',
+        'is_verified' => 'boolean'
 
 
 
@@ -80,10 +85,17 @@ class AnimalFeed extends Model
         'user_id' => 'required|integer',
         'image' => 'required',
         'weight' => 'required|integer',
-        'weight_unit' => 'required|string'
+        'weight_unit' => 'required|string',
+        'stock_amount' => 'required|integer'
 
 
     ];
+
+    public function getFormattedPriceAttribute()
+{
+    return number_format($this->attributes['price'], 0);
+}
+
 
     //an animal feed belongs to an animal feed category
     public function category()
@@ -119,11 +131,18 @@ class AnimalFeed extends Model
 
 
     //Accessors
+
     public function getImageAttribute($value)
     {
 
 
      return $this->dir.$value;
     }
+    //belongs to many carts
+    public function carts()
+    {
+        return $this->belongsToMany(\App\Models\Cart::class,'animal_feed_cart', 'cart_id', 'animal_feed_id');
+    }
+
 
 }

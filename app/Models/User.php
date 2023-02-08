@@ -265,6 +265,13 @@ class User extends Authenticable implements  Wallet
 
 
 
+      //has one cart
+      public function cart()
+      {
+          return $this->hasOne(\App\Models\Cart::class, 'user_id');
+      }
+
+
 
 
 }

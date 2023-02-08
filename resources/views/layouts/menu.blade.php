@@ -444,12 +444,12 @@
                         <p>Add Rent Vendors</p>
                     </a>
                 </li>
-
+{{--
                 <li class="nav-item">
                     <a href="{{ route('rentVendorImages.index') }}" class="nav-link">
                         <p>Rent Vendor Images</p>
                     </a>
-                </li>
+                </li> --}}
 
 
             </ul>

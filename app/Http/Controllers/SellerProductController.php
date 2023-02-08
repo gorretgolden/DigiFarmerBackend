@@ -13,6 +13,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 
 
 class SellerProductController extends AppBaseController
@@ -81,8 +82,10 @@ class SellerProductController extends AppBaseController
           $new_seller_product->description = $request->description;
           $new_seller_product->price = $request->price;
           $new_seller_product->image = $request->image;
-          $new_farm_product->price_unit = "UGX";
-          $new_farm_product->status = "on-sale";
+          $new_seller_product->price_unit = "UGX";
+          $new_seller_product->status = "on-sale";
+          $new_seller_product->is_verified = $request->is_verified;
+          $new_seller_product->stock_amount = $request->stock_amount;
 
            //set user as a vendor
           $user = User::find($request->user_id);
@@ -96,7 +99,7 @@ class SellerProductController extends AppBaseController
           $new_seller_product->vendor_category_id = $vendor_category->id;
            //location
           $location = Address::find($request->address_id);
-          $new_seller_product->address_id = $location->district_name;
+          $new_seller_product->location = $location->district_name;
           $new_seller_product->save();
 
           $new_seller_product = SellerProduct::find($new_seller_product->id);
@@ -163,8 +166,19 @@ class SellerProductController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateSellerProductRequest $request)
+    public function update($id, Request $request)
     {
+        //dd($request->all());
+        $rules = [
+            'name' => 'required|string',
+            'description' => 'required|string|min:10',
+            'price' => 'required|integer',
+            'seller_product_category_id' => 'required|integer',
+            'image' => 'nullable',
+            'user_id'=> 'required|integer',
+            'address_id'=>'nullable|integer'
+        ];
+        $request->validate($rules);
         $sellerProduct = $this->sellerProductRepository->find($id);
 
         if (empty($sellerProduct)) {
@@ -172,8 +186,34 @@ class SellerProductController extends AppBaseController
 
             return redirect(route('sellerProducts.index'));
         }
+        $location = Address::find($request->address_id);
 
-        $sellerProduct = $this->sellerProductRepository->update($request->all(), $id);
+        $sellerProduct->name = $request->name;
+        $sellerProduct->description = $request->description;
+        $sellerProduct->price = $request->price;
+        $sellerProduct->is_verified = $request->is_verified;
+        $sellerProduct->stock_amount = $request->stock_amount;
+        $sellerProduct->user_id = $request->user_id;
+        $sellerProduct->seller_product_category_id = $request->seller_product_category_id;
+        $sellerProduct->save();
+
+         //location
+
+        if(!empty($request->address_id)){
+            $location = Address::find($request->address_id);
+            $sellerProduct->location = $location->district_name;
+            $sellerProduct->save();
+
+        }
+
+
+        //$sellerProduct = $this->sellerProductRepository->update($request->all(), $id);
+
+        if(!empty($request->file('image'))){
+            File::delete('storage/seller_products/'.$sellerProduct->image);
+            $sellerProduct->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_products');
+            $sellerProduct->save();
+        }
 
         Flash::success('Seller Product updated successfully.');
 

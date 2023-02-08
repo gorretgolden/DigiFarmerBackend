@@ -18,7 +18,11 @@ class RentVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'rent_vendor_services.datatables_actions');
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.'  width="40" height="50"/>';
+
+        })->addColumn('action', 'rent_vendor_services.datatables_actions')
+        ->rawColumns(['image','action']);
     }
 
     /**
@@ -66,12 +70,16 @@ class RentVendorServiceDataTable extends DataTable
     {
         return [
             'name',
+            'image',
             'rent_vendor_sub_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Sub Category",'data'=>'rent_vendor_sub_category.name']),
             'charge',
             'charge_frequency',
             'location',
-            'quantity',
+             'quantity',
+            'status',
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'vendor.phone']),
+            'is_verified' => new \Yajra\DataTables\Html\Column(['title'=>"Verified",'data'=>'is_verified']),
 
 
 

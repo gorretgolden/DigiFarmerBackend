@@ -30,7 +30,7 @@ class SellerProductCategoryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sellerProductCategories = $this->sellerProductCategoryRepository->all();
+        $sellerProductCategories = SellerProductCategory::latest()->paginate(10);
 
         return view('seller_product_categories.index')
             ->with('sellerProductCategories', $sellerProductCategories);

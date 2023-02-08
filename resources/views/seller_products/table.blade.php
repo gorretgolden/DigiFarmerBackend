@@ -4,11 +4,14 @@
             <tr>
                 <th>Image</th>
                 <th>Name</th>
-                <th>Description</th>
                 <th>Price</th>
+                <th>In Stock</th>
                 <th>Category</th>
-                <th>Seller</th>
+                <th>Vendor Name</th>
+                <th>Phone Number</th>
                 <th>Location</th>
+                <th>Status</th>
+                <th>Verified</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -20,12 +23,20 @@
                             width="50px" height="50px" />
                     </td>
                     <td>{{ $sellerProduct->name }}</td>
-                    <td>{{ $sellerProduct->description }}</td>
                     <td>{{ $sellerProduct->price }}</td>
-
+                    <td class="text-center">{{ $sellerProduct->stock_amount }}</td>
                     <td>{{ $sellerProduct->seller_product_category->name }}</td>
                     <td>{{ $sellerProduct->user->username }}</td>
+                    <td>{{ $sellerProduct->user->phone}}</td>
                     <td>{{ $sellerProduct->location }}</td>
+                    <td>{{$sellerProduct->status}}</td>
+                    <td>
+                        @if ($sellerProduct->is_verified == 1)
+                            <p class="badge rounded-pill bg-success">Yes</p>
+                            @else
+                            <p class="badge rounded-pill bg-danger">No</p>
+                        @endif
+                    </td>
                     <td width="120">
                         {!! Form::open(['route' => ['sellerProducts.destroy', $sellerProduct->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

@@ -12,6 +12,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\AnimalCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class AnimalCategoryController extends AppBaseController
 {
@@ -140,8 +141,15 @@ class AnimalCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateAnimalCategoryRequest $request)
+    public function update($id, Request $request)
     {
+
+        $rules = [
+            'name' => 'required|string',
+            'image' => 'nullable'
+        ];
+
+        $request->validate($rules);
         $animalCategory = $this->animalCategoryRepository->find($id);
         $animalCategory->fill($request->all());
 
@@ -153,10 +161,17 @@ class AnimalCategoryController extends AppBaseController
         }else{
 
             $animalCategory->name = $request->name;
-            if(!empty($request->file('image'))){
-                $animalCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_categories');
-            }
+            $animalCategory->is_active = $request->is_active;
             $animalCategory->save();
+            if(!empty($request->file('image'))){
+                File::delete('storage/animal_categories/'.$animalCategory->image);
+                $animalCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_categories');
+                $animalCategory->save();
+            }else{
+
+                $animalCategory->animalCategory = $request->animalCategory;
+            }
+
 
             Flash::success('Animal Category updated successfully.');
 

@@ -18,6 +18,8 @@ class CreateSellerProductsTable extends Migration
              $table->string('name',100)->unique();
              $table->string('image')->nullable();
              $table->integer('price');
+             $table->integer('stock_amount')->default(0);
+             $table->boolean('is_verified')->default(false);
              $table->string('price_unit')->default('UGX');
              $table->text('description');
              $table->foreignId('seller_product_category_id')->nullable()->constrained()->onDelete('CASCADE');

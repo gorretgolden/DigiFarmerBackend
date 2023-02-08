@@ -37,7 +37,7 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $insuaranceVendorServices = InsuaranceVendorService::latest()->get();
+        $insuaranceVendorServices = InsuaranceVendorService::where('is_verified',1)->latest()->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -56,7 +56,7 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
 
     public function home_insurance_vendors(Request $request)
     {
-        $insuaranceVendorServices = InsuaranceVendorService::limit(4)->get();
+        $insuaranceVendorServices = InsuaranceVendorService::where('is_verified',1)->limit(4)->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -71,6 +71,49 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
 
 
     }
+
+
+    public function insuarance_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,400);
+
+        }
+        $all_services = InsuaranceVendorService::where('is_verified',1)->get();
+        $insurance = InsuaranceVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
+
+
+        if(count($insurance) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($insurance)." "."results found out of"." ".count($all_services),
+                    'search-results'=>$insurance,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
 
     /**
      * Store a newly created InsuaranceVendorService in storage.
@@ -117,7 +160,7 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
         }
         $new_insuarance->save();
 
-        return $this->sendResponse($new_insuarance->toArray(), 'Insuarance Vendor Service saved successfully');
+        return $this->sendResponse($new_insuarance->toArray(), 'Insuarance Vendor Service, waiting for verification');
     }
 
     /**

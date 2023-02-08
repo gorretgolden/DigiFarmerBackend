@@ -21,7 +21,7 @@
                                 </div>
                                 <div class="float-right mt-3">
 
-                                    <h2>{{$total_farmers}}</h2>
+                                    <h2>{{ $total_farmers }}</h2>
                                     <p>Farmers</p>
                                 </div>
 
@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_vendors}}</h2>
+                                    <h2>{{ $total_vendors }}</h2>
                                     <p>Vendors</p>
                                 </div>
 
@@ -62,13 +62,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 float-left">
-                                    <img style="width: 80%"
-                                        src="https://cdn-icons-png.flaticon.com/128/9167/9167461.png" />
+                                    <img style="width: 80%" src="https://cdn-icons-png.flaticon.com/128/9167/9167461.png" />
 
                                 </div>
                                 <div class="float-right  mt-3 text-white">
 
-                                    <h2>{{$total_users}}</h2>
+                                    <h2>{{ $total_users }}</h2>
                                     <p>Buyers</p>
                                 </div>
 
@@ -80,7 +79,7 @@
             </div>
 
 
-             <div class="col-md-3">
+            <div class="col-md-3">
                 <div class="card bg-success">
                     <div class="card-header">
                         <div class="card-body">
@@ -92,7 +91,7 @@
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_crops}}</h2>
+                                    <h2>{{ $total_crops }}</h2>
                                     <p>Crops</p>
                                 </div>
 
@@ -115,13 +114,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 float-left">
-                                    <img style="width: 80%"
-                                        src="https://cdn-icons-png.flaticon.com/128/5970/5970296.png" />
+                                    <img style="width: 80%" src="https://cdn-icons-png.flaticon.com/128/5970/5970296.png" />
 
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_crops_on_sale}}</h2>
+                                    <h2>{{ $total_crops_on_sale }}</h2>
                                     <p>Crops On Sale</p>
                                 </div>
 
@@ -137,13 +135,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 float-left">
-                                    <img style="width: 80%"
-                                        src="https://cdn-icons-png.flaticon.com/128/4388/4388935.png" />
+                                    <img style="width: 80%" src="https://cdn-icons-png.flaticon.com/128/4388/4388935.png" />
 
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_animals}}</h2>
+                                    <h2>{{ $total_animals }}</h2>
                                     <p>Animals</p>
                                 </div>
 
@@ -166,7 +163,7 @@
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_farms}}</h2>
+                                    <h2>{{ $total_farms }}</h2>
                                     <p>Farms</p>
                                 </div>
 
@@ -183,13 +180,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 float-left">
-                                    <img style="width: 80%"
-                                        src="https://cdn-icons-png.flaticon.com/128/6815/6815043.png" />
+                                    <img style="width: 80%" src="https://cdn-icons-png.flaticon.com/128/6815/6815043.png" />
 
                                 </div>
                                 <div class="float-right  mt-3">
 
-                                    <h2>{{$total_crop_orders}}</h2>
+                                    <h2>{{ $total_crop_orders }}</h2>
                                     <p>Crop Orders</p>
                                 </div>
 
@@ -230,4 +226,6 @@
 
         </div>
     </div>
+
+
 @endsection

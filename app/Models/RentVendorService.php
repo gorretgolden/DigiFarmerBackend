@@ -24,6 +24,7 @@ class RentVendorService extends Model
     use HasFactory;
 
     public $table = 'rent_vendor_services';
+    public $dir = 'storage/rent/';
 
 
 
@@ -37,7 +38,8 @@ class RentVendorService extends Model
         'location',
         'user_id',
         'quantity',
-        'status'
+        'status',
+        'image'
 
     ];
 
@@ -51,13 +53,14 @@ class RentVendorService extends Model
         'rent_vendor_category_id' => 'integer',
         'charge' => 'integer',
         'description' => 'string',
-        'images' => 'string',
+        'image' => 'string',
         'location' => 'string',
         'user_id' => 'integer',
         'charge_frequency' => 'string',
         'quantity' => 'integer',
         'status' =>'string',
-        'created_at' => 'datetime:d-m-Y'
+        'created_at' => 'datetime:d-m-Y',
+        'image'=>'string'
 
     ];
 
@@ -67,17 +70,18 @@ class RentVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|unique:rent_vendor_services|min:10|max:30',
+        'name' => 'required|string|unique:rent_vendor_services|min:10|max:50',
         'rent_vendor_category_id' => 'required|integer',
         'rent_vendor_sub_category_id' => 'required|integer',
         'charge' => 'required|integer',
         'description' => 'required|string|min:20|max:1000',
-        'images' => 'required',
-        'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-        'images' => 'max:3',
+        'image' => 'required',
+        'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        'images' => 'max:1',
         'user_id' => 'required|integer',
         'address_id' => 'required|integer',
-        'quantity'=> 'required|integer'
+        'quantity'=> 'required|integer',
+        'charge_frequency'=>'required|string'
 
     ];
 
@@ -87,6 +91,12 @@ class RentVendorService extends Model
     return $this->hasMany(\App\Models\RentVendorImage::class, 'rent_vendor_service_id','id');
     }
 
+    public function getImageAttribute($value)
+    {
+
+
+     return $this->dir.$value;
+    }
 
     //belongs to a vendor
     public function vendor()

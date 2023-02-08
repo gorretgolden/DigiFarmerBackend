@@ -7,8 +7,10 @@
     "require": {
         "php": "^7.3|^8.0",
         "africastalking/africastalking": "^3.0",
+        "bumbummen99/shoppingcart": "^4.2",
         "consoletvs/charts": "6.*",
         "darkaonline/l5-swagger": "^8.4",
+        "darryldecode/cart": "~4.0",
         "doctrine/dbal": "~2.3",
         "flutterwavedev/flutterwave-v3": "^1.0",
         "fruitcake/laravel-cors": "^2.0",

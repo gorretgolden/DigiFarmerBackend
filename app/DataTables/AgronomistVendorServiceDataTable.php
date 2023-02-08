@@ -18,7 +18,13 @@ class AgronomistVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'agronomist_vendor_services.datatables_actions');
+        return
+        $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.'  width="40" height="50"/>';
+
+        })->
+        addColumn('action', 'agronomist_vendor_services.datatables_actions')
+        ->rawColumns(['image','action']);
     }
 
     /**
@@ -66,14 +72,15 @@ class AgronomistVendorServiceDataTable extends DataTable
     {
         return [
             'name',
-
+            'image',
             'charge',
             'charge_unit',
             'availability',
             'zoom_details',
             'location',
             'user_id',
-            'vendor_category_id'
+            'vendor_category_id',
+
         ];
     }
 

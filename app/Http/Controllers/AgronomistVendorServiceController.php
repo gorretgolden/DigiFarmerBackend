@@ -16,6 +16,7 @@ use App\Models\VendorCategory;
 use App\Models\AgronomistVendorService;
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 
 class AgronomistVendorServiceController extends AppBaseController
 {
@@ -128,7 +129,6 @@ class AgronomistVendorServiceController extends AppBaseController
 
             $new_agro_service->save();
             Flash::success('Agronomist Vendor Service saved successfully.');
-
             return redirect(route('agronomistVendorServices.index'));
 
         }
@@ -186,8 +186,22 @@ class AgronomistVendorServiceController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateAgronomistVendorServiceRequest $request)
+    public function update($id,Request $request)
     {
+        $rules = [
+            'name' => 'required|string|max:100',
+            'expertise' => 'required|min:10|string',
+            'charge' => 'required|integer',
+            'charge_unit' => 'nullable',
+            'availability' => 'required|string',
+            'description' => 'required|min:10',
+            'zoom_details' => 'nullable',
+            'location' => 'nullable',
+            'image' => 'nullable|image',
+            'user_id' => 'required|integer',
+            'vendor_category_id' => 'nullable'
+        ];
+        $request->validate($rules);
         $agronomistVendorService = $this->agronomistVendorServiceRepository->find($id);
 
         if (empty($agronomistVendorService)) {
@@ -195,6 +209,34 @@ class AgronomistVendorServiceController extends AppBaseController
 
             return redirect(route('agronomistVendorServices.index'));
         }
+
+        $agronomistVendorService->name = $request->name;
+        $agronomistVendorService->charge = $request->charge;
+        $agronomistVendorService->user_id = $request->user_id;
+        $agronomistVendorService->expertise = $request->expertise;
+        $agronomistVendorService->description = $request->description;
+
+        $agronomistVendorService->save();
+
+        if(!empty($request->crops)){
+            $agronomistVendorService->crops()->attach($request->crops);
+            $agronomistVendorService->save();
+        }
+
+        if(!empty($request->address_id)){
+            $location = Address::find($request->address_id);
+            $agronomistVendorService->location = $location->district_name;
+            $agronomistVendorService->save();
+
+        }
+
+        if(!empty($request->file('image'))){
+            File::delete('storage/agronomists/'.$agronomistVendorService->image);
+            $agronomistVendorService->image = \App\Models\ImageUploader::upload($request->file('image'),'agronomists');
+            $agronomistVendorService->save();
+        }
+
+
 
         $agronomistVendorService = $this->agronomistVendorServiceRepository->update($request->all(), $id);
 

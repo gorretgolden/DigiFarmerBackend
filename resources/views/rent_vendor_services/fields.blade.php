@@ -49,14 +49,16 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 <!-- Charge Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('charge', 'Charge:') !!}
-    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>'Enter service charge']) !!}
+    {!! Form::number('charge', null, ['class' => 'form-control','placeholder'=>'Enter service charge','min'=>500]) !!}
 </div>
 
 <!-- Charge Day Frequency-->
 <div class="form-group col-sm-6">
     {!! Form::label('charge_frequency', 'Charge Frequency:') !!}
-    {!! Form::text('charge_frequency',null, ['class' => 'form-control','placeholder'=>'Per day','readonly'] ) !!}
+    {!! Form::select('charge_frequency', ['per day'=>'per day','per hour'=>'per hour','per piece'=>'per piece'],null, ['class' => 'form-control']) !!}
 </div>
+
+
 
 
 
@@ -95,12 +97,19 @@ $vendor_categories = App\Models\VendorCategory::pluck('name','id');
 
 <div class="form-group col-sm-6">
 
-    <label>Choose Images</label>
-    <input class="custom-file-label" type="file" name="images[]" multiple>
+    <label>Choose an image</label>
+    <input class="custom-file-label" type="file" name="image" multiple>
 </div>
 
 
-
+<!-- Is verified Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
+</div>
 
 
 
