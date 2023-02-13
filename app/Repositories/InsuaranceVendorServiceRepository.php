@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class InsuaranceVendorServiceRepository
  * @package App\Repositories
- * @version January 7, 2023, 1:41 pm CET
+ * @version February 8, 2023, 7:46 pm CET
 */
 
 class InsuaranceVendorServiceRepository extends BaseRepository
@@ -19,8 +19,12 @@ class InsuaranceVendorServiceRepository extends BaseRepository
     protected $fieldSearchable = [
         'name',
         'terms',
+        'image',
         'description',
-        'user_id'
+        'is_verified',
+        'location',
+        'user_id',
+        'vendor_category_id'
     ];
 
     /**

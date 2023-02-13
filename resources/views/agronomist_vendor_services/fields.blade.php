@@ -5,6 +5,8 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 ?>
 
 
+
+
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
@@ -18,11 +20,19 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 
 
 
+
+
+
+
 <!-- Crop Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('crop_id', 'Crop:') !!}
     {!! Form::select('crops[]', $crops, null, ['class' => 'form-control custom-select', 'multiple' => 'multiple']) !!}
 </div>
+
+
+
+
 
 
 
@@ -38,6 +48,8 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 </div>
 
 
+
+
 <!-- Charge Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('charge', 'Charge:') !!}
@@ -49,11 +61,15 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 </div>
 
 
+
+
 <!-- Charge Unit Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('charge_unit', 'Charge Unit:') !!}
     {!! Form::text('charge_unit', null, ['class' => 'form-control', 'placeholder' => 'Per hour', 'readonly']) !!}
 </div>
+
+
 
 
 <!--Availability-->
@@ -68,6 +84,8 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 </div>
 
 
+
+
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}
@@ -75,11 +93,17 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 </div>
 
 
+
+
 <!-- Zoom Details Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('zoom_details', 'Zoom Details:') !!}
     {!! Form::textarea('zoom_details', null, ['class' => 'form-control zoom']) !!}
 </div>
+
+
+
+
 
 
 
@@ -93,6 +117,7 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 
 
 
+
 <!-- Address Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('address_id', 'Address:') !!}
@@ -101,12 +126,6 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 
     </select>
 </div>
-
-
-
-
-
-
 
 
 
@@ -124,12 +143,23 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 <div class="clearfix"></div>
 
 
+<!-- Is verified Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
+</div>
+
 @push('scripts')
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
     <script>
         $('#user_id').on('change', function() {
             var idFarmer = this.value;
             console.log(idFarmer)
+
+
 
 
             $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
@@ -143,12 +173,18 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
                 success: function(result) {
 
 
+
+
                     $('#farmer-address').html(
                         '<option value="">-- Select farmer address --</option>');
 
 
+
+
                     $.each(result.addresses, function(key, value) {
                         console.log(result)
+
+
 
 
                         $("#farmer-address").append('<option value="' + value
@@ -156,15 +192,23 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
                             .district_name + '</option>');
 
 
+
+
                         console.log('hello', value.district_name)
+
+
 
 
                     });
 
 
+
+
                 }
             });
         });
+
+
 
 
         $(document).ready(function() {
@@ -174,13 +218,19 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
                 $('#zoom_details').hide();
 
 
+
+
                 if (tmp == "In-person") {
                     $('#farmer-address').show();
                 } else if (tmp == "Online") {
                     $('#zoom_details').show();
 
 
+
+
                 }
+
+
 
 
             })
@@ -192,6 +242,16 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 
 
 
+
+
+
+
+
+
+
+
         });
     </script>
 @endpush
+
+

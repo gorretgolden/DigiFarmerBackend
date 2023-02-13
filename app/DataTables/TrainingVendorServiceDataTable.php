@@ -1,10 +1,13 @@
 <?php
 
+
 namespace App\DataTables;
+
 
 use App\Models\TrainingVendorService;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+
 
 class TrainingVendorServiceDataTable extends DataTable
 {
@@ -18,13 +21,16 @@ class TrainingVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+
         return $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.'  width="40" height="50"/>';
+            return '<img src='.$data->image.' class="img-thumbnail"/>';
+
 
         })
         ->addColumn('action', 'training_vendor_services.datatables_actions')
         ->rawColumns(['image','action']);
     }
+
 
     /**
      * Get query source of dataTable.
@@ -36,6 +42,7 @@ class TrainingVendorServiceDataTable extends DataTable
     {
         return $model->newQuery()->with(['vendor','vendor_category']);
     }
+
 
     /**
      * Optional method if you want to use html builder.
@@ -62,6 +69,7 @@ class TrainingVendorServiceDataTable extends DataTable
             ]);
     }
 
+
     /**
      * Get columns.
      *
@@ -70,21 +78,21 @@ class TrainingVendorServiceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
             'image',
+            'name',
             'charge',
             'access',
             'starting_date',
             'ending_date',
             'starting_time',
             'ending_time',
-            'zoom_details',
             'location',
-            'vendor_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor Category",'data'=>'vendor_category.name']),
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
-            'is_verified' => new \Yajra\DataTables\Html\Column(['title'=>"Verifiedr",'data'=>'is_verified'])
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'vendor.phone']),
+            'is_verified' => new \Yajra\DataTables\Html\Column(['title'=>"Verified",'data'=>'is_verified'])
         ];
     }
+
 
     /**
      * Get filename for export.
@@ -96,3 +104,5 @@ class TrainingVendorServiceDataTable extends DataTable
         return 'training_vendor_services_datatable_' . time();
     }
 }
+
+

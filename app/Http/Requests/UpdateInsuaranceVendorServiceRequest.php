@@ -25,7 +25,7 @@ class UpdateInsuaranceVendorServiceRequest extends FormRequest
     public function rules()
     {
         $rules = InsuaranceVendorService::$rules;
-        
+        $rules['name'] = $rules['name'].",".$this->route("insuarance_vendor_service");
         return $rules;
     }
 }

@@ -3,22 +3,25 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class InsuaranceVendorService
  * @package App\Models
- * @version December 5, 2022, 8:59 pm UTC
+ * @version February 8, 2023, 7:46 pm CET
  *
  * @property string $name
  * @property string $terms
+ * @property string $image
  * @property string $description
+ * @property boolean $is_verified
+ * @property string $location
  * @property integer $user_id
+ * @property integer $vendor_category_id
  */
 class InsuaranceVendorService extends Model
 {
-
 
     use HasFactory;
 
@@ -27,14 +30,15 @@ class InsuaranceVendorService extends Model
 
 
 
-
     public $fillable = [
         'name',
         'terms',
+        'image',
         'description',
+        'is_verified',
+        'location',
         'user_id',
-        'vendor_category_id',
-        'image'
+        'vendor_category_id'
     ];
 
     /**
@@ -45,10 +49,12 @@ class InsuaranceVendorService extends Model
     protected $casts = [
         'name' => 'string',
         'terms' => 'string',
+        'image' => 'string',
         'description' => 'string',
+        'is_verified' => 'boolean',
+        'location' => 'string',
         'user_id' => 'integer',
-        'vendor_category_id'=>'integer',
-        'image'=> 'string'
+        'vendor_category_id' => 'integer'
     ];
 
     /**
@@ -57,35 +63,40 @@ class InsuaranceVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|unique:insuarance_vendor_services',
-        'terms' => 'required|string',
-        'description' => 'required|string',
+        'name' => 'required|string|max:100|min:10|unique:insuarance_vendor_services',
+        'terms' => 'required|string|min:10',
+        'image' => 'required',
+        'description' => 'required|min:10',
+        'is_verified' => 'nullable',
+        'location' => 'required|string',
         'user_id' => 'required|integer',
-        'image' => 'required|string',
-
-
+        'vendor_category_id' => 'nullable'
     ];
 
-    //belongs to a vendor category
-    public function vendor_category()
-    {
-        return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
-    }
+
+     //belongs to a vendor category
+     public function vendor_category()
+     {
+         return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
+     }
 
 
-    //belongs to a user
-    public function user()
-      {
-          return $this->belongsTo(\App\Models\User::class,'user_id');
-      }
 
 
-      public function getImageAttribute($value)
-      {
+     //belongs to a user
+     public function user()
+       {
+           return $this->belongsTo(\App\Models\User::class,'user_id');
+       }
 
 
-       return $this->dir.$value;
-      }
+
+
+       public function getImageAttribute($value)
+       {
+
+        return $this->dir.$value;
+       }
 
 
 }

@@ -159,10 +159,9 @@ class TrainingVendorServiceAPIController extends AppBaseController
             $input['zoom_details'] = $request->zoom_details;
 
             $input['vendor_category_id'] = $vendor_category->id;
-            $input['image'] = $request->image;
             $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
 
-            $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'training-services');
+            $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
             $trainingVendorService->save();
             return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
 
@@ -174,6 +173,8 @@ class TrainingVendorServiceAPIController extends AppBaseController
                 $location = Address::find($request->address_id);
                 $input['vendor_category_id'] = $vendor_category->id;
                 $input['location'] = $location->district_name;
+                $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
+                $trainingVendorService->save();
                 $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
                 return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service created successfully, waiting for verification');
             }

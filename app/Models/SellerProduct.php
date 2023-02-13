@@ -38,7 +38,7 @@ class SellerProduct extends Model
         'user_id',
         'address_id',
         'is_verified',
-        'stock_amount',
+        'stock_amount'
 
     ];
 
@@ -71,7 +71,8 @@ class SellerProduct extends Model
         'seller_product_category_id' => 'required|integer',
         'image' => 'required',
         'user_id'=> 'required',
-        'address_id'=>'required|integer'
+        'address_id'=>'required|integer',
+        'stock_amount'=>'required|integer'
     ];
 
      //a seller product belongs to a seller product category

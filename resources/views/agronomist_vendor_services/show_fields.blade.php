@@ -16,6 +16,18 @@
     <p>{{ $agronomistVendorService->charge }}</p>
 </div>
 
+<!-- Is Verified Field -->
+<div class="col-sm-12">
+    {!! Form::label('is_verified', 'Is Verified:') !!}
+    <p>{{ $agronomistVendorService->is_verified }}</p>
+</div>
+
+<!-- Location Field -->
+<div class="col-sm-12">
+    {!! Form::label('location', 'Location:') !!}
+    <p>{{ $agronomistVendorService->location }}</p>
+</div>
+
 <!-- Charge Unit Field -->
 <div class="col-sm-12">
     {!! Form::label('charge_unit', 'Charge Unit:') !!}
@@ -40,22 +52,16 @@
     <p>{{ $agronomistVendorService->zoom_details }}</p>
 </div>
 
-<!-- Location Field -->
+<!-- User Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('location', 'Location:') !!}
-    <p>{{ $agronomistVendorService->location }}</p>
+    {!! Form::label('user_id', 'User Id:') !!}
+    <p>{{ $agronomistVendorService->user_id }}</p>
 </div>
 
 <!-- Image Field -->
 <div class="col-sm-12">
     {!! Form::label('image', 'Image:') !!}
     <p>{{ $agronomistVendorService->image }}</p>
-</div>
-
-<!-- User Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $agronomistVendorService->user_id }}</p>
 </div>
 
 <!-- Vendor Category Id Field -->

@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
 
 use App\DataTables\AnimalFeedDataTable;
 use App\Http\Requests;
@@ -17,15 +19,18 @@ use App\Models\Address;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 
+
 class AnimalFeedController extends AppBaseController
 {
     /** @var AnimalFeedRepository $animalFeedRepository*/
     private $animalFeedRepository;
 
+
     public function __construct(AnimalFeedRepository $animalFeedRepo)
     {
         $this->animalFeedRepository = $animalFeedRepo;
     }
+
 
     /**
      * Display a listing of the AnimalFeed.
@@ -39,6 +44,7 @@ class AnimalFeedController extends AppBaseController
         return $animalFeedDataTable->render('animal_feeds.index');
     }
 
+
     /**
      * Show the form for creating a new AnimalFeed.
      *
@@ -48,6 +54,7 @@ class AnimalFeedController extends AppBaseController
     {
         return view('animal_feeds.create');
     }
+
 
     /**
      * Store a newly created AnimalFeed in storage.
@@ -59,9 +66,11 @@ class AnimalFeedController extends AppBaseController
     public function store(CreateAnimalFeedRequest $request)
     {
         $input = $request->all();
-        dd($input);
+       // dd($input);
         $vendor_category = VendorCategory::where('name','Animal Feeds')->first();
         $location = Address::find($request->address_id);
+
+
 
 
         //new animal feed
@@ -81,6 +90,7 @@ class AnimalFeedController extends AppBaseController
         $new_animal_feed->image = $request->image;
         $new_animal_feed->save();
 
+
         //set user as a vendor
         $user = User::find($request->user_id);
         if(!$user->is_vendor ==1){
@@ -90,18 +100,26 @@ class AnimalFeedController extends AppBaseController
 
 
 
+
+
+
         if(!empty($request->file('image'))){
             $new_animal_feed->image= \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
             $new_animal_feed->save();
+
 
         }
         $new_animal_feed->save();
 
 
+
+
         Flash::success('Animal Feed posted successfully.');
+
 
         return redirect(route('animalFeeds.index'));
     }
+
 
     /**
      * Display the specified AnimalFeed.
@@ -114,14 +132,18 @@ class AnimalFeedController extends AppBaseController
     {
         $animalFeed = $this->animalFeedRepository->find($id);
 
+
         if (empty($animalFeed)) {
             Flash::error('Animal Feed not found');
+
 
             return redirect(route('animalFeeds.index'));
         }
 
+
         return view('animal_feeds.show')->with('animalFeed', $animalFeed);
     }
+
 
     /**
      * Show the form for editing the specified AnimalFeed.
@@ -134,14 +156,18 @@ class AnimalFeedController extends AppBaseController
     {
         $animalFeed = $this->animalFeedRepository->find($id);
 
+
         if (empty($animalFeed)) {
             Flash::error('Animal Feed not found');
+
 
             return redirect(route('animalFeeds.index'));
         }
 
+
         return view('animal_feeds.edit')->with('animalFeed', $animalFeed);
     }
+
 
     /**
      * Update the specified AnimalFeed in storage.
@@ -153,6 +179,7 @@ class AnimalFeedController extends AppBaseController
      */
     public function update($id,Request $request)
     {
+
 
         $rules = [
             'name' => 'required|string',
@@ -167,10 +194,14 @@ class AnimalFeedController extends AppBaseController
             'stock_amount' => 'required|integer',
 
 
+
+
         ];
+
 
         $request->validate($rules);
         $animalFeed = $this->animalFeedRepository->find($id);
+
 
         if (empty($animalFeed)) {
             Flash::error('Animal Feed not found');
@@ -178,21 +209,47 @@ class AnimalFeedController extends AppBaseController
         }
 
 
+
+
         if(!empty($request->address_id)){
             $location = Address::find($request->address_id);
             $animalFeed->location = $location->district_name;
+            $animalFeed->weight = $request->weight;
+            $animalFeed->weight_unit = $request->weight_unit;
+            $animalFeed->name = $request->name;
+            $animalFeed->price = $request->price;
+            $animalFeed->description = $request->description;
+            $animalFeed->stock_amount = $request->stock_amount;
+            $animalFeed->is_verified = $request->is_verified;
             $animalFeed->save();
+
 
         }elseif(!empty($request->file('image'))){
             File::delete('storage/animal_feeds/'.$animalFeed->image);
             $animalFeed->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
+            $animalFeed->weight = $request->weight;
+            $animalFeed->weight_unit = $request->weight_unit;
+            $animalFeed->name = $request->name;
+            $animalFeed->price = $request->price;
+            $animalFeed->description = $request->description;
+            $animalFeed->stock_amount = $request->stock_amount;
+            $animalFeed->is_verified = $request->is_verified;
             $animalFeed->save();
+
 
         }elseif(!empty($request->animal_feed_category_id)){
             $animalFeed->animal_feed_category_id = $request->animal_feed_category_id;
             $animalFeed->is_verified = $request->is_verified;
+            $animalFeed->weight = $request->weight;
+            $animalFeed->weight_unit = $request->weight_unit;
+            $animalFeed->name = $request->name;
+            $animalFeed->price = $request->price;
+            $animalFeed->description = $request->description;
+            $animalFeed->stock_amount = $request->stock_amount;
+            $animalFeed->is_verified = $request->is_verified;
             $animalFeed->save();
         }else{
+
 
             $animalFeed->weight = $request->weight;
             $animalFeed->weight_unit = $request->weight_unit;
@@ -203,13 +260,18 @@ class AnimalFeedController extends AppBaseController
             $animalFeed->is_verified = $request->is_verified;
             $animalFeed->save();
 
+
         }
+
+
 
 
         Flash::success('Animal Feed updated successfully.');
 
+
         return redirect(route('animalFeeds.index'));
     }
+
 
     /**
      * Remove the specified AnimalFeed from storage.
@@ -222,15 +284,20 @@ class AnimalFeedController extends AppBaseController
     {
         $animalFeed = $this->animalFeedRepository->find($id);
 
+
         if (empty($animalFeed)) {
             Flash::error('Animal Feed not found');
+
 
             return redirect(route('animalFeeds.index'));
         }
 
+
         $this->animalFeedRepository->delete($id);
 
+
         Flash::success('Animal Feed deleted successfully.');
+
 
         return redirect(route('animalFeeds.index'));
     }

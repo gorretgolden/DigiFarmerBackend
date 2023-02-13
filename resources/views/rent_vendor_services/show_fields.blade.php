@@ -25,7 +25,10 @@
 <!-- Image Field -->
 <div class="col-sm-12">
     {!! Form::label('image', 'Image:') !!}
-    <p>{{ $rentVendorService->image }}</p>
+    <img src="{{ $rentVendorService->image }}" alt="job image" title="job image">
+
+
+
 </div>
 
 <!-- Created At Field -->

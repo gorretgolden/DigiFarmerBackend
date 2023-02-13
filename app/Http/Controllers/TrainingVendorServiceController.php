@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
 
 use App\DataTables\TrainingVendorServiceDataTable;
 use App\Http\Requests;
@@ -18,15 +20,18 @@ use App\Models\VendorCategory;
 use App\Models\Address;
 use Illuminate\Support\Facades\File;
 
+
 class TrainingVendorServiceController extends AppBaseController
 {
     /** @var TrainingVendorServiceRepository $trainingVendorServiceRepository*/
     private $trainingVendorServiceRepository;
 
+
     public function __construct(TrainingVendorServiceRepository $trainingVendorServiceRepo)
     {
         $this->trainingVendorServiceRepository = $trainingVendorServiceRepo;
     }
+
 
     /**
      * Display a listing of the TrainingVendorService.
@@ -40,6 +45,7 @@ class TrainingVendorServiceController extends AppBaseController
         return $trainingVendorServiceDataTable->render('training_vendor_services.index');
     }
 
+
     /**
      * Show the form for creating a new TrainingVendorService.
      *
@@ -50,6 +56,7 @@ class TrainingVendorServiceController extends AppBaseController
         return view('training_vendor_services.create');
     }
 
+
     /**
      * Store a newly created TrainingVendorService in storage.
      *
@@ -59,6 +66,7 @@ class TrainingVendorServiceController extends AppBaseController
      */
     public function store(Request $request)
     {
+
 
         $rules = [
             'name' => 'required|string|unique:training_vendor_services',
@@ -79,6 +87,7 @@ class TrainingVendorServiceController extends AppBaseController
         $request->validate($rules);
         $vendor_category = VendorCategory::where('name','Training')->first();
 
+
         if($request->access == 'Online'){
 
             $request->validate(['zoom_details' => 'required|string']);
@@ -87,13 +96,13 @@ class TrainingVendorServiceController extends AppBaseController
             $online_training->name = $request->name;
             $online_training->charge = $request->charge;
             $online_training->description = $request->description;
-            $online_training->image = $request->image;
             $online_training->access = $request->access;
             $online_training->starting_time = $request->starting_time;
             $online_training->ending_time = $request->ending_time;
             $online_training->starting_date = $request->starting_date;
             $online_training->ending_date = $request->ending_date;
             $online_training->vendor_category_id = $vendor_category->id;
+            $online_training->is_verified = $request->is_verified;
 
              //set user as a vendor
             $user = User::find($request->user_id);
@@ -102,11 +111,10 @@ class TrainingVendorServiceController extends AppBaseController
              $user->save();
             }
             $online_training->user_id = $request->user_id;
-
             $online_training->zoom_details = $request->zoom_details;
             $online_training->save();
 
-            $online_training = TrainingVendorService::find($online_training->id);
+
 
             if(!empty($request->file('image'))){
                 $online_training->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
@@ -114,10 +122,14 @@ class TrainingVendorServiceController extends AppBaseController
 
             }
 
+
             $online_training->save();
+
 
             Flash::success('Training Vendor Service saved successfully.');
             return redirect(route('trainingVendorServices.index'));
+
+
 
 
         }else{
@@ -126,6 +138,7 @@ class TrainingVendorServiceController extends AppBaseController
 
                 $request->validate(['address_id' => 'required|integer']);
                 $location = Address::find($request->address_id);
+
 
                 $online_training = new TrainingVendorService();
                 $online_training->name = $request->name;
@@ -138,6 +151,8 @@ class TrainingVendorServiceController extends AppBaseController
                 $online_training->starting_date = $request->starting_date;
                 $online_training->ending_date = $request->ending_date;
                 $online_training->vendor_category_id = $vendor_category->id;
+                $online_training->is_verified = $request->is_verified;
+
 
                 //set user as a vendor
                 $user = User::find($request->user_id);
@@ -147,9 +162,13 @@ class TrainingVendorServiceController extends AppBaseController
                 }
 
 
+
+
                 $online_training->user_id = $request->user_id;
                 $online_training->location = $location->district_name;
                 $online_training->save();
+
+
 
 
                 $online_training = TrainingVendorService::find($online_training->id);
@@ -157,21 +176,31 @@ class TrainingVendorServiceController extends AppBaseController
                     $online_training->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
                     $online_training->save();
 
+
                 }
+
 
                 $online_training->save();
 
+
                 Flash::success('Training Vendor Service saved successfully.');
+
 
                 return redirect(route('trainingVendorServices.index'));
 
+
             }
+
+
 
 
         }
 
 
+
+
     }
+
 
     /**
      * Display the specified TrainingVendorService.
@@ -183,18 +212,25 @@ class TrainingVendorServiceController extends AppBaseController
 
 
 
+
+
+
     public function show($id)
     {
         $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
 
+
         if (empty($trainingVendorService)) {
             Flash::error('Training Vendor Service not found');
+
 
             return redirect(route('trainingVendorServices.index'));
         }
 
+
         return view('training_vendor_services.show')->with('trainingVendorService', $trainingVendorService);
     }
+
 
     /**
      * Show the form for editing the specified TrainingVendorService.
@@ -207,14 +243,18 @@ class TrainingVendorServiceController extends AppBaseController
     {
         $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
 
+
         if (empty($trainingVendorService)) {
             Flash::error('Training Vendor Service not found');
+
 
             return redirect(route('trainingVendorServices.index'));
         }
 
+
         return view('training_vendor_services.edit')->with('trainingVendorService', $trainingVendorService);
     }
+
 
     /**
      * Update the specified TrainingVendorService in storage.
@@ -241,36 +281,37 @@ class TrainingVendorServiceController extends AppBaseController
             'location_details' => 'nullable',
             'user_id' => 'required|integer',
             'period_unit_id'  => 'nullable|integer',
-            'image' => 'nullable|string'
+            'image' => 'nullable'
         ];
         $request->validate($rules);
 
+
         $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
+
 
         if (empty($trainingVendorService)) {
             Flash::error('Training Vendor Service not found');
-
             return redirect(route('trainingVendorServices.index'));
         }
 
+
         $trainingVendorService->fill($request->all());
+
 
         if(!empty($request->file('image'))){
             File::delete('storage/training-services'.$trainingVendorService->image);
-            $trainingVendorService->image = \App\Models\ImageUploader::upload($request->file('image'),'training-services');
+            $trainingVendorService->image = \App\Models\ImageUploader::upload($request->file('image'),'trainings');
             $trainingVendorService->save();
-        }else{
-
-            $trainingVendorService->image = $request->image;
         }
-
 
 
 
         Flash::success('Training Vendor Service updated successfully.');
 
+
         return redirect(route('trainingVendorServices.index'));
     }
+
 
     /**
      * Remove the specified TrainingVendorService from storage.
@@ -283,16 +324,23 @@ class TrainingVendorServiceController extends AppBaseController
     {
         $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
 
+
         if (empty($trainingVendorService)) {
             Flash::error('Training Vendor Service not found');
+
 
             return redirect(route('trainingVendorServices.index'));
         }
 
+
         $this->trainingVendorServiceRepository->delete($id);
 
+
         Flash::success('Training Vendor Service deleted successfully.');
+
 
         return redirect(route('trainingVendorServices.index'));
     }
 }
+
+

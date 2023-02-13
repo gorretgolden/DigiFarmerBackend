@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\RegionDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateRegionRequest;
 use App\Http\Requests\UpdateRegionRequest;
 use App\Repositories\RegionRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
 
 class RegionController extends AppBaseController
@@ -23,16 +24,13 @@ class RegionController extends AppBaseController
     /**
      * Display a listing of the Region.
      *
-     * @param Request $request
+     * @param RegionDataTable $regionDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(RegionDataTable $regionDataTable)
     {
-        $regions = $this->regionRepository->all();
-
-        return view('regions.index')
-            ->with('regions', $regions);
+        return $regionDataTable->render('regions.index');
     }
 
     /**
@@ -132,8 +130,6 @@ class RegionController extends AppBaseController
      * Remove the specified Region from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

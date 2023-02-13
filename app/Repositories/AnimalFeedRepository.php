@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class AnimalFeedRepository
  * @package App\Repositories
- * @version November 29, 2022, 11:45 am UTC
+ * @version February 8, 2023, 8:44 pm CET
 */
 
 class AnimalFeedRepository extends BaseRepository
@@ -18,11 +18,19 @@ class AnimalFeedRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'animal_feed_sub_category_id',
         'price',
         'price_unit',
+        'weight',
+        'weight_unit',
+        'stock_amount',
+        'location',
+        'image',
         'description',
-        'user_id'
+        'status',
+        'is_verified',
+        'user_id',
+        'animal_feed_category_id',
+        'vendor_category_id'
     ];
 
     /**

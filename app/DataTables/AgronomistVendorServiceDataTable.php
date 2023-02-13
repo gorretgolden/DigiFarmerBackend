@@ -1,10 +1,13 @@
 <?php
 
+
 namespace App\DataTables;
+
 
 use App\Models\AgronomistVendorService;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+
 
 class AgronomistVendorServiceDataTable extends DataTable
 {
@@ -18,14 +21,17 @@ class AgronomistVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+
         return
         $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.'  width="40" height="50"/>';
+            return '<img src='.$data->image.'  class="img-thumbnail" />';
+
 
         })->
         addColumn('action', 'agronomist_vendor_services.datatables_actions')
         ->rawColumns(['image','action']);
     }
+
 
     /**
      * Get query source of dataTable.
@@ -35,8 +41,9 @@ class AgronomistVendorServiceDataTable extends DataTable
      */
     public function query(AgronomistVendorService $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('user','vendor_category');
     }
+
 
     /**
      * Optional method if you want to use html builder.
@@ -63,6 +70,7 @@ class AgronomistVendorServiceDataTable extends DataTable
             ]);
     }
 
+
     /**
      * Get columns.
      *
@@ -71,18 +79,21 @@ class AgronomistVendorServiceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
             'image',
+            'name',
             'charge',
             'charge_unit',
             'availability',
-            'zoom_details',
             'location',
-            'user_id',
-            'vendor_category_id',
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'user.username']),
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'user.phone']),
+            'is_verified',
+            'vendor_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor Category",'data'=>'vendor_category.name']),
+
 
         ];
     }
+
 
     /**
      * Get filename for export.

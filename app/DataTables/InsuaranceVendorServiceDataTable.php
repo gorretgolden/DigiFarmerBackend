@@ -1,10 +1,13 @@
 <?php
 
+
 namespace App\DataTables;
+
 
 use App\Models\InsuaranceVendorService;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+
 
 class InsuaranceVendorServiceDataTable extends DataTable
 {
@@ -18,13 +21,16 @@ class InsuaranceVendorServiceDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+
         return $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.'  width="40" height="50"/>';
+            return '<img src='.$data->image.'  class="img-thumbnail"/>';
+
 
         })
         ->addColumn('action', 'insuarance_vendor_services.datatables_actions')
         ->rawColumns(['image','action']);
     }
+
 
     /**
      * Get query source of dataTable.
@@ -36,6 +42,7 @@ class InsuaranceVendorServiceDataTable extends DataTable
     {
         return $model->newQuery()->with('user');
     }
+
 
     /**
      * Optional method if you want to use html builder.
@@ -62,6 +69,7 @@ class InsuaranceVendorServiceDataTable extends DataTable
             ]);
     }
 
+
     /**
      * Get columns.
      *
@@ -70,16 +78,17 @@ class InsuaranceVendorServiceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
             'image',
-            'terms',
-            'description',
+            'name',
+
+          //  'terms',
             'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'user.username']),
             'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'user.phone']),
             'location',
             'is_verified'
         ];
     }
+
 
     /**
      * Get filename for export.

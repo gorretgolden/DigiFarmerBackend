@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($insuaranceVendorService, ['route' => ['insuaranceVendorServices.update', $insuaranceVendorService->id], 'method' => 'patch']) !!}
+            {!! Form::model($insuaranceVendorService, ['route' => ['insuaranceVendorServices.update', $insuaranceVendorService->id], 'method' => 'patch', 'files' => true]) !!}
 
             <div class="card-body">
                 <div class="row">

@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class AgronomistVendorServiceRepository
  * @package App\Repositories
- * @version January 22, 2023, 2:15 pm CET
+ * @version February 9, 2023, 12:57 pm CET
 */
 
 class AgronomistVendorServiceRepository extends BaseRepository
@@ -20,13 +20,14 @@ class AgronomistVendorServiceRepository extends BaseRepository
         'name',
         'expertise',
         'charge',
+        'is_verified',
+        'location',
         'charge_unit',
         'availability',
         'description',
         'zoom_details',
-        'location',
-        'image',
         'user_id',
+        'image',
         'vendor_category_id'
     ];
 

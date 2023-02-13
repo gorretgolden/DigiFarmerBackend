@@ -1,6 +1,7 @@
 <?php
 $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
+
 ?>
 <!-- Name Field -->
 <div class="form-group col-sm-6">
@@ -8,17 +9,21 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Enter training name']) !!}
 </div>
 
+
 <!-- Charge Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('charge', 'Charge:') !!}
     {!! Form::number('charge', null, ['class' => 'form-control', 'placeholder' => '10000']) !!}
 </div>
 
+
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}
     {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
 </div>
+
+
 
 
 {{--
@@ -28,11 +33,13 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     {!! Form::text('period', null, ['class' => 'form-control', 'placeholder' => '1']) !!}
 </div>
 
+
 <!-- Period Unit Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('period_unit_id', 'Period Unit:') !!}
     {!! Form::select('period_unit_id', $period_units, null, ['class' => 'form-control custom-select']) !!}
 </div> --}}
+
 
 <div class="form-group col-sm-6">
     {!! Form::label('Access') !!}
@@ -40,6 +47,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
         'class' => 'form-control select select-access',
     ]) !!}
 </div>
+
 
 <!-- Image Field -->
 <div class="form-group col-sm-6">
@@ -53,11 +61,17 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 </div>
 
 
+
+
 {{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
     {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
 </div> --}}
+
+
+
+
 
 
 
@@ -72,6 +86,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     ]) !!}
 </div>
 
+
 @push('page_scripts')
     <script type="text/javascript">
         $('#starting_date').datetimepicker({
@@ -81,6 +96,8 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
         })
     </script>
 @endpush
+
+
 
 
 <!-- Starting Time Field -->
@@ -93,6 +110,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     ]) !!}
 </div>
 
+
 @push('page_scripts')
     <script type="text/javascript">
         $('#starting_time').datetimepicker({
@@ -103,6 +121,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     </script>
 @endpush
 
+
 <!-- Ending Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('ending_date', 'Ending Date:') !!}
@@ -112,6 +131,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
         'placeholder' => 'Select ending date',
     ]) !!}
 </div>
+
 
 @push('page_scripts')
     <script type="text/javascript">
@@ -124,6 +144,8 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 @endpush
 
 
+
+
 <!-- Ending Time Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('ending_time', 'Ending Time:') !!}
@@ -134,6 +156,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     ]) !!}
 </div>
 
+
 @push('page_scripts')
     <script type="text/javascript">
         $('#ending_time').datetimepicker({
@@ -142,6 +165,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
             sideBySide: true
         })
     </script>
+
 
     <script>
         $(document).ready(function() {
@@ -165,11 +189,16 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 
 
+
+
+
+
 <!-- User Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('user_id', 'Vendor :') !!}
     {!! Form::select('user_id', $users, null, ['class' => 'form-control custom-select']) !!}
 </div>
+
 
 <!-- Zoom Details Field -->
 <div class="form-group col-sm-12 col-lg-12">
@@ -180,14 +209,28 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     ]) !!}
 </div>
 
+
 <!-- Address Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('address_id', 'Address:') !!}
     <select id="farmer-address" name="address_id" class="form-control">
 
 
+
+
     </select>
 </div>
+
+
+<!-- Is verified Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
+</div>
+
 
 
 
@@ -197,6 +240,8 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
         $('#user_id').on('change', function() {
             var idFarmer = this.value;
             console.log(idFarmer)
+
+
 
 
             $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
@@ -210,12 +255,18 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
                 success: function(result) {
 
 
+
+
                     $('#farmer-address').html(
                         '<option value="">-- Select farmer address --</option>');
 
 
+
+
                     $.each(result.addresses, function(key, value) {
                         console.log(result)
+
+
 
 
                         $("#farmer-address").append('<option value="' + value
@@ -223,15 +274,23 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
                             .district_name + '</option>');
 
 
+
+
                         console.log('hello', value.district_name)
+
+
 
 
                     });
 
 
+
+
                 }
             });
         });
+
+
 
 
         $(document).ready(function() {
@@ -241,21 +300,17 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
                 $('#zoom_details').hide();
 
 
+
+
                 if (tmp == "In-person") {
                     $('#farmer-address').show();
                 } else if (tmp == "Online") {
                     $('#zoom_details').show();
 
-
                 }
 
 
             })
-
-
-
-
-
 
 
 

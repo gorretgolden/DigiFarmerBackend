@@ -71,17 +71,19 @@ class SellerProductController extends AppBaseController
 
     public function store(CreateSellerProductRequest $request)
     {
+
        //existing seller products
        $existing_seller_product = SellerProduct::where('name',$request->name)->first();
        $vendor_category = VendorCategory::where('name','Farm Equipments')->first();
 
        if(!$existing_seller_product){
-          $request->validate(SellerProduct::$rules);
+
           $new_seller_product = new SellerProduct();
           $new_seller_product->name = $request->name;
           $new_seller_product->description = $request->description;
           $new_seller_product->price = $request->price;
           $new_seller_product->image = $request->image;
+          $new_seller_product->stock_amount = $request->stock_amount;
           $new_seller_product->price_unit = "UGX";
           $new_seller_product->status = "on-sale";
           $new_seller_product->is_verified = $request->is_verified;
@@ -176,7 +178,8 @@ class SellerProductController extends AppBaseController
             'seller_product_category_id' => 'required|integer',
             'image' => 'nullable',
             'user_id'=> 'required|integer',
-            'address_id'=>'nullable|integer'
+            'address_id'=>'nullable|integer',
+            'stock_amount'=>'required|integer'
         ];
         $request->validate($rules);
         $sellerProduct = $this->sellerProductRepository->find($id);

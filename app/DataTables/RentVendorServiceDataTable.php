@@ -19,7 +19,7 @@ class RentVendorServiceDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.'  width="40" height="50"/>';
+            return '<img src='.$data->image.'  class="img-thumbnail"/>';
 
         })->addColumn('action', 'rent_vendor_services.datatables_actions')
         ->rawColumns(['image','action']);
@@ -69,8 +69,8 @@ class RentVendorServiceDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
             'image',
+            'name',
             'rent_vendor_sub_category'=> new \Yajra\DataTables\Html\Column(['title'=>"Sub Category",'data'=>'rent_vendor_sub_category.name']),
             'charge',
             'charge_frequency',

@@ -1,10 +1,13 @@
 <?php
 
+
 namespace App\DataTables;
+
 
 use App\Models\AnimalFeed;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+
 
 class AnimalFeedDataTable extends DataTable
 {
@@ -18,13 +21,16 @@ class AnimalFeedDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+
         return $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.'  width="40" height="50"/>';
+            return '<img src='.$data->image.' class="img-thumbnail"/>';
+
 
         })
         ->addColumn('action', 'animal_feeds.datatables_actions')
         ->rawColumns(['image','action']);
     }
+
 
     /**
      * Get query source of dataTable.
@@ -36,6 +42,7 @@ class AnimalFeedDataTable extends DataTable
     {
         return $model->newQuery()->with(['category','vendor','address']);
     }
+
 
     /**
      * Optional method if you want to use html builder.
@@ -59,9 +66,11 @@ class AnimalFeedDataTable extends DataTable
                     ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
 
+
                 ],
             ]);
     }
+
 
     /**
      * Get columns.
@@ -71,8 +80,8 @@ class AnimalFeedDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
             'image',
+            'name',
             'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Category",'data'=>'category.name']),
             'price',
             'stock_amount' => new \Yajra\DataTables\Html\Column(['title'=>"Stock",'data'=>'stock_amount']),
@@ -85,8 +94,11 @@ class AnimalFeedDataTable extends DataTable
             'is_verified'=> new \Yajra\DataTables\Html\Column(['title'=>"Verified",'data'=>'is_verified']),
 
 
+
+
         ];
     }
+
 
     /**
      * Get filename for export.

@@ -24,6 +24,7 @@ class DistrictFactory extends Factory
         return [
             'name' => $this->faker->word,
         'region_id' => $this->faker->randomDigitNotNull,
+        'is_active' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

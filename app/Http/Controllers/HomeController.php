@@ -30,7 +30,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $notifications = auth()->user()->unreadNotifications()->limit(5)->get();
+        $notifications = auth()->user()->unreadNotifications()->latest()->get();
+        $notifications_count = count($notifications);
         //dd(count($notifications));
         $total_farmers = User::where('user_type','=','farmer')->count();
         $total_vendors = User::where('is_vendor',1)->count();
@@ -51,7 +52,7 @@ class HomeController extends Controller
         // $labels = $users->keys();
         // $data = $users->values();
 
-        return view('home',compact('notifications','total_farmers','total_vendors','total_users','total_farms','total_crops','total_crops_on_sale','total_crop_orders','total_animals'));
+        return view('home',compact('notifications','notifications_count','total_farmers','total_vendors','total_users','total_farms','total_crops','total_crops_on_sale','total_crop_orders','total_animals'));
     }
 
     public function admin(){

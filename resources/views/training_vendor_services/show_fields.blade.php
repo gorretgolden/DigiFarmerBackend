@@ -16,22 +16,22 @@
     <p>{{ $trainingVendorService->description }}</p>
 </div>
 
-<!-- Period Field -->
+<!-- Image Field -->
 <div class="col-sm-12">
-    {!! Form::label('period', 'Period:') !!}
-    <p>{{ $trainingVendorService->period }}</p>
-</div>
-
-<!-- Period Unit Field -->
-<div class="col-sm-12">
-    {!! Form::label('period_unit', 'Period Unit:') !!}
-    <p>{{ $trainingVendorService->period_unit }}</p>
+    {!! Form::label('image', 'Image:') !!}
+    <p>{{ $trainingVendorService->image }}</p>
 </div>
 
 <!-- Access Field -->
 <div class="col-sm-12">
     {!! Form::label('access', 'Access:') !!}
     <p>{{ $trainingVendorService->access }}</p>
+</div>
+
+<!-- Is Verified Field -->
+<div class="col-sm-12">
+    {!! Form::label('is_verified', 'Is Verified:') !!}
+    <p>{{ $trainingVendorService->is_verified }}</p>
 </div>
 
 <!-- Starting Date Field -->
@@ -64,10 +64,10 @@
     <p>{{ $trainingVendorService->zoom_details }}</p>
 </div>
 
-<!-- Location Details Field -->
+<!-- Location Field -->
 <div class="col-sm-12">
-    {!! Form::label('location_details', 'Location Details:') !!}
-    <p>{{ $trainingVendorService->location_details }}</p>
+    {!! Form::label('location', 'Location:') !!}
+    <p>{{ $trainingVendorService->location }}</p>
 </div>
 
 <!-- Vendor Category Id Field -->

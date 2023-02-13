@@ -107,10 +107,6 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 
 
 
-
-
-
-
 <!-- Image Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('image', 'Image:') !!}
@@ -123,6 +119,14 @@ $vendor_categories = App\Models\VendorCategory::all()->pluck('name', 'id');
 </div>
 <div class="clearfix"></div>
 
+<!-- Is verified Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('is_verified', 'Verify:') !!}
+    <label class="checkbox-inline">
+        {!! Form::hidden('is_verified', 0) !!}
+        {!! Form::checkbox('is_verified', '1', null) !!}
+    </label>
+</div>
 
 @push('scripts')
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}

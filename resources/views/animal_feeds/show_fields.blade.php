@@ -1,6 +1,8 @@
 <div class="row">
 
+
     <div class="col-md-4">
+
 
         <div class="card">
             <div class="card-body">
@@ -9,6 +11,7 @@
                         <img src="{{ $animalFeed->vendor->image_url ? $animalFeed->vendor->image_url : asset('img/avatar-1.png') }}"
                             class="img-thumbnail" />
                     </div>
+
 
                     <div class="col-md-6 mt-2">
                         {!! Form::label('name', 'Vendor details:') !!}
@@ -19,27 +22,35 @@
                 </div>
 
 
+
+
             </div>
         </div>
     </div>
 
 
 
+
+
+
    <div class="col-md-6">
     <div class="card">
         <div class="card-body">
-            <div class="col-md-6">
+            <div class="col-md-12">
+
 
                 <div>
                     <img src="{{ $animalFeed->image}}"
                     class="img-thumbnail" />
                 </div>
 
+
                 <!-- Name Field -->
                 <div class="d-inline">
                     {!! Form::label('name', 'Name:') !!}
                     <p>{{ $animalFeed->name }}</p>
                 </div>
+
 
                 <!-- Animal Feed Sub Category Id Field -->
                 <div>
@@ -48,11 +59,15 @@
                 </div>
 
 
+
+
                 <!-- Price Field -->
                 <div>
                     {!! Form::label('price', 'Price:') !!}
                     <p>{{ $animalFeed->price_unit }} {{ $animalFeed->price }}</p>
                 </div>
+
+
 
 
                 <!-- status Field -->
@@ -65,7 +80,11 @@
                     <p class="badge rounded-pill bg-danger">Not verified</p>
                     @endif
 
+
                 </div>
+
+
+
 
 
 
@@ -73,7 +92,9 @@
                 <div>
                     {!! Form::label('description', 'Description:') !!}  <p>{{ $animalFeed->description }}</p>
 
+
                 </div>
+
 
                 <!-- Created At Field -->
                 <div>
@@ -83,11 +104,20 @@
 
 
 
+
+
+
             </div>
         </div>
     </div>
 
+
    </div>
+
+
+
+
+
 
 
 

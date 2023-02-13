@@ -21,7 +21,7 @@ use App\Models\UserVerification;
  require_once('../external/AfricasTalkingGateway.php');
 use AfricasTalking\SDK\AfricasTalking;
 use Tjmugova\Dpo\Facades\Dpo;
-
+use App\Notifications\NewUserNotification;
 
 
 /**
@@ -183,7 +183,8 @@ class UserAPIController extends AppBaseController
         else{
 
             $otp = OtpPhoneNumber::where('otp',$request->otp)->first();
-            $invalid_phone = OtpPhoneNumber::where('otp',$request->phone)->first();
+            $invalid_phone = OtpPhoneNumber::where('phone',$request->phone)->first();
+            //dd($invalid_phone);
 
             if(!$invalid_phone){
                 $response = [
@@ -374,6 +375,8 @@ class UserAPIController extends AppBaseController
              $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
              $user->save();
 
+             $admin = User::where('user_type','admin')->first();
+             $admin->notify(new NewUserNotification($user));
 
              $response = [
                 'success'=>true,

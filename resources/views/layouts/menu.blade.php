@@ -75,17 +75,25 @@
 
 
 
-        {{-- <li class="nav-item">
+        <li class="nav-item">
             <a href="{{ route('regions.index') }}"
                class="nav-link {{ Request::is('regions*') ? 'active' : '' }}">
                 <p>Regions</p>
             </a>
-        </li> --}}
+        </li>
 
 
         <li class="nav-item">
-            <a href="{{ route('addresses.index') }}"
-               class="nav-link">
+            <a href="{{ route('districts.index') }}"
+               class="nav-link ">
+                <p>Districts</p>
+            </a>
+        </li>
+
+
+
+        <li class="nav-item">
+            <a href="{{ route('addresses.index') }}" class="nav-link">
                 <p>Addresses</p>
             </a>
         </li>
@@ -138,8 +146,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('userVerifications.index') }}"
-               class="nav-link ">
+            <a href="{{ route('userVerifications.index') }}" class="nav-link ">
                 <p>User Verifications</p>
             </a>
         </li>
@@ -341,9 +348,8 @@
             <ul class="menu-content" style="display: none">
 
                 <li class="nav-item">
-                    <a href="{{ route('sellerProductCategories.index') }}"
-                       class="nav-link ">
-                        <p>Add  Categories</p>
+                    <a href="{{ route('sellerProductCategories.index') }}" class="nav-link ">
+                        <p>Add Categories</p>
                     </a>
                 </li>
 
@@ -365,11 +371,17 @@
 
             <ul class="menu-content" style="display: none">
 
+
+
                 <li class="nav-item">
-                    <a href="{{ route('trainingVendorServices.index') }}" class="nav-link">
-                        <p>Add Trainings</p>
+                    <a href="{{ route('trainingVendorServices.index') }}"
+                        class="nav-link">
+                        <p>Training Vendor Services</p>
                     </a>
                 </li>
+
+
+
 
 
                 <li class="nav-item">
@@ -383,36 +395,36 @@
         </li>
 
 
-<li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link ">
-        <i class="fa fa-users mr-2" aria-hidden="true"></i>
-        <p>Animal Feeds</p>
-    </a>
-
-    <ul class="menu-content" style="display: none">
-
-
-
-        <li class="nav-item">
-            <a href="{{ route('animalFeedCategories.index') }}" class="nav-link">
-                <p>Add Categories</p>
+        <li class="nav-item-one nav-item">
+            <a href="javascript:;" class="waves-effect nav-link ">
+                <i class="fa fa-users mr-2" aria-hidden="true"></i>
+                <p>Animal Feeds</p>
             </a>
+
+            <ul class="menu-content" style="display: none">
+
+
+
+                <li class="nav-item">
+                    <a href="{{ route('animalFeedCategories.index') }}" class="nav-link">
+                        <p>Add Categories</p>
+                    </a>
+                </li>
+
+
+
+
+                <li class="nav-item">
+                    <a href="{{ route('animalFeeds.index') }}" class="nav-link">
+                        <p>Add Animal Feeds</p>
+                    </a>
+                </li>
+
+
+
+
+            </ul>
         </li>
-
-
-
-
-        <li class="nav-item">
-            <a href="{{ route('animalFeeds.index') }}" class="nav-link">
-                <p>Add Animal Feeds</p>
-            </a>
-        </li>
-
-
-
-
-    </ul>
-</li>
 
         <li class="nav-item-one nav-item">
             <a href="javascript:;" class="waves-effect nav-link ">
@@ -431,8 +443,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('rentVendorSubCategories.index') }}"
-                       class="nav-link">
+                    <a href="{{ route('rentVendorSubCategories.index') }}" class="nav-link">
                         <p>Add Sub Categories</p>
                     </a>
                 </li>
@@ -444,7 +455,7 @@
                         <p>Add Rent Vendors</p>
                     </a>
                 </li>
-{{--
+                {{--
                 <li class="nav-item">
                     <a href="{{ route('rentVendorImages.index') }}" class="nav-link">
                         <p>Rent Vendor Images</p>
@@ -456,130 +467,131 @@
         </li>
 
 
-<li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link ">
-        <i class="fa fa-users mr-2" aria-hidden="true"></i>
-        <p>Insuarance Services</p>
-    </a>
+        <li class="nav-item-one nav-item">
+            <a href="javascript:;" class="waves-effect nav-link ">
+                <i class="fa fa-users mr-2" aria-hidden="true"></i>
+                <p>Insuarance Services</p>
+            </a>
 
-    <ul class="menu-content" style="display: none">
-
-
+            <ul class="menu-content" style="display: none">
 
 
 
-        <li class="nav-item">
+
+                <li class="nav-item">
+                    <a href="{{ route('insuaranceVendorServices.index') }}" class="nav-link ">
+                        <p>Add Insuarance Service</p>
+                    </a>
+                </li>
+
+
+
+                {{-- <li class="nav-item">
             <a href="{{ route('insuaranceVendorServices.index') }}" class="nav-link ">
                 <p>Add Insuarances</p>
             </a>
         </li>
+ --}}
 
-
-    </ul>
-</li>
-
-
-
-
-<li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link ">
-        <i class="fa fa-users mr-2" aria-hidden="true"></i>
-        <p>Finance Vendors</p>
-    </a>
-
-    <ul class="menu-content" style="display: none">
-        <li class="nav-item">
-            <a href="{{ route('financeVendorCategories.index') }}" class="nav-link">
-                <p>Add  Categories</p>
-            </a>
+            </ul>
         </li>
 
 
 
 
-        <li class="nav-item">
-            <a href="{{ route('finaceVendorServices.index') }}" class="nav-link">
-                <p>Add Finance Vendor</p>
+        <li class="nav-item-one nav-item">
+            <a href="javascript:;" class="waves-effect nav-link ">
+                <i class="fa fa-users mr-2" aria-hidden="true"></i>
+                <p>Finance Vendors</p>
             </a>
-        </li>
-    </ul>
-</li>
 
-
-<li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link ">
-        <i class="fa fa-users mr-2" aria-hidden="true"></i>
-        <p>Agronomist Services</p>
-    </a>
-
-    <ul class="menu-content" style="display: none">
-
-
-        <li class="nav-item">
-            <a href="{{ route('agronomistVendorServices.index') }}"
-               class="nav-link ">
-               <p>Add Agronomist</p>
-            </a>
-        </li>
+            <ul class="menu-content" style="display: none">
+                <li class="nav-item">
+                    <a href="{{ route('financeVendorCategories.index') }}" class="nav-link">
+                        <p>Add Categories</p>
+                    </a>
+                </li>
 
 
 
 
-        <li class="nav-item">
-            <a href="{{ route('agronomistShedules.index') }}"
-               class="nav-link">
-                <p>Agronomist Shedules</p>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ route('agronomistSlots.index') }}"
-               class="nav-link">
-                <p>Agronomist Slots</p>
-            </a>
+                <li class="nav-item">
+                    <a href="{{ route('finaceVendorServices.index') }}" class="nav-link">
+                        <p>Add Finance Vendor</p>
+                    </a>
+                </li>
+            </ul>
         </li>
 
 
-
-    </ul>
-</li>
-
-<li class="nav-item-one nav-item">
-    <a href="javascript:;" class="waves-effect nav-link ">
-        <i class="fa fa-users mr-2" aria-hidden="true"></i>
-        <p>Veterinary Services</p>
-    </a>
-
-    <ul class="menu-content" style="display: none">
-
-        <li class="nav-item">
-            <a href="{{ route('veterinaries.index') }}"
-               class="nav-link">
-                <p>Add  Vet service</p>
+        <li class="nav-item-one nav-item">
+            <a href="javascript:;" class="waves-effect nav-link ">
+                <i class="fa fa-users mr-2" aria-hidden="true"></i>
+                <p>Agronomist Services</p>
             </a>
+
+            <ul class="menu-content" style="display: none">
+
+
+                <li class="nav-item">
+                    <a href="{{ route('agronomistVendorServices.index') }}" class="nav-link ">
+                        <p>Add Agronomist</p>
+                    </a>
+                </li>
+
+
+
+
+                <li class="nav-item">
+                    <a href="{{ route('agronomistShedules.index') }}" class="nav-link">
+                        <p>Agronomist Shedules</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('agronomistSlots.index') }}" class="nav-link">
+                        <p>Agronomist Slots</p>
+                    </a>
+                </li>
+
+
+
+            </ul>
         </li>
 
-
-
-
-        <li class="nav-item">
-            <a href="{{ route('veterinaryShedules.index') }}"
-               class="nav-link">
-                <p>Veterinary Shedules</p>
+        <li class="nav-item-one nav-item">
+            <a href="javascript:;" class="waves-effect nav-link ">
+                <i class="fa fa-users mr-2" aria-hidden="true"></i>
+                <p>Veterinary Services</p>
             </a>
+
+            <ul class="menu-content" style="display: none">
+
+                <li class="nav-item">
+                    <a href="{{ route('veterinaries.index') }}" class="nav-link">
+                        <p>Add Vet service</p>
+                    </a>
+                </li>
+
+
+
+
+                <li class="nav-item">
+                    <a href="{{ route('veterinaryShedules.index') }}" class="nav-link">
+                        <p>Veterinary Shedules</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('veterinarySlots.index') }}" class="nav-link">
+                        <p>Veterinary Slots</p>
+                    </a>
+                </li>
+
+
+
+            </ul>
         </li>
-
-        <li class="nav-item">
-            <a href="{{ route('veterinarySlots.index') }}"
-               class="nav-link">
-                <p>Veterinary Slots</p>
-            </a>
-        </li>
-
-
-
-    </ul>
-</li>
 
 
     </ul>
@@ -708,20 +720,4 @@
         $("ul", this).toggle("slow");
     });
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

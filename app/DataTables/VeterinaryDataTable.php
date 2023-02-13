@@ -18,7 +18,14 @@ class VeterinaryDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'veterinaries.datatables_actions');
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.'  width="40" height="50"/>';
+
+
+        })
+       ->addColumn('action', 'veterinaries.datatables_actions')
+       ->rawColumns(['image','action']);
+
     }
 
     /**
@@ -66,14 +73,15 @@ class VeterinaryDataTable extends DataTable
     {
         return [
             'name',
+            'image',
             'charge',
             'location',
             'charge_unit',
             'availability',
             'zoom_details',
-            'image',
             'user_id',
-            'vendor_category_id'
+            'vendor_category_id',
+            'is_verified'
         ];
     }
 

@@ -1,3 +1,8 @@
+
+<?php
+$notifications = auth()->user()->unreadNotifications()->latest()->get();
+$notifications_count = count($notifications);
+?>
 <!DOCTYPE html>
 <html>
 
@@ -70,7 +75,7 @@
                         <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        Notifications <span class="badge badge-light">4</span>
+                        Notifications <span class="badge badge-light">{{$notifications_count}}</span>
                         <li class="user-header bg-primary">
                             <img src="https://cdn.pixabay.com/photo/2022/10/25/07/07/pumpkins-7545052__340.jpg"
                                 class="img-circle elevation-2" alt="User Image">

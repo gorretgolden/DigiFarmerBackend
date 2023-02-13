@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Models\SellerProductCategory;
+use Illuminate\Support\Facades\File;
 
 class SellerProductCategoryController extends AppBaseController
 {
@@ -120,8 +121,11 @@ class SellerProductCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateSellerProductCategoryRequest $request)
+    public function update($id, Request $request)
     {
+        $request->validate([
+            'name'=>'required|string|max:100'
+        ]);
         $sellerProductCategory = $this->sellerProductCategoryRepository->find($id);
 
         if (empty($sellerProductCategory)) {
@@ -130,7 +134,15 @@ class SellerProductCategoryController extends AppBaseController
             return redirect(route('sellerProductCategories.index'));
         }
 
-        $sellerProductCategory = $this->sellerProductCategoryRepository->update($request->all(), $id);
+        $sellerProductCategory->name = $request->name;
+        if(!empty($request->file('image'))){
+            File::delete('storage/seller_product_categories/'.$sellerProductCategory->image);
+            $sellerProductCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_product_categories');
+            $sellerProductCategory->save();
+        }
+
+        $sellerProductCategory->save();
+
 
         Flash::success('Seller Product Category updated successfully.');
 

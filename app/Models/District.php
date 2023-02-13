@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class District
  * @package App\Models
- * @version December 23, 2022, 9:33 am CET
+ * @version February 9, 2023, 5:19 pm CET
  *
  * @property string $name
  * @property integer $region_id
+ * @property boolean $is_active
  */
 class District extends Model
 {
@@ -26,7 +27,8 @@ class District extends Model
 
     public $fillable = [
         'name',
-        'region_id'
+        'region_id',
+        'is_active'
     ];
 
     /**
@@ -36,7 +38,8 @@ class District extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'region_id' => 'integer'
+        'region_id' => 'integer',
+        'is_active' => 'boolean'
     ];
 
     /**
@@ -45,16 +48,13 @@ class District extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
-        'region_id' => 'required|integer'
+        'name' => 'required|string|unique:districts,name',
+        'region_id' => 'required|integer',
+        'is_active' => 'nullable'
     ];
 
-    //belongs to a region
     public function region()
     {
-       return $this->belongsTo(\App\Models\Region::class,'region_id');
+        return $this->belongsTo(\App\Models\Region::class,'region_id');
     }
-
-
-
 }

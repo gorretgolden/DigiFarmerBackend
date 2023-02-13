@@ -296,3 +296,15 @@ Route::resource('veterinaryShedules', App\Http\Controllers\VeterinarySheduleCont
 
 
 Route::resource('veterinarySlots', App\Http\Controllers\VeterinarySlotController::class);
+
+
+Route::resource('insuaranceVendorServices', App\Http\Controllers\InsuaranceVendorServiceController::class);
+
+
+Route::resource('animalFeeds', App\Http\Controllers\AnimalFeedController::class);
+
+
+Route::resource('trainingVendorServices', App\Http\Controllers\TrainingVendorServiceController::class);
+
+
+Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);

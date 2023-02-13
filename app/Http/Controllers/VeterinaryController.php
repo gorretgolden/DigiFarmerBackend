@@ -15,7 +15,7 @@ use App\Models\VendorCategory;
 use App\Models\Veterinary;
 use App\Models\Address;
 use App\Models\User;
-
+use Illuminate\Support\Facades\File;
 class VeterinaryController extends AppBaseController
 {
     /** @var VeterinaryRepository $veterinaryRepository*/
@@ -74,7 +74,7 @@ class VeterinaryController extends AppBaseController
       $request->validate($rules);
 
      //  dd($location);
-      $vendor_category = VendorCategory::where('name','Agronomists')->first();
+      $vendor_category = VendorCategory::where('name','Veterinary')->first();
       $new_vet_service = new Veterinary();
       $new_vet_service->name = $request->name;
       $new_vet_service->charge = $request->charge;
@@ -92,6 +92,7 @@ class VeterinaryController extends AppBaseController
       $new_vet_service->expertise = $request->expertise;
       $new_vet_service->image = $request->image;
       $new_vet_service->description = $request->description;
+      $new_vet_service->is_verified = $request->is_verified;
       $new_vet_service->save();
 
       $new_vet_service->animal_categories()->attach($request->animals);
@@ -180,8 +181,23 @@ class VeterinaryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateVeterinaryRequest $request)
+    public function update($id, Request $request)
     {
+        $rules = [
+            'name' => 'required|string|max:100',
+            'expertise' => 'required|string|min:20|max:200',
+            'charge' => 'required|integer',
+            'location' => 'nullable',
+            'charge_unit' => 'nullable',
+            'availability' => 'required|string',
+            'description' => 'required|string|min:20|max:200',
+            'zoom_details' => 'nullable|string',
+            'image' => 'nullable|image',
+            'user_id' => 'required|integer',
+
+        ];
+        $request->validate($rules);
+
         $veterinary = $this->veterinaryRepository->find($id);
 
         if (empty($veterinary)) {
@@ -190,7 +206,42 @@ class VeterinaryController extends AppBaseController
             return redirect(route('veterinaries.index'));
         }
 
-        $veterinary = $this->veterinaryRepository->update($request->all(), $id);
+        $veterinary->name = $request->name;
+        $veterinary->charge = $request->charge;
+        $veterinary->is_verified = $request->is_verified;
+        $veterinary->user_id = $request->user_id;
+        $veterinary->expertise = $request->expertise;
+        $veterinary->availability = $request->availability;
+        $veterinary->description = $request->description;
+        $veterinary->save();
+
+
+        if(!empty($request->file('image'))){
+            File::delete('storage/vet/'.$veterinary->image);
+            $veterinary->image = \App\Models\ImageUploader::upload($request->file('image'),'vet');
+            $veterinary->save();
+        }
+
+
+        if(!empty($request->crops)){
+            $veterinary->animal_categories()->attach($request->animals);
+            $veterinary->save();
+        }
+
+        if(($request->availability == "In-Person") && !empty($request->address_id)){
+
+          //  $request->validate(['address_id' => 'required|integer']);
+            $location = Address::find($request->address_id);
+            $veterinary->location = $location->district_name;
+            $veterinary->save();
+
+         }
+         if(($request->availability == "Online") && !empty($request->zoom_details)){
+            //$request->validate(['zoom_details' => 'required|string']);
+            $veterinary->zoom_details = $request->zoom_details;
+            $veterinary->save();
+
+         }
 
         Flash::success('Veterinary updated successfully.');
 

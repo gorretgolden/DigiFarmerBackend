@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
 
 use App\DataTables\AgronomistVendorServiceDataTable;
 use App\Http\Requests;
@@ -18,15 +20,18 @@ use App\Models\Address;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 
+
 class AgronomistVendorServiceController extends AppBaseController
 {
     /** @var AgronomistVendorServiceRepository $agronomistVendorServiceRepository*/
     private $agronomistVendorServiceRepository;
 
+
     public function __construct(AgronomistVendorServiceRepository $agronomistVendorServiceRepo)
     {
         $this->agronomistVendorServiceRepository = $agronomistVendorServiceRepo;
     }
+
 
     /**
      * Display a listing of the AgronomistVendorService.
@@ -40,6 +45,7 @@ class AgronomistVendorServiceController extends AppBaseController
         return $agronomistVendorServiceDataTable->render('agronomist_vendor_services.index');
     }
 
+
     /**
      * Show the form for creating a new AgronomistVendorService.
      *
@@ -49,6 +55,7 @@ class AgronomistVendorServiceController extends AppBaseController
     {
         return view('agronomist_vendor_services.create');
     }
+
 
     /**
      * Store a newly created AgronomistVendorService in storage.
@@ -61,7 +68,6 @@ class AgronomistVendorServiceController extends AppBaseController
     {
 
 
-       // dd(Carbon::now()->subDays(2)->toDateTimeString())->get();
         $rules = [
             'name' => 'required|string|max:50|unique:agronomists',
             'expertise' => 'required|string|max:255|min:20',
@@ -75,14 +81,18 @@ class AgronomistVendorServiceController extends AppBaseController
             'crops' =>'required',
         ];
 
+
         $request->validate($rules);
+
 
       //  dd($location);
         $vendor_category = VendorCategory::where('name','Agronomists')->first();
         $new_agro_service = new AgronomistVendorService();
         $new_agro_service->name = $request->name;
         $new_agro_service->charge = $request->charge;
+        $new_agro_service->is_verified = $request->is_verified;
         $new_agro_service->charge_unit = "Per hour";
+
 
         //set user as a vendor
         $user = User::find($request->user_id);
@@ -91,19 +101,26 @@ class AgronomistVendorServiceController extends AppBaseController
            $user->save();
         }
         $new_agro_service->user_id = $request->user_id;
-
         $new_agro_service->vendor_category_id = $vendor_category->id;
         $new_agro_service->expertise = $request->expertise;
-        $new_agro_service->image = $request->image;
         $new_agro_service->description = $request->description;
         $new_agro_service->save();
 
+
         $new_agro_service->crops()->attach($request->crops);
+
 
         $new_agro_service = AgronomistVendorService::find($new_agro_service->id);
 
-        $new_agro_service->image = \App\Models\ImageUploader::upload($request->file('image'),'agronomists');
-        $new_agro_service->save();
+
+        if(!empty($request->file('image'))){
+            $new_agro_service->image = \App\Models\ImageUploader::upload($request->file('image'),'agronomists');
+            $new_agro_service->save();
+
+
+        }
+
+
 
 
         if($request->availability == "Online"){
@@ -115,7 +132,11 @@ class AgronomistVendorServiceController extends AppBaseController
 
 
 
+
+
+
         }elseif($request->availability == "In-Person"){
+
 
             $request->validate(['address_id' => 'required|integer']);
             $location = Address::find($request->address_id);
@@ -123,17 +144,26 @@ class AgronomistVendorServiceController extends AppBaseController
             $new_agro_service->save();
             Flash::success('Agronomist Vendor Service saved successfully.');
 
+
             return redirect(route('agronomistVendorServices.index'));
 
+
         }else{
+
 
             $new_agro_service->save();
             Flash::success('Agronomist Vendor Service saved successfully.');
             return redirect(route('agronomistVendorServices.index'));
 
+
         }
 
+
     }
+
+
+
+
 
 
 
@@ -149,14 +179,18 @@ class AgronomistVendorServiceController extends AppBaseController
     {
         $agronomistVendorService = $this->agronomistVendorServiceRepository->find($id);
 
+
         if (empty($agronomistVendorService)) {
             Flash::error('Agronomist Vendor Service not found');
+
 
             return redirect(route('agronomistVendorServices.index'));
         }
 
+
         return view('agronomist_vendor_services.show')->with('agronomistVendorService', $agronomistVendorService);
     }
+
 
     /**
      * Show the form for editing the specified AgronomistVendorService.
@@ -169,14 +203,18 @@ class AgronomistVendorServiceController extends AppBaseController
     {
         $agronomistVendorService = $this->agronomistVendorServiceRepository->find($id);
 
+
         if (empty($agronomistVendorService)) {
             Flash::error('Agronomist Vendor Service not found');
+
 
             return redirect(route('agronomistVendorServices.index'));
         }
 
+
         return view('agronomist_vendor_services.edit')->with('agronomistVendorService', $agronomistVendorService);
     }
+
 
     /**
      * Update the specified AgronomistVendorService in storage.
@@ -204,9 +242,9 @@ class AgronomistVendorServiceController extends AppBaseController
         $request->validate($rules);
         $agronomistVendorService = $this->agronomistVendorServiceRepository->find($id);
 
+
         if (empty($agronomistVendorService)) {
             Flash::error('Agronomist Vendor Service not found');
-
             return redirect(route('agronomistVendorServices.index'));
         }
 
@@ -215,20 +253,24 @@ class AgronomistVendorServiceController extends AppBaseController
         $agronomistVendorService->user_id = $request->user_id;
         $agronomistVendorService->expertise = $request->expertise;
         $agronomistVendorService->description = $request->description;
-
+        $agronomistVendorService->is_verified = $request->is_verified;
         $agronomistVendorService->save();
+
 
         if(!empty($request->crops)){
             $agronomistVendorService->crops()->attach($request->crops);
             $agronomistVendorService->save();
         }
 
+
         if(!empty($request->address_id)){
             $location = Address::find($request->address_id);
             $agronomistVendorService->location = $location->district_name;
             $agronomistVendorService->save();
 
+
         }
+
 
         if(!empty($request->file('image'))){
             File::delete('storage/agronomists/'.$agronomistVendorService->image);
@@ -237,13 +279,12 @@ class AgronomistVendorServiceController extends AppBaseController
         }
 
 
-
-        $agronomistVendorService = $this->agronomistVendorServiceRepository->update($request->all(), $id);
-
         Flash::success('Agronomist Vendor Service updated successfully.');
+
 
         return redirect(route('agronomistVendorServices.index'));
     }
+
 
     /**
      * Remove the specified AgronomistVendorService from storage.
@@ -256,15 +297,20 @@ class AgronomistVendorServiceController extends AppBaseController
     {
         $agronomistVendorService = $this->agronomistVendorServiceRepository->find($id);
 
+
         if (empty($agronomistVendorService)) {
             Flash::error('Agronomist Vendor Service not found');
+
 
             return redirect(route('agronomistVendorServices.index'));
         }
 
+
         $this->agronomistVendorServiceRepository->delete($id);
 
+
         Flash::success('Agronomist Vendor Service deleted successfully.');
+
 
         return redirect(route('agronomistVendorServices.index'));
     }

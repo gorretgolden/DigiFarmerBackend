@@ -3,23 +3,31 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class AnimalFeed
  * @package App\Models
- * @version November 29, 2022, 10:13 am UTC
+ * @version February 8, 2023, 8:44 pm CET
  *
  * @property string $name
- * @property integer $animal_feed_sub_category_id
  * @property integer $price
  * @property string $price_unit
+ * @property integer $weight
+ * @property string $weight_unit
+ * @property intger $stock_amount
+ * @property string $location
+ * @property string $image
  * @property string $description
+ * @property string $status
+ * @property boolean $is_verified
+ * @property integer $user_id
+ * @property integer $animal_feed_category_id
+ * @property integer $vendor_category_id
  */
 class AnimalFeed extends Model
 {
-
 
     use HasFactory;
 
@@ -27,23 +35,23 @@ class AnimalFeed extends Model
     public $dir = 'storage/animal_feeds/';
 
 
+
+
     public $fillable = [
         'name',
-        'animal_feed_category_id',
-        'animal_category_id',
-        'vendory_category_id',
         'price',
         'price_unit',
-        'description',
-        'user_id',
-        'image',
         'weight',
         'weight_unit',
-        'address_id',
-        'location',
         'stock_amount',
-        'is_verified'
-
+        'location',
+        'image',
+        'description',
+        'status',
+        'is_verified',
+        'user_id',
+        'animal_feed_category_id',
+        'vendor_category_id'
     ];
 
     /**
@@ -53,22 +61,18 @@ class AnimalFeed extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'animal_feed_category_id' => 'integer',
         'price' => 'integer',
         'price_unit' => 'string',
-        'description' => 'string',
-        'user_id' => 'integer',
-        'image' => 'string',
         'weight' => 'integer',
-        'animal_category_id' => 'integer',
-        'address_id' => 'integer',
-        'vendor_category_id' => 'integer',
         'weight_unit' => 'string',
-        'stock_amount' => 'integer',
-        'is_verified' => 'boolean'
-
-
-
+        'location' => 'string',
+        'image' => 'string',
+        'description' => 'string',
+        'status' => 'string',
+        'is_verified' => 'boolean',
+        'user_id' => 'integer',
+        'animal_feed_category_id' => 'integer',
+        'vendor_category_id' => 'integer'
     ];
 
     /**
@@ -77,24 +81,21 @@ class AnimalFeed extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|unique:animal_feeds',
-        'animal_feed_category_id' => 'required|integer',
+        'name' => 'required|string|min:10|max:100',
         'price' => 'required|integer',
         'price_unit' => 'nullable',
-        'description' => 'required|min:10',
-        'user_id' => 'required|integer',
-        'image' => 'required',
         'weight' => 'required|integer',
         'weight_unit' => 'required|string',
-        'stock_amount' => 'required|integer'
-
-
+        'stock_amount' => 'required|integer',
+        'address_id' => 'required|integer',
+        'image' => 'required',
+        'description' => 'required|string|min:10',
+        'status' => 'nullable',
+        'is_verified' => 'nullable',
+        'user_id' => 'required|integer',
+        'animal_feed_category_id' => 'required|integer',
+        'vendor_category_id' => 'nullable'
     ];
-
-    public function getFormattedPriceAttribute()
-{
-    return number_format($this->attributes['price'], 0);
-}
 
 
     //an animal feed belongs to an animal feed category
@@ -103,11 +104,14 @@ class AnimalFeed extends Model
        return $this->belongsTo(\App\Models\AnimalFeedCategory::class, 'animal_feed_category_id');
     }
 
+
     //animal feed belongs to a user
      public function vendor()
      {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
      }
+
+
 
 
      //belongs to an address
@@ -117,11 +121,14 @@ class AnimalFeed extends Model
      }
 
 
+
+
      //belongs to a vendor category
      public function vendor_category()
     {
         return $this->belongsTo(\App\Models\VendorCategory::class,'vendor_category_id');
     }
+
 
     //belongs to an animal feed category
     public function animal_feed_category()
@@ -130,14 +137,20 @@ class AnimalFeed extends Model
     }
 
 
+
+
     //Accessors
 
-    public function getImageAttribute($value)
+
+    public function getImageAttribute($image)
     {
 
+        if ($image) {
+            return $this->dir.$image;
+         }
 
-     return $this->dir.$value;
     }
+
     //belongs to many carts
     public function carts()
     {
