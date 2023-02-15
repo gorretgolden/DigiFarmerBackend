@@ -88,7 +88,70 @@ class CropOnSaleAPIController extends AppBaseController
 
     }
 
-    //get crops on sale by crop category
+
+    public function home_crops_on_sale(Request $request)
+    {
+        $crops_on_sale = CropOnSale::latest()->limit(6)->get();
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-crops-on-sale'=>$crops_on_sale->count(),
+                'crops-on-sale'=>$crops_on_sale
+
+            ],
+
+            'message'=> 'Crops on sale retrieved successfully'
+         ];
+         return response()->json($response,200);
+
+
+    }
+
+
+    public function crop_on_sale_search(Request $request){
+
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,400);
+
+        }
+
+        $all_crops_on_sale = CropOnSale::all();
+        $crops_on_sale = CropOnSale::where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+
+
+        if(count($crops_on_sale) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($crops_on_sale)." "."results found out of"." ".count($all_crops_on_sale),
+                    'search-results'=>$crops_on_sale,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
+    //get crops on sale by crop
     public function crop_on_sale_category(Request $request,$id){
 
         $crop = Crop::find($id);
@@ -177,6 +240,86 @@ class CropOnSaleAPIController extends AppBaseController
 
 
     }
+
+
+    //filter crop on sale by price range
+    public function price_range(Request $request){
+
+
+       if(empty($request->min_price) || empty($request->max_price)){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'Price range required'
+         ];
+
+         return response()->json($response,200);
+
+       }else{
+
+        $price_crops = CropOnSale::select("*")->whereBetween('selling_price', [$request->min_price, $request->max_price])->get();
+        $response = [
+            'success'=>true,
+            'data'=>[
+                'total-results'=>count($price_crops),
+                'crops-on-sale'=>$price_crops
+            ],
+            'message'=> 'Price range required'
+         ];
+
+         return response()->json($response,200);
+       }
+
+
+
+
+    }
+
+    //get crops on sale by location
+    public function location_crops(Request $request){
+
+        $location_crops = CropOnSale::where('location',$request->location)->get();
+        if(empty($request->location)){
+
+         $response = [
+             'success'=>false,
+             'message'=> 'Location field is required'
+          ];
+
+          return response()->json($response,200);
+
+        }elseif(count($location_crops) == 0){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+             ];
+
+             return response()->json($response,200);
+
+        }
+
+        else{
+
+          //  dd($location_crops);
+
+            $response = [
+                'success'=>false,
+                'data'=>[
+                    'total-results'=>count($location_crops),
+                     'crops-on-sale'=>$location_crops
+                ],
+                'message'=> 'Crops on sale retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+
+        }
+
+
+
+
+     }
 
 
     //vendpr crop orders/ buy requests

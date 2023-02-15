@@ -27,9 +27,8 @@ class Address extends Model
 
 
     public $fillable = [
-        'country_id',
+        'district_id',
         'district_name',
-        'address_name',
         'user_id'
     ];
 
@@ -39,9 +38,8 @@ class Address extends Model
      * @var array
      */
     protected $casts = [
-        'country_id' => 'integer',
+        'district_id' => 'integer',
         'district_name' => 'string',
-        'address_name' => 'string',
         'user_id' => 'integer'
     ];
 
@@ -51,9 +49,8 @@ class Address extends Model
      * @var array
      */
     public static $rules = [
-        'country_id' => 'required|integer',
-        'district_name' => 'required|string',
-        'address_name' => 'required|string',
+        'district_id' => 'required|integer',
+        'district_name' => 'nullable|string',
         'user_id' => 'required|integer'
     ];
 
@@ -68,9 +65,9 @@ class Address extends Model
 
 
       //belongs to a country
-      public function country()
+      public function district()
       {
-          return $this->belongsTo(\App\Models\Country::class,'country_id');
+          return $this->belongsTo(\App\Models\District::class,'district_id');
       }
 
 

@@ -18,9 +18,10 @@ class CropOnSaleDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('image', function (CropOnSale $crop_on_sale) {
-            $url=asset("storage/crops_on_sale/$crop_on_sale->image");
-            return '<img src='.$url.' border="0" width="40" class="img-rounded" align="center" />';
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.' class="img-thumbnail"/>';
+
+
 
         })->rawColumns(['image', 'action']);
 
@@ -69,6 +70,7 @@ class CropOnSaleDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'image',
             'quantity',
             'quantity_unit',
             'selling_price',

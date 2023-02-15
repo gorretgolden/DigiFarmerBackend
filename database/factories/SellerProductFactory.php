@@ -23,10 +23,17 @@ class SellerProductFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-        'description' => $this->faker->text,
-        'price' => $this->faker->randomDigitNotNull,
-        'seller_product_category_id' => $this->faker->randomDigitNotNull,
         'image' => $this->faker->word,
+        'price' => $this->faker->randomDigitNotNull,
+        'stock_amount' => $this->faker->randomDigitNotNull,
+        'is_verified' => $this->faker->word,
+        'status' => $this->faker->word,
+        'price_unit' => $this->faker->word,
+        'description' => $this->faker->text,
+        'seller_product_category_id' => $this->faker->randomDigitNotNull,
+        'vendor_category_id' => $this->faker->randomDigitNotNull,
+        'location' => $this->faker->word,
+        'user_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

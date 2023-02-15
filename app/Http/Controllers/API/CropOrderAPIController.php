@@ -112,6 +112,36 @@ class CropOrderAPIController extends AppBaseController
      *
      * @return Response
      */
+
+     public function accept_crop_order($id)
+     {
+          $crop_request = CropOrder::find($id);
+
+          if (empty($crop_request)) {
+            $response = [
+                'success'=>false,
+                'message'=> 'Crop buy request not found'
+           ];
+         }
+         else{
+
+            $crop_request->is_accepted = 1;
+            $crop_request->save();
+
+              $response = [
+                   'success'=>true,
+                   'message'=> 'Crop buy requested has been accepted'
+              ];
+
+              return response()->json($response,200);
+
+         }
+
+
+
+     }
+
+
     public function show($id)
     {
          /** @var CropOrder $cropBuyer */

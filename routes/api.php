@@ -23,6 +23,8 @@ Route::group(['prefix'=>'v1'], function(){
 
     //content routes
     Route::resource('countries', App\Http\Controllers\API\CountryAPIController::class);
+    Route::resource('regions', App\Http\Controllers\API\RegionAPIController::class);
+    Route::get('region/{id}/districts',[App\Http\Controllers\API\RegionAPIController::class,'region_districts']);
     Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
     Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
     Route::resource('categories', App\Http\Controllers\API\CategoryAPIController::class);
@@ -165,8 +167,9 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('farms', App\Http\Controllers\API\FarmAPIController::class)->only(['show','store','update','destroy']);
         Route::get('farmer/farms', [App\Http\Controllers\API\FarmAPIController::class,'userFarms']);
         //saved crops on sale
-        Route::resource('farmer/saved_crop_on_sales', App\Http\Controllers\API\SavedCropOnSaleAPIController::class);
-        Route::get('saved_crops/farmer', [App\Http\Controllers\API\SavedCropOnSaleAPIController::class,'saved_crops']);
+        Route::post('farmer/crops_on_sale/save', [App\Http\Controllers\API\SavedCropOnSaleAPIController::class,'store']);
+        Route::delete('farmer/crops_on_sale/unsave/{id}', [App\Http\Controllers\API\SavedCropOnSaleAPIController::class,'destroy']);
+        Route::get('/farmer/saved_crops', [App\Http\Controllers\API\SavedCropOnSaleAPIController::class,'saved_crops']);
 
         //farm endpoints
         Route::group(['prefix' => 'farm'],function () {
@@ -198,10 +201,12 @@ Route::group(['prefix'=>'v1'], function(){
            Route::post('crop_buy_request/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'buyCropOnSale']);
            Route::get('crop_buyers', [App\Http\Controllers\API\CropOrderAPIController::class,'index']);
            Route::get('crop_buyers/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'show']);
+           Route::get('crop_order/{id}/accept', [App\Http\Controllers\API\CropOrderAPIController::class,'accept_crop_order']);
            Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropOrderCropOnSaleAPIController::class);
-
-
-
+           Route::get('crops_on_sale/search', [App\Http\Controllers\API\CropOnSaleAPIController::class,'crop_on_sale_search']);
+           Route::get('crop_on_sale/price_filter', [App\Http\Controllers\API\CropOnSaleAPIController::class,'price_range']);
+           Route::get('crops_on_sale/home', [App\Http\Controllers\API\CropOnSaleAPIController::class,'home_crops_on_sale']);
+           Route::get('crops_on_sale/location', [App\Http\Controllers\API\CropOnSaleAPIController::class,'location_crops']);
         });
 
 
@@ -319,7 +324,6 @@ Route::get('/rave/callback', [App\Http\Controllers\API\RaveController::class, 'c
 
 
 
-
 Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFinanceApplicationAPIController::class);
 
 //Route::resource('crop_oders', App\Http\Controllers\API\CropOrderAPIController::class);
@@ -327,21 +331,4 @@ Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFi
 //Route::resource('crop_orders', App\Http\Controllers\API\CropOrderAPIController::class);
 
 Route::resource('onboardings', App\Http\Controllers\API\OnboardingAPIController::class);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

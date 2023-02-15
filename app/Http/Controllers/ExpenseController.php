@@ -43,7 +43,7 @@ class ExpenseController extends AppBaseController
         //     ->get();
 
 
-        dd($expenses);
+        //dd($expenses);
         return view('expenses.index')
             ->with('expenses', $expenses);
     }

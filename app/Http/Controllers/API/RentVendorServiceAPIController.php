@@ -136,14 +136,15 @@ class RentVendorServiceAPIController extends AppBaseController
             'image' => 'required|image',
             'image.*' => 'image|mimes:jpeg,png,jpg|max:5048',
             'quantity'=> 'required|integer',
-            'charge_frequency'=> 'required|string'
+            'charge_frequency'=> 'required|string',
+            'address_id'=>'required|integer'
 
         ];
 
         $request->validate($rules);
         $input = $request->all();
         $vendor_category = VendorCategory::where('name','Rent')->first();
-        $location = Address::where('id',2)->first();
+        $location = Address::find($request->address_id);
 
 
         $rent_vendor_service = new RentVendorService();

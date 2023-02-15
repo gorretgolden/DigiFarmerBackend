@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\Address;
+use App\Models\SellerProduct;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class AddressDataTable extends DataTable
+class SellerProductDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,18 +18,23 @@ class AddressDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'addresses.datatables_actions');
+
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.' class="img-thumbnail"/>';
+
+        })->rawColumns(['image', 'action'])
+        ->addColumn('action', 'seller_products.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Address $model
+     * @param \App\Models\SellerProduct $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Address $model)
+    public function query(SellerProduct $model)
     {
-        return $model->newQuery()->with(['user']);
+        return $model->newQuery()->with(['user','seller_product_category']);
     }
 
     /**
@@ -65,9 +70,17 @@ class AddressDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'image',
+            'name',
+            'price_unit',
+            'price',
+            'stock_amount',
+            'is_verified',
+            'status',
+            'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Category",'data'=>'seller_product_category.name']),
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username']),
+            'location'
 
-            'district_name',
-            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"User",'data'=>'user.username']),
         ];
     }
 
@@ -78,6 +91,6 @@ class AddressDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'addresses_datatable_' . time();
+        return 'seller_products_datatable_' . time();
     }
 }

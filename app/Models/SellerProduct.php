@@ -1,10 +1,13 @@
 <?php
 
+
 namespace App\Models;
+
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 /**
  * Class SellerProduct
@@ -20,11 +23,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SellerProduct extends Model
 {
 
+
     use HasFactory;
+
 
     public $table = 'seller_products';
     public $dir = 'storage/seller_products/';
-
 
 
 
@@ -40,7 +44,9 @@ class SellerProduct extends Model
         'is_verified',
         'stock_amount'
 
+
     ];
+
 
     /**
      * The attributes that should be casted to native types.
@@ -59,6 +65,7 @@ class SellerProduct extends Model
         'stock_amount' => 'integer'
     ];
 
+
     /**
      * Validation rules
      *
@@ -75,6 +82,7 @@ class SellerProduct extends Model
         'stock_amount'=>'required|integer'
     ];
 
+
      //a seller product belongs to a seller product category
      public function seller_product_category()
      {
@@ -82,12 +90,16 @@ class SellerProduct extends Model
      }
 
 
+
+
      //a seller product belongs to a user
+
 
      public function user()
      {
          return $this->belongsTo(\App\Models\User::class,'user_id');
      }
+
 
      //belongs to an address
      public function address()
@@ -95,21 +107,25 @@ class SellerProduct extends Model
         return $this->belongsTo(\App\Models\Address::class,'address_id');
      }
 
+
      //belongs to a vendor category
      public function vendor_category()
     {
         return $this->hasMany(\App\Models\VendorCategory::class,'vendor_category_id');
     }
 
+
     public function getImageAttribute($value)
     {
      return $this->dir.$value;
     }
+
 
     //belongs to many carts
     public function carts()
     {
         return $this->belongsToMany(\App\Models\Cart::class,'cart_seller_product', 'cart_id', 'seller_product_id');
     }
+
 
 }

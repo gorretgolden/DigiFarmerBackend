@@ -66,18 +66,18 @@
 
     <ul class="menu-content" style="display: none">
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('countries.index') }}" class="nav-link">
                 <p>Countries</p>
             </a>
         </li>
 
-
+ --}}
 
 
         <li class="nav-item">
             <a href="{{ route('regions.index') }}"
-               class="nav-link {{ Request::is('regions*') ? 'active' : '' }}">
+               class="nav-link">
                 <p>Regions</p>
             </a>
         </li>
@@ -144,12 +144,12 @@
                 <p>Commissions</p>
             </a>
         </li>
-
+{{--
         <li class="nav-item">
             <a href="{{ route('userVerifications.index') }}" class="nav-link ">
                 <p>User Verifications</p>
             </a>
-        </li>
+        </li> --}}
 
     </ul>
 </li>
@@ -376,7 +376,7 @@
                 <li class="nav-item">
                     <a href="{{ route('trainingVendorServices.index') }}"
                         class="nav-link">
-                        <p>Training Vendor Services</p>
+                        <p>Add Trainings</p>
                     </a>
                 </li>
 
@@ -480,7 +480,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('insuaranceVendorServices.index') }}" class="nav-link ">
-                        <p>Add Insuarance Service</p>
+                        <p>Add Insuarance</p>
                     </a>
                 </li>
 
@@ -544,7 +544,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('agronomistShedules.index') }}" class="nav-link">
-                        <p>Agronomist Shedules</p>
+                        <p>Add Shedules</p>
                     </a>
                 </li>
 
@@ -720,4 +720,5 @@
         $("ul", this).toggle("slow");
     });
 </script>
+
 

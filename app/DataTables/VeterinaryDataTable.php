@@ -19,7 +19,7 @@ class VeterinaryDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.'  width="40" height="50"/>';
+            return '<img src='.$data->image.' class="img-thumbnail"/>';
 
 
         })
@@ -36,7 +36,7 @@ class VeterinaryDataTable extends DataTable
      */
     public function query(Veterinary $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('user');
     }
 
     /**
@@ -72,15 +72,14 @@ class VeterinaryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
             'image',
+            'name',
             'charge',
             'location',
             'charge_unit',
             'availability',
-            'zoom_details',
-            'user_id',
-            'vendor_category_id',
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username']),
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'user.phone']),
             'is_verified'
         ];
     }

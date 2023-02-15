@@ -9,6 +9,7 @@ use App\Repositories\AddressRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\District;
 
 /**
  * Class AddressController
@@ -80,25 +81,38 @@ class AddressAPIController extends AppBaseController
     {
 
         $rules = [
-            'country_id' => 'required|integer',
-            'district_name' => 'required|string',
-            'address_name' => 'required|string'
+            'district_id' => 'required|integer',
 
         ];
+
         $request->validate($rules);
-        if(Address::where('user_id',auth()->user()->id)->where('country_id',$request->country_id)->where('district_name',$request->district_name)->where('address_name',$request->address_name)->first()){
+
+        $district = District::find($request->district_id);
+
+        if(!$district){
+            $response = [
+                'success'=>false,
+                'message'=> 'District not found'
+             ];
+             return response()->json($response,404);
+
+        }
+
+        if(Address::where('user_id',auth()->user()->id)->where('district_id',$request->district_id)->first()){
             $response = [
                 'success'=>false,
                 'message'=> 'This address exists'
              ];
              return response()->json($response,409);
+
         }else{
             $address = new Address();
+
             $address->user_id = auth()->user()->id;
-            $address->country_id = $request->country_id;
-            $address->district_name = $request->district_name;
-            $address->address_name = $request->address_name;
+            $address->district_id = $request->district_id;
+            $address->district_name = $district->name;
             $address->save();
+
 
             return $this->sendResponse($address->toArray(), 'Address saved successfully');
 

@@ -1,7 +1,9 @@
 
+
 <?php
 $seller_product_categories = App\Models\SellerProductCategory::pluck('name','id');
 $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
+
 
 ?>
 <!-- Name Field -->
@@ -10,11 +12,14 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
     {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 100]) !!}
 </div>
 
+
 <!-- Seller Product Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('seller_product_category_id', 'Category:') !!}
     {!! Form::select('seller_product_category_id', $seller_product_categories , null, ['class' => 'form-control custom-select']) !!}
 </div>
+
+
 
 
 <!-- Description Field -->
@@ -23,11 +28,14 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
     {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
 </div>
 
+
 <!-- Price Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('price', 'Price:') !!}
     {!! Form::number('price', null, ['class' => 'form-control','min'=>1]) !!}
 </div>
+
+
 
 
 <!-- Stock Field -->
@@ -47,6 +55,7 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
 </div>
 <div class="clearfix"></div>
 
+
 <!-- User-->
 <div class="form-group col-sm-6">
     {!! Form::label('user_id', 'Sellers:') !!}
@@ -54,13 +63,18 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
 </div>
 
 
+
+
 <!-- Address Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('address_id', 'Address:') !!}
     <select id="farmer-address" name="address_id" class="form-control">
 
+
     </select>
 </div>
+
+
 
 
 <!-- Is verified Field -->
@@ -73,11 +87,16 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
 </div>
 
 
+
+
 {{-- <!-- Vendor Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
     {!! Form::select('vendor_category_id', $vendor_categories, null, ['class' => 'form-control custom-select']) !!}
 </div> --}}
+
+
+
 
 
 
@@ -87,8 +106,10 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
         console.log('hfgkkk');
         $(document).ready(function() {
 
+
             $('#user_id').on('change', function() {
                 var idFarmer = this.value;
+
 
                 $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
                 $.ajax({
@@ -100,17 +121,23 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
                     dataType: 'json',
                     success: function(result) {
 
+
                         $('#farmer-address').html('<option value="">-- Select farmer address --</option>');
+
 
                         $.each(result.addresses, function(key, value) {
                             console.log(result)
 
+
                             $("#farmer-address").append('<option value="' + value
                                 .id + '">' + value.address_name + " " + value.district_name + '</option>');
 
+
                                 console.log('hello',value.district_name)
 
+
                         });
+
 
                     }
                 });

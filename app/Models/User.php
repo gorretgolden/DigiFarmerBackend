@@ -118,10 +118,10 @@ class User extends Authenticable implements  Wallet
       }
 
        //a user belongs to a district
-       public function district()
-       {
-           return $this->belongsTo(\App\Models\District::class, 'district_id');
-       }
+    //    public function district()
+    //    {
+    //        return $this->belongsTo(\App\Models\District::class, 'district_id');
+    //    }
 
 
       //a user belongs to a specific role

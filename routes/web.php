@@ -308,3 +308,6 @@ Route::resource('trainingVendorServices', App\Http\Controllers\TrainingVendorSer
 
 
 Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendorServiceController::class);
+
+
+Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);

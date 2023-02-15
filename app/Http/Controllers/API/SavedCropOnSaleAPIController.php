@@ -67,7 +67,7 @@ class SavedCropOnSaleAPIController extends AppBaseController
 
         $savedCropOnSale = $this->savedCropOnSaleRepository->create($input);
 
-        return $this->sendResponse($savedCropOnSale->toArray(), 'Saved Crop On Sale saved successfully');
+        return $this->sendResponse($savedCropOnSale->toArray(), 'Crop On Sale saved successfully');
     }
 
     /**
@@ -94,20 +94,31 @@ class SavedCropOnSaleAPIController extends AppBaseController
     public function saved_crops()
     {
 
-        $saved_crops = SavedCropOnSale::where('user_id',auth()->user()->id)->get() ;
-        $success= [];
+        $saved_crops = SavedCropOnSale::with('crop_on_sale')->where('user_id',auth()->user()->id)->get() ;
 
-        if (empty( $saved_crops)) {
-            return $this->sendError('no crops saved');
+        if (count($saved_crops) == 0) {
+
+            $response = [
+                'success'=>false,
+                'message'=> 'No crops saved'
+              ];
+             return response()->json($response,200);
+
+        }else{
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-saved-crops'=>count($saved_crops),
+                    'crops-on-sale'=>$saved_crops
+                ],
+                'message'=> 'Saved Crops On Sale retrieved successfully'
+              ];
+             return response()->json($response,200);
         }
-        foreach($saved_crops as $saved){
-            $success[] = $saved;
-        }
-
-       $success['name'] = $success->selling_price;
 
 
-        return $this->sendResponse($saved_crops->toArray(), 'Saved Crop On Sale retrieved successfully');
+
     }
 
     /**

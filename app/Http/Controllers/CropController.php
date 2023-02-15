@@ -146,9 +146,10 @@ class CropController extends AppBaseController
         if($crop){
 
             $crop->name = $request->name;
-            $crop->sub_category_id = $request->sub_category_id;
+            $crop->category_id = $request->category_id;
             $crop->standard_price = $request->standard_price;
             $crop->price_unit = $request->price_unit;
+            $crop->is_active = $request->is_active;
 
             if(!empty($request->file('image'))){
                 $crop->image = \App\Models\ImageUploader::upload($request->file('image'),'crops');

@@ -57,4 +57,13 @@ class District extends Model
     {
         return $this->belongsTo(\App\Models\Region::class,'region_id');
     }
+
+
+    //has many addresses
+    public function addresses()
+    {
+        return $this->hasMany(\App\Models\Address::class,'address_id');
+    }
+
+
 }

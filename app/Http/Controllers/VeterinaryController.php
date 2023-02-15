@@ -190,7 +190,7 @@ class VeterinaryController extends AppBaseController
             'location' => 'nullable',
             'charge_unit' => 'nullable',
             'availability' => 'required|string',
-            'description' => 'required|string|min:20|max:200',
+            'description' => 'required|string|min:20',
             'zoom_details' => 'nullable|string',
             'image' => 'nullable|image',
             'user_id' => 'required|integer',
