@@ -10,6 +10,8 @@ use App\Repositories\RegionRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\District;
+use Illuminate\Http\Request;
 
 class RegionController extends AppBaseController
 {
@@ -50,6 +52,19 @@ class RegionController extends AppBaseController
      *
      * @return Response
      */
+
+
+
+     public function fetchRegionDistricts(Request $request)
+     {
+
+
+       $data['districts'] = District::where("region_id", $request->region_id)->get(["name", "id"]);
+
+
+         return response()->json($data);
+     }
+
     public function store(CreateRegionRequest $request)
     {
         $input = $request->all();

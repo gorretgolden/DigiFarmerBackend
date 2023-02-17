@@ -165,7 +165,7 @@ Route::resource('insuaranceVendorServices', App\Http\Controllers\InsuaranceVendo
 Route::resource('userTypes', App\Http\Controllers\UserTypeController::class);
 
 
-Route::resource('finaceVendorServices', App\Http\Controllers\FinaceVendorServiceController::class);
+Route::resource('financeVendorServices', App\Http\Controllers\FinanceVendorServiceController::class);
 
 
 Route::resource('onboardings', App\Http\Controllers\OnboardingController::class);
@@ -240,7 +240,7 @@ Route::resource('cropOnSales', App\Http\Controllers\CropOnSaleController::class)
 
 
 Route::get('api/fetch-farmer-address', [App\Http\Controllers\FarmController::class, 'fetchUserAddresses']);
-
+Route::get('/fetch-region-districts', [App\Http\Controllers\RegionController::class, 'fetchRegionDistricts'])->name('region.districts');
 
 Route::get('/farmer/fetch-address', 'App\Http\Controllers\FarmController@fetchUserAddresses')->name('farmers.fetch-address');
 
@@ -311,3 +311,12 @@ Route::resource('agronomistVendorServices', App\Http\Controllers\AgronomistVendo
 
 
 Route::resource('sellerProducts', App\Http\Controllers\SellerProductController::class);
+
+
+Route::resource('financeVendorServices', App\Http\Controllers\FinanceVendorServiceController::class);
+
+
+Route::resource('financeVendorServices', App\Http\Controllers\FinanceVendorServiceController::class);
+
+
+Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);

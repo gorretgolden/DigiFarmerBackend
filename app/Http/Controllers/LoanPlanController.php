@@ -30,7 +30,7 @@ class LoanPlanController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $loanPlans = $this->loanPlanRepository->all();
+        $loanPlans = LoanPlan::orderBy('value','ASC')->get();
 
         return view('loan_plans.index')
             ->with('loanPlans', $loanPlans);

@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class FinanceVendorServiceRepository
  * @package App\Repositories
- * @version November 22, 2022, 9:01 am UTC
+ * @version February 17, 2023, 3:05 pm CET
 */
 
 class FinanceVendorServiceRepository extends BaseRepository
@@ -17,16 +17,23 @@ class FinanceVendorServiceRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'user_id',
+        'name',
         'principal',
         'interest_rate',
         'interest_rate_unit',
-        'duration',
-        'duration_unit',
-        'status',
+        'payment_frequency_pay',
+        'is_verified',
         'simple_interest',
         'total_amount_paid_back',
-        'vendor_category_id'
+        'vendor_category_id',
+        'user_id',
+        'loan_plan_id',
+        'loan_pay_back_id',
+        'finance_vendor_category_id',
+        'location',
+        'terms',
+        'payment_frequency_pay',
+        'image'
     ];
 
     /**

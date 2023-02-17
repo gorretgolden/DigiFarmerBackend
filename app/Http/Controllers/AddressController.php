@@ -10,6 +10,8 @@ use App\Repositories\AddressRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\Address;
+use App\Models\District;
 
 class AddressController extends AppBaseController
 {
@@ -52,13 +54,32 @@ class AddressController extends AppBaseController
      */
     public function store(CreateAddressRequest $request)
     {
-        $input = $request->all();
 
-        $address = $this->addressRepository->create($input);
+        $district = District::find($request->district_id);
+        if(Address::where('user_id',$request->user_id)->where('district_id',$request->district_id)->first()){
 
-        Flash::success('Address saved successfully.');
+            Flash::error('This address for the user exists');
 
-        return redirect(route('addresses.index'));
+            return redirect(route('addresses.index'));
+
+        }else{
+            $address = new Address();
+
+            $address->user_id = $request->user_id;
+            $address->district_id = $request->district_id;
+            $address->district_name = $district->name;
+            $address->address_name = $request->address_name;
+            $address->save();
+
+            Flash::success('Address saved successfully.');
+
+            return redirect(route('addresses.index'));
+
+
+        }
+
+
+
     }
 
     /**

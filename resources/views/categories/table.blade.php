@@ -2,7 +2,7 @@
     <table class="table" id="categories-table">
         <thead>
             <tr>
-                <th>Id</th>
+
                 <th>Image</th>
                 <th>Name</th>
                 <th>status</th>
@@ -14,7 +14,7 @@
         <tbody>
             @foreach ($categories as $category)
                 <tr>
-                    <td>{{ $category->id }}</td>
+
                     <td>
                         <img src="{{ $category->image ?  $category->image : asset('img/crop.png') }}"
                             width="50px" height="50px" />

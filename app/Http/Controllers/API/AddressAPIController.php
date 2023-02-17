@@ -82,6 +82,7 @@ class AddressAPIController extends AppBaseController
 
         $rules = [
             'district_id' => 'required|integer',
+            'address_name'=>'required|string|min:10'
 
         ];
 
@@ -111,6 +112,7 @@ class AddressAPIController extends AppBaseController
             $address->user_id = auth()->user()->id;
             $address->district_id = $request->district_id;
             $address->district_name = $district->name;
+            $address->address_name = $request->address_name;
             $address->save();
 
 

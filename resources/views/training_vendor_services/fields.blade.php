@@ -262,7 +262,6 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 
 
-
                     $.each(result.addresses, function(key, value) {
                         console.log(result)
 
@@ -270,10 +269,8 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 
                         $("#farmer-address").append('<option value="' + value
-                            .id + '">' + value.address_name + " " + value
+                            .id + '">' + value
                             .district_name + '</option>');
-
-
 
 
                         console.log('hello', value.district_name)

@@ -22,16 +22,23 @@ class FinanceVendorServiceFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->randomDigitNotNull,
+            'name' => $this->faker->word,
         'principal' => $this->faker->randomDigitNotNull,
         'interest_rate' => $this->faker->randomDigitNotNull,
         'interest_rate_unit' => $this->faker->word,
-        'duration' => $this->faker->randomDigitNotNull,
-        'duration_unit' => $this->faker->word,
-        'status' => $this->faker->word,
+        'payment_frequency_pay' => $this->faker->randomDigitNotNull,
+        'is_verified' => $this->faker->word,
         'simple_interest' => $this->faker->randomDigitNotNull,
         'total_amount_paid_back' => $this->faker->randomDigitNotNull,
         'vendor_category_id' => $this->faker->randomDigitNotNull,
+        'user_id' => $this->faker->randomDigitNotNull,
+        'loan_plan_id' => $this->faker->randomDigitNotNull,
+        'loan_pay_back_id' => $this->faker->randomDigitNotNull,
+        'finance_vendor_category_id' => $this->faker->randomDigitNotNull,
+        'location' => $this->faker->word,
+        'terms' => $this->faker->text,
+        'payment_frequency_pay' => $this->faker->randomDigitNotNull,
+        'image' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

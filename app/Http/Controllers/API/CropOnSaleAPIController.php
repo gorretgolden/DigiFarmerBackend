@@ -156,19 +156,20 @@ class CropOnSaleAPIController extends AppBaseController
 
         $crop = Crop::find($id);
 
-        $crops_on_sale[] =$crop->crops_on_sale;
+        $crops_on_sale = $crop->crops_on_sale;
 
 
        //dd($crops_on_sale);
         $response = [
             'success'=>true,
             'data'=>[
-                'total'=>$crop->crops_on_sale->count(),
+                'total-crops-on-sale'=>$crop->crops_on_sale->count(),
                 'crops-on-sale'=>$crops_on_sale
             ],
-            'message'=> 'Crops on sale under '
+            'message'=> "Crops on sale under " .$crop->name. " retrieved sucessfully"
            ];
-          return response()->json($response,400);
+
+          return response()->json($response,200);
 
     }
     /**

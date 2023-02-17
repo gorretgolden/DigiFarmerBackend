@@ -22,6 +22,7 @@ class LoanPlan extends Model
     public $table = 'loan_plans';
 
 
+    protected $appends = ['value_period_unit'];
 
 
     public $fillable = [
@@ -55,4 +56,11 @@ class LoanPlan extends Model
         return $this->hasMany(\App\Models\FinanceVendorService::class,'loan_plan_id');
      }
 
+
+     //get value period unit
+
+    public function getValuePeriodUnitAttribute()
+  {
+      return $this->value. ' ' . $this->period_unit;
+}
 }

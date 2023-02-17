@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Models\Crop;
+use Illuminate\Support\Facades\File;
 
 class CropController extends AppBaseController
 {
@@ -152,9 +153,13 @@ class CropController extends AppBaseController
             $crop->is_active = $request->is_active;
 
             if(!empty($request->file('image'))){
+                File::delete('storage/crops/'.$category->image);
                 $crop->image = \App\Models\ImageUploader::upload($request->file('image'),'crops');
+                $crop->save();
+            }else{
+                $crop->image = $request->image;
             }
-            $crop->save();
+
 
         }
 

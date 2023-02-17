@@ -99,10 +99,6 @@ class AnimalFeedController extends AppBaseController
         }
 
 
-
-
-
-
         if(!empty($request->file('image'))){
             $new_animal_feed->image= \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
             $new_animal_feed->save();
@@ -236,8 +232,8 @@ class AnimalFeedController extends AppBaseController
             $animalFeed->is_verified = $request->is_verified;
             $animalFeed->save();
 
-
-        }elseif(!empty($request->animal_feed_category_id)){
+if(!empty($request->animal_feed_category_id)){
+        }else
             $animalFeed->animal_feed_category_id = $request->animal_feed_category_id;
             $animalFeed->is_verified = $request->is_verified;
             $animalFeed->weight = $request->weight;

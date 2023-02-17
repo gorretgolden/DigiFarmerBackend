@@ -65,8 +65,8 @@ class FinanceVendorCategoriesDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
-            'image'
+            'name'
+
         ];
     }
 

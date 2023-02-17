@@ -9,6 +9,7 @@ use App\Repositories\SavedCropOnSaleRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use DB;
 
 /**
  * Class SavedCropOnSaleController
@@ -94,7 +95,13 @@ class SavedCropOnSaleAPIController extends AppBaseController
     public function saved_crops()
     {
 
-        $saved_crops = SavedCropOnSale::with('crop_on_sale')->where('user_id',auth()->user()->id)->get() ;
+        $saved_crops = DB::table('saved_crop_on_sales')
+        ->join('crop_on_sales', 'crop_on_sales.id', '=','saved_crop_on_sales.crop_on_sale_id')
+        ->where('saved_crop_on_sales.user_id', '=', auth()->user()->id)
+        ->select('crop_on_sales.id','crop_on_sales.quantity','crop_on_sales.name','crop_on_sales.image','crop_on_sales.selling_price','crop_on_sales.quantity_unit','crop_on_sales.selling_price','crop_on_sales.description','crop_on_sales.is_sold','crop_on_sales.location')->get();
+
+
+        // $saved_crops = SavedCropOnSale::with('crop_on_sale')->where('user_id',auth()->user()->id)->get() ;
 
         if (count($saved_crops) == 0) {
 
@@ -110,7 +117,7 @@ class SavedCropOnSaleAPIController extends AppBaseController
                 'success'=>true,
                 'data'=>[
                     'total-saved-crops'=>count($saved_crops),
-                    'crops-on-sale'=>$saved_crops
+                    'saved-crops'=>$saved_crops
                 ],
                 'message'=> 'Saved Crops On Sale retrieved successfully'
               ];

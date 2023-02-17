@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class LoanPlanRepository
  * @package App\Repositories
- * @version December 15, 2022, 10:15 am UTC
+ * @version February 17, 2023, 2:20 pm CET
 */
 
 class LoanPlanRepository extends BaseRepository

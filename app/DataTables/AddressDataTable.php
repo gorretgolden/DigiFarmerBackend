@@ -67,6 +67,7 @@ class AddressDataTable extends DataTable
         return [
 
             'district_name',
+            'address_name',
             'user'=> new \Yajra\DataTables\Html\Column(['title'=>"User",'data'=>'user.username']),
         ];
     }

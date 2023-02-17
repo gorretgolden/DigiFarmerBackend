@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class FinanceVendorCategoriesRepository
  * @package App\Repositories
- * @version December 14, 2022, 4:00 am UTC
+ * @version February 17, 2023, 8:18 pm CET
 */
 
 class FinanceVendorCategoriesRepository extends BaseRepository

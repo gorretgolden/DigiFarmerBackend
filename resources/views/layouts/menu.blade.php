@@ -112,16 +112,7 @@
         </li>
 
 
-        <li class="nav-item">
-            <a href="{{ route('loanPayBacks.index') }}" class="nav-link">
-                <p>Loan Pay Backs</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('statuses.index') }}" class="nav-link ">
-                <p>Statuses</p>
-            </a>
-        </li>
+
         <li class="nav-item">
             <a href="{{ route('sliders.index') }}" class="nav-link">
                 <p>Sliders</p>
@@ -134,16 +125,7 @@
             </a>
         </li>
 
-        {{-- <li class="nav-item">
-            <a href="{{ route('periodUnits.index') }}" class="nav-link ">
-                <p>Period Units</p>
-            </a>
-        </li> --}}
-        <li class="nav-item">
-            <a href="{{ route('commissions.index') }}" class="nav-link ">
-                <p>Commissions</p>
-            </a>
-        </li>
+
 {{--
         <li class="nav-item">
             <a href="{{ route('userVerifications.index') }}" class="nav-link ">
@@ -514,12 +496,16 @@
 
 
 
-
                 <li class="nav-item">
-                    <a href="{{ route('finaceVendorServices.index') }}" class="nav-link">
-                        <p>Add Finance Vendor</p>
+                    <a href="{{ route('financeVendorServices.index') }}"
+                       class="nav-link ">
+                        <p>Finance  Services</p>
                     </a>
                 </li>
+
+
+
+
             </ul>
         </li>
 
@@ -720,5 +706,15 @@
         $("ul", this).toggle("slow");
     });
 </script>
+
+
+
+
+<li class="nav-item">
+    <a href="{{ route('loanApplications.index') }}"
+       class="nav-link {{ Request::is('loanApplications*') ? 'active' : '' }}">
+        <p>Loan Applications</p>
+    </a>
+</li>
 
 

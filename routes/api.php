@@ -23,6 +23,8 @@ Route::group(['prefix'=>'v1'], function(){
 
     //content routes
     Route::resource('countries', App\Http\Controllers\API\CountryAPIController::class);
+    Route::resource('loan_plans', App\Http\Controllers\API\LoanPlanAPIController::class);
+
     Route::resource('regions', App\Http\Controllers\API\RegionAPIController::class);
     Route::get('region/{id}/districts',[App\Http\Controllers\API\RegionAPIController::class,'region_districts']);
     Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
@@ -332,3 +334,11 @@ Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFi
 
 Route::resource('onboardings', App\Http\Controllers\API\OnboardingAPIController::class);
 
+
+
+
+
+Route::resource('finance_vendor_services', App\Http\Controllers\API\FinanceVendorServiceAPIController::class);
+
+
+Route::resource('finance_vendor_categories', App\Http\Controllers\API\FinanceVendorCategoriesAPIController::class);

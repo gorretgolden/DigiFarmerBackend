@@ -9,6 +9,7 @@ use App\Repositories\RegionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use DB;
 
 /**
  * Class RegionController
@@ -44,6 +45,16 @@ class RegionAPIController extends AppBaseController
     {
         $region = Region::find($id);
 
+        $districts = DB::table('regions')
+        ->join('districts', 'districts.region_id', '=','regions.id')
+        ->where('regions.id', '=', $region->id)
+        ->select('districts.id','districts.name')
+        ->orderBy('districts.name','ASC')
+        ->get();
+
+
+
+
         if (empty($region)) {
             $response = [
                 'success'=>false,
@@ -51,25 +62,29 @@ class RegionAPIController extends AppBaseController
               ];
              return response()->json($response,404);
 
-        }else{
-            $districts = [];
-            foreach($region->districts as $district){
-                $districts[] = $district;
+        }elseif(count($districts) == 0){
 
+            $response = [
+                'success'=>false,
+                'message'=> 'Region has no districts'
+              ];
+             return response()->json($response,404);
 
-            }
-            dd($district);
+        }
+        else{
+
 
             $response = [
                 'success'=>true,
-                'message'=> 'Region not found'
+                'data'=>$districts,
+                'message'=> 'Region  districts retrieved'
               ];
-             return response()->json($response,404);
+             return response()->json($response,200);
 
 
         }
 
-        return $this->sendResponse($districts->toArray(), 'Districts retrieved successfully');
+
     }
 
     /**

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class FinanceVendorCategories
  * @package App\Models
- * @version December 14, 2022, 4:00 am UTC
+ * @version February 17, 2023, 8:18 pm CET
  *
  * @property string $name
  * @property string $image
@@ -20,9 +20,7 @@ class FinanceVendorCategories extends Model
     use HasFactory;
 
     public $table = 'finance_vendor_categories';
-
-
-
+    
 
 
 
@@ -47,17 +45,9 @@ class FinanceVendorCategories extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
+        'name' => 'required|text',
         'image' => 'nullable'
     ];
 
-
-    public function finances()
-    {
-       return $this->hasMany(\App\Models\FinanceVendorService::class,'finance_vendor_category_id');
-      }
-
-
-
-
+    
 }

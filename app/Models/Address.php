@@ -29,6 +29,7 @@ class Address extends Model
     public $fillable = [
         'district_id',
         'district_name',
+        'address_name',
         'user_id'
     ];
 
@@ -40,6 +41,7 @@ class Address extends Model
     protected $casts = [
         'district_id' => 'integer',
         'district_name' => 'string',
+        'address_name'=>'string',
         'user_id' => 'integer'
     ];
 
@@ -51,6 +53,7 @@ class Address extends Model
     public static $rules = [
         'district_id' => 'required|integer',
         'district_name' => 'nullable|string',
+        'address_name'=>'required|string|min:10',
         'user_id' => 'required|integer'
     ];
 
