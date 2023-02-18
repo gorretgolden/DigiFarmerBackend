@@ -23,6 +23,7 @@ class CreateFinanceVendorServicesTable extends Migration
             $table->integer('payment_frequency_pay')->default(0);
             $table->integer('simple_interest')->default(0);
             $table->boolean('is_verified')->default(false);
+            $table->string('status')->default('available');
             $table->integer('total_amount_paid_back')->default(0);
             $table->string('location');
             $table->string('document_type');

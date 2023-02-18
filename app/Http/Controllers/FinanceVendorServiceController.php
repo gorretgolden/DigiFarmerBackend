@@ -60,19 +60,6 @@ class FinanceVendorServiceController extends AppBaseController
 
 
 
-    public function random_strings($length_of_string)
-     {
-
-
-         // String of all alphanumeric character
-         $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-
-
-
-         return substr(str_shuffle($str_result),0, $length_of_string);
-     }
-
 
     /**
      * Store a newly created FinanceVendorService in storage.
@@ -206,8 +193,6 @@ class FinanceVendorServiceController extends AppBaseController
 
 
 
-
-
     /**
      * Display the specified FinanceVendorService.
      *
@@ -287,7 +272,7 @@ class FinanceVendorServiceController extends AppBaseController
             'user_id' => 'required|integer',
             'loan_plan_id' => 'required|integer',
             'loan_pay_back' => 'required|string',
-            'document_type' => 'required|integer',
+            'document_type' => 'required|string',
             'location' => 'nullable',
             'terms' => 'required|string|min:10',
             'payment_frequency_pay' => 'nullable',

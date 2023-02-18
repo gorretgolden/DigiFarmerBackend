@@ -320,3 +320,6 @@ Route::resource('financeVendorServices', App\Http\Controllers\FinanceVendorServi
 
 
 Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);
+
+
+Route::resource('tests', App\Http\Controllers\TestController::class);

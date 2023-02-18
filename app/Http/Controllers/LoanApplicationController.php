@@ -10,6 +10,9 @@ use App\Repositories\LoanApplicationRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Str;
+use App\Models\Address;
+use Carbon;
 
 class LoanApplicationController extends AppBaseController
 {
@@ -43,6 +46,17 @@ class LoanApplicationController extends AppBaseController
         return view('loan_applications.create');
     }
 
+
+
+    public function random_strings($length_of_string)
+     {
+
+         // String of all alphanumeric character
+         $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+         return substr(str_shuffle($str_result),0, $length_of_string);
+     }
+
     /**
      * Store a newly created LoanApplication in storage.
      *
@@ -52,12 +66,46 @@ class LoanApplicationController extends AppBaseController
      */
     public function store(CreateLoanApplicationRequest $request)
     {
-        $input = $request->all();
+        $location = Address::find($request->address_id);
+        $loan_number = $this->random_strings(10);
+        $applicant_age = Carbon::parse($request->dob)->age;
 
-        $loanApplication = $this->loanApplicationRepository->create($input);
+        //existing loan application
+        $existing_loan_application = LoanApplication::where('user_id',$request->user_id)->where('finance_vendor_service_id',$request->finance_vendor_service_id)->first();
+
+
+        if($existing_loan_application){
+
+           Flash::success('Farmer already applied for this loan');
+           return redirect(route('loanApplications.index'));
+
+        }
+        $loanApplication = new LoanApplication();
+        $loanApplication->loan_number = $loan_number;
+        $loanApplication->location = $location->district_name;
+        $loanApplication->location_details = $location->address_name;
+        $loanApplication->age =  $applicant_age ;
+        $loanApplication->gender =  $request->gender;
+        $loanApplication->dob =  $request->dob;
+        $loanApplication->nok_name =  $request->nok_name;
+        $loanApplication->nok_email =  $request->nok_email;
+        $loanApplication->nok_phone =  $request->nok_phone;
+        $loanApplication->nok_location =  $request->nok_location;
+        $loanApplication->nok_relationship =  $request->nok_relationship;
+        $loanApplication->employment_status =  $request->employment_status;
+        $loanApplication->user_id =  $request->user_id;
+        $loanApplication->finance_vendor_service_id =  $request->finance_vendor_service_id;
+        $loanApplication->finance_vendor_category_id =  $request->finance_vendor_category_id;
+        $loanApplication->save();
+
+
+        if(!empty($request->file('image'))){
+            $loanApplication->image = \App\Models\ImageUploader::upload($request->file('image'),'loan_applications');
+            $loanApplication->save();
+        }
+
 
         Flash::success('Loan Application saved successfully.');
-
         return redirect(route('loanApplications.index'));
     }
 

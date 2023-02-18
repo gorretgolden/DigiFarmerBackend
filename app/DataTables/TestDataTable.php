@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\LoanApplication;
+use App\Models\Test;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class LoanApplicationDataTable extends DataTable
+class TestDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,16 +18,16 @@ class LoanApplicationDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'loan_applications.datatables_actions');
+        return $dataTable->addColumn('action', 'tests.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\LoanApplication $model
+     * @param \App\Models\Test $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(LoanApplication $model)
+    public function query(Test $model)
     {
         return $model->newQuery();
     }
@@ -65,15 +65,11 @@ class LoanApplicationDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'name',
+            'image',
             'user_id',
-            'location',
-            'status',
-            'loan_number',
-            'gender',
-            'dob',
-            'age',
-            'nok_name',
-            'document'
+            'description',
+            'date'
         ];
     }
 
@@ -84,6 +80,6 @@ class LoanApplicationDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'loan_applications_datatable_' . time();
+        return 'tests_datatable_' . time();
     }
 }

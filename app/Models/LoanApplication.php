@@ -37,7 +37,7 @@ class LoanApplication extends Model
     use HasFactory;
 
     public $table = 'loan_applications';
-    
+
 
 
 
@@ -104,7 +104,7 @@ class LoanApplication extends Model
         'loan_number' => 'nullable',
         'finance_vendor_category_id' => 'required|integer',
         'gender' => 'required|string',
-        'dob' => 'required|string',
+        'dob' => 'required|date|before:8 years',
         'age' => 'nullable',
         'nok_name' => 'required|string',
         'nok_email' => 'nullable',
@@ -117,5 +117,5 @@ class LoanApplication extends Model
         'document' => 'required'
     ];
 
-    
+
 }

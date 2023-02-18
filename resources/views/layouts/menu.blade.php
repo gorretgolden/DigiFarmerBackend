@@ -503,6 +503,14 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('loanApplications.index') }}"
+                       class="nav-link ">
+                        <p>Loan Applications</p>
+                    </a>
+                </li>
+
+
 
 
 
@@ -709,12 +717,5 @@
 
 
 
-
-<li class="nav-item">
-    <a href="{{ route('loanApplications.index') }}"
-       class="nav-link {{ Request::is('loanApplications*') ? 'active' : '' }}">
-        <p>Loan Applications</p>
-    </a>
-</li>
 
 

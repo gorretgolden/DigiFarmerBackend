@@ -149,6 +149,8 @@ Route::group(['prefix'=>'v1'], function(){
 
     //protected routes
     Route::middleware(['auth:api','cors'])->group(function () {
+        Route::resource('tests', App\Http\Controllers\API\TestAPIController::class);
+
 
 
 
@@ -342,3 +344,5 @@ Route::resource('finance_vendor_services', App\Http\Controllers\API\FinanceVendo
 
 
 Route::resource('finance_vendor_categories', App\Http\Controllers\API\FinanceVendorCategoriesAPIController::class);
+
+

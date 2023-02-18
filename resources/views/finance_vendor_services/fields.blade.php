@@ -223,21 +223,6 @@ $loan_plans = \DB::table("loan_plans")->select(\DB::raw("CONCAT(value, ' ', peri
             var idFarmer = this.value;
             console.log(idFarmer)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
             $.ajax({
                 url: "{{ route('sellers.fetch-address') }}",
@@ -248,21 +233,8 @@ $loan_plans = \DB::table("loan_plans")->select(\DB::raw("CONCAT(value, ' ', peri
                 dataType: 'json',
                 success: function(result) {
 
-
-
-
-
-
-
-
                     $('#farmer-address').html(
                         '<option value="">-- Select farmer address --</option>');
-
-
-
-
-
-
 
 
                     $.each(result.addresses, function(key, value) {
@@ -270,70 +242,16 @@ $loan_plans = \DB::table("loan_plans")->select(\DB::raw("CONCAT(value, ' ', peri
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
                         $("#farmer-address").append('<option value="' + value
                             .id + '">' + value
-                            .district_name + '</option>');
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            .district_name + '</option>')
 
 
 
                         console.log('hello', value.district_name)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 }
