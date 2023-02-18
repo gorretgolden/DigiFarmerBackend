@@ -115,7 +115,8 @@ class LoanPlanController extends AppBaseController
         return view('loan_plans.show')->with('loanPlan', $loanPlan);
     }
 
-    /**
+
+
      * Show the form for editing the specified LoanPlan.
      *
      * @param int $id

@@ -118,12 +118,6 @@ class FinanceVendorService extends Model
     }
 
 
-
-
-
-
-
-
      //a finance vendor service belongs to a user
      public function user()
      {
@@ -131,33 +125,11 @@ class FinanceVendorService extends Model
      }
 
 
-
-
      //belongs to a loan plan
      public function loan_plan()
      {
         return $this->belongsTo(\App\Models\LoanPlan::class,'loan_plan_id');
      }
-
-
-
-
-      //belongs to a loan pay back frequency
-       public function loan_pay_back()
-     {
-        return $this->belongsTo(\App\Models\LoanPayBack::class,'loan_pay_back_id');
-       }
-
-
-
-
-     //belongs to a finance vendor category
-     public function finance_vendor_category()
-     {
-      return $this->belongsTo(\App\Models\FinanceVendorCategories::class,'finance_vendor_category_id');
-     }
-
-
 
 
      public function getImageAttribute($image)
@@ -170,6 +142,15 @@ class FinanceVendorService extends Model
 
 
      }
+
+     //has many loan applications
+       //belongs to a finance vendor category
+       public function loan_applications()
+       {
+        return $this->hasMany(\App\Models\LoanApplication::class,'finance_vendor_service_id');
+       }
+
+
 
 
 }

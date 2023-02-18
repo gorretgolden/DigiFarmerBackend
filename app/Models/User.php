@@ -264,6 +264,12 @@ class User extends Authenticable implements  Wallet
       }
 
 
+      //has many loan applications
+      public function loan_applications()
+      {
+          return $this->hasMany(\App\Models\LoanApplication::class,'user_id');
+      }
+
 
       //has one cart
       public function cart()

@@ -303,6 +303,39 @@ class VendorCategoryAPIController extends AppBaseController
 
      }
 
+
+
+
+     //get finance services
+     public function finance_services($id)
+     {
+
+         $vendor_category = VendorCategory::find($id);
+
+         if (empty($vendor_category)) {
+
+             return $this->sendError(' Vendor category not found');
+
+         }else{
+
+             $finance_services = $vendor_category->finance_vendor_services;
+             //dd(agronomist_vendors);
+             $response = [
+                 'success'=>true,
+                 'data'=> [
+                     'total-finance-services' => $finance_services->count(),
+                     'finance-services'=> $finance_services
+
+                 ],
+                 'message'=> 'Finance services retrieved successfully'
+              ];
+              return response()->json($response,200);
+
+         }
+
+
+     }
+
     /**
      * Store a newly created VendorCategory in storage.
      * POST /vendorCategories

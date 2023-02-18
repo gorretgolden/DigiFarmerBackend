@@ -29,7 +29,7 @@ class LoanApplicationDataTable extends DataTable
      */
     public function query(LoanApplication $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['user','finance_vendor_service']);
     }
 
     /**
@@ -65,15 +65,17 @@ class LoanApplicationDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'user_id',
-            'location',
-            'status',
             'loan_number',
+            'finance_vendor_service' => new \Yajra\DataTables\Html\Column(['title'=>"Finance Service",'data'=>'finance_vendor_service.name']),
+            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Applicant",'data'=>'user.username']),
+            'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'user.phone']),
+            'location',
             'gender',
             'dob',
             'age',
-            'nok_name',
-            'document'
+            'employment_status',
+            'status',
+
         ];
     }
 

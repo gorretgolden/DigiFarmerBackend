@@ -34,12 +34,7 @@ class FinanceVendorCategoriesAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $financeVendorCategories = $this->financeVendorCategoriesRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $financeVendorCategories = FinanceVendorCategories::orderBy('name','ASC')->get(['id','name']);
         return $this->sendResponse($financeVendorCategories->toArray(), 'Finance Vendor Categories retrieved successfully');
     }
 

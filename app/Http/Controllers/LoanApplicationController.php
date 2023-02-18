@@ -13,6 +13,7 @@ use Response;
 use Illuminate\Support\Str;
 use App\Models\Address;
 use Carbon;
+use App\Models\LoanApplication;
 
 class LoanApplicationController extends AppBaseController
 {
@@ -66,6 +67,8 @@ class LoanApplicationController extends AppBaseController
      */
     public function store(CreateLoanApplicationRequest $request)
     {
+
+
         $location = Address::find($request->address_id);
         $loan_number = $this->random_strings(10);
         $applicant_age = Carbon::parse($request->dob)->age;
@@ -76,13 +79,14 @@ class LoanApplicationController extends AppBaseController
 
         if($existing_loan_application){
 
-           Flash::success('Farmer already applied for this loan');
+           Flash::error('Farmer already applied for this loan');
            return redirect(route('loanApplications.index'));
 
         }
+
         $loanApplication = new LoanApplication();
         $loanApplication->loan_number = $loan_number;
-        $loanApplication->location = $location->district_name;
+        $loanApplication->location =    $location->district_name;
         $loanApplication->location_details = $location->address_name;
         $loanApplication->age =  $applicant_age ;
         $loanApplication->gender =  $request->gender;
@@ -94,15 +98,16 @@ class LoanApplicationController extends AppBaseController
         $loanApplication->nok_relationship =  $request->nok_relationship;
         $loanApplication->employment_status =  $request->employment_status;
         $loanApplication->user_id =  $request->user_id;
+        $loanApplication->document =  $request->document;
         $loanApplication->finance_vendor_service_id =  $request->finance_vendor_service_id;
         $loanApplication->finance_vendor_category_id =  $request->finance_vendor_category_id;
         $loanApplication->save();
 
 
-        if(!empty($request->file('image'))){
-            $loanApplication->image = \App\Models\ImageUploader::upload($request->file('image'),'loan_applications');
-            $loanApplication->save();
-        }
+        $loanApplication = LoanApplication::find($loanApplication->id);
+        $loanApplication->document = \App\Models\ImageUploader::upload($request->file('document'),'loan_applications');
+        $loanApplication->save();
+
 
 
         Flash::success('Loan Application saved successfully.');
@@ -128,6 +133,25 @@ class LoanApplicationController extends AppBaseController
 
         return view('loan_applications.show')->with('loanApplication', $loanApplication);
     }
+
+
+     //approve loan
+
+     public function approve_loan($id)
+     {
+         $loanApplication = $this->loanApplicationRepository->find($id);
+
+         if (empty($loanApplication)) {
+            Flash::error('Loan Application not found');
+
+            return redirect(route('loanApplications.index'));
+        }
+         $loanPlan->status = 'approved';
+         $loanPlan->save();
+         return view('loan_applications.show')->with('loanApplication', $loanApplication);
+
+
+     }
 
     /**
      * Show the form for editing the specified LoanApplication.

@@ -33,6 +33,8 @@ Route::group(['prefix'=>'v1'], function(){
     Route::get('crop_category/{id}/crops', [App\Http\Controllers\API\CategoryAPIController::class,'crops']);
     Route::resource('days', App\Http\Controllers\API\DayAPIController::class);
 
+    Route::resource('finance_vendor_categories', App\Http\Controllers\API\FinanceVendorCategoriesAPIController::class);
+
 
     Route::resource('animal_categories', App\Http\Controllers\API\AnimalCategoryAPIController::class);
 
@@ -50,6 +52,7 @@ Route::group(['prefix'=>'v1'], function(){
     Route::get('vendor_categories/{id}/rent', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_rent_services']);
     Route::get('vendor_categories/{id}/agronomists', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vendor_agronomists']);
     Route::get('vendor_categories/{id}/veterinary', [App\Http\Controllers\API\VendorCategoryAPIController::class,'vet_services']);
+    Route::get('vendor_categories/{id}/finance', [App\Http\Controllers\API\VendorCategoryAPIController::class,'finance_services']);
 
 
 
@@ -99,6 +102,8 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('/rent-services', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'rent_search']);
         Route::get('/insurance-services', [App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,'insuarance_search']);
         Route::get('/agronomist-services', [App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,'agronomist_search']);
+        Route::get('/finance-services', [App\Http\Controllers\API\FinanceVendorServiceAPIController::class,'finance_search']);
+
     });
 
 
@@ -261,8 +266,15 @@ Route::group(['prefix'=>'v1'], function(){
           Route::get('vendor/training-vendor-services', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'vendorTrainings']);
           Route::resource('farmer_trainings', App\Http\Controllers\API\FarmerTrainingAPIController::class);
 
+
           //loans
           Route::resource('finance-vendor-services', App\Http\Controllers\API\FinanceVendorServiceAPIController::class);
+          Route::get('/vendor/finance-vendor-services', [App\Http\Controllers\API\FinanceVendorServiceAPIController::class,'vendor_finance_services']);
+          Route::post('/finance/{id}/loans/apply', [App\Http\Controllers\API\LoanApplicationAPIController::class,'store']);
+          Route::get('/farmer/loan-applications', [App\Http\Controllers\API\LoanApplicationAPIController::class,'farmer_loan_applications']);
+          Route::patch('/loan-application/{id}/approve', [App\Http\Controllers\API\LoanApplicationAPIController::class,'approve_loan']);
+          Route::patch('/loan-application/{id}/reject', [App\Http\Controllers\API\LoanApplicationAPIController::class,'reject_loan']);
+          Route::get('/vendor/loan-applications', [App\Http\Controllers\API\LoanApplicationAPIController::class,'vendor_loan_applications']);
 
           //rent services
           Route::resource('rent_vendor_services', App\Http\Controllers\API\RentVendorServiceAPIController::class)->only(['show','store','update','destroy']);
@@ -311,9 +323,6 @@ Route::group(['prefix'=>'v1'], function(){
 
 
 
-
-
-
         //support
         Route::resource('support/contact-us', App\Http\Controllers\API\ContactAPIController::class)->only(['store']);
 
@@ -328,7 +337,7 @@ Route::get('/rave/callback', [App\Http\Controllers\API\RaveController::class, 'c
 
 
 
-Route::resource('farmer_finance_applications', App\Http\Controllers\API\FarmerFinanceApplicationAPIController::class);
+
 
 //Route::resource('crop_oders', App\Http\Controllers\API\CropOrderAPIController::class);
 
@@ -340,9 +349,10 @@ Route::resource('onboardings', App\Http\Controllers\API\OnboardingAPIController:
 
 
 
-Route::resource('finance_vendor_services', App\Http\Controllers\API\FinanceVendorServiceAPIController::class);
 
 
-Route::resource('finance_vendor_categories', App\Http\Controllers\API\FinanceVendorCategoriesAPIController::class);
+
+
+
 
 

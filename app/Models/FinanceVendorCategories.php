@@ -20,7 +20,6 @@ class FinanceVendorCategories extends Model
     use HasFactory;
 
     public $table = 'finance_vendor_categories';
-    
 
 
 
@@ -49,5 +48,12 @@ class FinanceVendorCategories extends Model
         'image' => 'nullable'
     ];
 
-    
+
+    //has many loan applications
+    public function loan_applications()
+    {
+     return $this->hasMany(\App\Models\LoanApplication::class,'finance_vendor_category_id');
+    }
+
+
 }

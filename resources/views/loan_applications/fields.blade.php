@@ -1,5 +1,5 @@
 <?php
-$finance_vendor_services = App\Models\FinanceVendorService::where('is_verified',1)->pluck('name', 'id');
+$finance_vendor_services = App\Models\FinanceVendorService::where('is_verified',1)->where('status','available')->pluck('name', 'id');
 $finance_vendor_categories = App\Models\FinanceVendorCategories::orderBy('name','ASC')->pluck('name', 'id');
 $farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 

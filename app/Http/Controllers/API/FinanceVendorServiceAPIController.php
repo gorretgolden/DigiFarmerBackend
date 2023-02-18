@@ -45,7 +45,7 @@ class FinanceVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $financeVendorService = FinanceVendorService::where('is_verified',1)->latest()->with('user')->get();
+        $financeVendorService = FinanceVendorService::where('is_verified',1)->latest()->get();
         $response = [
             'success'=>true,
             'data'=> $financeVendorService,
@@ -252,25 +252,30 @@ class FinanceVendorServiceAPIController extends AppBaseController
             return $this->sendError('Finance Vendor Service not found');
         }
         else{
-            $success['id'] = $crop->id;
-            $success['name'] = $crop->name;
-            $success['principal'] = $crop->principal;
-            $success['interest_rate'] = $crop->interest_rate;
-            $success['interest_rate_unit'] = $crop->interest_rate_unit;
-            $success['duration'] = $crop->duration;
-            $success['duration_unit'] = $crop->duration_unit;
-            $success['payment_frequency'] = $crop->payment_frequency;
-            $success['status'] = $crop->status;
-            $success['simple_interest'] = $crop->simple_interest;
-            $success['total_amount_paid_back'] = $crop->total_amount_paid_back;
-            $success['vendor_category'] = $crop->vendor_category;
-            $success['user'] = $crop->user;
+            $success['id'] = $financeVendorService->id;
+            $success['name'] = $financeVendorService->name;
+            $success['image'] = $financeVendorService->image;
+            $success['principal'] = $financeVendorService->principal;
+            $success['interest_rate'] = $financeVendorService->interest_rate;
+            $success['interest_rate_unit'] = $financeVendorService->interest_rate_unit;
+            $success['duration'] = $financeVendorService->loan_plan->value;
+            $success['duration_unit'] = $financeVendorService->loan_plan->period_unit;
+            $success['payment_frequency'] = $financeVendorService->payment_frequency_pay;
+            $success['status'] = $financeVendorService->status;
+            $success['simple_interest'] = $financeVendorService->simple_interest;
+            $success['total_amount_paid_back'] = $financeVendorService->total_amount_paid_back;
+            $success['loan_pay_back'] = $financeVendorService->loan_pay_back;
+            $success['document-required']= $financeVendorService->document_type;
+            $success['terms']= $financeVendorService->terms;
+            $success['location']= $financeVendorService->location;
+            $success['is_verified']= $financeVendorService->is_verified;
+            $success['vendor'] = $financeVendorService->user->username;
 
 
             $response = [
                 'success'=>true,
                 'data'=> $success,
-                'message'=> 'Crop details retrieved successfully'
+                'message'=> 'Finance details retrieved successfully'
              ];
 
 
@@ -279,6 +284,79 @@ class FinanceVendorServiceAPIController extends AppBaseController
     }
 
 
+
+    public function vendor_finance_services(Request $request)
+    {
+
+       $vendor_finances = FinanceVendorService::where('user_id',auth()->user()->id)->latest()->get();
+
+
+        if ($vendor_finances->count() == 0) {
+            return $this->sendError("You haven't posted any finance service");
+        }
+        else{
+
+
+
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-finance-services' =>$vendor_finances->count(),
+                    'finance-services'=>$vendor_finances
+                ],
+                'message'=> 'Vendor finance services  retrieved'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+
+
+    }
+
+
+    public function finance_search(Request $request){
+        $search = $request->keyword;
+
+        if(empty($request->keyword)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Enter a search keyword'
+              ];
+             return response()->json($response,400);
+
+        }
+        $all_services = FinanceVendorService::where('is_verified',1)->get();
+        $finance = FinanceVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
+
+
+        if(count($finance) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> 'No results found'
+              ];
+             return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-results'=>count($finance)." "."results found out of"." ".count($all_services),
+                    'search-results'=>$finance,
+
+                ],
+
+                'message'=> 'search results'
+              ];
+             return response()->json($response,200);
+
+        }
+
+
+
+}
     /**
      * Update the specified FinanceVendorService in storage.
      * PUT/PATCH /financeVendorServices/{id}

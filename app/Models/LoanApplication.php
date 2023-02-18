@@ -107,15 +107,35 @@ class LoanApplication extends Model
         'dob' => 'required|date|before:8 years',
         'age' => 'nullable',
         'nok_name' => 'required|string',
-        'nok_email' => 'nullable',
-        'nok_phone' => 'required|integer',
+        'nok_email' => 'required|string',
+        'nok_phone' => 'required|string',
         'nok_location' => 'required|string',
         'nok_relationship' => 'required|string',
         'employment_status' => 'required|string',
         'loan_start_date' => 'nullable',
         'loan_due_date' => 'nullable',
-        'document' => 'required'
+        'document' => 'required',
+        'address_id'=>'required|integer'
     ];
 
+
+    //a loan application belongs to a user
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class,'user_id');
+    }
+
+    //belongs to a finance vendor service
+    public function finance_vendor_service()
+    {
+        return $this->belongsTo(\App\Models\FinanceVendorService::class,'finance_vendor_service_id');
+    }
+
+
+    //belongs to a finance vendor category
+    public function finance_vendor_category()
+    {
+        return $this->belongsTo(\App\Models\FinanceVendorCategories::class,'finance_vendor_category_id');
+    }
 
 }
