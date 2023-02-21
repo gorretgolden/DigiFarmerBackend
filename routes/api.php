@@ -21,6 +21,8 @@ use Laravel\Socialite\Facades\Socialite;
 
 Route::group(['prefix'=>'v1'], function(){
 
+
+    Route::post('collect',[App\Http\Controllers\API\FlutterwaveController::class,'collect']);
     //content routes
     Route::resource('countries', App\Http\Controllers\API\CountryAPIController::class);
     Route::resource('loan_plans', App\Http\Controllers\API\LoanPlanAPIController::class);
