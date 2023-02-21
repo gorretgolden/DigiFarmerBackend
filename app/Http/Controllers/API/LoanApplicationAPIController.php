@@ -261,8 +261,6 @@ class LoanApplicationAPIController extends AppBaseController
         }
         else{
 
-
-
             $response = [
                 'success'=>true,
                 'data'=> [
@@ -293,7 +291,7 @@ class LoanApplicationAPIController extends AppBaseController
               ];
              return response()->json($response,400);
 
-        }
+        }-
         $all_services = FinanceVendorService::where('is_verified',1)->get();
         $finance = FinanceVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
 
