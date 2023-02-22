@@ -212,6 +212,8 @@ Route::group(['prefix'=>'v1'], function(){
            Route::post('crop_buy_request/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'buyCropOnSale']);
            Route::get('crop_buyers', [App\Http\Controllers\API\CropOrderAPIController::class,'index']);
            Route::get('crop_buyers/{id}', [App\Http\Controllers\API\CropOrderAPIController::class,'show']);
+           Route::get('farmer/crop_orders', [App\Http\Controllers\API\CropOrderAPIController::class,'farmer_crop_buy_requests']);
+           Route::get('user/crop_orders', [App\Http\Controllers\API\CropOrderAPIController::class,'user_crop_buy_requests']);
            Route::get('crop_order/{id}/accept', [App\Http\Controllers\API\CropOrderAPIController::class,'accept_crop_order']);
            Route::resource('crop_buyer_crop_on_sales', App\Http\Controllers\API\CropOrderCropOnSaleAPIController::class);
            Route::get('crops_on_sale/search', [App\Http\Controllers\API\CropOnSaleAPIController::class,'crop_on_sale_search']);

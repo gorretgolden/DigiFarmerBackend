@@ -141,7 +141,7 @@ class RentVendorServiceController extends AppBaseController
     {
         $rentVendorService = $this->rentVendorServiceRepository->find($id);
 
-        if (empty($rentVendorService)) {
+         if (empty($rentVendorService)) {
             Flash::error('Rent Vendor Service not found');
 
             return redirect(route('rentVendorServices.index'));

@@ -86,10 +86,10 @@ class RentVendorService extends Model
     ];
 
     //rent vendor service has many images
-    public function images()
-    {
-    return $this->hasMany(\App\Models\RentVendorImage::class, 'rent_vendor_service_id','id');
-    }
+    // public function images()
+    // {
+    // return $this->hasMany(\App\Models\RentVendorImage::class, 'rent_vendor_service_id','id');
+    // }
 
     public function getImageAttribute($value)
     {

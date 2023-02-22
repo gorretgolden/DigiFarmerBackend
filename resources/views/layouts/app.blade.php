@@ -1,6 +1,9 @@
-
 <?php
-$notifications = auth()->user()->unreadNotifications()->latest()->get();
+$notifications = auth()
+    ->user()
+    ->unreadNotifications()
+    ->latest()
+    ->get();
 $notifications_count = count($notifications);
 ?>
 <!DOCTYPE html>
@@ -61,11 +64,11 @@ $notifications_count = count($notifications);
 
             <ul class="navbar-nav ml-auto">
                 <div class="float-right">
-                    <a type="button" class="btn btn-light" href="{{route('notifications')}}">
+                    <a type="button" class="btn btn-light" href="{{ route('notifications') }}">
 
                         Notifications <span class="badge badge-success"> 4</span>
                     </a>
-                  </div>
+                </div>
                 <li class="nav-item dropdown user-menu">
                     <!-- User image -->
 
@@ -75,7 +78,7 @@ $notifications_count = count($notifications);
                         <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        Notifications <span class="badge badge-light">{{$notifications_count}}</span>
+                        Notifications <span class="badge badge-light">{{ $notifications_count }}</span>
                         <li class="user-header bg-primary">
                             <img src="https://cdn.pixabay.com/photo/2022/10/25/07/07/pumpkins-7545052__340.jpg"
                                 class="img-circle elevation-2" alt="User Image">
@@ -174,8 +177,87 @@ $notifications_count = count($notifications);
 
     @stack('third_party_scripts')
 
-    @stack('page_scripts')
-    @stack('scripts')
+
 </body>
+
+
+@yield('page_js')
+@yield('scripts')
+<!-- <script>
+    let loggedInUser = @json(\Illuminate\Support\Facades\Auth::user());
+    let loginUrl = '{{ route('login') }}';
+    // Loading button plugin (removed from BS4)
+    (function($) {
+        $.fn.button = function(action) {
+            if (action === 'loading' && this.data('loading-text')) {
+                this.data('original-text', this.html()).html(this.data('loading-text')).prop('disabled', true);
+            }
+            if (action === 'reset' && this.data('original-text')) {
+                this.html(this.data('original-text')).prop('disabled', false);
+            }
+        };
+    }(jQuery));
+</script> -->
+<script>
+    $(function() {
+        $('.table').not('.statement,.main-table').DataTable({
+            order: [],
+            autoWidth: false,
+            dom: 'Blfrtip',
+            columnDefs: [{
+                targets: 1,
+                className: 'noVis'
+            }],
+            // order:[],
+            buttons: [{
+                    extend: 'colvis',
+                    columns: ':not(.noVis)'
+                },
+                {
+                    extend: 'copyHtml5',
+                },
+                {
+                    extend: 'excelHtml5',
+                },
+                {
+                    extend: 'csvHtml5',
+                },
+                {
+                    extend: 'pdfHtml5',
+                },
+                'print'
+
+                //'pdfHtml5',
+            ]
+        });
+        //Date Filter
+        var start = moment();
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                    'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+</script>
+@stack('scripts')
+
+
 
 </html>

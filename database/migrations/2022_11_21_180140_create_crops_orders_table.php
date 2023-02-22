@@ -17,6 +17,7 @@ class CreateCropsOrdersTable extends Migration
             $table->id('id');
             $table->integer('buying_price');
             $table->boolean('is_paid')->default(false);
+            $table->string('location');
             $table->boolean('is_accepted')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
             $table->timestamps();

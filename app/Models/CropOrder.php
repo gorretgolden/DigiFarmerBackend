@@ -30,6 +30,7 @@ class CropOrder extends Model
         'is_accepted',
         'is_bought',
         'user_id',
+        'location',
         'address_id'
     ];
 
@@ -43,7 +44,9 @@ class CropOrder extends Model
         'is_accepted' => 'boolean',
         'is_bought' => 'boolean',
         'user_id' => 'integer',
-        'crop_on_sale_id' => 'integer'
+        'crop_on_sale_id' => 'integer',
+        'location'=>'string',
+        'address_id'=>'integer'
     ];
 
     /**
@@ -57,6 +60,8 @@ class CropOrder extends Model
         'is_bought' => 'nullable',
         'is_accepted' => 'nullable',
         'crop_on_sale_id' => 'integer|required',
+        'address_id'=>'required|integer',
+        'location'=>'nullable|string'
 
     ];
 

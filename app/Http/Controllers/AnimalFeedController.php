@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
-
+use DB;
 
 class AnimalFeedController extends AppBaseController
 {
@@ -44,6 +44,33 @@ class AnimalFeedController extends AppBaseController
         return $animalFeedDataTable->render('animal_feeds.index');
     }
 
+    // public function index(Request $request){
+    //     if($request->ajax()){
+    //         if(!empty($request->status) ){
+
+    //             $all_animal_feeds = DB::table('animal_feeds')
+    //                                ->join('users', 'users.id', '=', 'animal_feeds.user_id')
+    //                                ->join('animal_feed_categories', 'animal_feed_categories.id', '=', 'animal_feeds.animal_feed_category_id')
+    //                                ->where('animal_feeds.status', '=', $request->status)
+    //                                ->select('animal_feeds.image,animal_feeds.name,animal_feed_categories.name AS category,animal_feeds.price,animal_feeds.stock_amount,animal_feeds.weight,animal_feeds.status,users.username AS vendor,users.contact AS contact,animal_feeds.location')
+    //                                ->get();
+    //          }else{
+
+    //             $animal_feeds   = DB::table('animal_feeds')
+    //                             ->join('users', 'users.id', '=', 'animal_feeds.user_id')
+    //                             ->join('animal_feed_categories', 'animal_feed_categories.id', '=', 'animal_feeds.animal_feed_category_id')
+    //                             ->select('animal_feeds.image','animal_feeds.name','animal_feed_categories.name AS category','animal_feeds.price','animal_feeds.stock_amount','animal_feeds.weight','animal_feeds.status','users.username AS vendor','users.phone AS contact','animal_feeds.location')
+    //                             ->get();
+
+    //            }
+
+    //            //dd($animal_feeds);
+    //            return datatables()->of($all_animal_feeds)->make(true);
+    //         }
+
+    //     return view('animal_feeds.index');
+
+    // }
 
     /**
      * Show the form for creating a new AnimalFeed.

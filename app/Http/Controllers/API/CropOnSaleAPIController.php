@@ -13,7 +13,9 @@ use App\Models\User;
 use App\Models\Crop;
 use App\Models\Address;
 use App\Models\Plot;
+use App\Models\District;
 use App\Models\Category;
+use DB;
 
 /**
  * Class CropOnSaleController
@@ -276,20 +278,26 @@ class CropOnSaleAPIController extends AppBaseController
 
     }
 
-    //get crops on sale by location
+    //filter crops on sale by location
     public function location_crops(Request $request){
 
-        $location_crops = CropOnSale::where('location',$request->location)->get();
-        if(empty($request->location)){
+        if(empty($request->district_id)){
+            $response = [
+                'success'=>false,
+                'message'=> 'Please select a district'
+             ];
 
-         $response = [
-             'success'=>false,
-             'message'=> 'Location field is required'
-          ];
+             return response()->json($response,400);
 
-          return response()->json($response,200);
+        }
 
-        }elseif(count($location_crops) == 0){
+        $district= District::find($request->district_id);
+
+
+        $location_crops = CropOnSale::where('location',$district->name)->get();
+        $all_crops_on_sale = CropOnSale::all();
+
+        if(count($location_crops) == 0){
 
             $response = [
                 'success'=>false,
@@ -307,7 +315,7 @@ class CropOnSaleAPIController extends AppBaseController
             $response = [
                 'success'=>false,
                 'data'=>[
-                    'total-results'=>count($location_crops),
+                    'total-results'=>count($location_crops). " out of ".count($all_crops_on_sale)." crops on sale" ,
                      'crops-on-sale'=>$location_crops
                 ],
                 'message'=> 'Crops on sale retrieved successfully'
@@ -341,6 +349,19 @@ class CropOnSaleAPIController extends AppBaseController
     {
         /** @var CropOnSale $cropOnSale */
         $crop_on_sale = $this->cropOnSaleRepository->find($id);
+        // dd($crop_on_sale->id);
+
+        //get crop buyers
+        $buyers = DB::table('crop_on_sales')
+                  ->join('crop_orders',"crop_on_sales.id", "=", "crop_orders.crop_on_sale_id")
+                  ->leftJoin('users','users.id','=','crop_orders.user_id')
+                  ->where('crop_on_sales.id',$crop_on_sale->id)
+                  ->select('crop_on_sales.name','crop_orders.buying_price','users.username','crop_orders.location AS buyer-location')
+                  ->get();
+
+
+
+
 
         if (empty($crop_on_sale)) {
             return $this->sendError('Crop On Sale not found');
@@ -351,15 +372,18 @@ class CropOnSaleAPIController extends AppBaseController
             $success['selling_price'] = $crop_on_sale->selling_price;
             $success['price_unit'] = $crop_on_sale->price_unit;
             $success['crop'] = $crop_on_sale->crop->name;
+            $success['location'] = $crop_on_sale->location;
             $success['is-sold'] = $crop_on_sale->is_sold;
             $success['description'] = $crop_on_sale->description;
             $success['created_at'] = $crop_on_sale->created_at->format('d/m/Y');
             $success['time_since'] = $crop_on_sale->created_at->diffForHumans();
             $success['image'] = $crop_on_sale->crop->image;
             $success['farmer'] = $crop_on_sale->user->username;
-            $success['total-buy-requests'] = $crop_on_sale->crop_buy_requests->count();
-            $success['buyers'] = $crop_on_sale->crop_buy_requests;
-            $data = collect($crop_on_sale->crop_buy_requests);
+            $success['total-buyers'] = $crop_on_sale->crop_buy_requests->count();
+            $success['maximum-buying-price'] = $buyers->max('buying_price');
+            $success['minimum-buying-price'] = $buyers->min('buying_price');
+            $success['buyers'] = $buyers;
+            // $data = collect($crop_on_sale->crop_buy_requests);
 
 
             $response = [
@@ -371,6 +395,9 @@ class CropOnSaleAPIController extends AppBaseController
              return response()->json($response,200);
         }
     }
+
+
+
 
     //get crop buy requests for a crop
     public function crop_buy_requests($id)
@@ -384,8 +411,18 @@ class CropOnSaleAPIController extends AppBaseController
         }
         else{
 
-            $success['total-buy-requests'] = $crop_on_sale->crop_buy_requests->count();
-            $success['buyers'] = $crop_on_sale->crop_buy_requests;
+            $buyers = DB::table('crop_on_sales')
+            ->join('crop_orders',"crop_on_sales.id", "=", "crop_orders.crop_on_sale_id")
+            ->leftJoin('users','users.id','=','crop_orders.user_id')
+            ->where('crop_on_sales.id',$crop_on_sale->id)
+            ->select('crop_on_sales.name','crop_orders.buying_price','crop_orders.is_accepted','users.username','crop_orders.location AS buyer-location')
+            ->get();
+
+            $success['total-buy-requests'] = $buyers->count();
+            $success['maximum-buying-price'] = $buyers->max('buying_price');
+            $success['minimum-buying-price'] = $buyers->min('buying_price');
+            $success['buyers'] = $buyers;
+
 
             $response = [
                 'success'=>true,

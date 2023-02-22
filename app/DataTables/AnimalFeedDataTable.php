@@ -86,7 +86,7 @@ class AnimalFeedDataTable extends DataTable
             'price',
             'stock_amount' => new \Yajra\DataTables\Html\Column(['title'=>"Stock",'data'=>'stock_amount']),
             'weight',
-            'weight_unit'=> new \Yajra\DataTables\Html\Column(['title'=>"Unit",'data'=>'weight_unit']),
+            // 'weight_unit'=> new \Yajra\DataTables\Html\Column(['title'=>"Unit",'data'=>'weight_unit']),
             'status',
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
             'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'vendor.phone']),

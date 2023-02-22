@@ -12,6 +12,8 @@ use Response;
 use App\Models\CropOrderCropOnSale;
 use App\Models\CropOnSale;
 use App\Models\User;
+use App\Models\Address;
+use DB;
 
 /**
  * Class CropOrderController
@@ -58,14 +60,18 @@ class CropOrderAPIController extends AppBaseController
     {
 
 
+
+
         $crop_on_sale = CropOnSale::find($id);
 
         if (empty($crop_on_sale)) {
             return $this->sendError('Crop on sale not found');
         }
 
-        $existing_buy_request = CropOrder::where('user_id',auth()->user()->id)->where('crop_on_sale_id',$id)->first();
+        $existing_buy_request = CropOrder::where('user_id',auth()->user()->id)->where('crop_on_sale_id',$id)->where('is_accepted',false)->first();
 
+
+        $accepted_buy_request = CropOrder::where('user_id',auth()->user()->id)->where('crop_on_sale_id',$id)->where('is_accepted',true)->first();
 
         if($existing_buy_request ){
 
@@ -73,31 +79,48 @@ class CropOrderAPIController extends AppBaseController
                 'success'=>false,
                 'message'=> 'You already sent a buy request for this crop '
              ];
-             return response()->json($response,403);
+             return response()->json($response,409);
         }
-        else{
+        elseif($accepted_buy_request){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Your buy request was accepted, proceed to payments'
+             ];
+             return response()->json($response,400);
+
+        }else{
 
 
-        $crop_buy_request = new CropOrder();
-        $crop_buy_request->buying_price = $request->buying_price;
-        $crop_buy_request->user_id = auth()->user()->id;
-        $crop_buy_request->crop_on_sale_id = $request->crop_on_sale_id;
-        $crop_buy_request->save();
+           $crop_buy_request = new CropOrder();
+           $crop_buy_request->buying_price = $request->buying_price;
+           $crop_buy_request->user_id = auth()->user()->id;
+           $crop_buy_request->crop_on_sale_id = $request->crop_on_sale_id;
+
+           //user address
+           $address = Address::find($request->address_id);
+           $crop_buy_request->location = $address->district_name;
+           $crop_buy_request->save();
 
 
-         $success['buying_price'] = $crop_buy_request->buying_price;
-         $success['has_bought'] = false;
-         $success['is_accepted'] = false;
-         $success['buyer'] = auth()->user()->username;
+           $success['buying_price'] = $crop_buy_request->buying_price;
+           $success['location'] = $crop_buy_request->location;
+           $success['has_bought'] = false;
+           $success['is_accepted'] = false;
+           $success['buyer'] = auth()->user()->username;
 
-         $response = [
-            'success'=>true,
-            'data'=> $success,
+           $response = [
+              'success'=>true,
+                'data'=> $success,
             'message'=> 'Crop Buy request sent to farmer'
-         ];
+           ];
 
-         return response()->json($response,200);
+           return response()->json($response,200);
+
+
+
         }
+
 
 
     }
@@ -140,6 +163,83 @@ class CropOrderAPIController extends AppBaseController
 
 
      }
+
+
+
+     //crop buy requests for a user
+
+
+    public function user_crop_buy_requests(){
+        $buy_requests = DB::table('crop_orders')
+                        ->join('users','users.id','=','crop_orders.user_id')
+                        ->leftJoin('crop_on_sales','crop_on_sales.user_id','=','crop_orders.user_id')
+                        ->where('crop_orders.user_id',auth()->user()->id)
+                        ->select('crop_on_sales.image','crop_on_sales.name','crop_on_sales.quantity','crop_on_sales.quantity_unit','crop_on_sales.location','crop_on_sales.price_unit','crop_on_sales.selling_price','crop_on_sales.description','crop_orders.buying_price','crop_orders.location AS buyer-location','crop_orders.is_accepted','users.username')
+                        ->get();
+
+
+
+        if(count($buy_requests) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> "You haven't sent any crop buy requests"
+                    ];
+
+                return response()->json($response,404);
+
+
+        }
+
+        $success['buyers-requests'] = $buy_requests;
+
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Crop buy requests retrieved successfully'
+                ];
+
+            return response()->json($response,200);
+
+
+
+    }
+
+    //farmer crop requests
+    public function farmer_crop_buy_requests(){
+        $buy_requests = DB::table('crop_orders')
+                        ->join('users','users.id','=','crop_orders.user_id')
+                        ->leftJoin('crop_on_sales','crop_on_sales.user_id','=','crop_orders.user_id')
+                        ->where('crop_on_sales.user_id',auth()->user()->id)
+                        ->select('crop_on_sales.image','crop_on_sales.name','crop_on_sales.quantity','crop_on_sales.quantity_unit','crop_on_sales.location','crop_on_sales.price_unit','crop_on_sales.selling_price','crop_on_sales.description','crop_orders.buying_price','crop_orders.location AS buyer-location','crop_orders.is_accepted','users.username')
+                        ->get();
+
+
+
+        if(count($buy_requests) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> "You haven't received any crop requests"
+                    ];
+
+                return response()->json($response,404);
+
+
+        }
+
+        $success['buyer-requests'] = $buy_requests;
+
+        $response = [
+            'success'=>true,
+            'data'=> $success,
+            'message'=> 'Crop buy requests retrieved successfully'
+                ];
+
+            return response()->json($response,200);
+
+
+
+    }
+
 
 
     public function show($id)

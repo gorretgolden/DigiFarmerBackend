@@ -209,6 +209,7 @@ class RentVendorServiceAPIController extends AppBaseController
             return $this->sendError('Rent Vendor Service not found');
         }else{
 
+            $success['id'] = $rentVendorService->id;
             $success['name'] = $rentVendorService->name;
             $success['location'] = $rentVendorService->location;
             $success['charge'] = $rentVendorService->charge;
