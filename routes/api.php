@@ -22,7 +22,18 @@ use Laravel\Socialite\Facades\Socialite;
 Route::group(['prefix'=>'v1'], function(){
 
 
-    Route::post('collect',[App\Http\Controllers\API\FlutterwaveController::class,'collect']);
+    // collections
+    Route::post('collect',[App\Http\Controllers\API\CollectionController::class,'collect']);
+    Route::get('transactions',[App\Http\Controllers\API\CollectionController::class,'transactions']);
+    Route::get('transaction/verify/{id}',[App\Http\Controllers\API\CollectionController::class,'verifyTransaction']);
+    Route::post('transaction/validate',[App\Http\Controllers\API\CollectionController::class,'validateCharge']);
+    Route::post('transaction/resend/{id}',[App\Http\Controllers\API\CollectionController::class,'resendTransaction']);
+    Route::post('transaction/refund/{id}',[App\Http\Controllers\API\CollectionController::class,'refundTransaction']);
+
+    // transfers
+    Route::post('transfer',[App\Http\Controllers\API\PaymentsController::class,'transfer']);
+    Route::get('transfers',[App\Http\Controllers\API\PaymentsController::class,'transfers']);
+
     //content routes
     Route::resource('countries', App\Http\Controllers\API\CountryAPIController::class);
     Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
