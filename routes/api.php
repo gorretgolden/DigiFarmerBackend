@@ -20,7 +20,14 @@ use Laravel\Socialite\Facades\Socialite;
 
 
 Route::group(['prefix'=>'v1'], function(){
+    Route::post('/flw-webhook', function (\Illuminate\Http\Request $request) {
 
+        $payload = $request->all();
+        // It's a good idea to log all received events.
+        Log::info($payload);
+        // Do something (that doesn't take too long) with the payload
+        return response(200);
+    });
 
     // collections
     Route::post('collect',[App\Http\Controllers\API\CollectionController::class,'collect']);
