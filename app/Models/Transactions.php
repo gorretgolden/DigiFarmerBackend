@@ -30,11 +30,8 @@ class Transactions extends Model
      * @var array
      */
     public static $rules = [
-        'tx_ref' => 'required',
         'phone_number' => 'required',
         'amount'  => 'required',
-        'email'=>'required',
-        'currency' => 'required',
     ];
 
 

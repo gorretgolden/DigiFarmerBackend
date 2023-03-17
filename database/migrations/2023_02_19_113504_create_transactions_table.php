@@ -15,18 +15,19 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('CASCADE');
-            $table->string('transaction_ref');
-            $table->string('order_ref');
-            $table->string('external_ref');
-            $table->string('narration')->nullable();
-            $table->enum('status',['success-pending-validation','success-completed','success-completed-failed'])->default('success-pending-validation');
-            $table->enum('payment_type',['mobilemoneyug','card'])->default('mobilemoneyug');
-            $table->enum('transaction_type',['collection','payment'])->default('collection');
-            $table->enum('is_live',[0,1])->default(0);
+            $table->string('tx_ref');
+            $table->string('flw_ref');
+            $table->integer('amount');
+            $table->string('currency')->nullable();
+            $table->integer('charged_amount');
+            $table->integer('app_fee');
+            $table->integer('merchant_fee');
+            $table->string('auth_model');
+            $table->string('status');
+            $table->string('payment_type');
             $table->string('phone_number');
             $table->string('email');
-            $table->string('amount');
+            $table->string('name');
             $table->timestamps();
         });
     }

@@ -15,27 +15,8 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
-
-
-
-
 Route::group(['prefix'=>'v1'], function(){
-    Route::post('/flw-webhook', function (\Illuminate\Http\Request $request) {
-
-        $payload = $request->all();
-        // It's a good idea to log all received events.
-        Log::info($payload);
-        // Do something (that doesn't take too long) with the payload
-        return response(200);
-    });
-
-    // collections
-    Route::post('collect',[App\Http\Controllers\API\CollectionController::class,'collect']);
-    Route::get('transactions',[App\Http\Controllers\API\CollectionController::class,'transactions']);
-    Route::get('transaction/verify/{id}',[App\Http\Controllers\API\CollectionController::class,'verifyTransaction']);
-    Route::post('transaction/validate',[App\Http\Controllers\API\CollectionController::class,'validateCharge']);
-    Route::post('transaction/resend/{id}',[App\Http\Controllers\API\CollectionController::class,'resendTransaction']);
-    Route::post('transaction/refund/{id}',[App\Http\Controllers\API\CollectionController::class,'refundTransaction']);
+    Route::post('/flw-webhook',[App\Http\Controllers\API\CollectionController::class,'saveTransaction']);
 
     // transfers
     Route::post('transfer',[App\Http\Controllers\API\PaymentsController::class,'transfer']);
@@ -166,9 +147,12 @@ Route::group(['prefix'=>'v1'], function(){
     //protected routes
     Route::middleware(['auth:api','cors'])->group(function () {
 
-
-
-
+       Route::post('collect',[App\Http\Controllers\API\CollectionController::class,'collect']);
+       Route::get('transactions',[App\Http\Controllers\API\CollectionController::class,'transactions']);
+       Route::get('transaction/verify/{id}',[App\Http\Controllers\API\CollectionController::class,'verifyTransaction']);
+       Route::post('transaction/validate',[App\Http\Controllers\API\CollectionController::class,'validateCharge']);
+       Route::post('transaction/resend/{id}',[App\Http\Controllers\API\CollectionController::class,'resendTransaction']);
+       Route::post('transaction/refund/{id}',[App\Http\Controllers\API\CollectionController::class,'refundTransaction']);
         //user
         Route::post('user/profile/update/{id}', [App\Http\Controllers\API\UserAPIController::class,'update']);
         Route::patch('user/profile-image/update/{id}', [App\Http\Controllers\API\UserAPIController::class,'updateProfileImage']);
