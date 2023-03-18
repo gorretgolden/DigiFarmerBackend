@@ -14,9 +14,28 @@ class CollectionController extends Controller
 
 
     public function collect(TransactionRequest $transactionRequest){
+
         $transactionService = new TransactionService;
-        $response = $transactionService->transRequest($transactionRequest);
-        return response()->json($response);
+
+        $data['phone_number'] = auth()->user()->phone;
+        $data['amount'] = request()->amount;
+
+        $response = $transactionService->transRequest($data);
+        $redirect_link = $response['meta']['authorization']['redirect'];
+        // return response()->json($response);
+
+        if($response['status'] == 'success'){
+            return redirect()->away($redirect_link);
+
+        }else{
+            $response = [
+                'success'=>false,
+                'message'=> 'Something wrong happened'
+             ];
+             return response()->json($response,400);
+        }
+
+
     }
 
 
