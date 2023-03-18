@@ -13,6 +13,7 @@ use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
+use App\Models\District;
 
 /**
  * Class SellerProductController
@@ -38,7 +39,7 @@ class SellerProductAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sellerProducts = SellerProduct::where('is_verified',1)->latest()->get();
+        $sellerProducts = SellerProduct::where('is_verified',1)->where('status','on-sale')->latest()->get();
         return $this->sendResponse($sellerProducts->toArray(), 'Seller Products retrieved successfully');
     }
 
@@ -188,8 +189,8 @@ class SellerProductAPIController extends AppBaseController
 
         }
 
-        $total_products = SellerProduct::where('is_verified',1)->get();
-        $products = SellerProduct::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $total_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->get();
+        $products = SellerProduct::where('status','on-sale')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
 
 
         if(count($products) == 0){
@@ -226,7 +227,158 @@ class SellerProductAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateSellerProductAPIRequest $request)
+
+
+        //filter by price range
+        public function price_range(Request $request){
+
+
+            if(empty($request->min_price) || empty($request->max_price)){
+
+             $response = [
+                 'success'=>false,
+                 'message'=> 'Price range required'
+              ];
+
+              return response()->json($response,400);
+
+            }else{
+
+             $seller_products = SellerProduct::select("*")->where('status','on-sale')->where('is_verified',1)->whereBetween('price', [$request->min_price, $request->max_price])->get();
+
+             if(count($seller_products)==0){
+                $response = [
+                    'success'=>false,
+                    'message'=> "No Farm equipemnts found between"." "."UGX ".$request->min_price ." and "."UGX ". $request->max_price
+                 ];
+
+                 return response()->json($response,404);
+
+             }else{
+                $response = [
+                    'success'=>true,
+                    'data'=>[
+                        'total-results'=>count($seller_products),
+                        'seller-products'=>$seller_products
+                    ],
+                    'message'=> "Farm equipemnts between "."UGX ".$request->min_price ." and "."UGX ". $request->max_price." "."retrieved successfully"
+                 ];
+
+                 return response()->json($response,200);
+             }
+
+
+            }
+
+
+
+
+         }
+
+         //filter products by location
+         public function location_seller_products(Request $request){
+
+             if(empty($request->district_id)){
+                 $response = [
+                     'success'=>false,
+                     'message'=> 'Please select a district'
+                  ];
+
+                  return response()->json($response,400);
+
+             }
+
+             $district= District::find($request->district_id);
+
+             if(empty($district)){
+                $response = [
+                    'success'=>false,
+                    'message'=> 'District not found'
+                 ];
+
+                 return response()->json($response,404);
+
+             }
+
+
+             $seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->where('location',$district->name)->get();
+             $all_seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->get();
+
+             if(count($seller_products) == 0){
+
+                 $response = [
+                     'success'=>false,
+                     'message'=> "No results found for"." ".$district->name
+                  ];
+
+                  return response()->json($response,200);
+
+             }
+
+             else{
+
+               //  dd($seller_products);
+
+                 $response = [
+                     'success'=>true,
+                     'data'=>[
+                         'total-results'=>count($seller_products). " out of ".count($all_seller_products)." farm equipments in ".$district->name ,
+                          'farm-equipments'=>$seller_products
+                     ],
+                     'message'=> 'Farm equipments retrieved successfully'
+                  ];
+
+                  return response()->json($response,200);
+
+             }
+
+
+
+
+          }
+
+
+         //sorting in ascending order
+         public function seller_producting_asc_sort(){
+
+            $seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-seller-products'=>count($seller_products),
+                    'seller-products'=>$seller_products
+                ],
+                'message'=> 'Farm equipments ordered by name in ascending order'
+             ];
+
+             return response()->json($response,200);
+
+
+         }
+
+         public function seller_producting_desc_sort(){
+
+            $seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-seller-products'=>count($seller_products),
+                    'seller-products'=>$seller_products
+                ],
+                'message'=> 'Farm equipments ordered by name in descending order'
+             ];
+
+             return response()->json($response,200);
+
+
+         }
+
+
+         public function update($id, UpdateSellerProductAPIRequest $request)
     {
         $input = $request->all();
 

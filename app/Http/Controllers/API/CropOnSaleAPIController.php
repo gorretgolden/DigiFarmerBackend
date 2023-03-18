@@ -41,7 +41,7 @@ class CropOnSaleAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cropsOnSale = CropOnSale::latest()->get(['id','name','image','selling_price','quantity','quantity_unit','price_unit','description','location','is_sold','created_at']);
+        $cropsOnSale = CropOnSale::where('is_sold',0)->latest()->get(['id','name','image','selling_price','quantity','quantity_unit','price_unit','description','location','is_sold','created_at']);
 
       //  $data = collect($cropsOnSale);
         //dd($data->min('buying_price'));
@@ -93,7 +93,7 @@ class CropOnSaleAPIController extends AppBaseController
 
     public function home_crops_on_sale(Request $request)
     {
-        $crops_on_sale = CropOnSale::latest()->limit(6)->get();
+        $crops_on_sale = CropOnSale::where('is_sold',0)->latest()->limit(6)->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -124,8 +124,8 @@ class CropOnSaleAPIController extends AppBaseController
 
         }
 
-        $all_crops_on_sale = CropOnSale::all();
-        $crops_on_sale = CropOnSale::where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $all_crops_on_sale = CropOnSale::where('is_sold',0)->get();
+        $crops_on_sale = CropOnSale::where('is_sold',0)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
 
 
         if(count($crops_on_sale) == 0){
@@ -256,18 +256,18 @@ class CropOnSaleAPIController extends AppBaseController
             'message'=> 'Price range required'
          ];
 
-         return response()->json($response,200);
+         return response()->json($response,400);
 
        }else{
 
-        $price_crops = CropOnSale::select("*")->whereBetween('selling_price', [$request->min_price, $request->max_price])->get();
+        $price_crops = CropOnSale::select("*")->where('is_sold',0)->whereBetween('selling_price', [$request->min_price, $request->max_price])->get();
         $response = [
             'success'=>true,
             'data'=>[
                 'total-results'=>count($price_crops),
                 'crops-on-sale'=>$price_crops
             ],
-            'message'=> 'Price range required'
+            'message'=> 'Crops on sale between this range retrieved'
          ];
 
          return response()->json($response,200);
@@ -294,8 +294,8 @@ class CropOnSaleAPIController extends AppBaseController
         $district= District::find($request->district_id);
 
 
-        $location_crops = CropOnSale::where('location',$district->name)->get();
-        $all_crops_on_sale = CropOnSale::all();
+        $location_crops = CropOnSale::where('is_sold',0)->where('location',$district->name)->get();
+        $all_crops_on_sale = CropOnSale::where('is_sold',0)->get();
 
         if(count($location_crops) == 0){
 
@@ -332,6 +332,7 @@ class CropOnSaleAPIController extends AppBaseController
 
 
     //vendpr crop orders/ buy requests
+
     public function crop_orders(){
 
         $buy_requests = CropOnSale::where('user_id',auth()->user()->id)->get();

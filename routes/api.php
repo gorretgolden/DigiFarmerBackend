@@ -120,6 +120,13 @@ Route::group(['prefix'=>'v1'], function(){
     });
 
 
+     //vendor filters
+     Route::get('farm_equipments/price_filter', [App\Http\Controllers\API\SellerProductAPIController::class,'price_range']);
+     Route::get('farm_equipments/location_filter', [App\Http\Controllers\API\SellerProductAPIController::class,'location_seller_products']);
+     Route::get('farm_equipments/asc_order', [App\Http\Controllers\API\SellerProductAPIController::class,'seller_producting_asc_sort']);
+     Route::get('farm_equipments/desc_order', [App\Http\Controllers\API\SellerProductAPIController::class,'seller_producting_desc_sort']);
+
+
 
 
     //get animal feed categories by animal category
@@ -240,6 +247,7 @@ Route::group(['prefix'=>'v1'], function(){
         Route::post('user/update-details',[App\Http\Controllers\API\UserAPIController::class,'update']);
         Route::post('user/update-password',[App\Http\Controllers\API\UserAPIController::class,'updatePassord']);
         Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
+
 
 
 
