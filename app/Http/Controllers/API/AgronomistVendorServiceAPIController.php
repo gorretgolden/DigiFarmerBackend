@@ -13,6 +13,7 @@ use App\Models\Crop;
 use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
+use App\Notifications\NewAgronomistNotification;
 /**use App\Models\VendorCategory;
 
  * Class AgronomistVendorServiceController
@@ -169,13 +170,16 @@ class AgronomistVendorServiceAPIController extends AppBaseController
             $request->validate(['zoom_details' => 'required|string']);
             $new_agro_service->zoom_details = $request->zoom_details;
             $new_agro_service->save();
+
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewAgronomistNotification($new_agro_service));
             $response = [
                 'success'=>false,
                 'data'=>$new_agro_service,
                 'message'=> 'Agronomist Vendor Service created, waiting for verification.'
              ];
 
-             return response()->json($response,200);
+             return response()->json($response,201);
 
 
         }elseif($request->availability == "In-Person"){
@@ -184,21 +188,25 @@ class AgronomistVendorServiceAPIController extends AppBaseController
             $location = Address::find($request->address_id);
             $new_agro_service->location= $location->district_name;
             $new_agro_service->save();
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewAgronomistNotification($new_agro_service));
             $response = [
                 'success'=>false,
                 'data'=>$new_agro_service,
-                'message'=> 'Agronomist Vendor Service saved successfully.'
+                'message'=> 'Agronomist Vendor Service created,waiting for verification.'
              ];
 
-             return response()->json($response,200);
+             return response()->json($response,201);
 
 
 
         }else{
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewAgronomistNotification($new_agro_service));
             $response = [
                 'success'=>false,
                 'data'=>$new_agro_service,
-                'message'=> 'Agronomist Vendor Service saved successfully.'
+                'message'=> 'Agronomist Vendor Service created, waiting for verification'
              ];
 
              return response()->json($response,200);

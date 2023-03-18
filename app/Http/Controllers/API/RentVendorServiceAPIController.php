@@ -13,6 +13,8 @@ use App\Models\VendorCategory;
 use App\Models\RentVendorSubCategory;
 use App\Models\Address;
 use App\Models\User;
+use App\Notifications\NewRentServiceNotification;
+
 
 /**
  * Class RentVendorServiceController
@@ -129,7 +131,7 @@ class RentVendorServiceAPIController extends AppBaseController
     {
 
         $rules = [
-            'name' => 'required|string|unique:rent_vendor_services|min:10|max:30',
+            'name' => 'required|string|unique:rent_vendor_services|min:10|max:50',
             'rent_vendor_sub_category_id' => 'required|integer',
             'charge' => 'required|integer|min:500',
             'description' => 'required|string|min:20|max:1000',
@@ -174,17 +176,8 @@ class RentVendorServiceAPIController extends AppBaseController
         $rent_vendor_service->save();
 
 
-        // if($request->hasFile('images')){
-
-        //     foreach ($request->file('images') as $imagefile) {
-        //         $image = new RentVendorImage();
-        //         $path = $imagefile->store('/storage/rent', ['disk' =>   'rent-images']);
-        //         $image->url = $path;
-        //         $image->rent_vendor_service_id = $rent_vendor_service->id;
-        //         $image->save();
-        //       }
-        // }
-
+        $admin = User::where('user_type','admin')->first();
+        $admin->notify(new NewRentServiceNotification($rent_vendor_service));
         return $this->sendResponse($rent_vendor_service->toArray(), 'Rent Vendor Service created, waiting for verification');
     }
 

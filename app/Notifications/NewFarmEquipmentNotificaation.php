@@ -6,21 +6,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Lang;
-class ResetPasswordNotification extends Notification
+use App\Models\SellerProduct;
+
+class NewFarmEquipmentNotificaation extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    public $url;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $url)
+    protected $seller_product;
+    public function __construct(SellerProduct $seller_product)
     {
-        $this->url = $url;
+        $this->seller_product = $seller_product;
     }
 
     /**
@@ -31,7 +31,7 @@ class ResetPasswordNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -43,11 +43,22 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject(Lang::get('DigiFarmer Reset Password Notification'))
-        ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
-        ->action(Lang::get('Reset Password'),  $this->url)
-        ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
-        ->line(Lang::get('If you did not request a password reset, no further action is required.'));
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
+    }
+
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'Title' => $this->seller_product->name,
+            'name' => $this->seller_product->vendor->username,
+            'email' => $this->seller_product->vendor->email,
+            'phone' => $this->seller_product->vendor->phone,
+            'message' =>'Vendor'.' '.$this->seller_product->vendor->username.' '.'has posted a'.' '.$this->seller_product->name.' '.'as a farm equipment for sale'
+
+        ];
     }
 
     /**

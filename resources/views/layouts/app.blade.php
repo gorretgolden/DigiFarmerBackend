@@ -66,7 +66,7 @@ $notifications_count = count($notifications);
                 <div class="float-right">
                     <a type="button" class="btn btn-light" href="{{ route('notifications') }}">
 
-                        Notifications <span class="badge badge-success"> 4</span>
+                    Notifications <span class="badge badge-danger">{{$notifications_count }}</span>
                     </a>
                 </div>
                 <li class="nav-item dropdown user-menu">

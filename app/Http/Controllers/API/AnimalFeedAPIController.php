@@ -12,6 +12,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\User;
 use App\Models\Address;
+use App\Notifications\NewAnimalFeedNotification;
 
 /**
  * Class AnimalFeedController
@@ -112,6 +113,8 @@ class AnimalFeedAPIController extends AppBaseController
           }
 
           $new_animal_feed->save();
+          $admin = User::where('user_type','admin')->first();
+          $admin->notify(new NewAnimalFeedNotification($new_animal_feed));
 
         return $this->sendResponse($new_animal_feed->toArray(), 'Animal Feed posted successfully, waiting for verification');
     }

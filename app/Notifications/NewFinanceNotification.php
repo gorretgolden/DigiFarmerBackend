@@ -6,21 +6,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Lang;
-class ResetPasswordNotification extends Notification
+use App\Models\FinanceVendorService;
+
+class NewFinanceNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    public $url;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $url)
+    protected $finance_service;
+    public function __construct(FinanceVendorService $finance_service)
     {
-        $this->url = $url;
+        $this->finance_service = $finance_service;
     }
 
     /**
@@ -31,7 +31,7 @@ class ResetPasswordNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -43,11 +43,22 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject(Lang::get('DigiFarmer Reset Password Notification'))
-        ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
-        ->action(Lang::get('Reset Password'),  $this->url)
-        ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
-        ->line(Lang::get('If you did not request a password reset, no further action is required.'));
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
+    }
+
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'Title' => $this->finance_service->name,
+            'name' => $this->finance_service->user->username,
+            'email' => $this->finance_service->user->email,
+            'phone' => $this->finance_service->user->phone,
+            'message' =>'Vendor'.' '.$this->finance_service->user->username.' '.'has posted '.' '.$this->finance_service->name.' '.'as a finance vendor service'
+
+        ];
     }
 
     /**

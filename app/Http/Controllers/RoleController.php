@@ -59,13 +59,12 @@ class RoleController extends AppBaseController
          //validations
       $this->validate($request,[
         'name'=>'required|unique:roles,name',
-        'permission'=>'required',
+        'permissions'=>'required',
       ]);
 
-      $data = $request->all();
 
       $role = Role::create(['name'=>$request->input('name')]);
-      $role->syncPermissions($request->input('permission'));
+      $role->syncPermissions($request->input('permissions'));
 
       Flash::success('Role created Successfully');
 
@@ -122,15 +121,19 @@ class RoleController extends AppBaseController
      */
     public function update($id, UpdateRoleRequest $request)
     {
-        $role = $this->roleRepository->find($id);
+        $role = Role::find($id);
 
         if (empty($role)) {
-            Flash::error('Role not found');
+            Flash::error(__('messages.not_found', ['model' => __('models/roles.singular')]));
 
             return redirect(route('roles.index'));
         }
 
-        $role = $this->roleRepository->update($request->all(), $id);
+        //dd($request->all());
+
+        $role->name = $request->name;
+        $role->syncPermissions($request->permissions);
+        $role->save();
 
         Flash::success('Role updated successfully.');
 

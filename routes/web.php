@@ -23,8 +23,17 @@ Route::get('/response-password-reset', function () {
 });
 
 
-Route::post('password/reset', [App\Http\Controllers\UserForgotPasswordController::class,'reset']);
+///new
+Route::get('forget-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+Route::get('reset-password/{token}', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+Route::get('password-success-update', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'successMessage'])->name('reset.password.success');
 
+
+//Route::post('password/reset', [App\Http\Controllers\UserForgotPasswordController::class,'reset'])->name('reset-password');
+
+Route::post('user/reset/password', [App\Http\Controllers\UserForgotPasswordController::class,'reset'])->name('update-password');
 
 Auth::routes();
 

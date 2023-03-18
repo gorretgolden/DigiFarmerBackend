@@ -22,6 +22,9 @@ use App\Models\UserVerification;
 use AfricasTalking\SDK\AfricasTalking;
 use Tjmugova\Dpo\Facades\Dpo;
 use App\Notifications\NewUserNotification;
+use Illuminate\Support\Facades\File;
+
+
 
 
 /**
@@ -89,8 +92,8 @@ class UserAPIController extends AppBaseController
         $rand = "3242";
 
         $message    = $content;
-        $apikey = "32e6988167f57dc60e425bb7ff9808f6fa322d017c2341be040c6bf9f881bb3c";
-        $username='medaasi';
+        $apikey = "8cd1f933509cc8e19c31c7c5204b1ec40851ef383ceff9a4794b07a56e40f285";
+        $username='digifarmer';
 
         $gateway    = new \AfricasTalkingGateway($username, $apikey);
        try
@@ -533,10 +536,10 @@ class UserAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id,Request $request)
+    public function update(Request $request)
     {
 
-        $user = User::find($id);
+        $user = User::find(auth()->user()->id);
 
 
         if (empty($user)) {
@@ -545,7 +548,7 @@ class UserAPIController extends AppBaseController
                 'success'=>false,
                 'message'=> 'User not found'
                ];
-            return response()->json($response,200);
+            return response()->json($response,404);
 
          }else{
 
@@ -553,8 +556,8 @@ class UserAPIController extends AppBaseController
             $rules = [
                 'first_name' => 'required|string',
                 'last_name' => 'required|string',
-                'email' => 'required|unique:users,id|email',
-                'phone' => 'required',
+                'email' => 'required|unique:users,email',
+                'phone' => 'required|unique:users,phone',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -571,8 +574,9 @@ class UserAPIController extends AppBaseController
                 $user->phone = $request->phone;
 
                 if(!empty($request->file('image_url'))){
+                    File::delete('storage/users'.$user->image_url);
                     $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
-                     $user->save();
+                    $user->save();
                  }
                 $user->update();
 
@@ -580,6 +584,7 @@ class UserAPIController extends AppBaseController
 
                 $response = [
                        'success'=>true,
+                       'data'=>$user,
                         'message'=> 'User Details updated successfully'
                 ];
                 return response()->json($response,200);
@@ -591,11 +596,53 @@ class UserAPIController extends AppBaseController
         }
 
 
+    }
+
+    //update password
+    public function updatePassord(Request $request)
+    {
+
+        $user = User::find(auth()->user()->id);
+
+
+        if (empty($user)) {
+
+            $response = [
+                'success'=>false,
+                'message'=> 'User not found'
+               ];
+            return response()->json($response,404);
+
+         }else{
+
+
+            $rules = [
+                'password' => 'required|string',
+                'confirm_password' => 'required|string|same:password',
+
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+            else{
+
+                $user->password = Hash::make($request->password);
+                $user->update();
+
+                $response = [
+                       'success'=>true,
+                        'message'=> 'Your password has been updated successfully'
+                ];
+                return response()->json($response,200);
+            }
 
 
 
 
-
+        }
 
 
 
@@ -653,7 +700,7 @@ class UserAPIController extends AppBaseController
     public function updateProfileImage(Request $request){
 
         $user = User::find(auth()->user()->id);
-        dd($request->all());
+        // dd($request->all());
 
 
         $rules = [
@@ -662,8 +709,9 @@ class UserAPIController extends AppBaseController
         $request->validate($rules);
 
         if(!empty($request->file('image_url'))){
+            File::delete('storage/users'.$user->image_url);
             $user->image_url = \App\Models\ImageUploader::upload($request->file('image_url'),'users');
-            $user->save();
+            $user->update();
         }
         $response = [
             'success'=>true,

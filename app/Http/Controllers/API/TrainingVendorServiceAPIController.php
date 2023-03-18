@@ -12,6 +12,7 @@ use Response;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\VendorCategory;
+use App\Notifications\NewTrainingServiceNotification;
 /**
  * Class TrainingVendorServiceController
  * @package App\Http\Controllers\API
@@ -163,6 +164,9 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
             $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
             $trainingVendorService->save();
+
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewTrainingServiceNotification($trainingVendorService));
             return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
 
 
@@ -176,6 +180,8 @@ class TrainingVendorServiceAPIController extends AppBaseController
                 $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
                 $trainingVendorService->save();
                 $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
+                $admin = User::where('user_type','admin')->first();
+                $admin->notify(new NewTrainingServiceNotification($trainingVendorService));
                 return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service created successfully, waiting for verification');
             }
 

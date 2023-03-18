@@ -12,7 +12,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
-
+use App\Notification\NewVeterinaryNotification;
 
 /**
  * Class VeterinaryController
@@ -100,6 +100,8 @@ class VeterinaryAPIController extends AppBaseController
             $request->validate(['zoom_details' => 'required|string']);
             $new_vet_service->zoom_details = $request->zoom_details;
             $new_vet_service->save();
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewVeterinaryNotification($new_vet_service));
             $response = [
                 'success'=>false,
                 'data'=>$new_vet_service,
@@ -115,6 +117,8 @@ class VeterinaryAPIController extends AppBaseController
             $location = Address::find($request->address_id);
             $new_vet_service->location= $location->district_name;
             $new_vet_service->save();
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewVeterinaryNotification($new_vet_service));
             $response = [
                 'success'=>false,
                 'data'=>$new_vet_service,
@@ -126,6 +130,8 @@ class VeterinaryAPIController extends AppBaseController
 
 
         }else{
+            $admin = User::where('user_type','admin')->first();
+            $admin->notify(new NewVeterinaryNotification($new_vet_service));
             $response = [
                 'success'=>false,
                 'data'=>$new_vet_service,

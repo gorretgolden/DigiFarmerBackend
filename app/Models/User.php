@@ -16,6 +16,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Stephenjude\Wallet\Interfaces\Wallet;
 use Stephenjude\Wallet\Traits\HasWallet;
 
+
 /**
  * Class User
  * @package App\Models
@@ -165,7 +166,7 @@ class User extends Authenticable implements  Wallet
       public function sendPasswordResetNotification($token)
      {
 
-         $url = 'http://127.0.0.1:8000/response-password-reset?token=' . $token;
+         $url = 'http://127.0.0.1:8000/reset-password?token='. $token;
 
          $this->notify(new ResetPasswordNotification($url));
      }
@@ -276,6 +277,8 @@ class User extends Authenticable implements  Wallet
       {
           return $this->hasOne(\App\Models\Cart::class, 'user_id');
       }
+
+
 
 
 

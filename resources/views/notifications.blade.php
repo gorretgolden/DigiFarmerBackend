@@ -11,10 +11,10 @@
         </div>
         <div class="card-body">
             @forelse($notifications as $notification)
-            <div class="alert alert-success" role="alert">
-                [{{ $notification->created_at }}] User {{ $notification->data['fullname'] }}
-                ({{ $notification->data['email'] }}) has just registered.
-                <a href="#" class="float-right mark-as-read btn btn-warning nav-link " data-id="{{ $notification->id }}">
+            <div class="alert alert-success p-3" role="alert">
+                [{{ $notification->created_at }}]
+               {{ $notification->data['message']}}  user details:({{ $notification->data['email'] }},{{ $notification->data['phone'] }})
+                <a href="#" class="float-right mark-as-read btn btn-warning nav-link mb-3 " data-id="{{ $notification->id }}">
                     Mark as read
                 </a>
             </div>

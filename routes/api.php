@@ -142,14 +142,16 @@ Route::group(['prefix'=>'v1'], function(){
 
 
   //password request
-  Route::post('password/email', [App\Http\Controllers\UserForgotPasswordController::class,'forgot']);
-  Route::post('password/reset', [App\Http\Controllers\UserForgotPasswordController::class,'reset']);
+//   Route::post('password/email', [App\Http\Controllers\UserForgotPasswordController::class,'forgot']);
 
 
 
 
-    //user forgot password
-    Route::post('users/password/email', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'forgotPassword']);
+
+    //main user forgot password
+    Route::post('users/reset-password/email', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'forgotPassword']);
+    Route::put('users/password/reset', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'resetPassword']);
+
     Route::get('/auth/google/callback',[App\Http\Controllers\API\GoogleLoginController::class,'googleCallback']);
 
 
@@ -161,8 +163,8 @@ Route::group(['prefix'=>'v1'], function(){
     });
 
 
-    Route::post('sendPasswordResetLink',[App\Http\Controllers\UserForgotPasswordController::class, 'sendEmail']);
-    Route::post('resetPassword',[App\Http\Controllers\ChangePasswordController::class, 'passwordResetProcess']);
+    // Route::post('sendPasswordResetLink',[App\Http\Controllers\UserForgotPasswordController::class, 'sendEmail']);
+    // Route::post('resetPassword',[App\Http\Controllers\ChangePasswordController::class, 'passwordResetProcess']);
 
 
     //protected routes
@@ -174,8 +176,7 @@ Route::group(['prefix'=>'v1'], function(){
 
 
         //user
-        Route::post('user/profile/update/{id}', [App\Http\Controllers\API\UserAPIController::class,'update']);
-        Route::patch('user/profile-image/update/{id}', [App\Http\Controllers\API\UserAPIController::class,'updateProfileImage']);
+        Route::post('user/profile-image/update', [App\Http\Controllers\API\UserAPIController::class,'updateProfileImage']);
         Route::get('user/my-addresses', [App\Http\Controllers\API\AddressAPIController::class,'userAddress']);
         Route::resource('user/address', App\Http\Controllers\API\AddressAPIController::class)->only(['index','store','update','destroy']);
 
@@ -236,7 +237,8 @@ Route::group(['prefix'=>'v1'], function(){
 
         Route::get('/user', [App\Http\Controllers\API\UserAPIController::class,'loggedInUser']);
         Route::get('user/logout',[App\Http\Controllers\API\UserAPIController::class,'userLogOut']);
-        Route::get('users/update-details/{id}',[App\Http\Controllers\API\UserAPIController::class,'update']);
+        Route::post('user/update-details',[App\Http\Controllers\API\UserAPIController::class,'update']);
+        Route::post('user/update-password',[App\Http\Controllers\API\UserAPIController::class,'updatePassord']);
         Route::resource('farmers/bought-products', App\Http\Controllers\API\FarmerBuySellerProductAPIController::class);
 
 

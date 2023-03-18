@@ -3,7 +3,7 @@
 
 DigiFarmer Reset Password
 
-@component('mail::button', ['url' => 'http://localhost:8000/response-password-reset?token='.$token])
+@component('mail::button', ['url' => 'http://localhost:8000/reset-password?token='.$token])
 Click here to reset your passord
 @endcomponent
 

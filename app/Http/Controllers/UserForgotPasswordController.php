@@ -12,34 +12,41 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
 use Hash;
+use Flash;
 class UserForgotPasswordController extends Controller
 {
 
-    public function forgot() {
-        $credentials = request()->validate(['email' => 'required|email']);
+    // public function forgot() {
+    //     $credentials = request()->validate(['email' => 'required|email']);
 
-        Password::sendResetLink($credentials);
+    //     Password::sendResetLink($credentials);
 
-        return response()->json(["message" => 'Reset password link sent on your email id.']);
-    }
+    //     return response()->json(["message" => 'Reset password link sent on your email id.']);
+    // }
 
     public function reset() {
+      //  dd('hh');
         $credentials = request()->validate([
             'email' => 'required|email',
             'token' => 'required|string',
             'password' => 'required|string|confirmed'
         ]);
 
+
+
         $reset_password_status = Password::reset($credentials, function ($user, $password) {
             $user->password = Hash::make($password);
             $user->save();
         });
 
-        if ($reset_password_status == Password::INVALID_TOKEN) {
-            return response()->json(["message" => "Invalid token provided"], 400);
-        }
+        // if ($reset_password_status == Password::INVALID_TOKEN) {
+        //     Flash::error('Invalid token provided');
+        //     return redirect(route('response-password-reset'));
+        // }
+        // Flash::error('Password has been successfully changed');
+        return redirect(route('animals.index'));
 
-        return response()->json(["message" => "Password has been successfully changed"]);
+        // return response()->json(["message" => "Password has been successfully changed"]);
     }
 
 

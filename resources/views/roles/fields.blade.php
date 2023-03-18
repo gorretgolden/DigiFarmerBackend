@@ -1,3 +1,7 @@
+<?php
+$permissions = App\Models\Permission::pluck('name', 'id');
+?>
+
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
@@ -13,7 +17,7 @@
     @foreach ($permissions as  $key => $value )
   <div class="display:grid;grid-template-columns:repeat(2,1fr)">
     <label class="label label-success">
-        {!! Form::checkbox('permission[]', $value, false, ['class', 'permission']) !!}
+        {!! Form::checkbox('permissions[]', $value, false, ['class', 'permission']) !!}
         {{ $value }}
     </label>
 
