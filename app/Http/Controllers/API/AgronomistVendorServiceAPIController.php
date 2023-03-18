@@ -13,6 +13,7 @@ use App\Models\Crop;
 use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
+use App\Models\District;
 use App\Notifications\NewAgronomistNotification;
 /**use App\Models\VendorCategory;
 
@@ -113,6 +114,159 @@ class AgronomistVendorServiceAPIController extends AppBaseController
 
 
 }
+
+
+//filter by price range
+public function charge_range(Request $request){
+
+
+
+    if(empty($request->min_charge) || empty($request->max_charge)){
+
+     $response = [
+         'success'=>false,
+         'message'=> 'Charge range required'
+      ];
+
+      return response()->json($response,400);
+
+    }else{
+
+
+     $agronomist_services = AgronomistVendorService::select("*")->where('is_verified',1)->whereBetween('charge', [$request->min_charge, $request->max_charge])->get();
+
+     if(count($agronomist_services)==0){
+        $response = [
+            'success'=>false,
+            'message'=> "No agronomist services found between"." "."UGX ".$request->min_charge ." and "."UGX ". $request->max_charge
+         ];
+
+         return response()->json($response,404);
+
+     }else{
+
+        $response = [
+            'success'=>true,
+            'data'=>[
+                'total-results'=>count($agronomist_services),
+                'agronomist-services'=>$agronomist_services
+            ],
+            'message'=> "Agronomist services between "."UGX ".$request->min_charge ." and "."UGX ". $request->max_charge." "."retrieved successfully"
+         ];
+
+         return response()->json($response,200);
+     }
+
+
+    }
+
+
+
+
+ }
+
+ //filter products by location
+ public function location_agronomist_services(Request $request){
+
+     if(empty($request->district_id)){
+         $response = [
+             'success'=>false,
+             'message'=> 'Please select a district'
+          ];
+
+          return response()->json($response,400);
+
+     }
+
+     $district= District::find($request->district_id);
+
+     if(empty($district)){
+        $response = [
+            'success'=>false,
+            'message'=> 'District not found'
+         ];
+
+         return response()->json($response,404);
+
+     }
+
+
+     $agronomist_services = AgronomistVendorService::where('is_verified',1)->where('location',$district->name)->get();
+     $all_agronomist_services = AgronomistVendorService::where('is_verified',1)->get();
+
+     if(count($agronomist_services) == 0){
+
+         $response = [
+             'success'=>false,
+             'message'=> "No results found for agronomist services in"." ".$district->name
+          ];
+
+          return response()->json($response,404);
+
+     }
+
+     else{
+
+
+
+         $response = [
+             'success'=>true,
+             'data'=>[
+                 'total-results'=>count($agronomist_services). " out of ".count($all_agronomist_services)." agronomist services" ,
+                  'agronomist-services'=>$agronomist_services
+             ],
+             'message'=> "agronomist services in ".$district->name. " retrieved successfully"
+          ];
+
+          return response()->json($response,200);
+
+     }
+
+
+
+
+  }
+
+
+ //sorting in ascending order
+
+ public function agronomist_services_asc_sort(){
+
+    $agronomist_services = AgronomistVendorService::where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-agronomist-services'=>count($agronomist_services),
+            'agronomist-services'=>$agronomist_services
+        ],
+        'message'=> 'Agronomist services ordered by name in ascending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
+
+ public function agronomist_services_desc_sort(){
+
+    $agronomist_services = AgronomistVendorService::where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-agronomist-services'=>count($agronomist_services),
+            'agronomist-services'=>$agronomist_services
+        ],
+        'message'=> 'agronomist services ordered by name in descending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
     /**
      * Store a newly created AgronomistVendorService in storage.
      * POST /agronomistVendorServices

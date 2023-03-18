@@ -16,6 +16,7 @@ use App\Models\Address;
 use App\Models\VendorCategory;
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Models\District;
 
 require_once('vendor/autoload.php');
 /**
@@ -45,7 +46,7 @@ class FinanceVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $financeVendorService = FinanceVendorService::where('is_verified',1)->latest()->get();
+        $financeVendorService = FinanceVendorService::where('status','available')->where('is_verified',1)->latest()->get();
         $response = [
             'success'=>true,
             'data'=> $financeVendorService,
@@ -68,15 +69,164 @@ class FinanceVendorServiceAPIController extends AppBaseController
      public function random_strings($length_of_string)
      {
 
-
          // String of all alphanumeric character
          $str_result = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-
-
-
          return substr(str_shuffle($str_result),0, $length_of_string);
      }
+
+
+//filter by price range
+public function principal_range(Request $request){
+
+
+
+    if(empty($request->min_principal) || empty($request->max_principal)){
+
+     $response = [
+         'success'=>false,
+         'message'=> 'Principal range required'
+      ];
+
+      return response()->json($response,400);
+
+    }else{
+
+
+     $finance_services = FinanceVendorService::select("*")->where('status','available')->where('is_verified',1)->whereBetween('principal', [$request->min_principal, $request->max_principal])->get();
+
+     if(count($finance_services)==0){
+        $response = [
+            'success'=>false,
+            'message'=> "No finance services found between"." "."UGX ".$request->min_principal ." and "."UGX ". $request->max_principal
+         ];
+
+         return response()->json($response,404);
+
+     }else{
+
+        $response = [
+            'success'=>true,
+            'data'=>[
+                'total-results'=>count($finance_services),
+                'finance-services'=>$finance_services
+            ],
+            'message'=> "finance services between "."UGX ".$request->min_charge ." and "."UGX ". $request->max_charge." "."retrieved successfully"
+         ];
+
+         return response()->json($response,200);
+     }
+
+
+    }
+
+
+
+
+ }
+
+ //filter products by location
+ public function location_finance_services(Request $request){
+
+     if(empty($request->district_id)){
+         $response = [
+             'success'=>false,
+             'message'=> 'Please select a district'
+          ];
+
+          return response()->json($response,400);
+
+     }
+
+     $district= District::find($request->district_id);
+
+     if(empty($district)){
+        $response = [
+            'success'=>false,
+            'message'=> 'District not found'
+         ];
+
+         return response()->json($response,404);
+
+     }
+
+
+     $finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->where('location',$district->name)->get();
+     $all_finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->get();
+
+     if(count($finance_services) == 0){
+
+         $response = [
+             'success'=>false,
+             'message'=> "No results found for finance services in"." ".$district->name
+          ];
+
+          return response()->json($response,404);
+
+     }
+
+     else{
+
+
+
+         $response = [
+             'success'=>true,
+             'data'=>[
+                 'total-results'=>count($finance_services). " out of ".count($all_finance_services)." finance services" ,
+                  'finance-services'=>$finance_services
+             ],
+             'message'=> "finance services in ".$district->name. " retrieved successfully"
+          ];
+
+          return response()->json($response,200);
+
+     }
+
+
+
+
+  }
+
+
+ //sorting in ascending order
+
+ public function finance_services_asc_sort(){
+
+    $finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-finance-services'=>count($finance_services),
+            'finance-services'=>$finance_services
+        ],
+        'message'=> 'finance services ordered by name in ascending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
+
+ public function finance_services_desc_sort(){
+
+    $finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-finance-services'=>count($finance_services),
+            'finance-services'=>$finance_services
+        ],
+        'message'=> 'finance services ordered by name in descending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
 
 
     public function store(Request $request)
@@ -328,8 +478,8 @@ class FinanceVendorServiceAPIController extends AppBaseController
              return response()->json($response,400);
 
         }
-        $all_services = FinanceVendorService::where('is_verified',1)->get();
-        $finance = FinanceVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
+        $all_services = FinanceVendorService::where('status','available')->where('is_verified',1)->get();
+        $finance = FinanceVendorService::where('status','available')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
 
 
         if(count($finance) == 0){

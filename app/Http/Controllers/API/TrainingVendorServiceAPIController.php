@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\VendorCategory;
 use App\Notifications\NewTrainingServiceNotification;
+use App\Models\District;
 /**
  * Class TrainingVendorServiceController
  * @package App\Http\Controllers\API
@@ -126,6 +127,159 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
 }
 
+
+
+//filter by price range
+public function charge_range(Request $request){
+
+
+
+    if(empty($request->min_charge) || empty($request->max_charge)){
+
+     $response = [
+         'success'=>false,
+         'message'=> 'Charge range required'
+      ];
+
+      return response()->json($response,400);
+
+    }else{
+
+
+     $training_services = TrainingVendorService::select("*")->where('is_verified',1)->whereBetween('charge', [$request->min_charge, $request->max_charge])->get();
+
+     if(count($training_services)==0){
+        $response = [
+            'success'=>false,
+            'message'=> "No training services found between"." "."UGX ".$request->min_charge ." and "."UGX ". $request->max_charge
+         ];
+
+         return response()->json($response,404);
+
+     }else{
+
+        $response = [
+            'success'=>true,
+            'data'=>[
+                'total-results'=>count($training_services),
+                'training-services'=>$training_services
+            ],
+            'message'=> "Training services between "."UGX ".$request->min_charge ." and "."UGX ". $request->max_charge." "."retrieved successfully"
+         ];
+
+         return response()->json($response,200);
+     }
+
+
+    }
+
+
+
+
+ }
+
+ //filter products by location
+ public function location_training_services(Request $request){
+
+     if(empty($request->district_id)){
+         $response = [
+             'success'=>false,
+             'message'=> 'Please select a district'
+          ];
+
+          return response()->json($response,400);
+
+     }
+
+     $district= District::find($request->district_id);
+
+     if(empty($district)){
+        $response = [
+            'success'=>false,
+            'message'=> 'District not found'
+         ];
+
+         return response()->json($response,404);
+
+     }
+
+
+     $training_services = TrainingVendorService::where('is_verified',1)->where('location',$district->name)->get();
+     $all_training_services = TrainingVendorService::where('is_verified',1)->get();
+
+     if(count($training_services) == 0){
+
+         $response = [
+             'success'=>false,
+             'message'=> "No results found for training services in"." ".$district->name
+          ];
+
+          return response()->json($response,404);
+
+     }
+
+     else{
+
+
+
+         $response = [
+             'success'=>true,
+             'data'=>[
+                 'total-results'=>count($training_services). " out of ".count($all_training_services)." training services" ,
+                  'training-services'=>$training_services
+             ],
+             'message'=> "Training services in ".$district->name. " retrieved successfully"
+          ];
+
+          return response()->json($response,200);
+
+     }
+
+
+
+
+  }
+
+
+ //sorting in ascending order
+
+ public function training_services_asc_sort(){
+
+    $training_services = TrainingVendorService::where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-training-services'=>count($training_services),
+            'training-services'=>$training_services
+        ],
+        'message'=> 'Training services ordered by name in ascending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
+
+ public function training_services_desc_sort(){
+
+    $training_services = TrainingVendorService::where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-training-services'=>count($training_services),
+            'training-services'=>$training_services
+        ],
+        'message'=> 'training services ordered by name in descending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
     public function store(Request $request)
     {
 

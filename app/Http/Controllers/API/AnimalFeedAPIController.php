@@ -12,6 +12,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\User;
 use App\Models\Address;
+use App\Models\District;
 use App\Notifications\NewAnimalFeedNotification;
 
 /**
@@ -39,7 +40,7 @@ class AnimalFeedAPIController extends AppBaseController
     public function index(Request $request)
     {
 
-        $animalFeeds = AnimalFeed::with('category')->where('is_verified',1)->latest()->get();
+        $animalFeeds = AnimalFeed::with('category')->where('status','on-sale')->where('is_verified',1)->latest()->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -198,7 +199,7 @@ class AnimalFeedAPIController extends AppBaseController
 
     public function home_animal_feeds(Request $request)
     {
-        $animal_feeds = AnimalFeed::where('is_verified',1)->limit(4)->get();
+        $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->limit(4)->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -227,8 +228,8 @@ class AnimalFeedAPIController extends AppBaseController
              return response()->json($response,400);
 
         }
-        $total_feeds = AnimalFeed::where('is_verified',1)->get();
-        $animal_feeds = AnimalFeed::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $total_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->get();
+        $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
 
 
         if(count($animal_feeds) == 0){
@@ -258,6 +259,158 @@ class AnimalFeedAPIController extends AppBaseController
 }
 
 
+
+
+ //filter by price range
+ public function price_range(Request $request){
+
+
+
+    if(empty($request->min_price) || empty($request->max_price)){
+
+     $response = [
+         'success'=>false,
+         'message'=> 'Price range required'
+      ];
+
+      return response()->json($response,400);
+
+    }else{
+
+
+     $animal_feeds = AnimalFeed::select("*")->where('status','on-sale')->where('is_verified',1)->whereBetween('price', [$request->min_price, $request->max_price])->get();
+
+     if(count($animal_feeds)==0){
+        $response = [
+            'success'=>false,
+            'message'=> "No Animal feeds found between"." "."UGX ".$request->min_price ." and "."UGX ". $request->max_price
+         ];
+
+         return response()->json($response,404);
+
+     }else{
+
+        $response = [
+            'success'=>true,
+            'data'=>[
+                'total-results'=>count($animal_feeds),
+                'animal-feeds'=>$animal_feeds
+            ],
+            'message'=> "Animal feeds between "."UGX ".$request->min_price ." and "."UGX ". $request->max_price." "."retrieved successfully"
+         ];
+
+         return response()->json($response,200);
+     }
+
+
+    }
+
+
+
+
+ }
+
+ //filter products by location
+ public function location_animal_feeds(Request $request){
+
+     if(empty($request->district_id)){
+         $response = [
+             'success'=>false,
+             'message'=> 'Please select a district'
+          ];
+
+          return response()->json($response,400);
+
+     }
+
+     $district= District::find($request->district_id);
+
+     if(empty($district)){
+        $response = [
+            'success'=>false,
+            'message'=> 'District not found'
+         ];
+
+         return response()->json($response,404);
+
+     }
+
+
+     $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->where('location',$district->name)->get();
+     $all_animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->get();
+
+     if(count($animal_feeds) == 0){
+
+         $response = [
+             'success'=>false,
+             'message'=> "No results found for animal feeds in"." ".$district->name
+          ];
+
+          return response()->json($response,404);
+
+     }
+
+     else{
+
+
+
+         $response = [
+             'success'=>true,
+             'data'=>[
+                 'total-results'=>count($animal_feeds). " out of ".count($all_animal_feeds)." animal feeds" ,
+                  'animal-feeds'=>$animal_feeds
+             ],
+             'message'=> "Animal Feeds in ".$district->name. " retrieved successfully"
+          ];
+
+          return response()->json($response,200);
+
+     }
+
+
+
+
+  }
+
+
+ //sorting in ascending order
+ public function animal_feeds_asc_sort(){
+
+    $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-animal-feeds'=>count($animal_feeds),
+            'animal-feeds'=>$animal_feeds
+        ],
+        'message'=> 'Animal Feeds ordered by name in ascending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
+
+ public function animal_feeds_desc_sort(){
+
+    $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-animal-feeds'=>count($animal_feeds),
+            'animal-feeds'=>$animal_feeds
+        ],
+        'message'=> 'Animal Feeds ordered by name in descending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
 
 
 

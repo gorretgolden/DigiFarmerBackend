@@ -308,10 +308,10 @@ class SellerProductAPIController extends AppBaseController
 
                  $response = [
                      'success'=>false,
-                     'message'=> "No results found for"." ".$district->name
+                     'message'=> "No results found for farm equipments in"." ".$district->name
                   ];
 
-                  return response()->json($response,200);
+                  return response()->json($response,404);
 
              }
 
@@ -379,7 +379,9 @@ class SellerProductAPIController extends AppBaseController
 
 
          public function update($id, UpdateSellerProductAPIRequest $request)
-    {
+
+
+         {
         $input = $request->all();
 
         /** @var SellerProduct $sellerProduct */

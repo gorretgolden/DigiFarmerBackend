@@ -12,6 +12,7 @@ use Response;
 use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
+use App\Models\District;
 
 /**
  * Class InsuaranceVendorServiceController
@@ -115,6 +116,109 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
 
 }
 
+
+
+ //filter products by location
+ public function location_insurance(Request $request){
+
+     if(empty($request->district_id)){
+         $response = [
+             'success'=>false,
+             'message'=> 'Please select a district'
+          ];
+
+          return response()->json($response,400);
+
+     }
+
+     $district= District::find($request->district_id);
+
+     if(empty($district)){
+        $response = [
+            'success'=>false,
+            'message'=> 'District not found'
+         ];
+
+         return response()->json($response,404);
+
+     }
+
+
+     $insurance_services = InsuaranceVendorService::where('is_verified',1)->where('location',$district->name)->get();
+     $all_insurance_services = InsuaranceVendorService::where('is_verified',1)->get();
+
+     if(count($insurance_services) == 0){
+
+         $response = [
+             'success'=>false,
+             'message'=> "No results found for insurance services in"." ".$district->name
+          ];
+
+          return response()->json($response,404);
+
+     }
+
+     else{
+
+
+
+         $response = [
+             'success'=>true,
+             'data'=>[
+                 'total-results'=>count($insurance_services). " out of ".count($all_insurance_services)." insurance services" ,
+                  'insurance-services'=>$insurance_services
+             ],
+             'message'=> "insurance services in ".$district->name. " retrieved successfully"
+          ];
+
+          return response()->json($response,200);
+
+     }
+
+
+
+
+  }
+
+
+ //sorting in ascending order
+ public function insurance_services_asc_sort(){
+
+    $insurance_services = InsuaranceVendorService::where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-insurance-services'=>count($insurance_services),
+            'insurance-services'=>$insurance_services
+        ],
+        'message'=> 'Insurance services ordered by name in ascending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
+
+ public function insurance_services_desc_sort(){
+
+    $insurance_services = InsuaranceVendorService::where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-insurance-services'=>count($insurance_services),
+            'insurance-services'=>$insurance_services
+        ],
+        'message'=> 'Insurance services ordered by name in descending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
     /**
      * Store a newly created InsuaranceVendorService in storage.
      * POST /insuaranceVendorServices

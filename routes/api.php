@@ -127,9 +127,51 @@ Route::group(['prefix'=>'v1'], function(){
      Route::get('farm_equipments/desc_order', [App\Http\Controllers\API\SellerProductAPIController::class,'seller_producting_desc_sort']);
 
 
+     Route::get('animal_feeds/price_filter', [App\Http\Controllers\API\AnimalFeedAPIController::class,'price_range']);
+     Route::get('animal_feeds/location_filter', [App\Http\Controllers\API\AnimalFeedAPIController::class,'location_animal_feeds']);
+     Route::get('animal_feeds/asc_order', [App\Http\Controllers\API\AnimalFeedAPIController::class,'animal_feeds_asc_sort']);
+     Route::get('animal_feeds/desc_order', [App\Http\Controllers\API\AnimalFeedAPIController::class,'animal_feeds_desc_sort']);
 
 
-    //get animal feed categories by animal category
+     Route::get('rent_services/price_filter', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'price_range']);
+     Route::get('rent_services/location_filter', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'location_rent_services']);
+     Route::get('rent_services/asc_order', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'rent_services_asc_sort']);
+     Route::get('rent_services/desc_order', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'rent_services_desc_sort']);
+
+
+     Route::get('insurance_services/location_filter', [App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,'location_insurance']);
+     Route::get('insurance_services/asc_order', [App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,'insurance_services_asc_sort']);
+     Route::get('insurance_services/desc_order', [App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,'insurance_services_desc_sort']);
+
+
+     Route::get('training_services/charge_filter', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'charge_range']);
+     Route::get('training_services/location_filter', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'location_training_services']);
+     Route::get('training_services/asc_order', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'training_services_asc_sort']);
+     Route::get('training_services/desc_order', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'training_services_desc_sort']);
+
+
+
+     Route::get('agronomist_services/charge_filter', [App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,'charge_range']);
+     Route::get('agronomist_services/location_filter', [App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,'location_agronomist_services']);
+     Route::get('agronomist_services/asc_order', [App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,'agronomist_services_asc_sort']);
+     Route::get('agronomist_services/desc_order', [App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,'agronomist_services_desc_sort']);
+
+
+     Route::get('veterinary_services/charge_filter', [App\Http\Controllers\API\VeterinaryAPIController::class,'charge_range']);
+     Route::get('veterinary_services/location_filter', [App\Http\Controllers\API\VeterinaryAPIController::class,'location_veterinary_services']);
+     Route::get('veterinary_services/asc_order', [App\Http\Controllers\API\VeterinaryAPIController::class,'veterinary_services_asc_sort']);
+     Route::get('veterinary_services/desc_order', [App\Http\Controllers\API\VeterinaryAPIController::class,'veterinary_services_desc_sort']);
+
+
+     Route::get('finance_services/principal_filter', [App\Http\Controllers\API\FinanceVendorServiceAPIController::class,'principal_range']);
+     Route::get('finance_services/location_filter', [App\Http\Controllers\API\FinanceVendorServiceAPIController::class,'location_finance_services']);
+     Route::get('finance_services/asc_order', [App\Http\Controllers\API\FinanceVendorServiceAPIController::class,'finance_services_asc_sort']);
+     Route::get('finance_services/desc_order', [App\Http\Controllers\API\FinanceVendorServiceAPIController::class,'finance_services_desc_sort']);
+
+
+
+
+     //get animal feed categories by animal category
     Route::get('animal-category/{id}/feeds', [App\Http\Controllers\AnimalFeedCategoryController::class,'animal_category_feeds'] );
 
     Route::get('rent_vendor_categories', [App\Http\Controllers\API\RentVendorCategoryAPIController::class,'index']);

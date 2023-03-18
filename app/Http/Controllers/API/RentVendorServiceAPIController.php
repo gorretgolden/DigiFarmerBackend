@@ -13,6 +13,7 @@ use App\Models\VendorCategory;
 use App\Models\RentVendorSubCategory;
 use App\Models\Address;
 use App\Models\User;
+use App\Models\District;
 use App\Notifications\NewRentServiceNotification;
 
 
@@ -40,7 +41,7 @@ class RentVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $rentVendorServices = RentVendorService::where('is_verified',1)->latest()->get(['id','name','location','image','charge','charge_frequency','charge_unit','description','status','created_at']);
+        $rentVendorServices = RentVendorService::where('status','available for rent')->where('is_verified',1)->latest()->get(['id','name','location','image','charge','charge_frequency','charge_unit','description','status','created_at']);
         $response = [
             'success'=>true,
             'data'=> [
@@ -59,7 +60,7 @@ class RentVendorServiceAPIController extends AppBaseController
 
     public function home_rent_vendors(Request $request)
     {
-        $rentVendorServices = RentVendorService::where('is_verified',1)->latest()->limit(4)->get();
+        $rentVendorServices = RentVendorService::where('status','available for rent')->where('is_verified',1)->latest()->limit(4)->get();
         $response = [
             'success'=>true,
             'data'=> [
@@ -89,8 +90,8 @@ class RentVendorServiceAPIController extends AppBaseController
 
         }
 
-        $all_rent = RentVendorService::where('is_verified',1)->get();
-        $rent = RentVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $all_rent = RentVendorService::where('status','available for rent')->where('is_verified',1)->get();
+        $rent = RentVendorService::where('status','available for rent')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
 
 
         if(count($rent) == 0){
@@ -119,6 +120,157 @@ class RentVendorServiceAPIController extends AppBaseController
 
 }
 
+
+ //filter by price range
+ public function price_range(Request $request){
+
+
+
+    if(empty($request->min_price) || empty($request->max_price)){
+
+     $response = [
+         'success'=>false,
+         'message'=> 'Price range required'
+      ];
+
+      return response()->json($response,400);
+
+    }else{
+
+
+     $rent_services = RentVendorService::select("*")->where('status','available for rent')->where('is_verified',1)->whereBetween('charge', [$request->min_price, $request->max_price])->get();
+
+     if(count($rent_services)==0){
+        $response = [
+            'success'=>false,
+            'message'=> "No items for rent found between"." "."UGX ".$request->min_price ." and "."UGX ". $request->max_price
+         ];
+
+         return response()->json($response,404);
+
+     }else{
+
+        $response = [
+            'success'=>true,
+            'data'=>[
+                'total-results'=>count($rent_services),
+                'rent-services'=>$rent_services
+            ],
+            'message'=> "Rent items between "."UGX ".$request->min_price ." and "."UGX ". $request->max_price." "."retrieved successfully"
+         ];
+
+         return response()->json($response,200);
+     }
+
+
+    }
+
+
+
+
+ }
+
+ //filter products by location
+ public function location_rent_services(Request $request){
+
+     if(empty($request->district_id)){
+         $response = [
+             'success'=>false,
+             'message'=> 'Please select a district'
+          ];
+
+          return response()->json($response,400);
+
+     }
+
+     $district= District::find($request->district_id);
+
+     if(empty($district)){
+        $response = [
+            'success'=>false,
+            'message'=> 'District not found'
+         ];
+
+         return response()->json($response,404);
+
+     }
+
+
+     $rent_services = RentVendorService::where('status','available for rent')->where('is_verified',1)->where('location',$district->name)->get();
+     $all_rent_services = RentVendorService::where('status','available for rent')->where('is_verified',1)->get();
+
+     if(count($rent_services) == 0){
+
+         $response = [
+             'success'=>false,
+             'message'=> "No results found for rent items in"." ".$district->name
+          ];
+
+          return response()->json($response,404);
+
+     }
+
+     else{
+
+
+
+         $response = [
+             'success'=>true,
+             'data'=>[
+                 'total-results'=>count($rent_services). " out of ".count($all_rent_services)." rent items" ,
+                  'rent-services'=>$rent_services
+             ],
+             'message'=> "Rent items in ".$district->name. " retrieved successfully"
+          ];
+
+          return response()->json($response,200);
+
+     }
+
+
+
+
+  }
+
+
+ //sorting in ascending order
+ public function rent_services_asc_sort(){
+
+    $rent_services = RentVendorService::where('status','available for rent')->where('is_verified',1)->orderBy('name','ASC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-rent-services'=>count($rent_services),
+            'rent-services'=>$rent_services
+        ],
+        'message'=> 'Rent services ordered by name in ascending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
+
+ public function rent_services_desc_sort(){
+
+    $rent_services = RentVendorService::where('status','available for rent')->where('is_verified',1)->orderBy('name','DESC')->get();
+
+
+    $response = [
+        'success'=>true,
+        'data'=>[
+            'total-rent-services'=>count($rent_services),
+            'rent-services'=>$rent_services
+        ],
+        'message'=> 'Rent items ordered by name in descending order'
+     ];
+
+     return response()->json($response,200);
+
+
+ }
     /**
      * Store a newly created RentVendorService in storage.
      * POST /rentVendorServices
