@@ -15,20 +15,8 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
-
-
-
-
 Route::group(['prefix'=>'v1'], function(){
-
-
-    // collections
-    Route::post('collect',[App\Http\Controllers\API\CollectionController::class,'collect']);
-    Route::get('transactions',[App\Http\Controllers\API\CollectionController::class,'transactions']);
-    Route::get('transaction/verify/{id}',[App\Http\Controllers\API\CollectionController::class,'verifyTransaction']);
-    Route::post('transaction/validate',[App\Http\Controllers\API\CollectionController::class,'validateCharge']);
-    Route::post('transaction/resend/{id}',[App\Http\Controllers\API\CollectionController::class,'resendTransaction']);
-    Route::post('transaction/refund/{id}',[App\Http\Controllers\API\CollectionController::class,'refundTransaction']);
+    Route::post('/flw-webhook',[App\Http\Controllers\API\CollectionController::class,'saveTransaction']);
 
     // transfers
     Route::post('transfer',[App\Http\Controllers\API\PaymentsController::class,'transfer']);
@@ -221,9 +209,12 @@ Route::group(['prefix'=>'v1'], function(){
         Route::resource('tests', App\Http\Controllers\API\TestAPIController::class);
 
 
-
-
-
+       Route::post('collect',[App\Http\Controllers\API\CollectionController::class,'collect']);
+       Route::get('transactions',[App\Http\Controllers\API\CollectionController::class,'transactions']);
+       Route::get('transaction/verify/{id}',[App\Http\Controllers\API\CollectionController::class,'verifyTransaction']);
+       Route::post('transaction/validate',[App\Http\Controllers\API\CollectionController::class,'validateCharge']);
+       Route::post('transaction/resend/{id}',[App\Http\Controllers\API\CollectionController::class,'resendTransaction']);
+       Route::post('transaction/refund/{id}',[App\Http\Controllers\API\CollectionController::class,'refundTransaction']);
         //user
         Route::post('user/profile-image/update', [App\Http\Controllers\API\UserAPIController::class,'updateProfileImage']);
         Route::get('user/my-addresses', [App\Http\Controllers\API\AddressAPIController::class,'userAddress']);

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Http\Client\RequestException as ClientRequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 
 /**
@@ -70,10 +71,13 @@ class TransactionService
         try {
             $uri = "{$this->baseUrl}"."/charges?type=mobile_money_uganda";
             $response = Http::withHeaders($headers)->withOptions(["verify" => false])->retry(3, 100)->post($uri, ['amount' => $bodyData->amount,
-            'tx_ref' => $bodyData->tx_ref,
-            'currency' =>$bodyData->currency,
+            'tx_ref' => Str::uuid()->toString(),
+            'currency' =>"UGX",
             'phone_number' => $bodyData->phone_number,
-            'email' =>$bodyData->email],);
+            'email' =>auth()->user()->email,
+            'fullname' =>auth()->user()->username,
+            'voucher' =>auth()->user()->id,
+        ],);
 
             if($response->status() == 200){
                 return $response->json();
