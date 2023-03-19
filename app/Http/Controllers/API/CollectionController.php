@@ -85,7 +85,7 @@ class CollectionController extends Controller
         $transactions->auth_model = $data['data']['auth_model'];
         $transactions->status = $data['data']['status'];
         $transactions->payment_type = $data['data']['payment_type'];
-        $transactions->phone_number = $data['data']['customer']['name'];
+        $transactions->phone_number = $data['data']['customer']['phone_number'];
         $transactions->email = $data['data']['customer']['email'];
         $transactions->name = $data['data']['customer']['name'];
         $transactions->save();
