@@ -59,6 +59,7 @@ class CollectionController extends Controller
         $transactions->tx_ref = $data['data']['tx_ref'];
         $transactions->flw_ref = $data['data']['flw_ref'];
         $transactions->amount = $data['data']['amount'];
+        $transactions->trans_id = $data['data']['id'];
         $transactions->currency = $data['data']['currency'];
         $transactions->charged_amount = $data['data']['charged_amount'];
         $transactions->app_fee = $data['data']['app_fee'];
