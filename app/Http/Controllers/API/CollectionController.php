@@ -55,6 +55,11 @@ class CollectionController extends Controller
         $data = $request->all();
 
         if($data){
+
+        $token = $data['data']['tx_ref'];
+        $decoded = base64_decode($token);
+        $tokenDetails = explode(".",$decoded);
+
         $transactions = new Transactions();
         $transactions->tx_ref = $data['data']['tx_ref'];
         $transactions->flw_ref = $data['data']['flw_ref'];
@@ -70,7 +75,11 @@ class CollectionController extends Controller
         $transactions->phone_number = $data['data']['customer']['phone_number'];
         $transactions->email = $data['data']['customer']['email'];
         $transactions->name = $data['data']['customer']['name'];
+        $transactions->user_id = $tokenDetails[2];
+        $transactions->pay_type = $tokenDetails[3];
+        $transactions->payment_id = $tokenDetails[4];
         $transactions->save();
+        
         }else{
             abort(404);
         }

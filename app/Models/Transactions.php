@@ -32,6 +32,8 @@ class Transactions extends Model
     public static $rules = [
         'phone_number' => 'required',
         'amount'  => 'required',
+        'pay_type' => 'required',
+        'payment_id'  => 'required',
     ];
 
 
