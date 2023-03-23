@@ -74,11 +74,17 @@ class CollectionController extends Controller
         $data = $request->all();
 
         if($data){
+
+        $token = $data['data']['tx_ref'];
+        $decoded = base64_decode($token);
+        $tokenDetails = explode(".",$decoded);
+
         $transactions = new Transactions();
         $transactions->trans_id = $data['data']['trans_id'];
         $transactions->tx_ref = $data['data']['tx_ref'];
         $transactions->flw_ref = $data['data']['flw_ref'];
         $transactions->amount = $data['data']['amount'];
+        $transactions->trans_id = $data['data']['id'];
         $transactions->currency = $data['data']['currency'];
         $transactions->charged_amount = $data['data']['charged_amount'];
         $transactions->app_fee = $data['data']['app_fee'];
@@ -89,8 +95,15 @@ class CollectionController extends Controller
         $transactions->phone_number = $data['data']['customer']['phone_number'];
         $transactions->email = $data['data']['customer']['email'];
         $transactions->name = $data['data']['customer']['name'];
+        $transactions->user_id = $tokenDetails[2];
+        $transactions->pay_type = $tokenDetails[3];
+        $transactions->payment_id = $tokenDetails[4];
         $transactions->save();
+<<<<<<< HEAD
         return response(200);
+=======
+        
+>>>>>>> e7221655f24ad2b2225b5c7ce792942d46cc9626
         }else{
             abort(404);
         }
