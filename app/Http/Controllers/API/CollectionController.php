@@ -75,6 +75,7 @@ class CollectionController extends Controller
 
         if($data){
         $transactions = new Transactions();
+        $transactions->trans_id = $data['data']['trans_id'];
         $transactions->tx_ref = $data['data']['tx_ref'];
         $transactions->flw_ref = $data['data']['flw_ref'];
         $transactions->amount = $data['data']['amount'];
@@ -89,6 +90,7 @@ class CollectionController extends Controller
         $transactions->email = $data['data']['customer']['email'];
         $transactions->name = $data['data']['customer']['name'];
         $transactions->save();
+        return response(200);
         }else{
             abort(404);
         }

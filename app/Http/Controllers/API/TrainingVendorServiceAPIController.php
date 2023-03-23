@@ -14,6 +14,9 @@ use App\Models\User;
 use App\Models\VendorCategory;
 use App\Notifications\NewTrainingServiceNotification;
 use App\Models\District;
+use App\Http\Requests\API\TransactionRequest;
+use App\Services\TransactionService;
+use App\Models\Transactions;
 /**
  * Class TrainingVendorServiceController
  * @package App\Http\Controllers\API
@@ -346,31 +349,7 @@ public function charge_range(Request $request){
 
     }
 
-    // public function vendorTrainings(Request $request){
 
-    //     $vendor = User::find(auth()->user()->id);
-    //     $training_services = $vendor->training_vendor_services;
-    //     if($training_services->count()== 0){
-
-    //         $response = [
-    //             'success'=>true,
-    //             'message'=>'Vendor has no training vendor services'
-    //            ];
-
-    //            return response()->json($response,200);
-    //     }
-    //     else{
-    //         $response = [
-    //             'success'=>true,
-    //             'data' => $training_services,
-    //             'message'=>'Training vendor services retrieved successfully'
-    //            ];
-
-    //            return response()->json($response,200);
-
-    //     }
-
-    // }
 
     /**
      * Display the specified TrainingVendorService.
@@ -462,4 +441,82 @@ public function charge_range(Request $request){
 
         return $this->sendSuccess('Training Vendor Service deleted successfully');
     }
+
+
+
+    //register for a training service
+    public function collect_payment($id){
+
+        $trainingVendorService = TrainingVendorService::find($id);
+
+
+        if (empty($trainingVendorService)) {
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Training Vendor Service not found'
+             ];
+
+             return response()->json($response,404);
+
+        }else{
+
+            $transactionService = new TransactionService;
+            $data['phone_number'] = auth()->user()->phone;
+            $data['amount'] =  $trainingVendorService->charge;
+            $data['route'] = 'registration-callback';
+
+            $response = $transactionService->transRequest($data);
+            $redirect_link = $response['meta']['authorization']['redirect'];
+
+
+         return response()->json($response);
+
+
+
+        }
+
+    }
+
+
+    //verfiy transaction and update table
+  public function payment_callback(){
+
+
+    $status = request()->status;
+
+    //if payment is successful
+    if ($status ==  'successful') {
+
+        $collect = new CollectionController;
+        $transaction = $collect->verifyTransaction(request()->trans_id);
+        dd($transaction);
+
+        $data = $request->all();
+
+
+    }
+    elseif ($status ==  'cancelled'){
+
+
+        $response = [
+            'success'=>false,
+            'message'=> 'Transaction has been cancelled'
+         ];
+
+         return response()->json($response,400);
+    }
+    else{
+        $response = [
+            'success'=>false,
+            'message'=> 'Transaction failed'
+         ];
+
+         return response()->json($response,400);
+    }
+
+}
+
+
+
 }

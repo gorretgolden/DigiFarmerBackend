@@ -62,6 +62,50 @@ class AnimalFeedCategoryAPIController extends AppBaseController
         return $this->sendResponse($animalFeedCategory->toArray(), 'Animal Feed Category saved successfully');
     }
 
+
+    public function animal_feeds($id)
+    {
+        $animal_feed_category = AnimalFeedCategory::find($id);
+        //dd($animal_feed_category);
+
+        if(empty($animal_feed_category)) {
+            $response = [
+                'success'=>false,
+                'message'=> 'Animal feed category not found'
+             ];
+
+             return response()->json($response,404);
+
+        }elseif(count($animal_feed_category->animal_feeds) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> "No animal feed categories found under category ".$animal_feed_category->name
+             ];
+
+             return response()->json($response,404);
+
+
+        }
+        else{
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-animal-feeds'=>count($animal_feed_category->animal_feeds),
+                    'category'=>$animal_feed_category->name,
+                    'animal-category'=>$animal_feed_category->animal_category->name,
+                    'animal-feeds'=>$animal_feed_category->animal_feeds
+                ],
+                'message'=> "Animal feeds under ".$animal_feed_category->name." retrieved successfully"
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+
+
+    }
     /**
      * Display the specified AnimalFeedCategory.
      * GET|HEAD /animalFeedCategories/{id}

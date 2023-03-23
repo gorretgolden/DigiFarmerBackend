@@ -38,10 +38,16 @@ Route::group(['prefix'=>'v1'], function(){
 
 
     Route::resource('animal_categories', App\Http\Controllers\API\AnimalCategoryAPIController::class);
+    Route::get('animal_category/{id}/feed_categories', [App\Http\Controllers\API\AnimalCategoryAPIController::class,'animal_feeds']);
 
 
+
+    //vendor categories with sub categories
     Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);
     Route::get('seller_product_categories', [App\Http\Controllers\API\SellerProductCategoryAPIController::class,'index']);
+    Route::get('seller_product_category/{id}/products', [App\Http\Controllers\API\SellerProductCategoryAPIController::class,'seller_products']);
+
+    Route::get('animal_feed_category/{id}/animal_feeds', [App\Http\Controllers\API\AnimalFeedCategoryAPIController::class,'animal_feeds']);
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
 
     //vendor categories with vendor services
@@ -163,6 +169,7 @@ Route::group(['prefix'=>'v1'], function(){
     Route::get('animal-category/{id}/feeds', [App\Http\Controllers\AnimalFeedCategoryController::class,'animal_category_feeds'] );
 
     Route::get('rent_vendor_categories', [App\Http\Controllers\API\RentVendorCategoryAPIController::class,'index']);
+    Route::get('rent_sub_category/{id}/rent_services', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'rent_items']);
     Route::get('veterinaries/all', [App\Http\Controllers\API\VeterinaryAPIController::class,'index']);
 
     //user registration
@@ -190,6 +197,7 @@ Route::group(['prefix'=>'v1'], function(){
     Route::put('users/password/reset', [App\Http\Controllers\API\ForgotPasswordAPIController::class,'resetPassword']);
 
     Route::get('/auth/google/callback',[App\Http\Controllers\API\GoogleLoginController::class,'googleCallback']);
+    Route::get('/auth/google/login',[App\Http\Controllers\API\GoogleLoginController::class,'redirectToProvider']);
 
 
     //google login
@@ -218,6 +226,9 @@ Route::group(['prefix'=>'v1'], function(){
        Route::post('transaction/refund/{id}',[App\Http\Controllers\API\CollectionController::class,'refundTransaction']);
 
 
+
+       Route::post('/pay', [App\Http\Controllers\API\RaveController::class, 'initialize'])->name('pay');
+       Route::get('/rave/callback', [App\Http\Controllers\API\RaveController::class, 'callback'])->name('callback');
        //user
         Route::post('user/profile-image/update', [App\Http\Controllers\API\UserAPIController::class,'updateProfileImage']);
         Route::get('user/my-addresses', [App\Http\Controllers\API\AddressAPIController::class,'userAddress']);
@@ -326,6 +337,8 @@ Route::group(['prefix'=>'v1'], function(){
           Route::resource('training-vendor-services', App\Http\Controllers\API\TrainingVendorServiceAPIController::class)->only(['store','show','update','destroy']);
           Route::get('vendor/training-vendor-services', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'vendorTrainings']);
           Route::resource('farmer_trainings', App\Http\Controllers\API\FarmerTrainingAPIController::class);
+          Route::post('training-vendor-service/{id}/register', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'collect_payment']);
+          Route::get('/training-vendor-service/register/callback', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'payment_callback'])->name('registration-callback');
 
 
           //loans
@@ -393,8 +406,7 @@ Route::group(['prefix'=>'v1'], function(){
 });
 
 
-Route::post('/pay', [App\Http\Controllers\API\RaveController::class, 'initialize'])->name('pay');
-Route::get('/rave/callback', [App\Http\Controllers\API\RaveController::class, 'callback'])->name('callback');
+
 
 
 

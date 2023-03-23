@@ -15,6 +15,7 @@ use App\Models\Address;
 use App\Models\User;
 use App\Models\District;
 use App\Notifications\NewRentServiceNotification;
+use App\Models\RentVendorCategory;
 
 
 /**
@@ -420,9 +421,87 @@ class RentVendorServiceAPIController extends AppBaseController
     {
 
 
-      $data['rent-sub-categories'] = RentVendorSubCategory::where("rent_vendor_category_id", $id)->get(['name','id']);
 
-        return response()->json($data);
+      $rent_category = RentVendorCategory::find($id);
+
+      if(empty($rent_category)){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'Rent category not found'
+         ];
+
+         return response()->json($response,404);
+
+      }
+
+      $rent_sub_categories = RentVendorSubCategory::where("rent_vendor_category_id", $id)->get(['name','id']);
+
+      if(count($rent_sub_categories) == 0){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'No rent categories found for '.$rent_category->name
+         ];
+
+         return response()->json($response,404);
+
+      }
+
+      $response = [
+        'success'=>true,
+        'rent-sub-categories'=>$rent_sub_categories,
+        'message'=> 'Successfully retrieved rent categories under '.$rent_category->name
+     ];
+
+     return response()->json($response,200);
+    }
+
+
+    public function rent_items(Request $request,$id)
+    {
+
+
+
+      $rent_sub_category = RentVendorSubCategory::find($id);
+
+      if(empty($rent_sub_category)){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'Rent sub category not found'
+         ];
+
+         return response()->json($response,404);
+
+      }
+
+      if(count($rent_sub_category->rent_vendor_services) == 0){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'No rent services found for '.$rent_sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+      }
+
+      $response = [
+        'success'=>true,
+        'data'=>[
+
+            'category'=>$rent_sub_category->rent_category->name,
+            'sub-category'=>$rent_sub_category->name,
+            'rent-services'=>$rent_sub_category->rent_vendor_services
+        ]
+        ,
+
+
+        'message'=> 'Successfully retrieved rent services under '.$rent_sub_category->name
+     ];
+
+     return response()->json($response,200);
     }
     /**
      * Update the specified RentVendorService in storage.

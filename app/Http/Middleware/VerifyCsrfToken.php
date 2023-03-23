@@ -13,6 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'rave/callback',
-        '/webhook/flutterwave'
+        '/training-vendor-service/register/callback'
     ];
 }

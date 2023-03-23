@@ -60,4 +60,11 @@ class SellerProductCategory extends Model
     }
 
 
+    public function seller_products()
+    {
+       return $this->hasMany(\App\Models\SellerProduct::class);
+    }
+
+
+
 }

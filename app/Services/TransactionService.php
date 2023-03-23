@@ -27,6 +27,9 @@ class TransactionService
         return $this->doTransactionHttp($validatedData);
     }
 
+
+
+
     public function validateRequest($validatedData)
     {
         return $this->validateTransaction($validatedData);
@@ -70,16 +73,22 @@ class TransactionService
 
         try {
             $uri = "{$this->baseUrl}"."/charges?type=mobile_money_uganda";
-            $response = Http::withHeaders($headers)->withOptions(["verify" => false])->retry(3, 100)->post($uri, ['amount' => $bodyData['amount'],
+            $response = Http::withHeaders($headers)->withOptions(["verify" => false])->retry(3, 100)->post($uri,
+            [
+            'amount' => $bodyData['amount'],
             'tx_ref' => Str::uuid()->toString(),
             'currency' =>"UGX",
             'phone_number' => $bodyData['phone_number'],
             'email' =>auth()->user()->email,
             'fullname' =>auth()->user()->username,
             'voucher' =>auth()->user()->id,
+
         ],);
 
+
+
             if($response->status() == 200){
+
                 return $response->json();
             }
             else {

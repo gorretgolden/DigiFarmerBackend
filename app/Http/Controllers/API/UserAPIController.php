@@ -98,6 +98,7 @@ class UserAPIController extends AppBaseController
         $gateway    = new \AfricasTalkingGateway($username, $apikey);
        try
        {
+
          $recipients='+'.$tell;
          //$recipients='+256779815657';
          $results = $gateway->sendMessage($recipients, $message);

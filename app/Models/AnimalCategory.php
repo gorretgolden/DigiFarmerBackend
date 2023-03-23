@@ -72,6 +72,8 @@ class AnimalCategory extends Model
         return $this->hasMany(\App\Models\AnimalFeedCategory::class, 'animal_category_id');
     }
 
+
+
     //belongs to many vet services
     public function vet_services()
     {

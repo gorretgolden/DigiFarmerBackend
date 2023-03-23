@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\RentVendorService;
 
 /**
  * Class RentVendorSubCategory
@@ -53,7 +54,7 @@ class RentVendorSubCategory extends Model
     //has many rent vendor services
     public function rent_vendor_services()
     {
-    return $this->hasMany(\App\Models\RentVendorServices::class, 'rent_vendor_sub_category_id');
+    return $this->hasMany(\App\Models\RentVendorService::class, 'rent_vendor_sub_category_id');
     }
 
     //belongs to a rent category

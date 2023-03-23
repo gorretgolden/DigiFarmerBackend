@@ -428,4 +428,6 @@ class SellerProductAPIController extends AppBaseController
 
         return $this->sendSuccess('Seller Product deleted successfully');
     }
+
+
 }

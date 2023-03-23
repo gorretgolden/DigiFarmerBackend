@@ -15,12 +15,15 @@ class GoogleLoginController extends Controller
 {
     //login with google
     public function redirectToProvider(){
+      //  dd(Socialite::driver('google')->redirect());
+
         return Socialite::driver('google')->redirect();
 
     }
 
 
     public function googleCallback(){
+
 
         try{
             Socialite::driver('google')->stateless()->user();

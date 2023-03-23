@@ -34,7 +34,7 @@ class SellerProductCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $sellerProductCategories = SellerProductCategory::all('id','name','image');
+        $sellerProductCategories = SellerProductCategory::orderBy('name','ASC')->get(['id','name','image']);
 
         return $this->sendResponse($sellerProductCategories->toArray(), 'Seller Product Categories retrieved successfully');
     }
@@ -74,6 +74,50 @@ class SellerProductCategoryAPIController extends AppBaseController
         }
 
         return $this->sendResponse($sellerProductCategory->toArray(), 'Seller Product Category retrieved successfully');
+    }
+
+    //get seller products from category
+    public function seller_products($id)
+    {
+        $sellerProductCategory = SellerProductCategory::find($id);
+        //dd($sellerProductCategory);
+
+        if(empty($sellerProductCategory)) {
+            $response = [
+                'success'=>false,
+                'message'=> 'Farm equipment category not found'
+             ];
+
+             return response()->json($response,404);
+
+        }elseif(count($sellerProductCategory->seller_products) == 0){
+            $response = [
+                'success'=>false,
+                'message'=> "No farm equipments found under category ".$sellerProductCategory->name
+             ];
+
+             return response()->json($response,404);
+
+
+        }
+        else{
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-farm-equipments'=>count($sellerProductCategory->seller_products),
+                    'category'=>$sellerProductCategory->name,
+                    'farm-equipments'=>$sellerProductCategory->seller_products
+                ],
+                'message'=> "Seller products under ".$sellerProductCategory->name." retrieved successfully"
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+
+
     }
 
     /**
