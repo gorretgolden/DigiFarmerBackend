@@ -17,7 +17,7 @@
      {
          Schema::create('farms', function (Blueprint $table) {
              $table->id('id');
-             $table->string('name')->unique();
+             $table->string('name');
              $table->string('owner');
              $table->integer('field_area');
              $table->string('size_unit')->default('Acres');

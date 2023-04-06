@@ -8,6 +8,7 @@ use App\Http\Requests\CreateSellerProductRequest;
 use App\Http\Requests\UpdateSellerProductRequest;
 use App\Repositories\SellerProductRepository;
 use App\Http\Controllers\AppBaseController;
+use App\DataTables\SellerProductDataTable;
 use Illuminate\Http\Request;
 use Flash;
 use App\Models\SellerProduct;

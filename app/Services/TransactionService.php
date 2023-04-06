@@ -73,25 +73,12 @@ class TransactionService
 
         try {
             $uri = "{$this->baseUrl}"."/charges?type=mobile_money_uganda";
-<<<<<<< HEAD
-            $response = Http::withHeaders($headers)->withOptions(["verify" => false])->retry(3, 100)->post($uri,
-            [
-            'amount' => $bodyData['amount'],
-            'tx_ref' => Str::uuid()->toString(),
+            $response = Http::withHeaders($headers)->withOptions(["verify" => false])->retry(3, 100)->post($uri, ['amount' => $bodyData['amount'],
+            'tx_ref' => base64_encode(auth()->user()->email . "." .auth()->user()->id . "." .$bodyData['pay_type'] . "." . $bodyData['payment_id']),
             'currency' =>"UGX",
             'phone_number' => $bodyData['phone_number'],
-            'email' =>auth()->user()->email,
-            'fullname' =>auth()->user()->username,
-            'voucher' =>auth()->user()->id,
-
-=======
-            $response = Http::withHeaders($headers)->withOptions(["verify" => false])->retry(3, 100)->post($uri, ['amount' => $bodyData->amount,
-            'tx_ref' => base64_encode(auth()->user()->email . "." .auth()->user()->id . "." .$bodyData->pay_type . "." . $bodyData->payment_id),
-            'currency' =>"UGX",
-            'phone_number' => $bodyData->phone_number,
             'email' =>  auth()->user()->email,
             'fullname' => auth()->user()->username,
->>>>>>> e7221655f24ad2b2225b5c7ce792942d46cc9626
         ],);
 
 

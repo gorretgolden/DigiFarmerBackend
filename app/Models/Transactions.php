@@ -22,6 +22,7 @@ class Transactions extends Model
         'phone_number',
         'email',
         'amount'
+
     ];
 
     /**

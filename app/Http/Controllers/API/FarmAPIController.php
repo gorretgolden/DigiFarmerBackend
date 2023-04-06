@@ -129,7 +129,8 @@ class FarmAPIController extends AppBaseController
             'address_id' => 'required|integer'
         ];
         $request->validate($rules);
-        if(Farm::where('name',$request->name)->where('owner',auth()->user()->username)->first()){
+        $existing_farm_name = Farm::where('name',$request->name)->where('owner',auth()->user()->username)->first();
+        if($existing_farm_name){
             $response = [
                 'success'=>false,
                 'message'=> 'The farm name already exists'

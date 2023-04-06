@@ -19,20 +19,29 @@ class CollectionController extends Controller
 
         $data['phone_number'] = auth()->user()->phone;
         $data['amount'] = request()->amount;
+        $data['pay_type'] = request()->pay_type;
+        $data['payment_id'] = request()->payment_id;
 
-        $response = $transactionService->transRequest($data);
-        $redirect_link = $response['meta']['authorization']['redirect'];
-        // return response()->json($response);
 
-        if($response['status'] == 'success'){
-            return redirect()->away($redirect_link);
+        $resp = $transactionService->transRequest($data);
+        $redirect_link = $resp['meta']['authorization']['redirect'];
+        $response = [
+            'status'=>$resp['status'],
+            'message'=> $resp['message'],
+            'redirect-link'=> $redirect_link
+
+         ];
+
+
+        if($resp['status'] == 'success'){
+            return response()->json($response,200);
 
         }else{
             $response = [
                 'success'=>false,
                 'message'=> 'Something wrong happened'
              ];
-             return response()->json($response,400);
+             return response()->json($res,400);
         }
 
 
@@ -99,11 +108,7 @@ class CollectionController extends Controller
         $transactions->pay_type = $tokenDetails[3];
         $transactions->payment_id = $tokenDetails[4];
         $transactions->save();
-<<<<<<< HEAD
-        return response(200);
-=======
-        
->>>>>>> e7221655f24ad2b2225b5c7ce792942d46cc9626
+
         }else{
             abort(404);
         }
