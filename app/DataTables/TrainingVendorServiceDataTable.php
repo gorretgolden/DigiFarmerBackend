@@ -86,7 +86,6 @@ class TrainingVendorServiceDataTable extends DataTable
             'ending_date',
             'starting_time',
             'ending_time',
-            'location',
             'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
             'contact'=> new \Yajra\DataTables\Html\Column(['title'=>"Contact",'data'=>'vendor.phone']),
             'is_verified' => new \Yajra\DataTables\Html\Column(['title'=>"Verified",'data'=>'is_verified'])

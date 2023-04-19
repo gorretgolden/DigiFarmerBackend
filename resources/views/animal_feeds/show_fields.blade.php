@@ -6,10 +6,11 @@
 
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md">
-                        <img src="{{ $animalFeed->vendor->image_url ? $animalFeed->vendor->image_url : asset('img/avatar-1.png') }}"
-                            class="img-thumbnail" />
+                <div class="row justify-content-center">
+                    <div class="col-md ">
+
+                        <img src="{{ $animalFeed->vendor->image ? $animalFeed->vendor->image : asset('img/avatar-1.png') }}"
+                        class="img-thumbnail rounded-circle shadow-4-strong w-25"/>
                     </div>
 
 
@@ -40,7 +41,7 @@
 
 
                     <div>
-                        <img src="{{ $animalFeed->image }}" class="img-thumbnail" />
+                        <img class="img-thumbnail w-75 mb-3" src="{{ URL::asset("$animalFeed->image") }}" />
                     </div>
 
 
@@ -99,6 +100,13 @@
 
 
                     </div>
+
+                    <div>
+                        {!! Form::label('location', 'Location:') !!} <p>{{ $animalFeed->location }}</p>
+
+
+                    </div>
+
 
 
                     <!-- Created At Field -->

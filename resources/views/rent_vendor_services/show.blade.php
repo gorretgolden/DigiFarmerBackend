@@ -18,12 +18,8 @@
     </section>
 
     <div class="content px-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
+
                     @include('rent_vendor_services.show_fields')
-                </div>
-            </div>
-        </div>
+
     </div>
 @endsection

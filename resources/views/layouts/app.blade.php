@@ -198,7 +198,7 @@ $notifications_count = count($notifications);
         };
     }(jQuery));
 </script> -->
-<script>
+{{-- <script>
     $(function() {
         $('.table').not('.statement,.main-table').DataTable({
             order: [],
@@ -255,7 +255,7 @@ $notifications_count = count($notifications);
         cb(start, end);
 
     });
-</script>
+</script> --}}
 @stack('scripts')
 
 

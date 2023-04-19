@@ -1,7 +1,6 @@
 <?php
 $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
-
 ?>
 <!-- Name Field -->
 <div class="form-group col-sm-6">
@@ -43,9 +42,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 <div class="form-group col-sm-6">
     {!! Form::label('Access') !!}
-    {!! Form::select('access', ['Online' => 'Online', 'Offline' => 'Offline'], null, [
-        'class' => 'form-control select select-access',
-    ]) !!}
+    {!! Form::select('access', ['Online' => 'Online', 'Offline' => 'Offline'],null, ['class' => 'form-control type','placeholder'=>'Select access type']) !!}
 </div>
 
 
@@ -73,9 +70,6 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 
 
-
-
-
 <!-- Starting Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('starting_date', 'Starting Date:') !!}
@@ -86,16 +80,6 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     ]) !!}
 </div>
 
-
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#starting_date').datetimepicker({
-            format: 'DD-MM-YYYY',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
 
 
 
@@ -111,16 +95,6 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 </div>
 
 
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#starting_time').datetimepicker({
-            format: 'hh:mm A',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
-
 
 <!-- Ending Date Field -->
 <div class="form-group col-sm-6">
@@ -132,16 +106,6 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
     ]) !!}
 </div>
 
-
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#ending_date').datetimepicker({
-            format: 'DD-MM-YYYY ',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
 
 
 
@@ -157,40 +121,6 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 </div>
 
 
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#ending_time').datetimepicker({
-            format: 'hh:mm A',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-
-
-    <script>
-        $(document).ready(function() {
-            $("select-access").change(function() {
-                $("select option:selected").each(function() {
-                    if ($(this).attr("access") == "Online") {
-                        $(".rep").hide();
-                        $(".find").show();
-                        $(".replace").show();
-                    } else {
-                        $(".rep").show();
-                        $(".find").hide();
-                        $(".replace").hide();
-                    }
-                });
-            }).change();
-        });
-    </script>
-@endpush
-
-
-
-
-
-
 
 
 <!-- User Id Field -->
@@ -201,7 +131,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 
 <!-- Zoom Details Field -->
-<div class="form-group col-sm-12 col-lg-12">
+<div class="form-group col-sm-12 col-lg-12" id="zoom-details-container">
     {!! Form::label('zoom_details', 'Zoom Details:') !!}
     {!! Form::textarea('zoom_details', null, [
         'class' => 'form-control find',
@@ -211,7 +141,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 
 <!-- Address Id Field -->
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-6" id="address-container">
     {!! Form::label('address_id', 'Address:') !!}
     <select id="farmer-address" name="address_id" class="form-control">
 
@@ -220,6 +150,7 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
     </select>
 </div>
+
 
 
 <!-- Is verified Field -->
@@ -236,78 +167,87 @@ $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 
 @push('scripts')
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
-    <script>
-        $('#user_id').on('change', function() {
-            var idFarmer = this.value;
-            console.log(idFarmer)
 
 
-
-
-            $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
-            $.ajax({
-                url: "{{ route('sellers.fetch-address') }}",
-                type: "get",
-                data: {
-                    user_id: idFarmer
-                },
-                dataType: 'json',
-                success: function(result) {
-
-
-
-
-                    $('#farmer-address').html(
-                        '<option value="">-- Select farmer address --</option>');
-
-
-
-                    $.each(result.addresses, function(key, value) {
-                        console.log(result)
-
-
-
-
-                        $("#farmer-address").append('<option value="' + value
-                            .id + '">' + value
-                            .district_name + '</option>');
-
-
-                        console.log('hello', value.district_name)
-
-
-
-
-                    });
-
-
-
-
-                }
-            });
-        });
-
-
-
-
+    <script type="text/javascript">
         $(document).ready(function() {
-            $('.availability').change(function() {
-                var tmp = this.value;
-                $('#location').hide();
-                $('#zoom_details').hide();
+            $('#user_id').on('change', function() {
+                var idFarmer = this.value;
+
+
+                $('#farmer-address').html('<option selected="selected" value="">Loading...</option>');
+                $.ajax({
+                    url: "{{ route('sellers.fetch-address') }}",
+                    type: "get",
+                    data: {
+                        user_id: idFarmer
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+
+
+                        $('#farmer-address').html(
+                            '<option value="">-- Select farmer address --</option>');
+
+                        $.each(result.addresses, function(key, value) {
+
+
+                            $("#farmer-address").append('<option value="' + value
+                                .id + '">' + value
+                                .district_name + '</option>');
+
+
+                        });
 
 
 
 
-                if (tmp == "In-person") {
-                    $('#farmer-address').show();
-                } else if (tmp == "Online") {
-                    $('#zoom_details').show();
+                    }
+                });
+            });
+
+            $('#ending_time').datetimepicker({
+                format: 'hh:mm A',
+                useCurrent: true,
+                sideBySide: true
+            })
+
+            $('#ending_date').datetimepicker({
+                format: 'DD-MM-YYYY ',
+                useCurrent: true,
+                sideBySide: true
+            })
+
+            $('#starting_time').datetimepicker({
+                format: 'hh:mm A',
+                useCurrent: true,
+                sideBySide: true
+            })
+
+            $('#starting_date').datetimepicker({
+                format: 'DD-MM-YYYY',
+                useCurrent: true,
+                sideBySide: true
+            })
+
+            $('#zoom-details-container').hide()
+            $('#address-container').hide()
+            //   $('#farmer-address').hide()
+            $('.type').on('change', function() {
+
+                if (this.value == 'Online') {
+                    console.log(this.value)
+                    $("#zoom-details-container").show();
+                    $('#address-container').hide()
+
+                } else {
+                    $('#address-container').show()
+                    $("#zoom-details-container").hide();
 
                 }
 
 
-            })
+            });
 
 
 

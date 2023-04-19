@@ -1,60 +1,130 @@
-<!-- Name Field -->
-<div class="col-sm-12">
-    {!! Form::label('name', 'Name:') !!}
-    <p>{{ $insuaranceVendorService->name }}</p>
-</div>
+<div class="row">
 
-<!-- Terms Field -->
-<div class="col-sm-12">
-    {!! Form::label('terms', 'Terms:') !!}
-    <p>{{ $insuaranceVendorService->terms }}</p>
-</div>
 
-<!-- Image Field -->
-<div class="col-sm-12">
-    {!! Form::label('image', 'Image:') !!}
-    <p>{{ $insuaranceVendorService->image }}</p>
-</div>
+    <div class="col-md-6">
 
-<!-- Description Field -->
-<div class="col-sm-12">
-    {!! Form::label('description', 'Description:') !!}
-    <p>{{ $insuaranceVendorService->description }}</p>
-</div>
 
-<!-- Is Verified Field -->
-<div class="col-sm-12">
-    {!! Form::label('is_verified', 'Is Verified:') !!}
-    <p>{{ $insuaranceVendorService->is_verified }}</p>
-</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <div class="col-md ">
 
-<!-- Location Field -->
-<div class="col-sm-12">
-    {!! Form::label('location', 'Location:') !!}
-    <p>{{ $insuaranceVendorService->location }}</p>
-</div>
+                        <img src="{{ $insuaranceVendorService->user->image ? $insuaranceVendorService->user->image : asset('img/avatar-1.png') }}"
+                            class="img-thumbnail rounded-circle shadow-4-strong w-25" />
+                    </div>
 
-<!-- User Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $insuaranceVendorService->user_id }}</p>
-</div>
 
-<!-- Vendor Category Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('vendor_category_id', 'Vendor Category Id:') !!}
-    <p>{{ $insuaranceVendorService->vendor_category_id }}</p>
-</div>
+                    <div class="col-md-12 mt-2">
+                        {!! Form::label('name', 'Vendor details:') !!}
+                        <p>Name: {{ $insuaranceVendorService->user->username }}</p>
+                        <p>Contact: {{ $insuaranceVendorService->user->phone }}</p>
+                        <p>Email: {{ $insuaranceVendorService->user->email }}</p>
+                    </div>
+                </div>
 
-<!-- Created At Field -->
-<div class="col-sm-12">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{{ $insuaranceVendorService->created_at }}</p>
-</div>
 
-<!-- Updated At Field -->
-<div class="col-sm-12">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{{ $insuaranceVendorService->updated_at }}</p>
-</div>
 
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="col-md-12">
+
+
+                    <div>
+                        <img class="img-thumbnail w-75" src="{{ URL::asset("$insuaranceVendorService->image") }}" />
+                    </div>
+
+
+                    <!-- Name Field -->
+                    <div class="d-inline">
+                        {!! Form::label('name', 'Name:') !!}
+                        <p>{{ $insuaranceVendorService->name }}</p>
+                    </div>
+
+                    <!-- Terms Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('terms', 'Terms:') !!}
+                        <p>{{ $insuaranceVendorService->terms }}</p>
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('description', 'Description:') !!}
+                        <p>{{ $insuaranceVendorService->description }}</p>
+                    </div>
+
+
+
+                    <!-- Vendor Category Id Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
+                        <p>{{ $insuaranceVendorService->vendor_category->name }}</p>
+                    </div>
+
+
+
+
+                    <!-- status Field -->
+                    <div>
+                        {!! Form::label('status', 'Status:') !!}
+                        <p class="badge rounded-pill bg-success">{{ $insuaranceVendorService->status }}</p>
+                        @if ($insuaranceVendorService->is_verified == 1)
+                            <p class="badge rounded-pill bg-success">Verified</p>
+                        @else
+                            <p class="badge rounded-pill bg-danger">Not verified</p>
+                        @endif
+
+
+                    </div>
+
+
+
+
+
+                    <!-- Description Field -->
+                    <div>
+                        {!! Form::label('description', 'Description:') !!} <p>{{ $insuaranceVendorService->description }}</p>
+
+
+                    </div>
+
+                    <div>
+                        {!! Form::label('location', 'Location:') !!} <p>{{ $insuaranceVendorService->location }}</p>
+
+
+                    </div>
+
+
+
+                    <!-- Created At Field -->
+                    <div>
+                        {!! Form::label('created_at', 'Created At:') !!}
+                        <p>{{ $insuaranceVendorService->created_at }},
+                            {{ $insuaranceVendorService->created_at->diffForHumans() }}
+                        </p>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

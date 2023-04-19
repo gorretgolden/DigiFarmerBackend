@@ -1,78 +1,153 @@
-<!-- Name Field -->
-<div class="col-sm-12">
-    {!! Form::label('name', 'Name:') !!}
-    <p>{{ $veterinary->name }}</p>
-</div>
+<div class="row">
 
-<!-- Expertise Field -->
-<div class="col-sm-12">
-    {!! Form::label('expertise', 'Expertise:') !!}
-    <p>{{ $veterinary->expertise }}</p>
-</div>
 
-<!-- Charge Field -->
-<div class="col-sm-12">
-    {!! Form::label('charge', 'Charge:') !!}
-    <p>{{ $veterinary->charge }}</p>
-</div>
+    <div class="col-md-6">
 
-<!-- Location Field -->
-<div class="col-sm-12">
-    {!! Form::label('location', 'Location:') !!}
-    <p>{{ $veterinary->location }}</p>
-</div>
 
-<!-- Charge Unit Field -->
-<div class="col-sm-12">
-    {!! Form::label('charge_unit', 'Charge Unit:') !!}
-    <p>{{ $veterinary->charge_unit }}</p>
-</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <div class="col-md ">
 
-<!-- Availability Field -->
-<div class="col-sm-12">
-    {!! Form::label('availability', 'Availability:') !!}
-    <p>{{ $veterinary->availability }}</p>
-</div>
+                        <img src="{{ $veterinary->user->image ? $veterinary->user->image : asset('img/avatar-1.png') }}"
+                            class="img-thumbnail rounded-circle shadow-4-strong w-25" />
+                    </div>
 
-<!-- Description Field -->
-<div class="col-sm-12">
-    {!! Form::label('description', 'Description:') !!}
-    <p>{{ $veterinary->description }}</p>
-</div>
 
-<!-- Zoom Details Field -->
-<div class="col-sm-12">
-    {!! Form::label('zoom_details', 'Zoom Details:') !!}
-    <p>{{ $veterinary->zoom_details }}</p>
-</div>
+                    <div class="col-md-12 mt-2">
+                        {!! Form::label('name', 'Vendor details:') !!}
+                        <p>Name: {{ $veterinary->user->username }}</p>
+                        <p>Contact: {{ $veterinary->user->phone }}</p>
+                        <p>Email: {{ $veterinary->user->email }}</p>
+                    </div>
+                </div>
 
-<!-- Image Field -->
-<div class="col-sm-12">
-    {!! Form::label('image', 'Image:') !!}
-    <p>{{ $veterinary->image }}</p>
-</div>
 
-<!-- User Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $veterinary->user_id }}</p>
-</div>
 
-<!-- Vendor Category Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('vendor_category_id', 'Vendor Category Id:') !!}
-    <p>{{ $veterinary->vendor_category_id }}</p>
-</div>
 
-<!-- Created At Field -->
-<div class="col-sm-12">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{{ $veterinary->created_at }}</p>
-</div>
+            </div>
+        </div>
+    </div>
 
-<!-- Updated At Field -->
-<div class="col-sm-12">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{{ $veterinary->updated_at }}</p>
-</div>
 
+
+
+
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="col-md-12">
+
+
+                    <div>
+                        <img class="img-thumbnail w-75" src="{{ URL::asset("$veterinary->image") }}" />
+                    </div>
+
+
+                    <!-- Name Field -->
+                    <div class="d-inline">
+                        {!! Form::label('name', 'Name:') !!}
+                        <p>{{ $veterinary->name }}</p>
+                    </div>
+
+
+                    <div class="col-sm-12">
+                        {!! Form::label('expertise', 'Expertise:') !!}
+                        <p>{{ $veterinary->expertise }}</p>
+                    </div>
+
+                    <!-- Charge Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('charge', 'Charge:') !!}
+                        <p> {{ $veterinary->charge_unit }}{{ $veterinary->charge }}</p>
+                    </div>
+
+
+
+
+                    <!-- Availability Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('availability', 'Availability:') !!}
+                        <p>{{ $veterinary->availability }}</p>
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('description', 'Description:') !!}
+                        <p>{{ $veterinary->description }}</p>
+                    </div>
+
+
+                    <!-- Vendor Category Id Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('vendor_category_id', 'Vendor Category:') !!}
+                        <p>{{ $veterinary->vendor_category->name }}</p>
+                    </div>
+
+
+
+                    <!-- status Field -->
+                    <div>
+                        {!! Form::label('status', 'Status:') !!}
+                        <p class="badge rounded-pill bg-success">{{ $veterinary->status }}</p>
+                        @if ($veterinary->is_verified == 1)
+                            <p class="badge rounded-pill bg-success">Verified</p>
+                        @else
+                            <p class="badge rounded-pill bg-danger">Not verified</p>
+                        @endif
+
+
+                    </div>
+
+
+
+                    <!-- Description Field -->
+                    <div class="col-sm-12">
+                        {!! Form::label('description', 'Description:') !!}
+                        <p>{{ $veterinary->description }}</p>
+
+
+                    </div>
+
+
+
+                    @if (!empty($veterinary->location))
+                        <!-- Location Field -->
+                        <div class="col-sm-12">
+                            {!! Form::label('location', 'Location:') !!}
+                            <p>{{ $veterinary->location }}</p>
+                        </div>
+                    @else
+                        <!-- Zoom Details Field -->
+                        <div class="col-sm-12">
+                            {!! Form::label('zoom_details', 'Zoom Details:') !!}
+                            <p>{{ $veterinary->zoom_details }}</p>
+                        </div>
+                    @endif
+
+
+
+
+                    <!-- Created At Field -->
+                    <div>
+                        {!! Form::label('created_at', 'Created At:') !!}
+                        <p>{{ $veterinary->created_at }},
+                            {{ $veterinary->created_at->diffForHumans() }}
+                        </p>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

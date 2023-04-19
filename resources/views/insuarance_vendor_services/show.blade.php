@@ -8,8 +8,7 @@
                     <h1>Insuarance Vendor Service Details</h1>
                 </div>
                 <div class="col-sm-6">
-                    <a class="btn btn-default float-right"
-                       href="{{ route('insuaranceVendorServices.index') }}">
+                    <a class="btn btn-default float-right" href="{{ route('insuaranceVendorServices.index') }}">
                         Back
                     </a>
                 </div>
@@ -18,12 +17,8 @@
     </section>
 
     <div class="content px-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    @include('insuarance_vendor_services.show_fields')
-                </div>
-            </div>
-        </div>
+
+        @include('insuarance_vendor_services.show_fields')
+
     </div>
 @endsection
