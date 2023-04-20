@@ -4,10 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\AnimalFeedCart;
+use App\Models\CartItem;
 use App\Models\Cart;
-use App\Models\AnimalFeed;
 use DB;
+use App\Models\AnimalFeed;
 
 class AnimalFeedCartController extends Controller
 {
@@ -18,12 +18,26 @@ class AnimalFeedCartController extends Controller
 
         //check user cart
         $existing_user_cart = Cart::where('user_id',auth()->user()->id)->first();
+        $animal_feed = AnimalFeed::find($id);
+
+
+        if (empty($animal_feed)) {
+            $response = [
+                'success'=>false,
+                'message'=> 'Product not found'
+              ];
+
+              return response()->json($response,404);
+
+
+        }
+
 
 
         if($existing_user_cart){
 
             //check if product exists in cart
-            if(AnimalFeedCart::where('cart_id',$existing_user_cart->id)->where('animal_feed_id',$id)->first()){
+            if(CartItem::where('cart_id',$existing_user_cart->id)->where('animal_feed_id',$id)->first()){
 
                 $response = [
                     'success'=>false,
@@ -34,9 +48,13 @@ class AnimalFeedCartController extends Controller
                  return response()->json($response,409);
 
             }else{
+
+                //non existing item
+
+
                  //save product to cart
-                $animal_feed = AnimalFeed::find($id);
-                $new_cart_product = new AnimalFeedCart();
+
+                $new_cart_product = new CartItem();
                 $new_cart_product->cart_id = $existing_user_cart->id;
                 $new_cart_product->animal_feed_id = $id;
                 $new_cart_product->type = 'animal-feeds';
@@ -64,10 +82,12 @@ class AnimalFeedCartController extends Controller
             $new_cart->save();
 
 
-            $new_cart_product = new AnimalFeedCart();
+            $new_cart_product = new CartItem();
             $new_cart_product->cart_id = $new_cart->id;
             $new_cart_product->animal_feed_id = $id;
             $new_cart_product->type = 'animal-feeds';
+            $new_cart_product->quantity = 1;
+            $new_cart_product->total_cost = $animal_feed->price;
             $new_cart_product->save();
 
             $response = [
@@ -94,7 +114,8 @@ class AnimalFeedCartController extends Controller
 
     public function increase_quantity(Request $request,$id){
 
-        $product = AnimalFeedCart::find($id);
+        $product = CartItem::find($id);
+
 
         if (empty($product)) {
             $response = [
@@ -119,7 +140,7 @@ class AnimalFeedCartController extends Controller
         }else{
 
 
-            if( (AnimalFeedCart::where('id',$id)->update(['quantity'=> DB::raw('quantity+1'),'total_cost'=> DB::raw("quantity * '$animal_feed->price'")])) == 1){
+            if( (CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity+1'),'total_cost'=> DB::raw("quantity * '$animal_feed->price'")])) == 1){
                 $response = [
                     'success'=>true,
                     'message'=> 'Product quantity has been increased successfully'
@@ -149,7 +170,8 @@ class AnimalFeedCartController extends Controller
 
 
     public function decrease_quantity(Request $request,$id){
-        $product = AnimalFeedCart::find($id);
+        $product = CartItem::find($id);
+        $animal_feed = AnimalFeed::find($product->animal_feed_id);
 
 
         if (empty($product)) {
@@ -160,7 +182,7 @@ class AnimalFeedCartController extends Controller
              return response()->json($response,400);
          }
 
-        if( (AnimalFeedCart::where('id',$id)->update(['quantity'=> DB::raw('quantity-1'),'total_cost'=> DB::raw("quantity * '$animal_feed->price'")])) == 1){
+        if( (CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity-1'),'total_cost'=> DB::raw("quantity * '$animal_feed->price'")])) == 1){
             $response = [
                 'success'=>true,
                 'message'=> 'Product quantity has been reduced successfully'
@@ -183,7 +205,7 @@ class AnimalFeedCartController extends Controller
     //delete item in cart
     public function delete_cart_item(Request $request,$id){
 
-        $product = AnimalFeedCart::find($id);
+        $product = CartItem::find($id);
 
         if (empty($product)) {
             return $this->sendError('Cart product not found');

@@ -22,7 +22,8 @@ class CreateCartItemsTable extends Migration
             $table->foreignId('rent_vendor_service_id')->nullable()->constrained()->onDelete('CASCADE');
             $table->integer('quantity')->default(1);
             $table->integer('charge_value')->nullable();
-            $table->integer('total_cost');
+            $table->integer('grand_total');
+
             $table->timestamps();
         });
     }

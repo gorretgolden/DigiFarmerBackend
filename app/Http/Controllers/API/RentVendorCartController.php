@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use DB;
-use App\Models\CartRentVendorService;
+use App\Models\CartItem;
 use App\Models\RentVendorService;
 
 class RentVendorCartController extends Controller
@@ -15,11 +15,11 @@ class RentVendorCartController extends Controller
      //add item to cart
      public function add_product_to_cart(Request $request,$id){
 
-        $request->validate(
-            [
-                'days'=>'required|integer|min:1|max:30'
-            ]
-        );
+        // $request->validate(
+        //     [
+        //         'days'=>'required|integer|min:1|max:30'
+        //     ]
+        // );
 
 
         $rent_vendor_service = RentVendorService::find($id);
@@ -42,7 +42,7 @@ class RentVendorCartController extends Controller
         if($existing_user_cart){
 
             //check if product exists in cart
-            if(CartRentVendorService::where('cart_id',$existing_user_cart->id)->where('rent_vendor_service_id',$id)->first()){
+            if(CartItem::where('cart_id',$existing_user_cart->id)->where('rent_vendor_service_id',$id)->first()){
 
                 $response = [
                     'success'=>false,
@@ -56,7 +56,7 @@ class RentVendorCartController extends Controller
                  //save product to cart
 
 
-                $new_cart_product = new CartRentVendorService();
+                $new_cart_product = new CartItem();
                 $new_cart_product->cart_id = $existing_user_cart->id;
                 $new_cart_product->rent_vendor_service_id = $id;
                 $new_cart_product->type = "rent";
@@ -67,6 +67,8 @@ class RentVendorCartController extends Controller
                     $new_cart_product->quantity = 1;
                     $new_cart_product->total_cost = $rent_vendor_service->charge;
                 }else{
+
+                    //days and hours
                     $new_cart_product->quantity = 1;
                     $new_cart_product->charge_value = 1;
                     $new_cart_product->total_cost = $rent_vendor_service->charge;
@@ -102,10 +104,24 @@ class RentVendorCartController extends Controller
             $new_cart->save();
 
 
-            $new_cart_product = new CartRentVendorService();
+            $new_cart_product = new CartItem();
             $new_cart_product->cart_id = $new_cart->id;
             $new_cart_product->rent_vendor_service_id = $id;
             $new_cart_product->type = 'rent';
+            $new_cart_product->save();
+
+             //charge frequency
+             if($rent_vendor_service->charge_frequency == "per piece"){
+                $new_cart_product->quantity = 1;
+                $new_cart_product->total_cost = $rent_vendor_service->charge;
+            }else{
+
+                //days and hours
+                $new_cart_product->quantity = 1;
+                $new_cart_product->charge_value = 1;
+                $new_cart_product->total_cost = $rent_vendor_service->charge;
+            }
+
             $new_cart_product->save();
 
             $response = [
@@ -128,7 +144,7 @@ class RentVendorCartController extends Controller
 
     public function increase_quantity(Request $request,$id){
 
-        $product = CartRentVendorService::find($id);
+        $product = CartItem::find($id);
 
 
 
@@ -154,7 +170,7 @@ class RentVendorCartController extends Controller
 
         }elseif($rent_vendor_service->charge_frequency == "per piece"){
 
-         CartRentVendorService::where('id',$id)->update(['quantity'=> DB::raw('quantity+1'),'total_cost'=> DB::raw("quantity * '$rent_vendor_service->charge'")]);
+         CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity+1'),'total_cost'=> DB::raw("quantity * '$rent_vendor_service->charge'")]);
             $response = [
                 'success'=>true,
                 'message'=> 'Product quantity has been increased successfully'
@@ -165,7 +181,7 @@ class RentVendorCartController extends Controller
 
 
         }else{
-            CartRentVendorService::where('id',$id)->update(['quantity'=> DB::raw('quantity+1')]);
+            CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity+1')]);
             $response = [
                 'success'=>true,
                 'message'=> 'Product quantity has been increased successfully'
@@ -183,7 +199,7 @@ class RentVendorCartController extends Controller
 
 
     public function decrease_quantity(Request $request,$id){
-        $product = CartRentVendorservice::find($id);
+        $product = CartItem::find($id);
         $rent_vendor_service = RentVendorService::find($product->rent_vendor_service_id);
 
         if (empty($product)) {
@@ -194,7 +210,7 @@ class RentVendorCartController extends Controller
              return response()->json($response,400);
          }
          elseif($rent_vendor_service->charge_frequency == "per piece"){
-            CartRentVendorservice::where('id',$id)->update(['quantity'=> DB::raw('quantity-1'),'total_cost'=> DB::raw("quantity * '$rent_vendor_service->charge'")]);
+            CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity-1'),'total_cost'=> DB::raw("quantity * '$rent_vendor_service->charge'")]);
             $response = [
                 'success'=>true,
                 'message'=> 'Product quantity has been reduced successfully'
@@ -202,7 +218,7 @@ class RentVendorCartController extends Controller
              return response()->json($response,200);
          }else{
 
-            CartRentVendorservice::where('id',$id)->update(['quantity'=> DB::raw('quantity-1')]);
+            CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity-1')]);
             $response = [
                 'success'=>true,
                 'message'=> 'Product quantity has been reduced successfully'
@@ -220,7 +236,7 @@ class RentVendorCartController extends Controller
 
     public function increase_days(Request $request,$id){
 
-        $product = CartRentVendorService::find($id);
+        $product = CartItem::find($id);
 
 
 
@@ -248,7 +264,7 @@ class RentVendorCartController extends Controller
 
 
         }else{
-            CartRentVendorService::where('id',$id)->update(['charge_value'=> DB::raw('charge_value+1'),'total_cost'=> DB::raw("charge_value * '$rent_vendor_service->charge'")]);
+            CartItem::where('id',$id)->update(['charge_value'=> DB::raw('charge_value+1'),'total_cost'=> DB::raw("charge_value * '$rent_vendor_service->charge'")]);
             $response = [
                 'success'=>true,
                 'message'=> 'Product charge period has been increased successfully'
@@ -268,7 +284,7 @@ class RentVendorCartController extends Controller
 
     public function reduce_days(Request $request,$id){
 
-        $product = CartRentVendorService::find($id);
+        $product = CartItem::find($id);
 
 
 
@@ -296,7 +312,7 @@ class RentVendorCartController extends Controller
 
 
         }else{
-            CartRentVendorService::where('id',$id)->update(['charge_value'=> DB::raw('charge_value-1'),'total_cost'=> DB::raw("charge_value * '$rent_vendor_service->charge'")]);
+            CartItem::where('id',$id)->update(['charge_value'=> DB::raw('charge_value-1'),'total_cost'=> DB::raw("charge_value * '$rent_vendor_service->charge'")]);
             $response = [
                 'success'=>true,
                 'message'=> 'Product charge period has been reduced successfully'
@@ -315,7 +331,7 @@ class RentVendorCartController extends Controller
     //delete item in cart
     public function delete_cart_item(Request $request,$id){
 
-        $product = CartRentVendorService::find($id);
+        $product = CartItem::find($id);
 
         if (empty($product)) {
             $response = [

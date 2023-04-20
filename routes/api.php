@@ -300,7 +300,7 @@ Route::group(['prefix'=>'v1'], function(){
 
         Route::group(['prefix' => 'user'],function () {
               //seller-product-cart
-          Route::get('seller-product/cart-items',[App\Http\Controllers\API\SellerProductCartController::class,'user_cart_items']);
+          Route::get('seller-product/cart-items',[App\Http\Controllers\API\CartItemController::class,'user_cart_items']);
           Route::post('seller-product/cart/new/{id}',[App\Http\Controllers\API\SellerProductCartController::class,'add_product_to_cart']);
           Route::patch('seller-product/cart/add-qty/{id}',[App\Http\Controllers\API\SellerProductCartController::class,'increase_quantity']);
           Route::patch('seller-product/cart/reduce-qty/{id}',[App\Http\Controllers\API\SellerProductCartController::class,'decrease_quantity']);

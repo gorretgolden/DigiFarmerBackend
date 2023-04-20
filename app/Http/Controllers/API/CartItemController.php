@@ -5,11 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cart;
-use App\Models\CartItem;
+use App\Models\CartSellerProduct;
 use App\Models\SellerProduct;
 use DB;
 
-class SellerProductCartController extends Controller
+class CartItemController extends Controller
 {
 
 
@@ -17,6 +17,7 @@ class SellerProductCartController extends Controller
     public function user_cart_items(){
 
         $user_cart = Cart::where('user_id',auth()->user()->id)->first();
+        //dd($user_cart->user_id);
 
         if(empty($user_cart)){
 
@@ -29,38 +30,28 @@ class SellerProductCartController extends Controller
 
         }else{
 
-            $products = DB::table('cart_seller_product')
-                        ->join('carts', 'carts.id', '=','cart_seller_product.cart_id')
-                        ->join('seller_products', 'seller_products.id', '=', 'cart_seller_product.seller_product_id')
-                        ->where('cart_seller_product.cart_id', '=', $user_cart->id)
-                        ->select('cart_seller_product.id','seller_products.id as seller_product_id', 'seller_products.name','cart_seller_product.quantity','cart_seller_product.total_cost','seller_products.price', 'seller_products.price_unit','seller_products.stock_amount','seller_products.image','cart_seller_product.type')->get();
-
-            $feeds = DB::table('animal_feed_cart')
-                        ->join('carts', 'carts.id', '=','animal_feed_cart.cart_id')
-                        ->join('animal_feeds', 'animal_feeds.id', '=', 'animal_feed_cart.animal_feed_id')
-                        ->where('animal_feed_cart.cart_id', '=', $user_cart->id)
-                        ->select('animal_feed_cart.id','animal_feeds.id as animal_feed_id','animal_feeds.name','animal_feed_cart.quantity','animal_feed_cart.total_cost','animal_feeds.price', 'animal_feeds.price_unit','animal_feeds.stock_amount','animal_feeds.image','animal_feed_cart.type')->get();
-
-            $rent = DB::table('cart_rent_vendor_service')
-                        ->join('carts', 'carts.id', '=','cart_rent_vendor_service.cart_id')
-                        ->join('rent_vendor_services', 'rent_vendor_services.id', '=', 'cart_rent_vendor_service.rent_vendor_service_id')
-                        ->where('cart_rent_vendor_service.cart_id', '=', $user_cart->id)
-                        ->select('cart_rent_vendor_service.id','rent_vendor_services.id as rent_service_id','rent_vendor_services.name','rent_vendor_services.image','cart_rent_vendor_service.quantity','cart_rent_vendor_service.charge_value','rent_vendor_services.charge','rent_vendor_services.charge_frequency','rent_vendor_services.quantity as vendor_total_items_for_hire','cart_rent_vendor_service.total_cost', 'rent_vendor_services.charge_unit','cart_rent_vendor_service.type')->get();
-
-           //$cart_items = $products->concat($feeds);
-           $all_cart_items = collect($products)->merge($feeds)->merge($rent);
+            $all_user_cart_items= DB::table('carts')
+                        ->join('cart_items', 'carts.id', '=','cart_items.cart_id')
+                        ->leftJoin('animal_feeds', 'animal_feeds.id', '=', 'cart_items.animal_feed_id')
+                        ->leftJoin('seller_products', 'seller_products.id', '=', 'cart_items.seller_product_id')
+                        ->leftJoin('rent_vendor_services', 'rent_vendor_services.id', '=', 'cart_items.rent_vendor_service_id')
+                        ->where('carts.user_id', '=', $user_cart->user_id)
+                        ->select('carts.user_id as user_id',DB::raw("coalesce(cart_items.seller_product_id, cart_items.animal_feed_id,cart_items.rent_vendor_service_id) as product_id"),'cart_items.quantity','cart_items.type','cart_items.charge_value','cart_items.total_cost')
+                        ->get();
 
 
-           //  dd($cart_items);
+
+
+          // dd($products);
 
 
             $response = [
                 'success'=>true,
                 'data'=>[
-                    'total-cart-items'=> count($all_cart_items),
-                    'total-cart-quantity'=> $all_cart_items->sum('quantity'),
-                    'total-grand_amount'=> $all_cart_items->sum('total_cost'),
-                     'items'=>$all_cart_items
+                    'total-cart-items'=> count($all_user_cart_items),
+                    'total-cart-quantity'=> $all_user_cart_items->sum('quantity'),
+                    'total-grand_amount'=> $all_user_cart_items->sum('total_cost'),
+                     'items'=>$all_user_cart_items
                 ],
                 'message'=> 'User cart items retrieved '
              ];
@@ -80,14 +71,12 @@ class SellerProductCartController extends Controller
 
         //check user cart
         $existing_user_cart = Cart::where('user_id',auth()->user()->id)->first();
-        $seller_product = SellerProduct::find($id);
-        //dd($existing_user_cart->id);
 
 
         if($existing_user_cart){
 
             //check if product exists in cart
-            if(CartItem::where('cart_id',$existing_user_cart->id)->where('seller_product_id',$id)->first()){
+            if(CartSellerProduct::where('cart_id',$existing_user_cart->id)->where('seller_product_id',$id)->first()){
 
                 $response = [
                     'success'=>false,
@@ -100,7 +89,7 @@ class SellerProductCartController extends Controller
             }else{
                  //save product to cart
 
-
+                $seller_product = SellerProduct::find($id);
                 if (empty($seller_product)) {
                     $response = [
                         'success'=>false,
@@ -112,7 +101,7 @@ class SellerProductCartController extends Controller
 
                 }
 
-                $new_cart_product = new CartItem();
+                $new_cart_product = new CartSellerProduct();
                 $new_cart_product->cart_id = $existing_user_cart->id;
                 $new_cart_product->seller_product_id = $id;
                 $new_cart_product->type = 'farm-equipments';
@@ -150,14 +139,11 @@ class SellerProductCartController extends Controller
             $new_cart->save();
 
 
-            $new_cart_product = new CartItem();
+            $new_cart_product = new CartSellerProduct();
             $new_cart_product->cart_id = $new_cart->id;
             $new_cart_product->seller_product_id = $id;
-            $new_cart_product->total_cost = $seller_product->price;
-            $new_cart_product->quantity = 1;
             $new_cart_product->type = 'farm-equipments';
             $new_cart_product->save();
-
 
             $response = [
                 'success'=>true,
@@ -182,7 +168,7 @@ class SellerProductCartController extends Controller
 
 
     public function increase_quantity(Request $request,$id){
-        $product = CartItem::find($id);
+        $product = CartSellerProduct::find($id);
 
         if (empty($product)) {
             $response = [
@@ -207,7 +193,7 @@ class SellerProductCartController extends Controller
         }else{
 
 
-            if( (CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity+1'),'total_cost'=> DB::raw("quantity * '$seller_product->price'")])) == 1){
+            if( (CartSellerProduct::where('id',$id)->update(['quantity'=> DB::raw('quantity+1'),'total_cost'=> DB::raw("quantity * '$seller_product->price'")])) == 1){
                 $response = [
                     'success'=>true,
                     'message'=> 'Product quantity has been increased successfully'
@@ -237,7 +223,7 @@ class SellerProductCartController extends Controller
 
 
     public function decrease_quantity(Request $request,$id){
-        $product = CartItem::find($id);
+        $product = CartSellerProduct::find($id);
         $seller_product = SellerProduct::find($product->seller_product_id);
 
         if (empty($product)) {
@@ -248,7 +234,7 @@ class SellerProductCartController extends Controller
              return response()->json($response,400);
          }
 
-        if( (CartItem::where('id',$id)->update(['quantity'=> DB::raw('quantity-1'),'total_cost'=> DB::raw("quantity * '$seller_product->price'")])) == 1){
+        if( (CartSellerProduct::where('id',$id)->update(['quantity'=> DB::raw('quantity-1'),'total_cost'=> DB::raw("quantity * '$seller_product->price'")])) == 1){
             $response = [
                 'success'=>true,
                 'message'=> 'Product quantity has been reduced successfully'
@@ -271,7 +257,7 @@ class SellerProductCartController extends Controller
     //delete item in cart
     public function delete_cart_item(Request $request,$id){
 
-        $product = CartItem::find($id);
+        $product = CartSellerProduct::find($id);
 
         if (empty($product)) {
             $response = [
