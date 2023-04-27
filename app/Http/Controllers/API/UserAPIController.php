@@ -22,6 +22,10 @@ use App\Models\UserVerification;
 use AfricasTalking\SDK\AfricasTalking;
 use Tjmugova\Dpo\Facades\Dpo;
 use App\Notifications\NewUserNotification;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Contract\Messaging;
 
 
 /**
@@ -238,6 +242,143 @@ class UserAPIController extends AppBaseController
 
 
 
+
+
+    }
+
+    public function googleLogin(Request $request){
+
+        $rules = [
+            'avatar'=>'required',
+            'name'=>'required',
+            'type'=>'required',
+            'open_id'=>'required',
+            'email'=>'required',
+            'phone'=>'nullable',
+        ];
+
+    $validator = $request->validate($rules);
+    $input = $request->all();
+
+    try{
+        $map = [];
+        $map['type'] = $input['type'];
+        $map['open_id'] = $input['open_id'];
+        $result = DB::table('google_users')->select('avatar','description','type','token','access_token','online')
+        ->where($map)->first();
+        if(empty($result)){
+        $input['token'] = md5(uniqid().rand(10000,99999));
+            $input['created_at'] = Carbon::now();
+            $input['access_token'] = md5(uniqid().rand(10000,99999));
+                $input['expiry_date'] = Carbon::now()->addDays(30);
+                $user_id = DB::table('google_users')->insertGetId($input);
+                $user_result = DB::table('google_users')->select('avatar','description','type','token','access_token','online')->where('id','=',$user_id)->first();
+
+        return ['code'=>0,'data'=>$user_result,'msg'=>'user created'];
+        }else{
+        $access_token = md5(uniqid().rand(10000,99999));
+        $expire_date = Carbon::now()->addDays(30);
+        DB::table("google_users")->where($map)->update(
+        [
+            "access_token" => $access_token,
+            "expiry_date" => $expire_date
+        ]
+        );
+        $result->access_token = $access_token;
+        return ['code'=>0,'data'=>$result,'msg'=>'user  info updated'];
+        }
+
+        }catch(Exception $ex){
+            return ['msg'=> (string)$ex];
+        }
+    }
+
+
+    public function contact(Request $request){
+        $token = $request->user_token;
+        $res = DB::table('google_users')->select('avatar','description','type','token','online','name')
+        ->where('token','!=',$token)->get();
+
+        return ['code'=>0,'data'=>$res,'msg'=>"got all the users info"];
+
+    }
+
+    public function sendNotice(Request $request){
+        //caller information
+        $user_token = $request->user_token;
+        $user_avatar = $request->user_avatar;
+        $user_name = $request->user_name;
+
+        //callee infor,ation
+        $to_token = $request->input("to_token");
+        $to_avatar = $request->input("to_avatar");
+        $to_name = $request->input("to_name");
+        $call_type = $request->input("call_type");
+        $doc_id = $request->input("doc_id");
+
+        if(empty($doc_id)){
+            $doc_id ="";
+        }
+        //get the other user
+        $res = DB::table('google_users')->select('avatar', 'name','token','fcmtoken')->where("token","=",$to_token)->first();
+        if(empty($res)){
+            return ["code"=> -1, "data"=>"","msg"=>"User does not exists"];
+        }
+
+        $device_token = $res->fcmtoken;
+
+        try{
+
+            if(!empty($device_token)){
+                $messaging = app('firebase.messaging');
+
+                if($call_type == "cancel"){
+                    $message = CloudMessage::fromArray([
+                        'token' => $device_token,
+                        'data' => [
+                            'token'=> $user_token,
+                            'avatar'=> $user_avatar,
+                            'name'=> $user_name,
+                            'doc_id'=> $doc_id,
+                            'call_type'=> $call_type,
+                        ]
+                    ]);
+                $messaging->send($message);
+                }else if($call_type == "voice"){
+                    $message = CloudMessage::fromArray([
+                        'token' => $device_token,
+                        'data' => [
+                            'token'=> $user_token,
+                            'avatar'=> $user_avatar,
+                            'name'=> $user_name,
+                            'doc_id'=> $doc_id,
+                            'call_type'=> $call_type,
+                        ],
+                        'android' => ['priority'=>'high','notification'=> ['channel_id' => '****','title'=>'voice call made by'.$user_name,'body'=>'Please click to answer the voice call.']]
+                    ]);
+                }
+                $messaging->send($message);
+
+                return ["code"=>0, "data"=>$to_token,"msg"=>"success"];
+            }else{
+                return ["code"=> -1,"data"=>"","msg"=>"device token is empty"];
+            }
+
+        }catch(\Exception $e){
+            return ["code"=> -1,"data"=>"","msg"=>(string)$e];
+        }
+    }
+
+    public function bind_fcmtoken(Request $request){
+      $token = $request->user_token;
+      $fcmtoken = $request->input('fcmtoken');
+      if(empty($fcmtoken)){
+        return ["code" => -1, "data"=>"","msg"=>"error getting the token"];
+      }
+
+      DB::table('google_users')->where('token','=', $token)->update(['fcmtoken'=>$fcmtoken]);
+
+      return ['code'=> -1, "data"=>"","msg" => "success"];
 
 
     }

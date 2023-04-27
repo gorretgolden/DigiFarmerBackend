@@ -48,7 +48,7 @@ class UserType extends Model
 
    //user type belongs to many users
    public function users()
-      {
-          return $this->hasMany(\App\Models\User::class,'user_type_id');
-      }
+    {
+        return $this->hasMany(\App\Models\User::class,'user_type_id');
+    }
 }
