@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class CategoryRepository
  * @package App\Repositories
- * @version November 3, 2022, 7:11 pm UTC
+ * @version April 21, 2023, 11:20 am CEST
 */
 
 class CategoryRepository extends BaseRepository
@@ -18,7 +18,9 @@ class CategoryRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'image'
+        'image',
+        'is_active',
+        'type'
     ];
 
     /**

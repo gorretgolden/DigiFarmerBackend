@@ -32,7 +32,8 @@ class AnimalCategory extends Model
 
     public $fillable = [
         'name',
-        'image'
+        'image',
+        'type'
     ];
 
     /**
@@ -42,7 +43,8 @@ class AnimalCategory extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'type'=>'string'
     ];
 
     /**
@@ -52,7 +54,8 @@ class AnimalCategory extends Model
      */
     public static $rules = [
         'name' => 'required|string',
-        'image' => 'required'
+        'image' => 'required',
+        'type'=>'required|string'
     ];
 
 
@@ -79,4 +82,13 @@ class AnimalCategory extends Model
     {
         return $this->belongsToMany(\App\Models\Veterinary::class);
     }
+
+
+      //belongs to many vendor services
+      public function vendor_services()
+      {
+         return $this->belongsToMany(\App\Models\VendorService::class);
+      }
+
+
 }

@@ -31,7 +31,7 @@ $farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 <!-- Owner Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('owner', 'Farmer:') !!}
-    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select','placeholder'=>'Select farmer']) !!}
 </div>
 
 <!-- farm id Field -->

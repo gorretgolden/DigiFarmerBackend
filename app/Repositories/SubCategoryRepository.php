@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class SubCategoryRepository
  * @package App\Repositories
- * @version November 3, 2022, 7:16 pm UTC
+ * @version April 21, 2023, 11:52 am CEST
 */
 
 class SubCategoryRepository extends BaseRepository
@@ -18,7 +18,10 @@ class SubCategoryRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'category_id'
+        'image',
+        'is_active',
+        'category_id',
+        'animal_category_id'
     ];
 
     /**

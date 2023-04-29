@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateAnimalFeedAPIRequest;
-use App\Http\Requests\API\UpdateAnimalFeedAPIRequest;
-use App\Models\AnimalFeed;
 use App\Repositories\AnimalFeedRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
-use App\Models\VendorCategory;
+use App\Models\VendorService;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\District;
 use App\Notifications\NewAnimalFeedNotification;
+use DB;
 
 /**
  * Class AnimalFeedController
@@ -40,7 +38,17 @@ class AnimalFeedAPIController extends AppBaseController
     public function index(Request $request)
     {
 
-        $animalFeeds = AnimalFeed::with('category')->where('status','on-sale')->where('is_verified',1)->latest()->get();
+
+             $animalFeeds = DB::table('vendor_services')
+                                  ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                                  ->join('categories','categories.id','=','sub_categories.category_id')
+                                  ->where('categories.name','Animal Feeds')
+                                  ->where('vendor_services.status','on-sale')
+                                  ->where('is_verified',1)
+                                  ->orderBy('vendor_services.id','DESC')
+                                  ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+                                  ->get();
+
         $response = [
             'success'=>true,
             'data'=> [
@@ -53,137 +61,76 @@ class AnimalFeedAPIController extends AppBaseController
 
     }
 
-    /**
-     * Store a newly created AnimalFeed in storage.
-     * POST /animalFeeds
-     *
-     * @param CreateAnimalFeedAPIRequest $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $rules = [
-            'name' => 'required|string|unique:animal_feeds',
-            'price' => 'required|integer',
-            'price_unit' => 'nullable',
-            'description' => 'required|string|min:10',
-            'image' => 'required',
-            'weight' => 'required|integer',
-            'address_id' => 'required|integer',
-            'stock_amount' => 'required|integer'
+    public function animal_feed_sub_categories(Request $request){
+
+        $animal_feed_sub_categories =  DB::table('categories')
+            ->join('sub_categories','categories.id','=','sub_categories.category_id')
+            ->where('categories.name','Animal Feeds')
+            ->where('sub_categories.is_active',1)
+            ->orderBy('sub_categories.name','ASC')
+            ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+            ->get();
+
+            if ($animal_feed_sub_categories->count() == 0) {
+                $response = [
+                    'success'=>false,
+                    'message'=> 'No sub categories under animal feeds'
+                 ];
+
+                 return response()->json($response,404);
+
+            }
+            else{
 
 
+                $response = [
+                    'success'=>true,
+                    'data'=> [
+                        'total-animal-feed-sub-categories' =>count($animal_feed_sub_categories),
+                        'animal-feed-sub-categories'=>$animal_feed_sub_categories
+                    ],
+                    'message'=> 'Animal feed subcategories retrieved successfully'
+                 ];
 
-        ];
-
-        $request->validate($rules);
-        $input = $request->all();
-        $vendor_category = VendorCategory::where('name','Animal Feeds')->first();
-        $location = Address::find($request->address_id);
-          //new animal feed
-          $new_animal_feed = new AnimalFeed();
-
-
-          $new_animal_feed->weight_unit = $request->weight_unit;
-          $new_animal_feed->name = $request->name;
-          $new_animal_feed->price = $request->price;
-          $new_animal_feed->animal_feed_category_id = $request->animal_feed_category_id;
-          $new_animal_feed->vendor_category_id = $vendor_category->id;
-          $new_animal_feed->location = $location->district_name;
-          $new_animal_feed->description = $request->description;
-          $new_animal_feed->stock_amount = $request->stock_amount;
-
-          $user = User::find(auth()->user()->id);
-          if(!$user->is_vendor ==1){
-           $user->is_vendor = 1;
-           $user->save();
-          }
-          $new_animal_feed->user_id = auth()->user()->id;
-          $new_animal_feed->weight = $request->weight;
-          $new_animal_feed->weight_unit = $request->weight_unit;
-          $new_animal_feed->image = $request->image;
-          $new_animal_feed->status = "on-sale";
-          $new_animal_feed->save();
-
-
-
-
-          if(!empty($request->file('image'))){
-            $new_animal_feed->image = \App\Models\ImageUploader::upload($request->file('image'),'animal_feeds');
-          }
-
-          $new_animal_feed->save();
-          $admin = User::where('user_type','admin')->first();
-          $admin->notify(new NewAnimalFeedNotification($new_animal_feed));
-
-        return $this->sendResponse($new_animal_feed->toArray(), 'Animal Feed posted successfully, waiting for verification');
-    }
-
-    /**
-     * Display the specified AnimalFeed.
-     * GET|HEAD /animalFeeds/{id}
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        /** @var AnimalFeed $animalFeed */
-        $animalFeed = $this->animalFeedRepository->find($id);
-
-        if (empty($animalFeed)) {
-            return $this->sendError('Animal Feed not found');
-        }
-        else{
-            $success['name'] = $animalFeed->name;
-            $success['price'] = $animalFeed->price;
-            $success['price_unit'] = $animalFeed->price_unit;
-            $success['weight'] = $animalFeed ->weight." ".$animalFeed ->weight_unit;
-            $success['description'] = $animalFeed ->description;
-            $success['location'] = $animalFeed ->location;
-            $success['status'] = $animalFeed ->status;
-            $success['vendor'] = $animalFeed ->vendor->username;
-            $success['image'] = $animalFeed->image;
-            $success['animal_feed_category'] = $animalFeed->animal_feed_category->name;
-            $success['animal_category'] = $animalFeed->animal_feed_category->animal_category->name;
-            $success['created_at'] = $animalFeed->created_at->format('d/m/Y');
-            $success['time_since'] = $animalFeed->created_at->diffForHumans();
-
-
-            $response = [
-                'success'=>true,
-                'data'=> $success,
-                'message'=> 'Animal Feed retrieved successfully'
-             ];
-
-             return response()->json($response,200);
-        }
+                 return response()->json($response,200);
+            }
 
 
     }
+
+
+    //animal feeds
+
 
     //get animal feeds for a vendor
     public function vendorAnimalFeeds(Request $request)
     {
 
-       $vendor_animal_feeds = AnimalFeed::with('animal_feed_category')->where('user_id',auth()->user()->id)->latest()->get();
-       $animal_feed = [];
+
+       $vendor_animal_feeds = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Animal Feeds')
+        ->where('is_verified',1)
+        ->where('user_id',auth()->user()->id)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->limit(5)
+        ->get();
+
+
 
         if ($vendor_animal_feeds->count() == 0) {
-            return $this->sendError('you havent posted any animal feed');
+            return $this->sendError('You havent posted any animal feeds');
         }
         else{
 
-            foreach($vendor_animal_feeds as $feed){
-                $animal_feed = $feed;
-            }
+
 
             $response = [
                 'success'=>true,
                 'data'=> [
-                    'total-animal-feeds' =>$animal_feed->count(),
+                    'total-animal-feeds' =>count($vendor_animal_feeds),
                     'animal-feeds'=>$vendor_animal_feeds
                 ],
                 'message'=> 'Vendor animal feeds retrieved'
@@ -199,7 +146,16 @@ class AnimalFeedAPIController extends AppBaseController
 
     public function home_animal_feeds(Request $request)
     {
-        $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->limit(4)->get();
+        $animal_feeds = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Animal Feeds')
+        ->where('vendor_services.status','on-sale')->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->limit(5)
+        ->get();
+
         $response = [
             'success'=>true,
             'data'=> [
@@ -228,8 +184,31 @@ class AnimalFeedAPIController extends AppBaseController
              return response()->json($response,400);
 
         }
-        $total_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->get();
-        $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $total_feeds = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Animal Feeds')
+        ->where('vendor_services.status','on-sale')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->get();
+
+
+
+        $animal_feeds = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Animal Feeds')
+        ->where('vendor_services.status','on-sale')
+        ->where('is_verified',1)
+        ->where('vendor_services.name', 'like', '%' . $search. '%')
+        ->orWhere('description','like', '%' . $search.'%')
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->get();
+
+
 
 
         if(count($animal_feeds) == 0){
@@ -278,7 +257,18 @@ class AnimalFeedAPIController extends AppBaseController
     }else{
 
 
-     $animal_feeds = AnimalFeed::select("*")->where('status','on-sale')->where('is_verified',1)->whereBetween('price', [$request->min_price, $request->max_price])->get();
+     $animal_feeds = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Animal Feeds')
+     ->where('vendor_services.status','on-sale')
+     ->where('is_verified',1)
+     ->whereBetween('price', [$request->min_price, $request->max_price])
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+     ->get();
+
+
 
      if(count($animal_feeds)==0){
         $response = [
@@ -336,8 +326,30 @@ class AnimalFeedAPIController extends AppBaseController
      }
 
 
-     $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->where('location',$district->name)->get();
-     $all_animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->get();
+     $animal_feeds = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Animal Feeds')
+     ->where('vendor_services.status','on-sale')
+     ->where('is_verified',1)
+     ->where('location',$district->name)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+     ->get();
+
+
+
+     $all_animal_feeds = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Animal Feeds')
+     ->where('vendor_services.status','on-sale')
+     ->where('is_verified',1)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+     ->get();
+
+
 
      if(count($animal_feeds) == 0){
 
@@ -374,9 +386,20 @@ class AnimalFeedAPIController extends AppBaseController
 
 
  //sorting in ascending order
+
  public function animal_feeds_asc_sort(){
 
-    $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->orderBy('name','ASC')->get();
+    $animal_feeds =  DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Animal Feeds')
+    ->where('vendor_services.status','on-sale')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.name','ASC')
+    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+    ->get();
+
+
 
 
     $response = [
@@ -395,7 +418,15 @@ class AnimalFeedAPIController extends AppBaseController
 
  public function animal_feeds_desc_sort(){
 
-    $animal_feeds = AnimalFeed::where('status','on-sale')->where('is_verified',1)->orderBy('name','DESC')->get();
+    $animal_feeds =  DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Animal Feeds')
+    ->where('vendor_services.status','on-sale')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.name','DESC')
+    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+    ->get();
 
 
     $response = [
@@ -414,52 +445,6 @@ class AnimalFeedAPIController extends AppBaseController
 
 
 
-    /**
-     * Update the specified AnimalFeed in storage.
-     * PUT/PATCH /animalFeeds/{id}
-     *
-     * @param int $id
-     * @param UpdateAnimalFeedAPIRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateAnimalFeedAPIRequest $request)
-    {
-        $input = $request->all();
 
-        /** @var AnimalFeed $animalFeed */
-        $animalFeed = $this->animalFeedRepository->find($id);
 
-        if (empty($animalFeed)) {
-            return $this->sendError('Animal Feed not found');
-        }
-
-        $animalFeed = $this->animalFeedRepository->update($input, $id);
-
-        return $this->sendResponse($animalFeed->toArray(), 'AnimalFeed updated successfully');
-    }
-
-    /**
-     * Remove the specified AnimalFeed from storage.
-     * DELETE /animalFeeds/{id}
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        /** @var AnimalFeed $animalFeed */
-        $animalFeed = $this->animalFeedRepository->find($id);
-
-        if (empty($animalFeed)) {
-            return $this->sendError('Animal Feed not found');
-        }
-
-        $animalFeed->delete();
-
-        return $this->sendSuccess('Animal Feed deleted successfully');
-    }
 }

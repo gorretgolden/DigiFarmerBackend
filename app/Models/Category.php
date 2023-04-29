@@ -28,6 +28,8 @@ class Category extends Model
 
     public $fillable = [
         'name',
+        'type',
+        'is_active',
         'image'
     ];
 
@@ -38,7 +40,8 @@ class Category extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'type'=>'string'
     ];
 
     /**
@@ -47,9 +50,10 @@ class Category extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:100',
-        'image' => 'nullable',
+        'name' => 'required|string|max:100|unique:categories',
+        'image' => 'required',
         'image.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        'type'=>'required|string'
 
     ];
 
@@ -60,6 +64,13 @@ class Category extends Model
         return $this->hasMany(\App\Models\Crop::class, 'category_id');
     }
 
+    //has many sub categories
+
+    public function sub_categories()
+    {
+        return $this->hasMany(\App\Models\SubCategory::class, 'category_id');
+    }
+
 
     public function getImageAttribute($value)
        {
@@ -67,6 +78,10 @@ class Category extends Model
 
         return $this->dir.$value;
        }
+
+
+
+
 
 
 }

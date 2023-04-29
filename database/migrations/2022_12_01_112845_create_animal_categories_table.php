@@ -18,6 +18,7 @@ class CreateAnimalCategoriesTable extends Migration
             $table->id('id');
             $table->string('name');
             $table->boolean('is_active')->default(1);
+            $table->enum('type',['poultry','livestock']);
             $table->string('image')->nullable();
             $table->timestamps();
 

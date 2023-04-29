@@ -59,6 +59,7 @@ class AnimalCategoryController extends AppBaseController
     public function store(CreateAnimalCategoryRequest $request)
     {
         $input = $request->all();
+        $input['name'] =ucwords($request->name);
 
 
         if(AnimalCategory::where('name',$request->name)->first()){
@@ -70,6 +71,7 @@ class AnimalCategoryController extends AppBaseController
 
             $animalCategory = new AnimalCategory();
             $animalCategory->name = $request->name;
+            $animalCategory->type = $request->type;
             $animalCategory->is_active = $request->is_active;
             $animalCategory->image = $request->image;
             $animalCategory->save();
@@ -161,6 +163,7 @@ class AnimalCategoryController extends AppBaseController
         }else{
 
             $animalCategory->name = $request->name;
+            $animalCategory->type = $request->type;
             $animalCategory->is_active = $request->is_active;
             $animalCategory->save();
             if(!empty($request->file('image'))){

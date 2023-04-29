@@ -2,157 +2,142 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateSellerProductAPIRequest;
-use App\Http\Requests\API\UpdateSellerProductAPIRequest;
-use App\Models\SellerProduct;
-use App\Repositories\SellerProductRepository;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
-use App\Models\VendorCategory;
+use App\Models\SubCategory;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use App\Models\District;
+use DB;
 
 /**
  * Class SellerProductController
  * @package App\Http\Controllers\API
  */
 
-class SellerProductAPIController extends AppBaseController
+class SellerProductAPIController extends Controller
 {
-    /** @var  SellerProductRepository */
-    private $sellerProductRepository;
 
-    public function __construct(SellerProductRepository $sellerProductRepo)
-    {
-        $this->sellerProductRepository = $sellerProductRepo;
+
+
+    //get farm equipments under a sub category
+
+public function farm_equipments(Request $request,$id)
+{
+    $sub_category = SubCategory::find($id);
+
+   $farm_equipments  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Farm Equipments')
+                          ->where('vendor_services.status','on-sale')->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+                          ->get();
+
+
+
+    if ($farm_equipments->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No  farm equipments have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-farm-equipments' =>$farm_equipments->count(),
+                'farm-equipments'=>$farm_equipments
+            ],
+            'message'=> 'Farm equipments under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
     }
 
-    /**
-     * Display a listing of the SellerProduct.
-     * GET|HEAD /sellerProducts
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function index(Request $request)
-    {
-        $sellerProducts = SellerProduct::where('is_verified',1)->where('status','on-sale')->latest()->get();
-        return $this->sendResponse($sellerProducts->toArray(), 'Seller Products retrieved successfully');
-    }
-
-    /**
-     * Store a newly created SellerProduct in storage.
-     * POST /sellerProducts
-     *
-     * @param CreateSellerProductAPIRequest $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $rules = [
-            'name' => 'required|string|unique:seller_products',
-            'description' => 'required|string|min:10',
-            'price' => 'required|integer',
-            'seller_product_category_id' => 'required|integer',
-            'image' => 'required',
-            'address_id'=>'required|integer',
-            'stock_amount'=>'required|integer'
-        ];
-        $request->validate($rules);
-
-        $vendor_category = VendorCategory::where('name','Farm Equipments')->first();
-
-        $new_farm_product = new SellerProduct();
-        $new_farm_product->name = $request->name;
-        $new_farm_product->price = $request->price;
-        $new_farm_product->price_unit = "UGX";
-        $new_farm_product->status = "on-sale";
-        $new_farm_product->image = $request->image;
-        $new_farm_product->stock_amount = $request->stock_amount;
 
 
-        $user = User::find(auth()->user()->id);
-        if(!$user->is_vendor ==1){
-         $user->is_vendor = 1;
-         $user->save();
+
+}
+
+//farm equipment sub categories
+public function farm_equipments_sub_categories(Request $request){
+
+
+
+
+    $farm_equipment_sub_categories = DB::table('categories')
+        ->join('sub_categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farm Equipments')
+        ->where('sub_categories.is_active',1)
+        ->orderBy('sub_categories.name','ASC')
+        ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+        ->get();
+
+        if ($farm_equipment_sub_categories->count() == 0) {
+            $response = [
+                'success'=>false,
+                'message'=> 'No sub categories for farm equipments'
+             ];
+
+             return response()->json($response,404);
+
         }
+        else{
 
-        $new_farm_product->user_id = auth()->user()->id;
-        $new_farm_product->vendor_category_id = $vendor_category->id;
-        $new_farm_product->seller_product_category_id = $request->seller_product_category_id;
-
-        //location
-        $location = Address::find($request->address_id);
-        $new_farm_product->location = $location->district_name;
-        $new_farm_product->description = $request->description;
-        $new_farm_product->save();
-
-
-        //image
-        $new_farm_product = SellerProduct::find($new_farm_product->id);
-        $new_farm_product->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_products');
-        $new_farm_product->save();
-
-
-        return $this->sendResponse($new_farm_product->toArray(), 'Product created successfully, waiting for verification');
-    }
-
-    /**
-     * Display the specified SellerProduct.
-     * GET|HEAD /sellerProducts/{id}
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        /** @var SellerProduct $sellerProduct */
-        $sellerProduct = $this->sellerProductRepository->find($id);
-
-        if (empty($sellerProduct)) {
-            return $this->sendError('Seller Product not found');
-        }else{
-            $success['name'] = $sellerProduct->name;
-            $success['location'] = $sellerProduct->location;
-            $success['price'] = $sellerProduct->price;
-            $success['price_unit'] = $sellerProduct->price_unit;
-            $success['status'] = $sellerProduct->status;
-            $success['image'] = $sellerProduct->image;
-            $success['stock_amount'] = $sellerProduct->stock_amount;
-            $success['description'] = $sellerProduct->description;
-            $success['category'] = $sellerProduct->seller_product_category->name;
-            $success['vendor'] = $sellerProduct->user->username;
-            $success['created_at'] = $sellerProduct->created_at->format('d/m/Y');
-            $success['time_since'] = $sellerProduct->created_at->diffForHumans();
 
             $response = [
                 'success'=>true,
-                'data'=> $success,
-                'message'=> 'Seller Product retrieved successfully'
+                'data'=> [
+                    'total-farm-equipments' =>count($farm_equipment_sub_categories),
+                    'farm-equipments'=>$farm_equipment_sub_categories
+                ],
+                'message'=> 'Farm equipment subcategories retrieved successfully'
              ];
 
              return response()->json($response,200);
-
         }
 
 
-    }
+}
+
+
 
 
      //get vendor seller products
      public function vendor_farm_equipments(Request $request)
      {
 
-        $vendor_farm_equipments = SellerProduct::where('user_id',auth()->user()->id)->latest()->get();
+        $vendor_farm_equipments = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farm Equipments')
+        ->where('is_verified',1)
+        ->where('vendor_services.user_id',auth()->user()->id)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+        ->get();
+
 
 
          if ($vendor_farm_equipments->count() == 0) {
-             return $this->sendError('You havent posted any farm equipment');
+            $response = [
+                'success'=>false,
+                'message'=> "You haven't posted any farm equipment"
+             ];
+
+             return response()->json($response,404);
+
          }
          else{
 
@@ -160,7 +145,7 @@ class SellerProductAPIController extends AppBaseController
              $response = [
                  'success'=>true,
                  'data'=> [
-                     'total-farm-equipments' =>$vendor_farm_equipments->count(),
+                     'total-farm-equipments' =>count($vendor_farm_equipments),
                      'farm-equipments'=>$vendor_farm_equipments
                  ],
                  'message'=> 'Vendor farm equipments'
@@ -189,8 +174,28 @@ class SellerProductAPIController extends AppBaseController
 
         }
 
-        $total_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->get();
-        $products = SellerProduct::where('status','on-sale')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $total_products =  DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farm Equipments')
+        ->where('vendor_services.status','on-sale')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+        ->get();
+
+
+        $products = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farm Equipments')
+        ->where('vendor_services.status','on-sale')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->where('vendor_services.name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')
+        ->select('vendor_services.id','vendor_services.name','vendor_services.image','description','price_unit','price','stock_amount','status','is_verified','location')
+        ->get();
+
 
 
         if(count($products) == 0){
@@ -218,15 +223,7 @@ class SellerProductAPIController extends AppBaseController
 
 
 }
-    /**
-     * Update the specified SellerProduct in storage.
-     * PUT/PATCH /sellerProducts/{id}
-     *
-     * @param int $id
-     * @param UpdateSellerProductAPIRequest $request
-     *
-     * @return Response
-     */
+
 
 
         //filter by price range
@@ -244,12 +241,22 @@ class SellerProductAPIController extends AppBaseController
 
             }else{
 
-             $seller_products = SellerProduct::select("*")->where('status','on-sale')->where('is_verified',1)->whereBetween('price', [$request->min_price, $request->max_price])->get();
+             $seller_products = DB::table('vendor_services')
+             ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+             ->join('categories','categories.id','=','sub_categories.category_id')
+             ->where('categories.name','Farm Equipments')
+             ->where('vendor_services.status','on-sale')->where('is_verified',1)
+             ->whereBetween('price', [$request->min_price, $request->max_price])
+             ->orderBy('vendor_services.id','DESC')
+             ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+             ->get();
+
+
 
              if(count($seller_products)==0){
                 $response = [
                     'success'=>false,
-                    'message'=> "No Farm equipemnts found between"." "."UGX ".$request->min_price ." and "."UGX ". $request->max_price
+                    'message'=> "No Farm equipments found between"." "."UGX ".$request->min_price ." and "."UGX ". $request->max_price
                  ];
 
                  return response()->json($response,404);
@@ -301,8 +308,26 @@ class SellerProductAPIController extends AppBaseController
              }
 
 
-             $seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->where('location',$district->name)->get();
-             $all_seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->get();
+             $seller_products = DB::table('vendor_services')
+             ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+             ->join('categories','categories.id','=','sub_categories.category_id')
+             ->where('categories.name','Farm Equipments')
+             ->where('vendor_services.status','on-sale')->where('is_verified',1)
+             ->where('location',$district->name)
+             ->orderBy('vendor_services.id','DESC')
+             ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+             ->get();
+
+
+
+             $all_seller_products =  DB::table('vendor_services')
+             ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+             ->join('categories','categories.id','=','sub_categories.category_id')
+             ->where('categories.name','Farm Equipments')
+             ->where('vendor_services.status','on-sale')->where('is_verified',1)
+             ->orderBy('vendor_services.id','DESC')
+             ->select('vendor_services.id','vendor_services.name','vendor_services.image','description','price_unit','price','stock_amount','status','is_verified','location')
+             ->get();
 
              if(count($seller_products) == 0){
 
@@ -339,10 +364,18 @@ class SellerProductAPIController extends AppBaseController
 
 
          //sorting in ascending order
+
+
          public function seller_producting_asc_sort(){
 
-            $seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->orderBy('name','ASC')->get();
-
+            $seller_products = DB::table('vendor_services')
+            ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+            ->join('categories','categories.id','=','sub_categories.category_id')
+            ->where('categories.name','Farm Equipments')
+            ->where('vendor_services.status','on-sale')->where('is_verified',1)
+            ->orderBy('vendor_services.id','ASC')
+            ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+            ->get();
 
             $response = [
                 'success'=>true,
@@ -360,7 +393,14 @@ class SellerProductAPIController extends AppBaseController
 
          public function seller_producting_desc_sort(){
 
-            $seller_products = SellerProduct::where('status','on-sale')->where('is_verified',1)->orderBy('name','DESC')->get();
+            $seller_products = DB::table('vendor_services')
+            ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+            ->join('categories','categories.id','=','sub_categories.category_id')
+            ->where('categories.name','Farm Equipments')
+            ->where('vendor_services.status','on-sale')->where('is_verified',1)
+            ->orderBy('vendor_services.id','DESC')
+            ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','price','stock_amount','status','is_verified','location')
+            ->get();
 
 
             $response = [
@@ -378,56 +418,9 @@ class SellerProductAPIController extends AppBaseController
          }
 
 
-         public function update($id, UpdateSellerProductAPIRequest $request)
 
 
-         {
-        $input = $request->all();
 
-        /** @var SellerProduct $sellerProduct */
-        $sellerProduct = $this->sellerProductRepository->find($id);
-
-        if (empty($sellerProduct)) {
-            return $this->sendError('Seller Product not found');
-        }
-
-        $sellerProduct = $this->sellerProductRepository->update($input, $id);
-
-        if(!empty($request->file('image'))){
-            File::delete('storage/seller_products/'.$sellerProduct->image);
-            $sellerProduct->image = \App\Models\ImageUploader::upload($request->file('image'),'seller_products');
-            $sellerProduct->save();
-        }else{
-
-            $sellerProduct->image= $request->image;
-        }
-
-        return $this->sendResponse($sellerProduct->toArray(), 'SellerProduct updated successfully');
-    }
-
-    /**
-     * Remove the specified SellerProduct from storage.
-     * DELETE /sellerProducts/{id}
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        /** @var SellerProduct $sellerProduct */
-        $sellerProduct = $this->sellerProductRepository->find($id);
-
-        if (empty($sellerProduct)) {
-            return $this->sendError('Seller Product not found');
-        }
-
-        $sellerProduct->delete();
-
-        return $this->sendSuccess('Seller Product deleted successfully');
-    }
 
 
 }

@@ -63,7 +63,7 @@ class RoleController extends AppBaseController
       ]);
 
 
-      $role = Role::create(['name'=>$request->input('name')]);
+      $role = Role::create(['name'=>strtolower($request->input('name'))]);
       $role->syncPermissions($request->input('permissions'));
 
       Flash::success('Role created Successfully');

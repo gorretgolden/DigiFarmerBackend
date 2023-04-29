@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Crop;
 use App\Models\Farm;
-use App\Models\AnimalCategory;
 use App\Models\CropOnSale;
 use App\Models\CropOrder;
+use App\Models\Category;
 use DB;
 
 class HomeController extends Controller
@@ -37,7 +37,7 @@ class HomeController extends Controller
         $total_vendors = User::where('is_vendor',1)->count();
         $total_users = User::all()->count();
         $total_farms = Farm::all()->count();
-        $total_animals = AnimalCategory::all()->count();
+        $total_animals = Category::where('type','animals')->count();
         $total_crops = Crop::all()->count();
         $total_crops_on_sale = CropOnSale::all()->count();
         $total_crop_orders = CropOrder::all()->count();

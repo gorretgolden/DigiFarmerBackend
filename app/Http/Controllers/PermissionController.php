@@ -56,6 +56,7 @@ class PermissionController extends AppBaseController
     public function store(CreatePermissionRequest $request)
     {
         $input = $request->all();
+        $input['name'] = strtolower($request->name);
 
         $permission = $this->permissionRepository->create($input);
 

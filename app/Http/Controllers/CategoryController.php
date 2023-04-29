@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\CategoryDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Repositories\CategoryRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
-use App\Models\Category;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use DB;
+use App\Models\SubCategory;
 
 class CategoryController extends AppBaseController
 {
@@ -25,16 +29,24 @@ class CategoryController extends AppBaseController
     /**
      * Display a listing of the Category.
      *
-     * @param Request $request
+     * @param CategoryDataTable $categoryDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(CategoryDataTable $categoryDataTable)
     {
-        $categories = Category::latest()->paginate(6);
+        return $categoryDataTable->render('categories.index');
+    }
 
-        return view('categories.index')
-            ->with('categories', $categories);
+
+    //sub categories
+    public function fetchCategorySubCategory(Request $request)
+    {
+
+
+      $data['sub_categories'] = SubCategory::where("category_id", $request->category_id)->get(["name","id"]);
+
+        return response()->json($data);
     }
 
     /**
@@ -56,26 +68,27 @@ class CategoryController extends AppBaseController
      */
     public function store(CreateCategoryRequest $request)
     {
-       $existing_name = Category::where('name',$request->name)->first();
-       if(!$existing_name){
+
+
 
         $category = new category();
-        $category->name = $request->name;
+        $category->name = ucwords($request->name);
+        $category->type = $request->type;
+        $category->is_active = $request->is_active;
         $category->save();
+
 
         $category = Category::find($category->id);
         $category->image = \App\Models\ImageUploader::upload($request->file('image'),'categories');
         $category->save();
 
-        Flash::success('Category saved successfully.');
+
+        Flash::success('Category '.$category->name. ' saved successfully under '.$request->type);
+
 
         return redirect(route('categories.index'));
 
-    }else{
-        Flash::error('Category name exists.');
 
-        return redirect(route('categories.index'));
-       }
 
 
     }
@@ -128,19 +141,22 @@ class CategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCategoryRequest $request)
+    public function update($id, Request $request)
     {
-
         $category = Category::find($id);
+
 
         if (empty($category)) {
             Flash::error('Category not found');
             return redirect(route('categories.index'));
         }else{
 
-            $category->name = $request->name;
+
+            $category->name = ucwords($request->name);
             $category->is_active = $request->is_active;
+            $category->type = $request->type;
             $category->save();
+
 
             if(!empty($request->file('image'))){
                 File::delete('storage/categories/'.$category->image);
@@ -148,19 +164,10 @@ class CategoryController extends AppBaseController
                 $category->save();
             }else{
 
+
                 $category->image = $request->image;
             }
-
         }
-
-
-
-
-
-
-
-
-
 
 
         Flash::success('Category updated successfully.');
@@ -172,8 +179,6 @@ class CategoryController extends AppBaseController
      * Remove the specified Category from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\SubCategoryDataTable;
+use App\Http\Requests;
 use App\Http\Requests\CreateSubCategoryRequest;
 use App\Http\Requests\UpdateSubCategoryRequest;
 use App\Repositories\SubCategoryRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
 use Flash;
+use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\SubCategory;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class SubCategoryController extends AppBaseController
 {
@@ -23,17 +28,16 @@ class SubCategoryController extends AppBaseController
     /**
      * Display a listing of the SubCategory.
      *
-     * @param Request $request
+     * @param SubCategoryDataTable $subCategoryDataTable
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(SubCategoryDataTable $subCategoryDataTable)
     {
-        $subCategories = $this->subCategoryRepository->all();
-
-        return view('sub_categories.index')
-            ->with('subCategories', $subCategories);
+        return $subCategoryDataTable->render('sub_categories.index');
     }
+
+
 
     /**
      * Show the form for creating a new SubCategory.
@@ -54,9 +58,38 @@ class SubCategoryController extends AppBaseController
      */
     public function store(CreateSubCategoryRequest $request)
     {
-        $input = $request->all();
 
-        $subCategory = $this->subCategoryRepository->create($input);
+       // dd($request->all());
+        $category = Category::find($request->category_id);
+
+        if(SubCategory::where('name',ucwords($request->name))->where('category_id',$request->category_id)->first()){
+            Flash::error($request->name." already exits as a subcategory under ".$category->name);
+
+            return redirect(route('subCategories.index'));
+        }
+
+        //existing animal feed category
+        // if($category->name == 'Animal Feeds' && SubCategory::where('category_id',$category->id)->first()){
+
+        //     Flash::error('Sub Category for animal feeds exits.');
+
+        //     return redirect(route('subCategories.index'));
+        // }
+
+
+        $subCategory = new SubCategory();
+        $subCategory->name = ucwords($request->name);
+        $subCategory->category_id = $request->category_id;
+        $subCategory->is_active = $request->is_active;
+        $subCategory->save();
+
+        if(!empty($request->image)){
+            $subCategory = SubCategory::find($subCategory->id);
+            $subCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'sub_categories');
+            $subCategory->save();
+
+        }
+
 
         Flash::success('Sub Category saved successfully.');
 
@@ -121,7 +154,21 @@ class SubCategoryController extends AppBaseController
             return redirect(route('subCategories.index'));
         }
 
-        $subCategory = $this->subCategoryRepository->update($request->all(), $id);
+
+        $subCategory->name = ucwords($request->name);
+        $subCategory->is_active = $request->is_active;
+        $subCategory->save();
+        if(!empty($request->file('image'))){
+            File::delete('storage/sub_categories/'.$subCategory->image);
+            $subCategory->image = \App\Models\ImageUploader::upload($request->file('image'),'sub_categories');
+            $subCategory->save();
+        }else{
+
+
+            $subCategory->image = $request->image;
+        }
+
+
 
         Flash::success('Sub Category updated successfully.');
 
@@ -132,8 +179,6 @@ class SubCategoryController extends AppBaseController
      * Remove the specified SubCategory from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
      *
      * @return Response
      */

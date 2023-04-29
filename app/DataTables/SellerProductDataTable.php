@@ -2,18 +2,15 @@
 
 namespace App\DataTables;
 
-use App\Models\SellerProduct;
+use App\Models\VendorService;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
+use DB;
+
 class SellerProductDataTable extends DataTable
 {
-    /**
-     * Build DataTable class.
-     *
-     * @param mixed $query Results from query() method.
-     * @return \Yajra\DataTables\DataTableAbstract
-     */
+
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
@@ -26,15 +23,13 @@ class SellerProductDataTable extends DataTable
         ->addColumn('action', 'seller_products.datatables_actions');
     }
 
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\SellerProduct $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query(SellerProduct $model)
+
+    public function query(VendorService $model)
     {
-        return $model->newQuery()->with(['user','seller_product_category']);
+
+
+
+        return $model->newQuery()->with(['vendor','sub_category']);
     }
 
     /**
@@ -77,8 +72,8 @@ class SellerProductDataTable extends DataTable
             'stock_amount',
             'is_verified',
             'status',
-            'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Category",'data'=>'seller_product_category.name']),
-            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username']),
+            'category'=> new \Yajra\DataTables\Html\Column(['title'=>"Category",'data'=>'sub_category.name']),
+            'vendor'=> new \Yajra\DataTables\Html\Column(['title'=>"Vendor",'data'=>'vendor.username']),
             'location'
 
         ];

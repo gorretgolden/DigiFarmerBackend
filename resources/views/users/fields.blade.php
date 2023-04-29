@@ -1,5 +1,4 @@
 <?php
-$countries = App\Models\Country::pluck('name','id');
 $roles =    Spatie\Permission\Models\Role::pluck('name','id');
 ?>
 

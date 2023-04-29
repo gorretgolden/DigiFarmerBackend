@@ -2,32 +2,24 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateInsuaranceVendorServiceAPIRequest;
-use App\Http\Requests\API\UpdateInsuaranceVendorServiceAPIRequest;
-use App\Models\InsuaranceVendorService;
-use App\Repositories\InsuaranceVendorServiceRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Controllers\Controller;
 use Response;
-use App\Models\VendorCategory;
 use App\Models\Address;
 use App\Models\User;
 use App\Models\District;
-
+use App\Models\VendorService;
+use DB;
+use App\Models\SubCategory;
 /**
  * Class InsuaranceVendorServiceController
  * @package App\Http\Controllers\API
  */
 
-class InsuaranceVendorServiceAPIController extends AppBaseController
+class InsuaranceVendorServiceAPIController extends Controller
 {
-    /** @var  InsuaranceVendorServiceRepository */
-    private $insuaranceVendorServiceRepository;
 
-    public function __construct(InsuaranceVendorServiceRepository $insuaranceVendorServiceRepo)
-    {
-        $this->insuaranceVendorServiceRepository = $insuaranceVendorServiceRepo;
-    }
 
     /**
      * Display a listing of the InsuaranceVendorService.
@@ -38,26 +30,143 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $insuaranceVendorServices = InsuaranceVendorService::where('is_verified',1)->latest()->get();
-        $response = [
-            'success'=>true,
-            'data'=> [
-                'total-insurance-services'=>$insuaranceVendorServices->count(),
-                'insurance-vendor-services'=>$insuaranceVendorServices
+        $insuaranceVendorServices = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Insurance')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','terms','status','is_verified','location')
+        ->get();
 
-            ],
+        if(count($insuaranceVendorServices) == 0){
 
-            'message'=> 'Insuarance Vendor Services retrieved successfully'
-         ];
-         return response()->json($response,200);
+            $response = [
+                'success'=>false,
+
+
+                'message'=> 'No insurance vendor services have been posted'
+             ];
+             return response()->json($response,404);
+
+        }else{
+
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-insurance-services'=>$insuaranceVendorServices->count(),
+                    'insurance-vendor-services'=>$insuaranceVendorServices
+
+                ],
+
+                'message'=> 'Insuarance Vendor Services retrieved successfully'
+             ];
+             return response()->json($response,200);
+
+        }
+
 
 
     }
+
+    //insurance under a sub category
+    public function insurance_services(Request $request,$id)
+{
+    $sub_category = SubCategory::find($id);
+
+   $insurance_services  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Insurance')
+                           ->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','is_verified','location')
+                          ->get();
+
+
+
+    if ($insurance_services->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No insurance services have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-rent-services' =>$insurance_services->count(),
+                'rent-services'=>$insurance_services
+            ],
+            'message'=> 'Rent vendor services under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+    }
+
+
+
+
+}
+
+
+ //insurance sub categories
+ public function insurance_sub_categories(Request $request){
+
+    $insurance_sub_categories = DB::table('categories')
+        ->join('sub_categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Insurance')
+        ->where('sub_categories.is_active',1)
+        ->orderBy('sub_categories.name','ASC')
+        ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+        ->get();
+
+        if ($insurance_sub_categories->count() == 0) {
+            $response = [
+                'success'=>false,
+                'message'=> 'No sub categories under farmer insurances'
+             ];
+
+             return response()->json($response,404);
+
+        }
+        else{
+
+
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-insurance-sub-categories' =>count($insurance_sub_categories),
+                    'insurance-sub-categories'=>$insurance_sub_categories
+                ],
+                'message'=> 'Farmer insurance sub categories retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+}
     //home
 
     public function home_insurance_vendors(Request $request)
     {
-        $insuaranceVendorServices = InsuaranceVendorService::where('is_verified',1)->limit(4)->get();
+        $insuaranceVendorServices = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Insurance')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+        ->limit(5)
+        ->get();
+
         $response = [
             'success'=>true,
             'data'=> [
@@ -86,8 +195,26 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
              return response()->json($response,400);
 
         }
-        $all_services = InsuaranceVendorService::where('is_verified',1)->get();
-        $insurance = InsuaranceVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
+        $all_services = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Insurance')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+        ->get();
+
+
+        $insurance = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Insurance')
+        ->where('is_verified',1)
+        ->where('vendor_services.name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+        ->get();
+
 
 
         if(count($insurance) == 0){
@@ -144,8 +271,26 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
      }
 
 
-     $insurance_services = InsuaranceVendorService::where('is_verified',1)->where('location',$district->name)->get();
-     $all_insurance_services = InsuaranceVendorService::where('is_verified',1)->get();
+     $insurance_services =  DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Insurance')
+     ->where('is_verified',1)
+     ->where('location',$district->name)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+     ->get();
+
+
+     $all_insurance_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Insurance')
+     ->where('is_verified',1)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+     ->get();
+
 
      if(count($insurance_services) == 0){
 
@@ -184,7 +329,17 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
  //sorting in ascending order
  public function insurance_services_asc_sort(){
 
-    $insurance_services = InsuaranceVendorService::where('is_verified',1)->orderBy('name','ASC')->get();
+    $insurance_services =  DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Insurance')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.name','ASC')
+    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+    ->get();
+
+
+
 
 
     $response = [
@@ -203,7 +358,15 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
 
  public function insurance_services_desc_sort(){
 
-    $insurance_services = InsuaranceVendorService::where('is_verified',1)->orderBy('name','DESC')->get();
+    $insurance_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Insurance')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.name','DESC')
+    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+    ->get();
+
 
 
     $response = [
@@ -219,100 +382,37 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
 
 
  }
-    /**
-     * Store a newly created InsuaranceVendorService in storage.
-     * POST /insuaranceVendorServices
-     *
-     * @param CreateInsuaranceVendorServiceAPIRequest $request
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $rules = [
-            'name' => 'required|string|unique:insuarance_vendor_services',
-            'terms' => 'required|string',
-            'description' => 'required|string',
-            'image' => 'required|image',
-            'address_id'=>'required|integer'
-
-        ];
-        $request->validate($rules);
-
-        $vendor_category = VendorCategory::where('name','Insuarance')->first();
-        $location = Address::find($request->address_id);
-
-        $new_insuarance = new InsuaranceVendorService();
-        $new_insuarance->name = $request->name;
-        $new_insuarance->terms = $request->terms;
-        $new_insuarance->description = $request->description;
-
-        $user = User::find(auth()->user()->id);
-        if(!$user->is_vendor ==1){
-         $user->is_vendor = 1;
-         $user->save();
-        }
-        $new_insuarance->user_id = auth()->user()->id;
-        $new_insuarance->vendor_category_id = $vendor_category->id;
-        $new_insuarance->image = $request->image;
-        $new_insuarance->location = $location->district_name;
-        $new_insuarance->save();
 
 
-        if(!empty($request->file('image'))){
-            $new_insuarance->image = \App\Models\ImageUploader::upload($request->file('image'),'insuarance_services');
-        }
-        $new_insuarance->save();
-
-        return $this->sendResponse($new_insuarance->toArray(), 'Insuarance Vendor Service, waiting for verification');
-    }
-
-    /**
-     * Display the specified InsuaranceVendorService.
-     * GET|HEAD /insuaranceVendorServices/{id}
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        /** @var InsuaranceVendorService $insuaranceVendorService */
-        $insuaranceVendorService = $this->insuaranceVendorServiceRepository->find($id);
-
-        if (empty($insuaranceVendorService)) {
-            return $this->sendError('Insuarance Vendor Service not found');
-        }else{
-            $success['name'] = $insuaranceVendorService->name;
-            $success['image'] = $insuaranceVendorService->image;
-            $success['terms'] = $insuaranceVendorService->terms;
-            $success['description'] = $insuaranceVendorService->description;
-            $success['vendor'] = $insuaranceVendorService->user->username;
-            $success['location'] = $insuaranceVendorService->location;
-            $success['created_at'] = $insuaranceVendorService->created_at->format('d/m/Y');
-            $success['time_since'] = $insuaranceVendorService->created_at->diffForHumans();
-        }
-        $response = [
-            'success'=>true,
-            'data'=> $success,
-            'message'=> 'Insuarance Vendor Service retrieved successfully'
-         ];
-
-         return response()->json($response,200);
-
-
-    }
 
 
        //get insurance vendors for a vendor
        public function vendor_insurance_services(Request $request)
        {
 
-          $vendor_insurances = InsuaranceVendorService::where('user_id',auth()->user()->id)->latest()->get();
+          $vendor_insurances = DB::table('vendor_services')
+          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+          ->join('categories','categories.id','=','sub_categories.category_id')
+          ->where('categories.name','Insurance')
+          ->where('is_verified',1)
+          ->where('vendor_services.user_id',auth()->user()->id)
+          ->orderBy('vendor_services.id','ASC')
+          ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+          ->get();
+
+
 
 
            if ($vendor_insurances->count() == 0) {
-               return $this->sendError("You haven't posted any insurance service");
+
+
+            $response = [
+                'success'=>false,
+                'message'=> "You haven't posted any insurance service"
+            ];
+
+             return response()->json($response,404);
+
            }
            else{
 
@@ -334,52 +434,5 @@ class InsuaranceVendorServiceAPIController extends AppBaseController
 
 
        }
-    /**
-     * Update the specified InsuaranceVendorService in storage.
-     * PUT/PATCH /insuaranceVendorServices/{id}
-     *
-     * @param int $id
-     * @param UpdateInsuaranceVendorServiceAPIRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateInsuaranceVendorServiceAPIRequest $request)
-    {
-        $input = $request->all();
 
-        /** @var InsuaranceVendorService $insuaranceVendorService */
-        $insuaranceVendorService = $this->insuaranceVendorServiceRepository->find($id);
-
-        if (empty($insuaranceVendorService)) {
-            return $this->sendError('Insuarance Vendor Service not found');
-        }
-
-        $insuaranceVendorService = $this->insuaranceVendorServiceRepository->update($input, $id);
-
-        return $this->sendResponse($insuaranceVendorService->toArray(), 'InsuaranceVendorService updated successfully');
-    }
-
-    /**
-     * Remove the specified InsuaranceVendorService from storage.
-     * DELETE /insuaranceVendorServices/{id}
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        /** @var InsuaranceVendorService $insuaranceVendorService */
-        $insuaranceVendorService = $this->insuaranceVendorServiceRepository->find($id);
-
-        if (empty($insuaranceVendorService)) {
-            return $this->sendError('Insuarance Vendor Service not found');
-        }
-
-        $insuaranceVendorService->delete();
-
-        return $this->sendSuccess('Insuarance Vendor Service deleted successfully');
-    }
 }

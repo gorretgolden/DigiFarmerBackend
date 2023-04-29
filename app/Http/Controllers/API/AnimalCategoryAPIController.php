@@ -9,6 +9,7 @@ use App\Repositories\AnimalCategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use DB;
 
 /**
  * Class AnimalCategoryController
@@ -34,7 +35,7 @@ class AnimalCategoryAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $animalCategories = AnimalCategory::where('is_active',1)->latest()->get(['id','name','image']);
+        $animalCategories = AnimalCategory::where('is_active',1)->orderBy('name','ASC')->get(['id','name','type','image']);
         $response = [
             'success'=>true,
             'data'=> $animalCategories,
@@ -42,6 +43,62 @@ class AnimalCategoryAPIController extends AppBaseController
          ];
          return response()->json($response,200);
     }
+
+
+    //get livestock animals
+    public function livestock(Request $request)
+    {
+        $livestock_animals = AnimalCategory::where('is_active',1)->where('type','livestock')->orderBy('name','ASC')->get(['id','name','type','image']);
+        $response = [
+            'success'=>true,
+            'data'=> $livestock_animals,
+            'message'=> 'Livestock animal Categories retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
+
+     //get poultry animals
+     public function poultry(Request $request)
+     {
+         $poultry = AnimalCategory::where('is_active',1)->where('type','poultry')->orderBy('name','ASC')->get(['id','name','type','image']);
+         $response = [
+             'success'=>true,
+             'data'=> $poultry,
+             'message'=> 'Poultry animal Categories retrieved successfully'
+          ];
+          return response()->json($response,200);
+     }
+
+     //get vendor services under an animal
+     public function animal_feed_service(Request $request,$id)
+     {
+
+        $animal_category = AnimalCategory::find($id);
+        $animal_feeds = DB::table('animal_category_vendor_service')
+                        ->join('animal_categories','animal_categories.id','=','animal_category_vendor_service.animal_category_id')
+                        ->join('vendor_Services','vendor_Services.id','=','animal_category_vendor_service.vendor_Service_id')
+                        ->where('vendor_Services.is_verified',1)
+                        ->where('vendor_Services.status','on-sale')
+                        ->where('animal_categories.id',$id)
+                        ->orderBy('vendor_Services.id','DESC')
+                        ->select('vendor_services.id as id','vendor_services.name as name','animal_categories.name as animal_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+                        ->get();
+
+    // dd($animal_feeds);
+
+         $response = [
+             'success'=>true,
+             'data'=> [
+                'total-animal-feeds'=>count($animal_feeds),
+                'animal-category'=>$animal_category->name,
+                'animal-category-type'=>$animal_category->type,
+                'animal-feeds' =>  $animal_feeds
+             ],
+             'message'=> 'Animal feeeds under'.$animal_category .' retrieved successfully'
+          ];
+          return response()->json($response,200);
+     }
+
 
     /**
      * Store a newly created AnimalCategory in storage.
@@ -54,7 +111,7 @@ class AnimalCategoryAPIController extends AppBaseController
     public function store(CreateAnimalCategoryAPIRequest $request)
     {
         $input = $request->all();
-        $input['image'] = $request->image;
+
 
         $animalCategory = $this->animalCategoryRepository->create($input);
 

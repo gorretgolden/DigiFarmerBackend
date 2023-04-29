@@ -11,7 +11,7 @@ $farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
 <!-- Owner Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('owner', 'Farmer:') !!}
-    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('owner', $farmers, null, ['class' => 'form-control custom-select','placeholder'=>'Select farmer']) !!}
 </div>
 
 
@@ -64,7 +64,7 @@ $farmers = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id'
                         $.each(result.addresses, function(key, value) {
 
                             $("#farmer-address").append('<option value="' + value
-                                .id + '">' + value.address_name + " " + value.district_name + '</option>');
+                                .id + '">'  + " " + value.district_name + '</option>');
 
                                 console.log('hello',value.district_name)
 

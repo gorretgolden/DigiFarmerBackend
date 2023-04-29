@@ -19,6 +19,7 @@
         "infyomlabs/laravel-generator": "^3.0",
         "infyomlabs/swagger-generator": "^3.0",
         "kingflamez/laravelrave": "^4.2",
+        "kreait/firebase-php": "^5.26",
         "label84/laravel-hours-helper": "^1.2",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",

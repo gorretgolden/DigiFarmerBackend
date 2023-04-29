@@ -139,7 +139,7 @@ class FarmAPIController extends AppBaseController
         }else{
             $farm = new Farm();
             $farm->owner = auth()->user()->username;
-            $farm->name = $request->name;
+            $farm->name = ucwords($request->name);
             $farm->address_id = $request->address_id;
             $farm->field_area = $request->field_area;
 

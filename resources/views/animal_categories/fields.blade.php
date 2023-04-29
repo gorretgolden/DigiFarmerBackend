@@ -15,6 +15,13 @@
     </div>
 </div>
 
+
+<!-- Type Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('type', 'Type:') !!}
+    {!! Form::select('type', ['livestock'=>'Livestock','poultry'=>'Poultry'], null, ['class' => 'form-control custom-select']) !!}
+</div>
+
 <!-- Enabled Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('enabled', 'Enabled:') !!}

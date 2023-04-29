@@ -75,7 +75,7 @@ class AnimalFeedCategoryController extends AppBaseController
     public function store(CreateAnimalFeedCategoryRequest $request)
     {
         $input = $request->all();
-        //dd($input);
+        $input['name'] =ucwords($request->name);
 
         $animalFeedCategory = $this->animalFeedCategoryRepository->create($input);
 

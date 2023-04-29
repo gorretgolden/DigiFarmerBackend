@@ -2,69 +2,180 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateTrainingVendorServiceAPIRequest;
-use App\Http\Requests\API\UpdateTrainingVendorServiceAPIRequest;
-use App\Models\TrainingVendorService;
-use App\Repositories\TrainingVendorServiceRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\VendorCategory;
-use App\Notifications\NewTrainingServiceNotification;
 use App\Models\District;
-use App\Http\Requests\API\TransactionRequest;
-use App\Services\TransactionService;
-use App\Models\Transactions;
-/**
- * Class TrainingVendorServiceController
- * @package App\Http\Controllers\API
- */
+use DB;
+use App\Models\SubCategory;
 
-class TrainingVendorServiceAPIController extends AppBaseController
+
+class TrainingVendorServiceAPIController extends Controller
 {
-    /** @var  TrainingVendorServiceRepository */
-    private $trainingVendorServiceRepository;
 
-    public function __construct(TrainingVendorServiceRepository $trainingVendorServiceRepo)
-    {
-        $this->trainingVendorServiceRepository = $trainingVendorServiceRepo;
-    }
 
-    /**
-     * Display a listing of the TrainingVendorService.
-     * GET|HEAD /trainingVendorServices
-     *
-     * @param Request $request
-     * @return Response
-     */
+
     public function index(Request $request)
     {
-        $trainingVendorServices =  TrainingVendorService::where('is_verified',1)->latest()->get();
-        return $this->sendResponse($trainingVendorServices->toArray(), 'Training Vendor Services retrieved successfully');
+        $trainingVendorServices  = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farmer Trainings')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+        ->get();
+
+        if(count($trainingVendorServices) == 0){
+
+          $response = [
+            'success'=>false,
+            'message'=> 'No farmer trainings have been posted'
+          ];
+          return response()->json($response,404);
+
+        }else{
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total'=>count($trainingVendorServices),
+                    'trainings'=>$trainingVendorServices
+                ],
+                'message'=> 'Farmer training vendor services retrieved'
+             ];
+
+             return response()->json($response,200);
+
+
+        }
+
+
+
+
     }
 
-    /**
-     * Store a newly created TrainingVendorService in storage.
-     * POST /trainingVendorServices
-     *
-     * @param CreateTrainingVendorServiceAPIRequest $request
-     *
-     * @return Response
-     */
+
+    //training sub categories
+    public function training_sub_categories(Request $request){
+
+        $training_sub_categories = DB::table('categories')
+            ->join('sub_categories','categories.id','=','sub_categories.category_id')
+            ->where('categories.name','Farmer Trainings')
+            ->where('sub_categories.is_active',1)
+            ->orderBy('sub_categories.name','ASC')
+            ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+            ->get();
+
+            if ($training_sub_categories->count() == 0) {
+                $response = [
+                    'success'=>false,
+                    'message'=> 'No sub categories under farmer trainings'
+                 ];
+
+                 return response()->json($response,404);
+
+            }
+            else{
+
+
+                $response = [
+                    'success'=>true,
+                    'data'=> [
+                        'total-farmer-training-sub-categories' =>count($training_sub_categories),
+                        'farmer-training-sub-categories'=>$training_sub_categories
+                    ],
+                    'message'=> 'Farmer training sub categories retrieved successfully'
+                 ];
+
+                 return response()->json($response,200);
+            }
+
+
+    }
+
+    //trainings under a subcategory
+    public function trainings(Request $request,$id)
+{
+
+
+    $sub_category = SubCategory::find($id);
+
+    if(empty($sub_category)){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'Sub category under farmer trainings not found'
+         ];
+
+         return response()->json($response,404);
+
+    }
+
+   $trainings  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Farmer Trainings')
+                          ->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time','vendor_services.image','description','price_unit','charge','status','is_verified','location')
+                          ->get();
+
+
+
+    if ($trainings->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No farmer trainings have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'training-sub-category'=>$sub_category->name,
+                'total-trainings' =>$trainings->count(),
+                'trainings'=>$trainings
+            ],
+            'message'=> 'Training vendor services under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+    }
+
+
+
+
+}
+
 
 
       //training vendor services for a single vendor
     public function vendorTrainings(Request $request)
     {
-        $vendor_trainings = TrainingVendorService::with('vendor_category')->where('user_id',auth()->user()->id)->get();
+
+        $vendor_trainings  = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farmer Trainings')
+        ->where('is_verified',1)
+        ->where('vendor_services.user_id',auth()->user()->id)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+        ->get();
 
         if($vendor_trainings->count()==0){
             $response = [
                 'success'=>false,
 
-                'message'=> 'vendor has no training services'
+                'message'=> "You haven't posted any training services"
              ];
              return response()->json($response,200);
 
@@ -77,7 +188,7 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
                 ],
 
-                'message'=> 'vendor training services retrieved successfully'
+                'message'=> 'Vendor training services retrieved successfully'
              ];
              return response()->json($response,200);
 
@@ -100,8 +211,25 @@ class TrainingVendorServiceAPIController extends AppBaseController
 
         }
 
-        $all_trainings = TrainingVendorService::where('is_verified',1)->get();
-        $trainings = TrainingVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')->get();
+        $all_trainings  = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farmer Trainings')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+        ->get();
+
+        $trainings  = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Farmer Trainings')
+        ->where('is_verified',1)
+        ->where('vendor_services.name', 'like', '%' . $search. '%')
+        ->orWhere('description','like', '%' . $search.'%')
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time','vendor_services.image','description','price_unit','charge','status','is_verified','location')
+        ->get();
 
 
         if(count($trainings) == 0){
@@ -149,7 +277,16 @@ public function charge_range(Request $request){
     }else{
 
 
-     $training_services = TrainingVendorService::select("*")->where('is_verified',1)->whereBetween('charge', [$request->min_charge, $request->max_charge])->get();
+     $training_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Farmer Trainings')
+     ->where('is_verified',1)
+     ->whereBetween('charge', [$request->min_charge, $request->max_charge])
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+     ->get();
+
 
      if(count($training_services)==0){
         $response = [
@@ -207,8 +344,26 @@ public function charge_range(Request $request){
      }
 
 
-     $training_services = TrainingVendorService::where('is_verified',1)->where('location',$district->name)->get();
-     $all_training_services = TrainingVendorService::where('is_verified',1)->get();
+     $training_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Farmer Trainings')
+     ->where('is_verified',1)
+     ->where('location',$district->name)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+     ->get();
+
+     $all_training_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Farmer Trainings')
+     ->where('is_verified',1)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+     ->get();
+
+
 
      if(count($training_services) == 0){
 
@@ -248,7 +403,16 @@ public function charge_range(Request $request){
 
  public function training_services_asc_sort(){
 
-    $training_services = TrainingVendorService::where('is_verified',1)->orderBy('name','ASC')->get();
+    $training_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Farmer Trainings')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.name','ASC')
+    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+    ->get();
+
+
 
 
     $response = [
@@ -267,7 +431,14 @@ public function charge_range(Request $request){
 
  public function training_services_desc_sort(){
 
-    $training_services = TrainingVendorService::where('is_verified',1)->orderBy('name','DESC')->get();
+    $training_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Farmer Trainings')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.name','DESC')
+    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+    ->get();
 
 
     $response = [
@@ -283,67 +454,9 @@ public function charge_range(Request $request){
 
 
  }
-    public function store(Request $request)
-    {
-
-        $rules = [
-
-            'name' => 'required|string|unique:training_vendor_services',
-            'charge' => 'required|integer',
-            'description' => 'required|string',
-            'access' => 'required|string',
-            'starting_date' => 'required|date',
-            'ending_date' => 'required|after_or_equal:starting_date',
-            'starting_time' => 'required|before:ending_time',
-            'ending_time' => 'required|after:starting_time',
-            'location' => 'nullable',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-        ];
-
-        $request->validate($rules);
-        $input = $request->all();
-        $input['user_id'] = auth()->user()->id;
-
-        $user = User::find(auth()->user()->id);
-        if(!$user->is_vendor ==1){
-         $user->is_vendor = 1;
-         $user->save();
-        }
-        $vendor_category = VendorCategory::where('name','Training')->first();
-
-        //access
-        if($input['access']=='Online'){
-            $request->validate(['zoom_details' => 'required|string']);
-            $input['zoom_details'] = $request->zoom_details;
-
-            $input['vendor_category_id'] = $vendor_category->id;
-            $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
-
-            $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
-            $trainingVendorService->save();
-
-            $admin = User::where('user_type','admin')->first();
-            $admin->notify(new NewTrainingServiceNotification($trainingVendorService));
-            return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service saved successfully');
 
 
-        }else{
-            if($input['access']=='Offline'){
 
-                $request->validate(['address_id' => 'required|integer']);
-                $location = Address::find($request->address_id);
-                $input['vendor_category_id'] = $vendor_category->id;
-                $input['location'] = $location->district_name;
-                $trainingVendorService->image= \App\Models\ImageUploader::upload($request->file('image'),'trainings');
-                $trainingVendorService->save();
-                $trainingVendorService = $this->trainingVendorServiceRepository->create($input);
-                $admin = User::where('user_type','admin')->first();
-                $admin->notify(new NewTrainingServiceNotification($trainingVendorService));
-                return $this->sendResponse($trainingVendorService->toArray(), 'Training Vendor Service created successfully, waiting for verification');
-            }
-
-
-        }
 
 
 
@@ -351,172 +464,7 @@ public function charge_range(Request $request){
 
 
 
-    /**
-     * Display the specified TrainingVendorService.
-     * GET|HEAD /trainingVendorServices/{id}
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function show($id)
-    {
-        /** @var TrainingVendorService $trainingVendorService */
-        $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
-
-        if (empty($trainingVendorService)) {
-            return $this->sendError('Training Vendor Service not found');
-        }else{
-            $success['id'] = $trainingVendorService->id;
-            $success['name'] = $trainingVendorService->name;
-            $success['charge'] = $trainingVendorService->charge;
-            $success['description'] = $trainingVendorService->description;
-            $success['location'] = $trainingVendorService->location;
-            $success['charge'] = $trainingVendorService->charge;
-            $success['vendor'] = $trainingVendorService->vendor->username;
-            $success['image'] = $trainingVendorService->image;
-            $success['access'] = $trainingVendorService->access;
-            $success['starting_date'] = $trainingVendorService->starting_date;
-            $success['starting_time'] = $trainingVendorService->starting_time;
-            $success['ending_date'] = $trainingVendorService->ending_date;
-            $success['ending_time'] = $trainingVendorService->ending_time;
-            $success['zoom_details'] = $trainingVendorService->zoom_details;
-            $success['vendor_category'] = $trainingVendorService->vendor_category->name;
-            $success['created_at'] = $trainingVendorService->created_at->format('d/m/Y');
-            $success['time_since'] = $trainingVendorService->created_at->diffForHumans();
-        }
-        $response = [
-            'success'=>true,
-            'data'=> $success,
-            'message'=> 'Training Vendor Service retrieved successfully'
-         ];
-         return response()->json($response,200);
-    }
-
-    /**
-     * Update the specified TrainingVendorService in storage.
-     * PUT/PATCH /trainingVendorServices/{id}
-     *
-     * @param int $id
-     * @param UpdateTrainingVendorServiceAPIRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateTrainingVendorServiceAPIRequest $request)
-    {
-        $input = $request->all();
-
-        /** @var TrainingVendorService $trainingVendorService */
-        $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
-
-        if (empty($trainingVendorService)) {
-            return $this->sendError('Training Vendor Service not found');
-        }
-
-        $trainingVendorService = $this->trainingVendorServiceRepository->update($input, $id);
-
-        return $this->sendResponse($trainingVendorService->toArray(), 'TrainingVendorService updated successfully');
-    }
-
-    /**
-     * Remove the specified TrainingVendorService from storage.
-     * DELETE /trainingVendorServices/{id}
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        /** @var TrainingVendorService $trainingVendorService */
-        $trainingVendorService = $this->trainingVendorServiceRepository->find($id);
-
-        if (empty($trainingVendorService)) {
-            return $this->sendError('Training Vendor Service not found');
-        }
-
-        $trainingVendorService->delete();
-
-        return $this->sendSuccess('Training Vendor Service deleted successfully');
-    }
 
 
 
-    //register for a training service
-    public function collect_payment($id){
 
-        $trainingVendorService = TrainingVendorService::find($id);
-
-
-        if (empty($trainingVendorService)) {
-
-            $response = [
-                'success'=>false,
-                'message'=> 'Training Vendor Service not found'
-             ];
-
-             return response()->json($response,404);
-
-        }else{
-
-            $transactionService = new TransactionService;
-            $data['phone_number'] = auth()->user()->phone;
-            $data['amount'] =  $trainingVendorService->charge;
-            $data['route'] = 'registration-callback';
-
-            $response = $transactionService->transRequest($data);
-            $redirect_link = $response['meta']['authorization']['redirect'];
-
-
-         return response()->json($response);
-
-
-
-        }
-
-    }
-
-
-    //verfiy transaction and update table
-  public function payment_callback(){
-
-
-    $status = request()->status;
-
-    //if payment is successful
-    if ($status ==  'successful') {
-
-        $collect = new CollectionController;
-        $transaction = $collect->verifyTransaction(request()->trans_id);
-        dd($transaction);
-
-        $data = $request->all();
-
-
-    }
-    elseif ($status ==  'cancelled'){
-
-
-        $response = [
-            'success'=>false,
-            'message'=> 'Transaction has been cancelled'
-         ];
-
-         return response()->json($response,400);
-    }
-    else{
-        $response = [
-            'success'=>false,
-            'message'=> 'Transaction failed'
-         ];
-
-         return response()->json($response,400);
-    }
-
-}
-
-
-
-}

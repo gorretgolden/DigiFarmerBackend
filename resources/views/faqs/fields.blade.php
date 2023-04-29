@@ -1,5 +1,5 @@
 <?php
-$categories= App\Models\FaqCategory::pluck('name','id');
+$categories= App\Models\Category::where('is_active',1)->where('type','faqs')->pluck('name','id');
 ?>
 
 <!-- Faq Category Id Field -->

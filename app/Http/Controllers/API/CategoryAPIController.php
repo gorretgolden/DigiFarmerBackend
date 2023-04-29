@@ -9,6 +9,8 @@ use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Models\SubCategory;
+use DB;
 
 /**
  * Class CategoryController
@@ -31,11 +33,184 @@ class CategoryAPIController extends AppBaseController
         $categories = Category::where('is_active',1)->latest()->get(['id','name','image']);
         $response = [
             'success'=>true,
-            'data'=> $categories,
+            'data'=> [
+                'total'=>count($categories),
+                'all-categories'=>$categories
+            ],
             'message'=> 'Categories retrieved successfully'
          ];
          return response()->json($response,200);
     }
+
+    //get vendor categories
+    public function vendor_categories(Request $request)
+    {
+        $categories = Category::where('is_active',1)->where('type','vendors')->
+        orderBy('name','ASC')->get(['id','name','image']);
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total'=>count($categories),
+                'vendor-categories'=>$categories
+            ],
+            'message'=> 'Vendor categories retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
+
+
+    //animal categories
+    public function animal_categories(Request $request)
+    {
+        $categories = Category::where('is_active',1)->where('type','animals')->orderBy('name','ASC')->get(['id','name','image']);
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total'=>count($categories),
+                'animal-categories'=>$categories
+            ],
+            'message'=> 'Animal categories retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
+
+    //crop categories
+    public function crop_categories(Request $request)
+    {
+        $categories = Category::where('is_active',1)->where('type','crops')->orderBy('name','ASC')->get(['id','name','image']);
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total'=>count($categories),
+                'crop-categories'=>$categories
+            ],
+            'message'=> 'Crop categories retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
+
+    //crops under a crop category
+    public function category_crops(Request $request,$id)
+    {
+
+        $category = Category::find($id);
+        $crops = DB::table('crops')
+                ->join('categories','categories.id','=','crops.category_id')
+                ->where('crops.is_active',1)
+                ->where('categories.type','crops')
+                ->where('categories.id',$id)
+                ->orderBy('name','ASC')
+                ->select('categories.name as category','crops.name as name','crops.image as image')
+                ->get();
+                if(empty($category)){
+
+
+                    $response = [
+                       'success'=>false,
+                      'message'=> 'Category not found'
+                    ];
+                    return response()->json($response,404);
+
+
+                }
+
+                elseif(count($crops) == 0){
+
+
+                    $response = [
+                       'success'=>false,
+                      'message'=> 'No crops under '.$category->name
+                    ];
+                    return response()->json($response,404);
+
+
+                }else{
+
+                    $response = [
+                        'success'=>true,
+                        'data'=> [
+                            'total'=>count($crops),
+                            'category'=>$category->name,
+                            'crops'=>$crops
+                        ],
+                        'message'=> 'Crops under'.$category->name.' retrieved successfully'
+                     ];
+                     return response()->json($response,200);
+
+                }
+
+
+    }
+
+
+    //get faq categories
+    public function faq_categories(Request $request)
+    {
+        $categories = Category::where('is_active',1)->where('type','faqs')->orderBy('name','ASC')->get(['id','name','image']);
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total'=>count($categories),
+                'faq-categories'=>$categories
+            ],
+            'message'=> 'Faq categories retrieved successfully'
+         ];
+         return response()->json($response,200);
+    }
+
+
+    //get sub categories under a category
+    public function category_sub_categories(Request $request, $id)
+    {
+        $category = Category::find($id);
+
+        $sub_categories = DB::table('categories')
+        ->join('sub_categories', 'sub_categories.category_id', '=','categories.id')
+        ->where('categories.id', '=', $category->id)
+        ->where('sub_categories.is_active',1)
+        ->select('sub_categories.id','sub_categories.name','sub_categories.image','categories.name as category')
+        ->orderBy('sub_categories.name','ASC')
+        ->get();
+
+
+
+
+        if (empty($category)) {
+            $response = [
+                'success'=>false,
+                'message'=> 'Category not found'
+              ];
+             return response()->json($response,404);
+
+        }elseif(count($sub_categories) == 0){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Category '.$category->name.' has no sub_categories'
+              ];
+             return response()->json($response,404);
+
+        }
+        else{
+
+
+            $response = [
+                'success'=>true,
+                'data'=>[
+                    'total-sub-categories'=>count($sub_categories),
+                    'sub-categories'=>$sub_categories
+                ],
+                'message'=> 'Category  sub categories retrieved'
+              ];
+             return response()->json($response,200);
+
+
+        }
+
+
+    }
+
+
 
     /**
      * Store a newly created Category in storage.
@@ -68,7 +243,7 @@ class CategoryAPIController extends AppBaseController
     {
         /** @var Category $category */
         $category = Category::find($id);
-        $crops = $category->crops;
+
        // dd( $category->sub_categories);
 
         if (empty($category)) {
@@ -79,10 +254,10 @@ class CategoryAPIController extends AppBaseController
                 'success'=>true,
                 'data'=> [
                     'category'=> $category,
-                     'crops' => $crops
+                     'subCategories' => $category->sub_categories
                 ],
 
-                'message'=> 'Crop details retrieved successfully'
+                'message'=> 'Category details retrieved successfully'
              ];
         }
 

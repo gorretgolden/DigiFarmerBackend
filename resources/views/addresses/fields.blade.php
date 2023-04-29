@@ -7,7 +7,7 @@ $users = App\Models\User::where('user_type','farmer')->pluck('username','id');
 <!-- Country Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('region_id', 'Region:') !!}
-    {!! Form::select('region_id', $regions, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('region_id', $regions, null, ['class' => 'form-control custom-select','placeholder'=>'Select region']) !!}
 </div>
 
 

@@ -16,7 +16,8 @@ class CartItem extends Model
         'rent_vendor_service_id',
         'seller_product_id',
         'animal_feed_id',
-        'quantity'
+        'quantity',
+        'type'
 
     ];
 

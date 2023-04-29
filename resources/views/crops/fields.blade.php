@@ -1,6 +1,6 @@
 
 <?php
-$categories= App\Models\Category::pluck('name','id');
+$categories= App\Models\Category::where('is_active',1)->where('type','crops')->orderBy('name','ASC')->pluck('name','id');
 ?>
 
 <!-- Name Field -->

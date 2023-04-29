@@ -4,7 +4,8 @@
             <tr>
                 <th>Image</th>
                 <th>Name</th>
-                <th>status</th>
+                <th>Type</th>
+                <th>Status</th>
 
 
                 <th colspan="3">Action</th>
@@ -19,6 +20,7 @@
                             width="50px" height="50px"/>
                     </td>
                     <td>{{ $category->name }}</td>
+                    <td>{{ $category->type }}</td>
                     <td>
                         @if ($category->is_active == 1)
                             <p class="badge rounded-pill bg-success">enabled</p>

@@ -104,8 +104,8 @@ class Crop extends Model
 
 
        //belongs to many agronomists
-       public function agronomists()
+       public function vendor_services()
        {
-           return $this->belongsToMany(\App\Models\AgronomistVendorService::class,'agronomist_crop','agronomist_id','crop_id');
+           return $this->belongsToMany(\App\Models\VendorService::class);
        }
 }

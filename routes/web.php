@@ -252,6 +252,7 @@ Route::get('api/fetch-farmer-address', [App\Http\Controllers\FarmController::cla
 Route::get('/fetch-region-districts', [App\Http\Controllers\RegionController::class, 'fetchRegionDistricts'])->name('region.districts');
 
 Route::get('/farmer/fetch-address', 'App\Http\Controllers\FarmController@fetchUserAddresses')->name('farmers.fetch-address');
+Route::get('/category/sub_categories', 'App\Http\Controllers\CategoryController@fetchCategorySubCategory')->name('categories.sub_categories');
 
 Route::get('/farmer/fetch-farms', 'App\Http\Controllers\FarmController@fetch_farmer_farms')->name('farmers.fetch-farms');
 Route::get('/farmer/fetch-farm-plots', 'App\Http\Controllers\FarmController@fetch_farm_plots')->name('farmers.fetch-farm-plots');
@@ -279,7 +280,7 @@ Route::post('/rave/callback', 'RaveController@callback')->name('callback');
 
 //get animal feed categories
 Route::get('animalcategory/feeds', [App\Http\Controllers\AnimalFeedCategoryController::class,'fetch_animal_category_feeds'])->name('animal-categories.feeds');
-
+Route::resource('animalCategories', App\Http\Controllers\AnimalCategoryController::class);
 
 // The page that displays the payment form
 Route::get('/test', function () {
@@ -332,3 +333,9 @@ Route::resource('loanApplications', App\Http\Controllers\LoanApplicationControll
 
 
 Route::resource('tests', App\Http\Controllers\TestController::class);
+
+
+Route::resource('subCategories', App\Http\Controllers\SubCategoryController::class);
+
+
+Route::resource('vendorServices', App\Http\Controllers\VendorServiceController::class);

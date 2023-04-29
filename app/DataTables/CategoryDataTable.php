@@ -3,11 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\Category;
-use Yajra\DataTables\Html\Button;
-use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\EloquentDataTable;
 
 class CategoryDataTable extends DataTable
 {
@@ -19,9 +16,18 @@ class CategoryDataTable extends DataTable
      */
     public function dataTable($query)
     {
-        return datatables()
-            ->eloquent($query)
-            ->addColumn('action', 'category.action');
+        $dataTable = new EloquentDataTable($query);
+
+        return $dataTable->addColumn('image', function($data){
+            return '<img src='.$data->image.' class="img-thumbnail w-25"/>';
+
+
+        })
+        ->addColumn('action', 'categories.datatables_actions')
+        ->rawColumns(['image','action']);
+
+
+
     }
 
     /**
@@ -43,18 +49,21 @@ class CategoryDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('category-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('create'),
-                        Button::make('export'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    );
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->addAction(['width' => '120px', 'printable' => false])
+            ->parameters([
+                'dom'       => 'Bfrtip',
+                'stateSave' => true,
+                'order'     => [[0, 'desc']],
+                'buttons'   => [
+                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
+                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
+                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
+                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
+                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
+                ],
+            ]);
     }
 
     /**
@@ -65,15 +74,10 @@ class CategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+            'image',
+            'name',
+            'is_active',
+            'type'
         ];
     }
 
@@ -84,6 +88,6 @@ class CategoryDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Category_' . date('YmdHis');
+        return 'categories_datatable_' . time();
     }
 }

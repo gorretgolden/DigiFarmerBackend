@@ -153,13 +153,7 @@ class LoanApplicationController extends AppBaseController
 
      }
 
-    /**
-     * Show the form for editing the specified LoanApplication.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
+
     public function edit($id)
     {
         $loanApplication = $this->loanApplicationRepository->find($id);
@@ -173,52 +167,7 @@ class LoanApplicationController extends AppBaseController
         return view('loan_applications.edit')->with('loanApplication', $loanApplication);
     }
 
-    /**
-     * Update the specified LoanApplication in storage.
-     *
-     * @param int $id
-     * @param UpdateLoanApplicationRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateLoanApplicationRequest $request)
-    {
-        $loanApplication = $this->loanApplicationRepository->find($id);
 
-        if (empty($loanApplication)) {
-            Flash::error('Loan Application not found');
 
-            return redirect(route('loanApplications.index'));
-        }
 
-        $loanApplication = $this->loanApplicationRepository->update($request->all(), $id);
-
-        Flash::success('Loan Application updated successfully.');
-
-        return redirect(route('loanApplications.index'));
-    }
-
-    /**
-     * Remove the specified LoanApplication from storage.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        $loanApplication = $this->loanApplicationRepository->find($id);
-
-        if (empty($loanApplication)) {
-            Flash::error('Loan Application not found');
-
-            return redirect(route('loanApplications.index'));
-        }
-
-        $this->loanApplicationRepository->delete($id);
-
-        Flash::success('Loan Application deleted successfully.');
-
-        return redirect(route('loanApplications.index'));
-    }
 }

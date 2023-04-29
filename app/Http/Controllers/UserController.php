@@ -13,7 +13,7 @@ use App\Models\User;
 use Hash;
 use App\Mail\SendUserPasswordMail;
 use Illuminate\Support\Facades\Mail;
-use App\Models\UserUserType;
+use App\Models\Role;
 require_once('../external/AfricasTalkingGateway.php');
 use URL;
 use Illuminate\Support\Facades\File;
@@ -131,9 +131,9 @@ class UserController extends AppBaseController
         if(!$existing_user){
 
           $user = new User();
-          $user->first_name = $request->input('first_name');
-          $user->last_name = $request->input('last_name');
-          $user->username = $request->last_name ." " . $request->first_name;
+          $user->first_name = ucwords($request->input('first_name'));
+          $user->last_name =ucwords( $request->input('last_name'));
+          $user->username = ucwords($request->last_name ." " . $request->first_name);
           $user->email = $request->input('email');
           $user->phone = $request->input('phone');
           $user->is_active = $request->input('is_active');
@@ -144,6 +144,14 @@ class UserController extends AppBaseController
 
 
           //assign a user a role depending on the user type
+          $role = Role::where('name','farmer')->first();
+          if(empty($role)){
+
+           Flash::error('No role named farmer');
+           return redirect(route('farmers.index'));
+
+
+          }
 
            $user->assignRole('farmer');
 

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateAgronomistVendorServiceAPIRequest;
-use App\Http\Requests\API\UpdateAgronomistVendorServiceAPIRequest;
-use App\Models\AgronomistVendorService;
-use App\Repositories\AgronomistVendorServiceRepository;
+
+use App\Models\VendorService;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\Crop;
-use App\Models\VendorCategory;
+use App\Models\Category;
 use App\Models\Address;
 use App\Models\User;
 use App\Models\District;
@@ -21,28 +20,38 @@ use App\Notifications\NewAgronomistNotification;
  * @package App\Http\Controllers\API
  */
 
-class AgronomistVendorServiceAPIController extends AppBaseController
+class AgronomistVendorServiceAPIController extends Controller
 {
-    /** @var  AgronomistVendorServiceRepository */
-    private $agronomistVendorServiceRepository;
 
-    public function __construct(AgronomistVendorServiceRepository $agronomistVendorServiceRepo)
-    {
-        $this->agronomistVendorServiceRepository = $agronomistVendorServiceRepo;
-    }
 
-    /**
-     * Display a listing of the AgronomistVendorService.
-     * GET|HEAD /agronomistVendorServices
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function index(Request $request)
-    {
-        $agronomistVendorServices = AgronomistVendorService::where('is_verified',1)->latest()->get();
-        return $this->sendResponse($agronomistVendorServices->toArray(), 'Agronomist Vendor Services retrieved successfully');
-    }
+   //get agronomists under a crop
+   public function crop_agromonomist_service(Request $request,$id)
+   {
+
+      $crop= Crop::find($id);
+      $animal_feeds = DB::table('crop_vendor_service')
+                      ->join('crops','crops.id','=','crop_vendor_service.crop_id')
+                      ->join('vendor_Services','vendor_Services.id','=','crop_vendor_service.vendor_Service_id')
+                      ->where('vendor_Services.is_verified',1)
+                      ->where('crops.id',$id)
+                      ->orderBy('vendor_Services.id','DESC')
+                      ->select('vendor_services.id as id','vendor_services.name as name','crops.name as crop','vendor_services.image','description','charge_unit','charge','is_verified','location')
+                      ->get();
+
+  // dd($animal_feeds);
+
+       $response = [
+           'success'=>true,
+           'data'=> [
+              'total-animal-feeds'=>count($animal_feeds),
+              'animal-category'=>$animal_category->name,
+              'animal-category-type'=>$animal_category->type,
+              'animal-feeds' =>  $animal_feeds
+           ],
+           'message'=> 'Animal feeeds under'.$animal_category .' retrieved successfully'
+        ];
+        return response()->json($response,200);
+   }
 
     //vendor agro services
     public function vendor_agro_services(Request $request){

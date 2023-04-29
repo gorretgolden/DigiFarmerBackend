@@ -4,19 +4,18 @@
 namespace App\Http\Controllers\API;
 
 
-use App\Http\Requests\API\CreateFinanceVendorServiceAPIRequest;
-use App\Http\Requests\API\UpdateFinanceVendorServiceAPIRequest;
-use App\Models\FinanceVendorService;
-use App\Repositories\FinanceVendorServiceRepository;
+
+y;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Models\LoanPlan;
 use App\Models\LoanPayBack;
 use App\Models\Address;
-use App\Models\VendorCategory;
+use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\District;
+use DB;
 
 require_once('vendor/autoload.php');
 /**
@@ -25,25 +24,11 @@ require_once('vendor/autoload.php');
  */
 
 
-class FinanceVendorServiceAPIController extends AppBaseController
+class FinanceVendorServiceAPIController extends Controller
 {
-    /** @var  FinanceVendorServiceRepository */
-    private $financeVendorServiceRepository;
 
 
-    public function __construct(FinanceVendorServiceRepository $financeVendorServiceRepo)
-    {
-        $this->financeVendorServiceRepository = $financeVendorServiceRepo;
-    }
 
-
-    /**
-     * Display a listing of the FinanceVendorService.
-     * GET|HEAD /financeVendorServices
-     *
-     * @param Request $request
-     * @return Response
-     */
     public function index(Request $request)
     {
         $financeVendorService = FinanceVendorService::where('status','available')->where('is_verified',1)->latest()->get();
@@ -56,14 +41,45 @@ class FinanceVendorServiceAPIController extends AppBaseController
     }
 
 
-    /**
-     * Store a newly created FinanceVendorService in storage.
-     * POST /financeVendorServices
-     *
-     * @param CreateFinanceVendorServiceAPIRequest $request
-     *
-     * @return Response
-     */
+
+    //finance sub categories
+    public function finance_sub_categories(Request $request){
+
+        $finance_sub_categories = DB::table('categories')
+            ->join('sub_categories','categories.id','=','sub_categories.category_id')
+            ->where('categories.name','Finance')
+            ->where('sub_categories.is_active',1)
+            ->orderBy('sub_categories.name','ASC')
+            ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+            ->get();
+
+            if ($finance_sub_categories->count() == 0) {
+                $response = [
+                    'success'=>false,
+                    'message'=> 'No sub categories under farmer finances'
+                 ];
+
+                 return response()->json($response,404);
+
+            }
+            else{
+
+
+                $response = [
+                    'success'=>true,
+                    'data'=> [
+                        'total-finance-sub-categories' =>count($finance_sub_categories),
+                        'finance-sub-categories'=>$finance_sub_categories
+                    ],
+                    'message'=> 'Farmer finance sub categories retrieved successfully'
+                 ];
+
+                 return response()->json($response,200);
+            }
+
+
+    }
+
 
 
      public function random_strings($length_of_string)
@@ -507,60 +523,8 @@ public function principal_range(Request $request){
 
 
 }
-    /**
-     * Update the specified FinanceVendorService in storage.
-     * PUT/PATCH /financeVendorServices/{id}
-     *
-     * @param int $id
-     * @param UpdateFinanceVendorServiceAPIRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateFinanceVendorServiceAPIRequest $request)
-    {
-        $input = $request->all();
 
 
-        /** @var FinanceVendorService $financeVendorService */
-        $financeVendorService = $this->financeVendorServiceRepository->find($id);
 
 
-        if (empty($financeVendorService)) {
-            return $this->sendError('Finance Vendor Service not found');
-        }
-
-
-        $financeVendorService = $this->financeVendorServiceRepository->update($input, $id);
-
-
-        return $this->sendResponse($financeVendorService->toArray(), 'FinanceVendorService updated successfully');
-    }
-
-
-    /**
-     * Remove the specified FinanceVendorService from storage.
-     * DELETE /financeVendorServices/{id}
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        /** @var FinanceVendorService $financeVendorService */
-        $financeVendorService = $this->financeVendorServiceRepository->find($id);
-
-
-        if (empty($financeVendorService)) {
-            return $this->sendError('Finance Vendor Service not found');
-        }
-
-
-        $financeVendorService->delete();
-
-
-        return $this->sendSuccess('Finance Vendor Service deleted successfully');
-    }
 }

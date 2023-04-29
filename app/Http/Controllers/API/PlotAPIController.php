@@ -336,7 +336,7 @@ class PlotAPIController extends AppBaseController
          }else{
 
              $new_plot = new Plot();
-             $new_plot->name = $request->name;
+             $new_plot->name = ucwords($request->name);
              $new_plot->farm_id = $request->farm_id;
              $new_plot->crop_id = $request->crop_id;
              $new_plot->district = $farm->address->district_name;
