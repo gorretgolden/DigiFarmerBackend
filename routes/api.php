@@ -24,8 +24,11 @@ Route::group(['prefix'=>'v1'], function(){
     ->middleware('checkUser');
     Route::any('bind_fcmtoken',[App\Http\Controllers\API\UserAPIController::class,'bind_fcmtoken'])
     ->middleware('checkUser');
+    Route::any('send_notice',[App\Http\Controllers\API\UserAPIController::class,'sendNotice'])
+    ->middleware('checkUser');
     Route::any('upload_photo',[App\Http\Controllers\API\UserAPIController::class,'upload_photo']);
     // ->middleware('checkUser');
+
 
 
 
