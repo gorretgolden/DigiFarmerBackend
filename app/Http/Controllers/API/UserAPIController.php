@@ -354,7 +354,19 @@ class UserAPIController extends AppBaseController
                             'doc_id'=> $doc_id,
                             'call_type'=> $call_type,
                         ],
-                        'android' => ['priority'=>'high','notification'=> ['channel_id' => '****','title'=>'voice call made by'.$user_name,'body'=>'Please click to answer the voice call.']]
+                        'android' => ['priority'=>'high','notification'=> ['channel_id' => 'com.dbestech.chatty.message','title'=>'voice call made by'.$user_name,'body'=>'Please click to answer the voice call.']]
+                    ]);
+                }else if($call_type == "video"){
+                    $message = CloudMessage::fromArray([
+                        'token' => $device_token,
+                        'data' => [
+                            'token'=> $user_token,
+                            'avatar'=> $user_avatar,
+                            'name'=> $user_name,
+                            'doc_id'=> $doc_id,
+                            'call_type'=> $call_type,
+                        ],
+                        'android' => ['priority'=>'high','notification'=> ['channel_id' => 'com.dbestech.chatty.message','title'=>'voice call made by'.$user_name,'body'=>'Please click to answer the voice call.']]
                     ]);
                 }
                 $messaging->send($message);
