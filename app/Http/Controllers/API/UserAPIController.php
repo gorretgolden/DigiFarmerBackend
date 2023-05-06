@@ -380,6 +380,22 @@ class UserAPIController extends AppBaseController
 
       return ['code'=> -1, "data"=>"","msg" => "success"];
 
+    }
+
+
+    public function upload_photo(Request $request){
+
+        $file = $request->file('file');
+        try {
+            $extension = $file->getClientOriginalExtension();
+            $fullFileName = uniqid().'.'.$extension;
+            $timeDir = date("Ymd");
+            $file->storeAs($timeDir, $fullFileName,["disk" => "public"]);
+            $url = env("APP_URL")."/storage/".$timeDir.'/'.$fullFileName;
+            return ['code' => 0, 'data'=>$url,'msg'=>'success uploading image'];
+        }catch(Exception $e){
+            return ['code' => -1, 'data'=>"",'msg'=>'error uploading image'];
+        }
 
     }
 
