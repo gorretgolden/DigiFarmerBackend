@@ -70,21 +70,41 @@ class AnimalCategoryAPIController extends AppBaseController
      }
 
      //get vendor services under an animal
-     public function animal_feed_service(Request $request,$id)
+     public function animal_feed_services(Request $request,$id)
      {
 
         $animal_category = AnimalCategory::find($id);
+
+        if(empty($animal_category)){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'Animal category not found'
+             ];
+             return response()->json($response,404);
+
+        }
         $animal_feeds = DB::table('animal_category_vendor_service')
                         ->join('animal_categories','animal_categories.id','=','animal_category_vendor_service.animal_category_id')
-                        ->join('vendor_Services','vendor_Services.id','=','animal_category_vendor_service.vendor_Service_id')
-                        ->where('vendor_Services.is_verified',1)
-                        ->where('vendor_Services.status','on-sale')
+                        ->join('vendor_services','vendor_services.id','=','animal_category_vendor_service.vendor_Service_id')
+                        ->where('vendor_services.is_verified',1)
+                        ->where('vendor_services.status','on-sale')
                         ->where('animal_categories.id',$id)
-                        ->orderBy('vendor_Services.id','DESC')
-                        ->select('vendor_services.id as id','vendor_services.name as name','animal_categories.name as animal_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+                        ->orderBy('vendor_services.id','DESC')
+                        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
                         ->get();
 
     // dd($animal_feeds);
+
+    if($animal_feeds->count()==0){
+
+        $response = [
+            'success'=>false,
+            'message'=> 'No animal feeds have been posted under'.$animal_category->name
+         ];
+         return response()->json($response,404);
+
+    }
 
          $response = [
              'success'=>true,
@@ -94,7 +114,7 @@ class AnimalCategoryAPIController extends AppBaseController
                 'animal-category-type'=>$animal_category->type,
                 'animal-feeds' =>  $animal_feeds
              ],
-             'message'=> 'Animal feeeds under'.$animal_category .' retrieved successfully'
+             'message'=> 'Animal feeeds under '.$animal_category->name .' retrieved successfully'
           ];
           return response()->json($response,200);
      }

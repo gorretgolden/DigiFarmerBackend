@@ -31,7 +31,17 @@ class FinanceVendorServiceAPIController extends Controller
 
     public function index(Request $request)
     {
-        $financeVendorService = FinanceVendorService::where('status','available')->where('is_verified',1)->latest()->get();
+        $financeVendorService = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Finance')
+        ->where('is_verified',1)
+        ->where('status','available')
+        ->orderBy('vendor_services.id','ASC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
+
+
         $response = [
             'success'=>true,
             'data'=> $financeVendorService,
@@ -109,7 +119,18 @@ public function principal_range(Request $request){
     }else{
 
 
-     $finance_services = FinanceVendorService::select("*")->where('status','available')->where('is_verified',1)->whereBetween('principal', [$request->min_principal, $request->max_principal])->get();
+     $finance_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Finance')
+     ->where('is_verified',1)
+     ->where('status','available')
+     ->whereBetween('principal', [$request->min_principal, $request->max_principal])
+     ->orderBy('vendor_services.id','ASC')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+     ->get();
+
+
 
      if(count($finance_services)==0){
         $response = [
@@ -167,8 +188,30 @@ public function principal_range(Request $request){
      }
 
 
-     $finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->where('location',$district->name)->get();
-     $all_finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->get();
+     $finance_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Finance')
+     ->where('is_verified',1)
+     ->where('status','available')
+     ->where('location',$district->name)
+     ->orderBy('vendor_services.id','ASC')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+     ->get();
+
+
+
+     $all_finance_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Finance')
+     ->where('is_verified',1)
+     ->where('status','available')
+     ->orderBy('vendor_services.id','ASC')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+     ->get();
+
+
 
      if(count($finance_services) == 0){
 
@@ -208,7 +251,17 @@ public function principal_range(Request $request){
 
  public function finance_services_asc_sort(){
 
-    $finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->orderBy('name','ASC')->get();
+    $finance_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Finance')
+    ->where('is_verified',1)
+    ->where('status','available')
+    ->orderBy('vendor_services.id','ASC')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+    ->get();
+
+
 
 
     $response = [
@@ -227,7 +280,15 @@ public function principal_range(Request $request){
 
  public function finance_services_desc_sort(){
 
-    $finance_services = FinanceVendorService::where('status','available')->where('is_verified',1)->orderBy('name','DESC')->get();
+    $finance_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Finance')
+    ->where('is_verified',1)
+    ->where('status','available')
+    ->orderBy('vendor_services.id','DESC')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+    ->get();
 
 
     $response = [
@@ -454,11 +515,29 @@ public function principal_range(Request $request){
     public function vendor_finance_services(Request $request)
     {
 
-       $vendor_finances = FinanceVendorService::where('user_id',auth()->user()->id)->latest()->get();
+       $vendor_finances = DB::table('vendor_services')
+       ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+       ->join('categories','categories.id','=','sub_categories.category_id')
+       ->where('categories.name','Finance')
+       ->where('is_verified',1)
+       ->where('status','available')
+       ->where('user_id',auth()->user()->id)
+       ->orderBy('vendor_services.id','DESC')
+       ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+       ->get();
+
+
 
 
         if ($vendor_finances->count() == 0) {
-            return $this->sendError("You haven't posted any finance service");
+
+            $response = [
+                'success'=>false,
+                'message'=> "You haven't posted any finance service"
+             ];
+
+             return response()->json($response,200);
+
         }
         else{
 
@@ -494,8 +573,30 @@ public function principal_range(Request $request){
              return response()->json($response,400);
 
         }
-        $all_services = FinanceVendorService::where('status','available')->where('is_verified',1)->get();
-        $finance = FinanceVendorService::where('status','available')->where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')->get();
+        $all_services = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Finance')
+        ->where('is_verified',1)
+        ->where('status','available')
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
+
+
+
+        $finance = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Finance')
+        ->where('is_verified',1)
+        ->where('status','available')
+        ->where('name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
+
+
 
 
         if(count($finance) == 0){

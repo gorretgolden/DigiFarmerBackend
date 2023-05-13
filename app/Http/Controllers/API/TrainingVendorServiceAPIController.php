@@ -25,7 +25,7 @@ class TrainingVendorServiceAPIController extends Controller
         ->where('categories.name','Farmer Trainings')
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
         if(count($trainingVendorServices) == 0){
@@ -120,7 +120,7 @@ class TrainingVendorServiceAPIController extends Controller
                           ->where('is_verified',1)
                           ->where('vendor_services.sub_category_id',$id)
                           ->orderBy('vendor_services.id','DESC')
-                          ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time','vendor_services.image','description','price_unit','charge','status','is_verified','location')
+                          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
                           ->get();
 
 
@@ -168,7 +168,7 @@ class TrainingVendorServiceAPIController extends Controller
         ->where('is_verified',1)
         ->where('vendor_services.user_id',auth()->user()->id)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
         if($vendor_trainings->count()==0){
@@ -217,7 +217,7 @@ class TrainingVendorServiceAPIController extends Controller
         ->where('categories.name','Farmer Trainings')
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
         $trainings  = DB::table('vendor_services')
@@ -228,7 +228,7 @@ class TrainingVendorServiceAPIController extends Controller
         ->where('vendor_services.name', 'like', '%' . $search. '%')
         ->orWhere('description','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time','vendor_services.image','description','price_unit','charge','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
 
@@ -284,7 +284,7 @@ public function charge_range(Request $request){
      ->where('is_verified',1)
      ->whereBetween('charge', [$request->min_charge, $request->max_charge])
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -351,7 +351,7 @@ public function charge_range(Request $request){
      ->where('is_verified',1)
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
      $all_training_services = DB::table('vendor_services')
@@ -360,7 +360,7 @@ public function charge_range(Request $request){
      ->where('categories.name','Farmer Trainings')
      ->where('is_verified',1)
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -409,7 +409,7 @@ public function charge_range(Request $request){
     ->where('categories.name','Farmer Trainings')
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','ASC')
-    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
     ->get();
 
 
@@ -437,7 +437,7 @@ public function charge_range(Request $request){
     ->where('categories.name','Farmer Trainings')
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','DESC')
-    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.starting_date','vendor_services.starting_time','vendor_services.ending_date','vendor_services.ending_time',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','price_unit','charge','status','is_verified','location')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
     ->get();
 
 

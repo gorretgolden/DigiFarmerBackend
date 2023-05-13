@@ -36,7 +36,7 @@ class InsuaranceVendorServiceAPIController extends Controller
         ->where('categories.name','Insurance')
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','terms','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
         if(count($insuaranceVendorServices) == 0){
@@ -81,7 +81,7 @@ class InsuaranceVendorServiceAPIController extends Controller
                            ->where('is_verified',1)
                           ->where('vendor_services.sub_category_id',$id)
                           ->orderBy('vendor_services.id','DESC')
-                          ->select('vendor_services.id','vendor_services.name',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','is_verified','location')
+                          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
                           ->get();
 
 
@@ -163,7 +163,7 @@ class InsuaranceVendorServiceAPIController extends Controller
         ->where('categories.name','Insurance')
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->limit(5)
         ->get();
 
@@ -201,7 +201,7 @@ class InsuaranceVendorServiceAPIController extends Controller
         ->where('categories.name','Insurance')
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
 
@@ -212,7 +212,7 @@ class InsuaranceVendorServiceAPIController extends Controller
         ->where('is_verified',1)
         ->where('vendor_services.name', 'like', '%' . $search. '%')->orWhere('terms','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
 
@@ -278,7 +278,7 @@ class InsuaranceVendorServiceAPIController extends Controller
      ->where('is_verified',1)
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -288,7 +288,7 @@ class InsuaranceVendorServiceAPIController extends Controller
      ->where('categories.name','Insurance')
      ->where('is_verified',1)
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -335,7 +335,7 @@ class InsuaranceVendorServiceAPIController extends Controller
     ->where('categories.name','Insurance')
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','ASC')
-    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
     ->get();
 
 
@@ -364,7 +364,7 @@ class InsuaranceVendorServiceAPIController extends Controller
     ->where('categories.name','Insurance')
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','DESC')
-    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
     ->get();
 
 
@@ -397,7 +397,7 @@ class InsuaranceVendorServiceAPIController extends Controller
           ->where('is_verified',1)
           ->where('vendor_services.user_id',auth()->user()->id)
           ->orderBy('vendor_services.id','ASC')
-          ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"),'description','terms','status','is_verified','location')
+          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
           ->get();
 
 

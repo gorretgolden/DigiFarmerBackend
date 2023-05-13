@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\File;
 use App\Models\District;
 use App\Models\LoanPlan;
 use App\Models\SubCategory;
+use Notification;
+use App\Notifications\NewVendorServiceNotification;
 
 
 class VendorServiceAPIController extends Controller
@@ -316,10 +318,14 @@ class VendorServiceAPIController extends Controller
            $user->is_vendor =1;
            $user->save();
         }
+
+        $admin = User::where('user_type','admin')->first();
+        $admin->notify(new NewVendorServiceNotification($vendor_service));
+
         $response = [
             'success'=>true,
             'data'=> $vendor_service,
-            'message'=> 'Vendor serice  created successfully waiting for verifications'
+            'message'=> 'Vendor service  created successfully waiting for verifications'
          ];
 
         return response()->json($response,200);
@@ -345,77 +351,137 @@ class VendorServiceAPIController extends Controller
 
         }else{
 
-            $success['id'] = $vendor_service->id;
+            // $success['id'] = $vendor_service->id;
+            // $success['name'] = $vendor_service->name;
+            // $success['location'] = $vendor_service->location;
+
+            // //charge and price
+            // if(empty($vendor_service->price)){
+            //     $success['charge'] = $vendor_service->charge;
+            //     $success['charge_unit'] = $vendor_service->charge_unit;
+            //     $success['charge_frequency'] = $vendor_service->charge_frequency;
+            // }else{
+            //     $success['price'] = $vendor_service->price;
+            //     $success['price_unit'] = $vendor_service->price_unit;
+            // }
+
+
+            // //weight
+            // if(!empty($vendor_service->weight) && !empty($vendor_service->weight_unit)){
+            //     $success['weight'] = $vendor_service->weight;
+            //     $success['weight_unit'] = $vendor_service->weight_unit;
+
+            // }
+
+            // //stock
+            // if(!empty($vendor_service->stock_unit)){
+            //     $success['stock_unit'] = $vendor_service->stock_unit;
+            // }
+
+            // //expertise
+            // if(!empty($vendor_service->expertise)){
+            //     $success['expertise'] = $vendor_service->expertise;
+            // }
+
+            // //access
+            // if(!empty($vendor_service->access)){
+            //     $success['access'] = $vendor_service->access;
+            // }
+
+
+            // //zoom_details
+            // if(!empty($vendor_service->zoom_details)){
+            //     $success['zoom_details'] = $vendor_service->zoom_details;
+            // }
+
+            // if(!empty($vendor_service->starting_date) && !empty($vendor_service->starting_time) && !empty($vendor_service->ending_date) && !empty($vendor_service->ending_time)){
+                // $success['starting_date'] = $vendor_service->starting_date;
+                // $success['starting_time'] = $vendor_service->starting_time;
+                // $success['ending_date'] = $vendor_service->ending_date;
+                // $success['ending_time'] = $vendor_service->ending_time;
+            // }
+
+            // //finance
+            // if(!empty($vendor_service->principal) && !empty($vendor_service->interest_rate) && !empty($vendor_service->interest_rate_unit) && !empty($vendor_service->payment_frequency_pay) && !empty($vendor_service->payment_frequency_pay)){
+            //     $success['principal'] = $vendor_service->principal;
+            //     $success['interest_rate'] = $vendor_service->interest_rate;
+            //     $success['interest_rate_unit'] = $vendor_service->interest_rate_unit;
+            //     $success['payment_frequency_pay'] = $vendor_service->payment_frequency_pay;
+            //     $success['simple_interest'] = $vendor_service->simple_interest;
+            //     $success['total_amount_paid_back'] = $vendor_service->total_amount_paid_back;
+            //     $success['document_type'] = $vendor_service->document_type;
+            //     $success['terms'] = $vendor_service->terms;
+            //     $success['loan_pay_back'] = $vendor_service->loan_pay_back;
+
+
+
+            // }
+
+
+
+  $success['id'] = $vendor_service->id;
             $success['name'] = $vendor_service->name;
             $success['location'] = $vendor_service->location;
 
             //charge and price
-            if(empty($vendor_service->price)){
+
                 $success['charge'] = $vendor_service->charge;
                 $success['charge_unit'] = $vendor_service->charge_unit;
                 $success['charge_frequency'] = $vendor_service->charge_frequency;
-            }else{
+
                 $success['price'] = $vendor_service->price;
                 $success['price_unit'] = $vendor_service->price_unit;
-            }
+
 
 
             //weight
-            if(!empty($vendor_service->weight) && !empty($vendor_service->weight_unit)){
+
                 $success['weight'] = $vendor_service->weight;
                 $success['weight_unit'] = $vendor_service->weight_unit;
 
-            }
+
 
             //stock
-            if(!empty($vendor_service->stock_unit)){
-                $success['stock_unit'] = $vendor_service->stock_unit;
-            }
+
+             $success['stock_unit'] = $vendor_service->stock_unit;
+
 
             //expertise
-            if(!empty($vendor_service->expertise)){
+
                 $success['expertise'] = $vendor_service->expertise;
-            }
+
 
             //access
-            if(!empty($vendor_service->access)){
+
                 $success['access'] = $vendor_service->access;
-            }
+
 
 
             //zoom_details
-            if(!empty($vendor_service->zoom_details)){
-                $success['zoom_details'] = $vendor_service->zoom_details;
-            }
 
-            if(!empty($vendor_service->starting_date) && !empty($vendor_service->starting_time) && !empty($vendor_service->ending_date) && !empty($vendor_service->ending_time)){
+                $success['zoom_details'] = $vendor_service->zoom_details;
+
+
+
                 $success['starting_date'] = $vendor_service->starting_date;
                 $success['starting_time'] = $vendor_service->starting_time;
                 $success['ending_date'] = $vendor_service->ending_date;
                 $success['ending_time'] = $vendor_service->ending_time;
-            }
-
-            //finance
-            if(!empty($vendor_service->principal) && !empty($vendor_service->interest_rate) && !empty($vendor_service->interest_rate_unit) && !empty($vendor_service->payment_frequency_pay) && !empty($vendor_service->payment_frequency_pay)){
-                $success['principal'] = $vendor_service->principal;
-                $success['interest_rate'] = $vendor_service->interest_rate;
-                $success['interest_rate_unit'] = $vendor_service->interest_rate_unit;
-                $success['payment_frequency_pay'] = $vendor_service->payment_frequency_pay;
-                $success['simple_interest'] = $vendor_service->simple_interest;
-                $success['total_amount_paid_back'] = $vendor_service->total_amount_paid_back;
-                $success['document_type'] = $vendor_service->document_type;
-                $success['terms'] = $vendor_service->terms;
-                $success['loan_pay_back'] = $vendor_service->loan_pay_back;
 
 
-
-            }
-
-
-
-
-
-
+        $success['starting_date'] = $vendor_service->starting_date;
+        $success['starting_time'] = $vendor_service->starting_time;
+        $success['ending_date'] = $vendor_service->ending_date;
+        $success['ending_time'] = $vendor_service->ending_time;
+          $success['principal'] = $vendor_service->principal;
+          $success['interest_rate'] = $vendor_service->interest_rate;
+          $success['interest_rate_unit'] = $vendor_service->interest_rate_unit;
+          $success['payment_frequency_pay'] = $vendor_service->payment_frequency_pay;
+          $success['simple_interest'] = $vendor_service->simple_interest;
+          $success['total_amount_paid_back'] = $vendor_service->total_amount_paid_back;
+          $success['document_type'] = $vendor_service->document_type;
+          $success['terms'] = $vendor_service->terms;
+          $success['loan_pay_back'] = $vendor_service->loan_pay_back;
 
             $success['status'] = $vendor_service->status;
             $success['description'] = $vendor_service->description;

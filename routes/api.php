@@ -19,12 +19,18 @@ Route::group(['prefix'=>'v1'], function(){
     Route::post('/flw-webhook',[App\Http\Controllers\API\CollectionController::class,'saveTransaction']);
 
     Route::post('login/google',[App\Http\Controllers\API\UserAPIController::class,'googleLogin']);
-    Route::any('contact',[App\Http\Controllers\API\UserAPIController::class,'contact'])->middleware('checkUser');
+    // Route::any('contact',[App\Http\Controllers\API\UserAPIController::class,'contact'])->middleware('checkUser');
+    Route::any('contact',[App\Http\Controllers\API\UserAPIController::class,'contact']);
     Route::any('get_rtc_token',[App\Http\Controllers\API\AccessTokenController::class,'getRtcToken'])->middleware('checkUser');
     Route::any('notifications',[App\Http\Controllers\API\UserAPIController::class,'sendNotice'])
     ->middleware('checkUser');
     Route::any('bind_fcmtoken',[App\Http\Controllers\API\UserAPIController::class,'bind_fcmtoken'])
     ->middleware('checkUser');
+    Route::any('send_notice',[App\Http\Controllers\API\UserAPIController::class,'sendNotice'])
+    ->middleware('checkUser');
+    Route::any('upload_photo',[App\Http\Controllers\API\UserAPIController::class,'upload_photo']);
+    // ->middleware('checkUser');
+
 
     // transfers
     Route::post('transfer',[App\Http\Controllers\API\PaymentsController::class,'transfer']);
@@ -36,7 +42,7 @@ Route::group(['prefix'=>'v1'], function(){
     Route::get('region/{id}/districts',[App\Http\Controllers\API\RegionAPIController::class,'region_districts']);
     Route::resource('districts', App\Http\Controllers\API\DistrictAPIController::class);
     Route::get('users',[App\Http\Controllers\API\UserAPIController::class,'index']);
-    //Route::get('animal_category/{id}/feed_categories', [App\Http\Controllers\API\AnimalCategoryAPIController::class,'animal_feeds']);
+    Route::get('animal_category/{id}/animal_feeds', [App\Http\Controllers\API\AnimalCategoryAPIController::class,'animal_feed_services']);
     Route::resource('expense_categories', App\Http\Controllers\API\ExpenseCategoryAPIController::class);
     Route::resource('crops', App\Http\Controllers\API\CropAPIController::class);
 
@@ -71,10 +77,8 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('/animal_feeds', [App\Http\Controllers\API\AnimalFeedAPIController::class,'animal_feed_sub_categories']);//animal feeds
 
 
-
-
         Route::get('/{id}/rent_services', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'rent_services']);//vendors
-        Route::get('/{id}/animal_feeds', [App\Http\Controllers\API\AnimalFeedsAPIController::class,'animal_feeds']);//vendors
+      //  Route::get('/{id}/animal_feeds', [App\Http\Controllers\API\AnimalFeedsAPIController::class,'animal_feeds']);//vendors
         Route::get('/{id}/training_services', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'trainings']);//trainings vendors
         Route::get('/{id}/farm_equipments', [App\Http\Controllers\API\SellerProductAPIController::class,'farm_equipments']);//farm equipments
         Route::get('crop/{id}/agronomists', [App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,'crop_agromonomist_service']);//vendors
@@ -181,8 +185,6 @@ Route::group(['prefix'=>'v1'], function(){
 
 
 
-     //get animal feed categories by animal category
-    Route::get('animal-category/{id}/feeds', [App\Http\Controllers\AnimalFeedCategoryController::class,'animal_category_feeds'] );
 
 
       Route::get('veterinaries/all', [App\Http\Controllers\API\VeterinaryAPIController::class,'index']);
@@ -337,6 +339,7 @@ Route::group(['prefix'=>'v1'], function(){
         Route::get('agronomist_vendor_services/all', [App\Http\Controllers\API\VendorServiceAPIController::class,'index']);
         Route::get('insuarance_vendor_services/all', [App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,'index']);
         Route::get('animal_feeds/all', [App\Http\Controllers\API\AnimalFeedAPIController::class,'index']);
+        Route::get('farm_equipments/all', [App\Http\Controllers\API\SellerProductAPIController::class,'index']);
         Route::get('rent_vendor_services/all', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'index']);
         Route::get('training_vendor_services/all', [App\Http\Controllers\API\TrainingVendorServiceAPIController::class,'index']);
 
@@ -368,7 +371,7 @@ Route::group(['prefix'=>'v1'], function(){
           Route::get('vendor/rent_vendor_services', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'vendorRentService']);
 
            //seller products
-          Route::resource('farm_equipments', App\Http\Controllers\API\SellerProductAPIController::class)->only(['store','show','update','destroy']);
+          Route::resource('farm_equipments', App\Http\Controllers\API\SellerProductAPIController::class)->only(['index','store','update','destroy']);
 
           Route::get('vendor/farm_equipments', [App\Http\Controllers\API\SellerProductAPIController::class,'vendor_farm_equipments']);
 

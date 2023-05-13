@@ -154,10 +154,9 @@ class SubCategoryAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateSubCategoryAPIRequest $request)
+    public function update($id,Request $request)
     {
         $input = $request->all();
-
         /** @var SubCategory $subCategory */
         $subCategory = $this->subCategoryRepository->find($id);
 

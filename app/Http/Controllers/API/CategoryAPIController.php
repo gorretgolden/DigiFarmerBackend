@@ -166,13 +166,11 @@ class CategoryAPIController extends AppBaseController
 
         $sub_categories = DB::table('categories')
         ->join('sub_categories', 'sub_categories.category_id', '=','categories.id')
-        ->where('categories.id', '=', $category->id)
+        ->where('categories.id', '=', $id)
         ->where('sub_categories.is_active',1)
-        ->select('sub_categories.id','sub_categories.name','sub_categories.image','categories.name as category')
+        ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
         ->orderBy('sub_categories.name','ASC')
         ->get();
-
-
 
 
         if (empty($category)) {
@@ -200,7 +198,7 @@ class CategoryAPIController extends AppBaseController
                     'total-sub-categories'=>count($sub_categories),
                     'sub-categories'=>$sub_categories
                 ],
-                'message'=> 'Category  sub categories retrieved'
+                'message'=> 'Sub categories under '.$category->name.' retrieved'
               ];
              return response()->json($response,200);
 

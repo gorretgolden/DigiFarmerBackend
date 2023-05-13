@@ -10,6 +10,7 @@ use App\Models\VendorService;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\District;
+use App\Models\AnimalCategory;
 use App\Notifications\NewAnimalFeedNotification;
 use DB;
 
@@ -46,7 +47,7 @@ class AnimalFeedAPIController extends AppBaseController
                                   ->where('vendor_services.status','on-sale')
                                   ->where('is_verified',1)
                                   ->orderBy('vendor_services.id','DESC')
-                                  ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+                                  ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
                                   ->get();
 
         $response = [
@@ -99,7 +100,8 @@ class AnimalFeedAPIController extends AppBaseController
     }
 
 
-    //animal feeds
+
+
 
 
     //get animal feeds for a vendor
@@ -114,14 +116,21 @@ class AnimalFeedAPIController extends AppBaseController
         ->where('is_verified',1)
         ->where('user_id',auth()->user()->id)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->limit(5)
         ->get();
 
 
 
         if ($vendor_animal_feeds->count() == 0) {
-            return $this->sendError('You havent posted any animal feeds');
+
+            $response = [
+                'success'=>true,
+                'message'=> 'You havent posted any animal feeds'
+             ];
+
+             return response()->json($response,404);
+
         }
         else{
 
@@ -152,7 +161,7 @@ class AnimalFeedAPIController extends AppBaseController
         ->where('categories.name','Animal Feeds')
         ->where('vendor_services.status','on-sale')->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->limit(5)
         ->get();
 
@@ -191,7 +200,7 @@ class AnimalFeedAPIController extends AppBaseController
         ->where('vendor_services.status','on-sale')
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
 
@@ -205,7 +214,7 @@ class AnimalFeedAPIController extends AppBaseController
         ->where('vendor_services.name', 'like', '%' . $search. '%')
         ->orWhere('description','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','DESC')
-        ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
         ->get();
 
 
@@ -265,7 +274,7 @@ class AnimalFeedAPIController extends AppBaseController
      ->where('is_verified',1)
      ->whereBetween('price', [$request->min_price, $request->max_price])
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -334,7 +343,7 @@ class AnimalFeedAPIController extends AppBaseController
      ->where('is_verified',1)
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -346,7 +355,7 @@ class AnimalFeedAPIController extends AppBaseController
      ->where('vendor_services.status','on-sale')
      ->where('is_verified',1)
      ->orderBy('vendor_services.id','DESC')
-     ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
      ->get();
 
 
@@ -396,7 +405,7 @@ class AnimalFeedAPIController extends AppBaseController
     ->where('vendor_services.status','on-sale')
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','ASC')
-    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
     ->get();
 
 
@@ -425,7 +434,7 @@ class AnimalFeedAPIController extends AppBaseController
     ->where('vendor_services.status','on-sale')
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','DESC')
-    ->select('vendor_services.id as id','vendor_services.name as name','sub_categories.name as sub_category','vendor_services.image','description','price_unit','price','stock_amount','weight','weight_unit','status','is_verified','location')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
     ->get();
 
 

@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\AgronomistVendorService;
 
-class NewAgronomistNotification extends Notification implements ShouldQueue
+class NewVendorServiceNotification extends Notification
 {
     use Queueable;
 
@@ -17,10 +16,9 @@ class NewAgronomistNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    protected $agronomist_service;
-    public function __construct(AgronomistVendorService $agronomist_service)
+    public function __construct($vendor_service)
     {
-        $this->agronomist_service = $agronomist_service;
+        $this->vendor_service = $vendor_service;
     }
 
     /**
@@ -48,19 +46,6 @@ class NewAgronomistNotification extends Notification implements ShouldQueue
                     ->line('Thank you for using our application!');
     }
 
-
-    public function toDatabase($notifiable)
-    {
-        return [
-            'Title' => $this->agronomist_service->name,
-            'name' => $this->agronomist_service->user->username,
-            'email' => $this->agronomist_service->user->email,
-            'phone' => $this->agronomist_service->user->phone,
-            'message' =>'Vendor'.' '.$this->agronomist_service->user->username.' '.'has posted '.' '.$this->agronomist_service->name.' '.'as an agronomist service'
-
-        ];
-    }
-
     /**
      * Get the array representation of the notification.
      *
@@ -69,8 +54,14 @@ class NewAgronomistNotification extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+
+            return [
+                'Title' => $this->vendor_service->name,
+                'name' => $this->vendor_service->vendor->username,
+                'email' => $this->vendor_service->vendor->email,
+                'phone' => $this->vendor_service->vendor->phone,
+                'message' =>'Vendor'.' '.$this->vendor_service->vendor->username.' '.'has posted a '.$this->vendor_service->sub_category->category->name.' vendor service'
+
+            ];
     }
 }

@@ -144,7 +144,7 @@ class SubCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateSubCategoryRequest $request)
+    public function update($id, Request $request)
     {
         $subCategory = $this->subCategoryRepository->find($id);
 

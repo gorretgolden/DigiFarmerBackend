@@ -14,6 +14,7 @@ use App\Models\Address;
 use App\Models\User;
 use App\Models\District;
 use App\Notifications\NewAgronomistNotification;
+use DB;
 /**use App\Models\VendorCategory;
 
  * Class AgronomistVendorServiceController
@@ -57,11 +58,26 @@ class AgronomistVendorServiceAPIController extends Controller
     public function vendor_agro_services(Request $request){
 
 
-        $agro_services = AgronomistVendorService::where('user_id',auth()->user()->id)->latest()->get();
+        $agro_services = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Agronomist')
+        ->where('is_verified',1)
+        ->where('vendor_services.user_id',auth()->user()->id)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
 
 
         if ($agro_services->count() == 0) {
-            return $this->sendError("You haven't posted any agro service");
+
+            $response = [
+                'success'=>false,
+                'message'=> "You haven't posted any agro service"
+             ];
+
+             return response()->json($response,404);
+
         }
         else{
 
@@ -94,8 +110,27 @@ class AgronomistVendorServiceAPIController extends Controller
 
         }
 
-        $all_ago_services = AgronomistVendorService::all();
-        $agronomists = AgronomistVendorService::where('is_verified',1)->where('name', 'like', '%' . $search. '%')->orWhere('expertise','like', '%' . $search.'%')->get();
+        $all_ago_services = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Agronomists')
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
+
+
+        $agronomists = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->join('categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Agronomists')
+        ->where('is_verified',1)
+        ->where('name', 'like', '%' . $search. '%')
+        ->orWhere('expertise','like', '%' . $search.'%')
+        ->orderBy('vendor_services.id','ASC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
+
 
 
         if(count($agronomists) == 0){
@@ -142,7 +177,17 @@ public function charge_range(Request $request){
     }else{
 
 
-     $agronomist_services = AgronomistVendorService::select("*")->where('is_verified',1)->whereBetween('charge', [$request->min_charge, $request->max_charge])->get();
+     $agronomist_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Agronomists')
+     ->where('is_verified',1)
+     ->whereBetween('charge', [$request->min_charge, $request->max_charge])
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+     ->get();
+
+
 
      if(count($agronomist_services)==0){
         $response = [
@@ -200,8 +245,26 @@ public function charge_range(Request $request){
      }
 
 
-     $agronomist_services = AgronomistVendorService::where('is_verified',1)->where('location',$district->name)->get();
-     $all_agronomist_services = AgronomistVendorService::where('is_verified',1)->get();
+     $agronomist_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Agronomists')
+     ->where('is_verified',1)
+     ->where('location',$district->name)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+     ->get();
+
+
+     $all_agronomist_services = DB::table('vendor_services')
+     ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+     ->join('categories','categories.id','=','sub_categories.category_id')
+     ->where('categories.name','Agronomists')
+     ->where('is_verified',1)
+     ->orderBy('vendor_services.id','DESC')
+     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+     ->get();
+
 
      if(count($agronomist_services) == 0){
 
@@ -241,7 +304,15 @@ public function charge_range(Request $request){
 
  public function agronomist_services_asc_sort(){
 
-    $agronomist_services = AgronomistVendorService::where('is_verified',1)->orderBy('name','ASC')->get();
+    $agronomist_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Agronomists')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.id','ASC')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+    ->get();
+
 
 
     $response = [
@@ -260,7 +331,16 @@ public function charge_range(Request $request){
 
  public function agronomist_services_desc_sort(){
 
-    $agronomist_services = AgronomistVendorService::where('is_verified',1)->orderBy('name','DESC')->get();
+    $agronomist_services = DB::table('vendor_services')
+    ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+    ->join('categories','categories.id','=','sub_categories.category_id')
+    ->where('categories.name','Agronomists')
+    ->where('is_verified',1)
+    ->orderBy('vendor_services.id','DESC')
+    ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+    ->get();
+
+
 
 
     $response = [
