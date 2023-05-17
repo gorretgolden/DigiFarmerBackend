@@ -17,6 +17,20 @@ use Laravel\Socialite\Facades\Socialite;
 
 Route::group(['prefix'=>'v1'], function(){
     Route::post('/flw-webhook',[App\Http\Controllers\API\CollectionController::class,'saveTransaction']);
+    Route::post('login/google',[App\Http\Controllers\API\UserAPIController::class,'googleLogin']);
+    Route::any('contact',[App\Http\Controllers\API\UserAPIController::class,'contact']);
+    Route::any('get_rtc_token',[App\Http\Controllers\API\AccessTokenController::class,'getRtcToken'])->middleware('checkUser');
+    Route::any('notifications',[App\Http\Controllers\API\UserAPIController::class,'sendNotice'])
+    ->middleware('checkUser');
+    Route::any('bind_fcmtoken',[App\Http\Controllers\API\UserAPIController::class,'bind_fcmtoken'])
+    ->middleware('checkUser');
+    Route::any('send_notice',[App\Http\Controllers\API\UserAPIController::class,'sendNotice'])
+    ->middleware('checkUser');
+    Route::any('upload_photo',[App\Http\Controllers\API\UserAPIController::class,'upload_photo']);
+    // ->middleware('checkUser');
+
+
+
 
     Route::post('login/google',[App\Http\Controllers\API\UserAPIController::class,'googleLogin']);
     // Route::any('contact',[App\Http\Controllers\API\UserAPIController::class,'contact'])->middleware('checkUser');

@@ -76,6 +76,5 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'checkSession' => \App\Http\Middleware\checkSession::class,
         'checkUser' => \App\Http\Middleware\CheckUser::class,
-
     ];
 }
