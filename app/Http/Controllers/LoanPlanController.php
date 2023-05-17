@@ -30,10 +30,9 @@ class LoanPlanController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $loanPlans = LoanPlan::orderBy('value','ASC')->get();
+        $loanPlans = LoanPlan::orderBy("value", "ASC")->get();
 
-        return view('loan_plans.index')
-            ->with('loanPlans', $loanPlans);
+        return view("loan_plans.index")->with("loanPlans", $loanPlans);
     }
 
     /**
@@ -43,7 +42,7 @@ class LoanPlanController extends AppBaseController
      */
     public function create()
     {
-        return view('loan_plans.create');
+        return view("loan_plans.create");
     }
 
     /**
@@ -55,44 +54,32 @@ class LoanPlanController extends AppBaseController
      */
     public function store(CreateLoanPlanRequest $request)
     {
-
-
         //if existing value
-        $existing_value = LoanPlan::where('value',$request->value)->first();
+        $existing_value = LoanPlan::where("value", $request->value)->first();
 
-        if($existing_value){
+        if ($existing_value) {
+            Flash::error("Loan Plan already exists");
 
-            Flash::error('Loan Plan already exists');
-
-            return redirect(route('loanPlans.index'));
-
-        }else{
-
-            if($request->value == 1){
+            return redirect(route("loanPlans.index"));
+        } else {
+            if ($request->value == 1) {
                 $new_plan = new LoanPlan();
                 $new_plan->value = $request->value;
-                $new_plan->period_unit = 'Month';
+                $new_plan->period_unit = "Month";
                 $new_plan->save();
-                Flash::success('Loan Plan saved successfully.');
+                Flash::success("Loan Plan saved successfully.");
 
-                return redirect(route('loanPlans.index'));
-
-            }else{
+                return redirect(route("loanPlans.index"));
+            } else {
                 $new_plan = new LoanPlan();
                 $new_plan->value = $request->value;
-                $new_plan->period_unit = 'Months';
+                $new_plan->period_unit = "Months";
                 $new_plan->save();
-                Flash::success('Loan Plan saved successfully.');
+                Flash::success("Loan Plan saved successfully.");
 
-                return redirect(route('loanPlans.index'));
-
+                return redirect(route("loanPlans.index"));
             }
         }
-
-
-
-
-
     }
 
     /**
@@ -107,17 +94,15 @@ class LoanPlanController extends AppBaseController
         $loanPlan = $this->loanPlanRepository->find($id);
 
         if (empty($loanPlan)) {
-            Flash::error('Loan Plan not found');
+            Flash::error("Loan Plan not found");
 
-            return redirect(route('loanPlans.index'));
+            return redirect(route("loanPlans.index"));
         }
 
-        return view('loan_plans.show')->with('loanPlan', $loanPlan);
+        return view("loan_plans.show")->with("loanPlan", $loanPlan);
     }
 
-
-
-     * Show the form for editing the specified LoanPlan.
+    /* Show the form for editing the specified LoanPlan.
      *
      * @param int $id
      *
@@ -128,12 +113,12 @@ class LoanPlanController extends AppBaseController
         $loanPlan = $this->loanPlanRepository->find($id);
 
         if (empty($loanPlan)) {
-            Flash::error('Loan Plan not found');
+            Flash::error("Loan Plan not found");
 
-            return redirect(route('loanPlans.index'));
+            return redirect(route("loanPlans.index"));
         }
 
-        return view('loan_plans.edit')->with('loanPlan', $loanPlan);
+        return view("loan_plans.edit")->with("loanPlan", $loanPlan);
     }
 
     /**
@@ -149,16 +134,16 @@ class LoanPlanController extends AppBaseController
         $loanPlan = $this->loanPlanRepository->find($id);
 
         if (empty($loanPlan)) {
-            Flash::error('Loan Plan not found');
+            Flash::error("Loan Plan not found");
 
-            return redirect(route('loanPlans.index'));
+            return redirect(route("loanPlans.index"));
         }
 
         $loanPlan = $this->loanPlanRepository->update($request->all(), $id);
 
-        Flash::success('Loan Plan updated successfully.');
+        Flash::success("Loan Plan updated successfully.");
 
-        return redirect(route('loanPlans.index'));
+        return redirect(route("loanPlans.index"));
     }
 
     /**
@@ -175,15 +160,15 @@ class LoanPlanController extends AppBaseController
         $loanPlan = $this->loanPlanRepository->find($id);
 
         if (empty($loanPlan)) {
-            Flash::error('Loan Plan not found');
+            Flash::error("Loan Plan not found");
 
-            return redirect(route('loanPlans.index'));
+            return redirect(route("loanPlans.index"));
         }
 
         $this->loanPlanRepository->delete($id);
 
-        Flash::success('Loan Plan deleted successfully.');
+        Flash::success("Loan Plan deleted successfully.");
 
-        return redirect(route('loanPlans.index'));
+        return redirect(route("loanPlans.index"));
     }
 }
