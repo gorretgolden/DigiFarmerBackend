@@ -190,7 +190,7 @@ class VendorService extends Model
     {
 
         if ($image) {
-            return $this->dir.$image;
+            return asset($this->dir.$image);
          }
 
     }

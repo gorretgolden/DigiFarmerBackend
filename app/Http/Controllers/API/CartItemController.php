@@ -41,7 +41,6 @@ class CartItemController extends Controller
 
           // dd($products);
 
-
             $response = [
                 'success'=>true,
                 'data'=>[
@@ -68,6 +67,8 @@ class CartItemController extends Controller
     //add item to cart
     public function add_product_to_cart(Request $request,$id){
 
+
+
         //check user cart
         $existing_user_cart = Cart::where('user_id',auth()->user()->id)->first();
         $vendor_service = VendorService::find($id);
@@ -88,6 +89,7 @@ class CartItemController extends Controller
 
 
         if($existing_user_cart){
+
 
             //check if product exists in cart
             if(CartItem::where('cart_id',$existing_user_cart->id)->where('vendor_service_id',$id)->first()){
@@ -110,6 +112,9 @@ class CartItemController extends Controller
                 $new_cart_product->cart_id = $existing_user_cart->id;
                 $new_cart_product->vendor_service_id = $id;
                 $new_cart_product->quantity = 1;
+                $new_cart_product->user_id = $request->user()->id;
+
+
 
                 if($category == 'Rent'){
 
@@ -138,7 +143,7 @@ class CartItemController extends Controller
                 $success['quantity'] = $new_cart_product->quantity;
                 $success['type'] = $new_cart_product->type;
                 $success['total_cost'] = $new_cart_product->total_cost;
-
+                $success['user_id'] = $new_cart_product->user_id;
 
 
 

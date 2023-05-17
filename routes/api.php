@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -327,9 +328,6 @@ Route::group(['prefix'=>'v1'], function(){
 
           //cart
          Route::group(['prefix' => 'cart'],function () {
-
-
-
           Route::get('user/cart_items',[App\Http\Controllers\API\CartItemController::class,'user_cart_items']);
           Route::post('vendor_service/add/{id}',[App\Http\Controllers\API\CartItemController::class,'add_product_to_cart']);
           Route::patch('cart_item/add-qty/{id}',[App\Http\Controllers\API\CartItemController::class,'increase_quantity']);
@@ -338,8 +336,10 @@ Route::group(['prefix'=>'v1'], function(){
           Route::patch('rent-service/add-charge-value/{id}',[App\Http\Controllers\API\CartItemController::class,'increase_charge_value']);
           Route::patch('rent-service/reduce-charge-value/{id}',[App\Http\Controllers\API\CartItemController::class,'reduce_charge_value']);
 
+        });
 
-     });
+        //orders
+        Route::apiResource('orders', OrderController::class);
 
 
         //all vendor groups
