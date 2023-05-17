@@ -34,8 +34,7 @@ class OnboardingController extends AppBaseController
     {
         $onBoardings = Onboarding::latest()->paginate(6);
 
-        return view('onboardings.index')
-            ->with('onBoardings', $onBoardings);
+        return view("onboardings.index")->with("onBoardings", $onBoardings);
     }
 
     /**
@@ -45,7 +44,7 @@ class OnboardingController extends AppBaseController
      */
     public function create()
     {
-        return view('onboardings.create');
+        return view("onboardings.create");
     }
 
     /**
@@ -58,31 +57,29 @@ class OnboardingController extends AppBaseController
     public function store(CreateOnboardingRequest $request)
     {
         //existing title
-        $existing_title = Onboarding::where('title',$request->title)->first();
+        $existing_title = Onboarding::where("title", $request->title)->first();
 
-        if(!$existing_title){
+        if (!$existing_title) {
+            $new_onboarding = new Onboarding();
+            $new_onboarding->title = $request->title;
+            $new_onboarding->is_active = $request->is_active;
+            $new_onboarding->description = $request->description;
+            $new_onboarding->image = $request->image;
+            $new_onboarding->save();
 
-           $new_onboarding = new Onboarding();
-           $new_onboarding->title = $request->title;
-           $new_onboarding->is_active = $request->is_active;
-           $new_onboarding->description = $request->description;
-           $new_onboarding->image = $request->image;
-           $new_onboarding->save();
+            $new_onboarding = Onboarding::find($new_onboarding->id);
 
-           $new_onboarding = Onboarding::find($new_onboarding->id);
-
-           $new_onboarding->image = \App\Models\ImageUploader::upload($request->file('image'),'onboardings');
-           $new_onboarding->save();
-           Flash::success('Onboarding saved successfully.');
-           return redirect(route('onboardings.index'));
+            $new_onboarding->image = \App\Models\ImageUploader::upload(
+                $request->file("image"),
+                "onboardings"
+            );
+            $new_onboarding->save();
+            Flash::success("Onboarding saved successfully.");
+            return redirect(route("onboardings.index"));
+        } else {
+            Flash::error("Title already already exists");
+            return redirect(route("onboardings.index"));
         }
-        else{
-           Flash::error('Title already already exists');
-           return redirect(route('onboardings.index'));
-        }
-
-
-
     }
 
     /**
@@ -97,12 +94,12 @@ class OnboardingController extends AppBaseController
         $onboarding = $this->onboardingRepository->find($id);
 
         if (empty($onboarding)) {
-            Flash::error('Onboarding not found');
+            Flash::error("Onboarding not found");
 
-            return redirect(route('onboardings.index'));
+            return redirect(route("onboardings.index"));
         }
 
-        return view('onboardings.show')->with('onboarding', $onboarding);
+        return view("onboardings.show")->with("onboarding", $onboarding);
     }
 
     /**
@@ -117,12 +114,12 @@ class OnboardingController extends AppBaseController
         $onboarding = $this->onboardingRepository->find($id);
 
         if (empty($onboarding)) {
-            Flash::error('Onboarding not found');
+            Flash::error("Onboarding not found");
 
-            return redirect(route('onboardings.index'));
+            return redirect(route("onboardings.index"));
         }
 
-        return view('onboardings.edit')->with('onboarding', $onboarding);
+        return view("onboardings.edit")->with("onboarding", $onboarding);
     }
 
     /**
@@ -138,20 +135,23 @@ class OnboardingController extends AppBaseController
         $onboarding = $this->onboardingRepository->find($id);
 
         if (empty($onboarding)) {
-            Flash::error('Onboarding not found');
+            Flash::error("Onboarding not found");
 
-            return redirect(route('onboardings.index'));
+            return redirect(route("onboardings.index"));
         }
 
-        if(!empty($request->file('image'))){
-            $onboarding->image = \App\Models\ImageUploader::upload($request->file('image'),'onboardings');
+        if (!empty($request->file("image"))) {
+            $onboarding->image = \App\Models\ImageUploader::upload(
+                $request->file("image"),
+                "onboardings"
+            );
         }
         $onboarding->save();
         $onboarding = $this->onboardingRepository->update($request->all(), $id);
 
-        Flash::success('Onboarding updated successfully.');
+        Flash::success("Onboarding updated successfully.");
 
-        return redirect(route('onboardings.index'));
+        return redirect(route("onboardings.index"));
     }
 
     /**
@@ -166,15 +166,15 @@ class OnboardingController extends AppBaseController
         $onboarding = $this->onboardingRepository->find($id);
 
         if (empty($onboarding)) {
-            Flash::error('Onboarding not found');
+            Flash::error("Onboarding not found");
 
-            return redirect(route('onboardings.index'));
+            return redirect(route("onboardings.index"));
         }
 
         $this->onboardingRepository->delete($id);
 
-        Flash::success('Onboarding deleted successfully.');
+        Flash::success("Onboarding deleted successfully.");
 
-        return redirect(route('onboardings.index'));
+        return redirect(route("onboardings.index"));
     }
 }
