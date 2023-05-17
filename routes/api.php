@@ -68,6 +68,8 @@ Route::group(['prefix'=>'v1'], function(){
 
     Route::group(['prefix' => 'sub_categories'],function () {
 
+        Route::get('{id}/vendor_services', [App\Http\Controllers\API\VendorServiceAPIController::class,'vendor_services']);
+
         //all sub categories
         Route::get('/farm_equipments', [App\Http\Controllers\API\SellerProductAPIController::class,'farm_equipments_sub_categories']);//farm equipments
         Route::get('/rent_services', [App\Http\Controllers\API\RentVendorServiceAPIController::class,'rent_sub_categories']);//farm equipments
@@ -333,6 +335,7 @@ Route::group(['prefix'=>'v1'], function(){
          //post vendor service
          Route::post('vendor_service/create', [App\Http\Controllers\API\VendorServiceAPIController::class,'store']);
          Route::get('vendor_service/{id}', [App\Http\Controllers\API\VendorServiceAPIController::class,'show']);
+
 
           //get all vendor services data
 

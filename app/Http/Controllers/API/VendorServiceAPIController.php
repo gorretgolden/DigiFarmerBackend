@@ -15,6 +15,7 @@ use App\Models\District;
 use App\Models\LoanPlan;
 use App\Models\SubCategory;
 use Notification;
+use DB;
 use App\Notifications\NewVendorServiceNotification;
 
 
@@ -506,7 +507,55 @@ class VendorServiceAPIController extends Controller
 
     }
 
-      //training vendor services for a single vendor
+
+    public function vendor_services(Request $request,$id){
+
+        $sub_category = SubCategory::find($id);
+
+        $vendor_services = DB::table('vendor_services')
+        ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+        ->where('sub_categories.id',$id)
+        ->where('is_verified',1)
+        ->orderBy('vendor_services.id','DESC')
+        ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+        ->get();
+
+        if(empty($sub_category)){
+            $response = [
+                'success'=>false,
+                'message'=> 'Sub category not found'
+             ];
+             return response()->json($response,404);
+
+        }
+
+
+        if($vendor_services->count()==0){
+
+            $response = [
+                'success'=>false,
+                'message'=> 'No vendor_services have been posted under '.$sub_category->name
+             ];
+             return response()->json($response,404);
+
+        }
+
+             $response = [
+                 'success'=>true,
+                 'data'=> [
+                    'total-vendor-services'=>count($vendor_services),
+                    'sub-category'=>$sub_category->name,
+                    'vendor-services' =>  $vendor_services
+                 ],
+                 'message'=> 'Vendor services under '.$sub_category->name .' retrieved successfully'
+              ];
+              return response()->json($response,200);
+
+
+
+
+    }
+
 
 
 
