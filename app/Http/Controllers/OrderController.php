@@ -82,6 +82,14 @@ class OrderController extends Controller
             }
 
             CartItem::where(["user_id" => $request->user()->id])->delete();
+            return response()->json(
+                [
+                    "success" => true,
+                    "error" => null,
+                    "message" => "Order added successfully",
+                ],
+                201
+            );
         } else {
             return response()->json(
                 ["message" => "You add some items to cart"],
