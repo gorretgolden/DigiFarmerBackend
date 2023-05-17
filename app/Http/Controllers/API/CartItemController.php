@@ -33,7 +33,7 @@ class CartItemController extends Controller
                         ->join('cart_items', 'carts.id', '=','cart_items.cart_id')
                         ->join('vendor_services', 'vendor_services.id', '=', 'cart_items.vendor_service_id')
                         ->where('carts.user_id', '=', $user_cart->user_id)
-                        ->select('cart_items.id as cart_item_id','cart_items.quantity','cart_items.type','cart_items.charge_value','vendor_services.id as vendor_service_id',DB::raw("CONCAT('https://digifarmer.agrosahas.co/farmerapp/public/storage/vendor_services/', vendor_services.image) AS image"),'vendor_services.name','vendor_services.price_unit','vendor_services.price','vendor_services.charge','cart_items.total_cost')
+                        ->select('cart_items.id as cart_item_id','cart_items.quantity','carts.user_id','cart_items.type','cart_items.charge_value','vendor_services.id as vendor_service_id',DB::raw("CONCAT('https://digifarmer.agrosahas.co/farmerapp/public/storage/vendor_services/', vendor_services.image) AS image"),'vendor_services.name','vendor_services.price_unit','vendor_services.price','vendor_services.charge','cart_items.total_cost')
                         ->get();
 
 
