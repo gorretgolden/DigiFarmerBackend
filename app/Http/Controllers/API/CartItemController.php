@@ -170,6 +170,7 @@ class CartItemController extends Controller
             $new_cart_product = new CartItem();
             $new_cart_product->cart_id = $new_cart->id;
             $new_cart_product->vendor_service_id = $id;
+            $new_cart_product->user_id = $request->user()->id;
 
             if($category == 'Rent'){
 

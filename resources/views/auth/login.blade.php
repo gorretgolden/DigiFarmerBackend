@@ -33,7 +33,8 @@
 
 </head>
 
-<body class="hold-transition login-page bg-success" style="background-image: url('https://media.istockphoto.com/id/1308606393/photo/corn-field-in-agricultural-garden-and-light-shines-sunset.jpg?b=1&s=170667a&w=0&k=20&c=KcQPWv5gUPQbIlmfmBGuQxx4YkoJRY9sy7HV0Mypkso=');background-repeat: no-repeat;background-size: cover; ">
+<body class="hold-transition login-page bg-success"
+    style="background-image: url('https://img.freepik.com/free-photo/meadow-with-trees-wooden-fence_1160-287.jpg?size=626&ext=jpg&uid=R46484519&ga=GA1.1.1085104606.1668665649&semt=ais');background-repeat: no-repeat;background-size: cover; ">
     <div class="login-box">
         <div class="login-logo">
             <a class="text-dark font-weight-bold" href="{{ url('/home') }}"><b>Digi Farmer</b></a>
@@ -42,7 +43,7 @@
         <!-- /.login-logo -->
 
         <!-- /.login-box-body -->
-        <div class="card bd-light shadow-sm">
+        <div class="card bd-light ">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
 
@@ -102,7 +103,7 @@
                 </form>
 
                 <div class="row">
-{{--
+                    {{--
                     <div class="col-12">
                         <p class="mb-0">
                             <a href="{{ route('google') }}" class="text-center text-dark">

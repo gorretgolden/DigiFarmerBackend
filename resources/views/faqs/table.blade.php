@@ -12,13 +12,13 @@
         <tbody>
             @foreach ($faqs as $faq)
                 <tr>
-                    <td>{{ $faq->faq_category->name }}</td>
+                    <td>{{ $faq->category->name }}</td>
                     <td>{{ $faq->question }}</td>
                     <td>{{ $faq->answer }}</td>
                     <td>
                         @if ($faq->is_active == 1)
                             <p class="badge rounded-pill bg-success">enabled</p>
-                            @else
+                        @else
                             <p class="badge rounded-pill bg-danger">disabled</p>
                         @endif
                     </td>

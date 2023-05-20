@@ -41,7 +41,7 @@ class Permission extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string'
+        'name' => 'required|string|unique:permissions'
     ];
 
 

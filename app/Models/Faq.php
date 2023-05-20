@@ -26,7 +26,7 @@ class Faq extends Model
 
 
     public $fillable = [
-        'faq_category_id',
+        'category_id',
         'question',
         'answer',
         'is_active'
@@ -38,7 +38,7 @@ class Faq extends Model
      * @var array
      */
     protected $casts = [
-        'faq_category_id' => 'integer',
+        'category_id' => 'integer',
         'question' => 'string',
         'answer' => 'string',
         'is_active' => 'boolean'
@@ -50,7 +50,7 @@ class Faq extends Model
      * @var array
      */
     public static $rules = [
-        'faq_category_id' => 'required|integer',
+        'category_id' => 'required|integer',
         'question' => 'required|string|max:50',
         'answer' => 'required|string|max:255'
     ];
@@ -63,9 +63,9 @@ class Faq extends Model
 
 
     //belongs to faq category
-    public function faq_category()
+    public function category()
     {
-       return $this->belongsTo(\App\Models\FaqCategory::class,'faq_category_id');
+       return $this->belongsTo(\App\Models\Category::class,'category_id');
     }
 
 
