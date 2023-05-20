@@ -30,7 +30,7 @@ class UserTypeController extends AppBaseController
      */
     public function index(UserTypeDataTable $userTypeDataTable)
     {
-        return $userTypeDataTable->render('user_types.index');
+        return $userTypeDataTable->render("user_types.index");
     }
 
     /**
@@ -40,7 +40,7 @@ class UserTypeController extends AppBaseController
      */
     public function create()
     {
-        return view('user_types.create');
+        return view("user_types.create");
     }
 
     /**
@@ -56,9 +56,9 @@ class UserTypeController extends AppBaseController
 
         $userType = $this->userTypeRepository->create($input);
 
-        Flash::success('User Type saved successfully.');
+        Flash::success("User Type saved successfully.");
 
-        return redirect(route('userTypes.index'));
+        return redirect(route("userTypes.index"));
     }
 
     /**
@@ -73,12 +73,12 @@ class UserTypeController extends AppBaseController
         $userType = $this->userTypeRepository->find($id);
 
         if (empty($userType)) {
-            Flash::error('User Type not found');
+            Flash::error("User Type not found");
 
-            return redirect(route('userTypes.index'));
+            return redirect(route("userTypes.index"));
         }
 
-        return view('user_types.show')->with('userType', $userType);
+        return view("user_types.show")->with("userType", $userType);
     }
 
     /**
@@ -93,12 +93,12 @@ class UserTypeController extends AppBaseController
         $userType = $this->userTypeRepository->find($id);
 
         if (empty($userType)) {
-            Flash::error('User Type not found');
+            Flash::error("User Type not found");
 
-            return redirect(route('userTypes.index'));
+            return redirect(route("userTypes.index"));
         }
 
-        return view('user_types.edit')->with('userType', $userType);
+        return view("user_types.edit")->with("userType", $userType);
     }
 
     /**
@@ -114,16 +114,16 @@ class UserTypeController extends AppBaseController
         $userType = $this->userTypeRepository->find($id);
 
         if (empty($userType)) {
-            Flash::error('User Type not found');
+            Flash::error("User Type not found");
 
-            return redirect(route('userTypes.index'));
+            return redirect(route("userTypes.index"));
         }
 
         $userType = $this->userTypeRepository->update($request->all(), $id);
 
-        Flash::success('User Type updated successfully.');
+        Flash::success("User Type updated successfully.");
 
-        return redirect(route('userTypes.index'));
+        return redirect(route("userTypes.index"));
     }
 
     /**
@@ -138,15 +138,15 @@ class UserTypeController extends AppBaseController
         $userType = $this->userTypeRepository->find($id);
 
         if (empty($userType)) {
-            Flash::error('User Type not found');
+            Flash::error("User Type not found");
 
-            return redirect(route('userTypes.index'));
+            return redirect(route("userTypes.index"));
         }
 
         $this->userTypeRepository->delete($id);
 
-        Flash::success('User Type deleted successfully.');
+        Flash::success("User Type deleted successfully.");
 
-        return redirect(route('userTypes.index'));
+        return redirect(route("userTypes.index"));
     }
 }

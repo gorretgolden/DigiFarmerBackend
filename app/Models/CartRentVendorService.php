@@ -8,15 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class CartRentVendorService extends Model
 {
     use HasFactory;
-    public $table = 'cart_rent_vendor_service';
+    public $table = "cart_rent_vendor_service";
 
-
-    public $fillable = [
-        'cart_id',
-        'rent_vendor_service_id',
-        'days'
-
-    ];
+    public $fillable = ["cart_id", "rent_vendor_service_id", "days"];
 
     /**
      * The attributes that should be casted to native types.
@@ -24,11 +18,9 @@ class CartRentVendorService extends Model
      * @var array
      */
     protected $casts = [
-
-        'cart_id'=>'integer',
-        'rent_vendor_service_id'=>'integer',
-        'days'=>'integer'
-
+        "cart_id" => "integer",
+        "rent_vendor_service_id" => "integer",
+        "days" => "integer",
     ];
 
     /**
@@ -37,8 +29,7 @@ class CartRentVendorService extends Model
      * @var array
      */
     public static $rules = [
-        'cart_id' => 'required|integer',
-        'rent_vendor_service_id' => 'required|integer'
-
+        "cart_id" => "required|integer",
+        "rent_vendor_service_id" => "required|integer",
     ];
 }
