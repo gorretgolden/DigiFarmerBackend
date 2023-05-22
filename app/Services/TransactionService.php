@@ -69,28 +69,31 @@ class TransactionService
 
         try {
             $uri = "{$this->baseUrl}" . "/charges?type=mobile_money_uganda";
+            $data = [
+                "amount" => $bodyData["amount"],
+                "tx_ref" => base64_encode(
+                    auth()->user()->email .
+                        "." .
+                        auth()->user()->id .
+                        "." .
+                        $bodyData["pay_type"] .
+                        "." .
+                        $bodyData["payment_id"] .
+                        "." .
+                        time()
+                ),
+                "currency" => "UGX",
+                "phone_number" => $bodyData["phone_number"],
+                "email" => auth()->user()->email,
+                "fullname" => auth()->user()->username,
+            ];
             $response = Http::withHeaders($headers)
                 ->withOptions(["verify" => false])
                 ->retry(3, 100)
-                ->post($uri, [
-                    "amount" => $bodyData["amount"],
-                    "tx_ref" => base64_encode(
-                        auth()->user()->email .
-                            "." .
-                            auth()->user()->id .
-                            "." .
-                            $bodyData["pay_type"] .
-                            "." .
-                            $bodyData["payment_id"]
-                    ),
-                    "currency" => "UGX",
-                    "phone_number" => $bodyData["phone_number"],
-                    "email" => auth()->user()->email,
-                    "fullname" => auth()->user()->username,
-                ]);
+                ->post($uri, $data);
 
             if ($response->status() == 200) {
-                return $response->json();
+                return ["data" => $data, "response" => $response->json()];
             } else {
                 return [
                     "statusCode" => $response->status(),

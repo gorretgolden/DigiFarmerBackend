@@ -21,21 +21,23 @@ class CollectionController extends Controller
         $data["payment_id"] = request()->payment_id;
 
         $resp = $transactionService->transRequest($data);
-        $redirect_link = $resp["meta"]["authorization"]["redirect"];
+
+        $redirect_link = $resp["response"]["meta"]["authorization"]["redirect"];
         $response = [
-            "status" => $resp["status"],
-            "message" => $resp["message"],
+            "status" => $resp["response"]["status"],
+            "message" => $resp["response"]["message"],
+            "data" => $resp["data"],
             "redirect-link" => $redirect_link,
         ];
 
-        if ($resp["status"] == "success") {
+        if ($resp["response"]["status"] == "success") {
             return response()->json($response, 200);
         } else {
             $response = [
                 "success" => false,
                 "message" => "Something wrong happened",
             ];
-            return response()->json($res, 400);
+            return response()->json($response, 400);
         }
     }
 
