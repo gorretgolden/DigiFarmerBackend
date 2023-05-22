@@ -34,9 +34,9 @@ class TransactionService
         return $this->fetchTransactions();
     }
 
-    public function transactionVerify($id)
+    public function transactionVerify($txRef)
     {
-        return $this->verifyTransaction($id);
+        return $this->verifyTransaction($txRef);
     }
     public function transactionResend($id)
     {
@@ -69,28 +69,31 @@ class TransactionService
 
         try {
             $uri = "{$this->baseUrl}" . "/charges?type=mobile_money_uganda";
+            $data = [
+                "amount" => $bodyData["amount"],
+                "tx_ref" => base64_encode(
+                    auth()->user()->email .
+                        "." .
+                        auth()->user()->id .
+                        "." .
+                        $bodyData["pay_type"] .
+                        "." .
+                        $bodyData["payment_id"] .
+                        "." .
+                        time()
+                ),
+                "currency" => "UGX",
+                "phone_number" => $bodyData["phone_number"],
+                "email" => auth()->user()->email,
+                "fullname" => auth()->user()->username,
+            ];
             $response = Http::withHeaders($headers)
                 ->withOptions(["verify" => false])
                 ->retry(3, 100)
-                ->post($uri, [
-                    "amount" => $bodyData["amount"],
-                    "tx_ref" => base64_encode(
-                        auth()->user()->email .
-                            "." .
-                            auth()->user()->id .
-                            "." .
-                            $bodyData["pay_type"] .
-                            "." .
-                            $bodyData["payment_id"]
-                    ),
-                    "currency" => "UGX",
-                    "phone_number" => $bodyData["phone_number"],
-                    "email" => auth()->user()->email,
-                    "fullname" => auth()->user()->username,
-                ]);
+                ->post($uri, $data);
 
             if ($response->status() == 200) {
-                return $response->json();
+                return ["data" => $data, "response" => $response->json()];
             } else {
                 return [
                     "statusCode" => $response->status(),
@@ -175,7 +178,7 @@ class TransactionService
     /**
      * method to verify a specific transaction
      */
-    private function verifyTransaction($transactionId)
+    private function verifyTransaction($txRef)
     {
         $headers = [
             "Authorization" => "Bearer " . $this->secretKey,
@@ -184,9 +187,7 @@ class TransactionService
         try {
             $uri =
                 "{$this->baseUrl}" .
-                "transactions/" .
-                $transactionId .
-                "/verify";
+                "transactions/verify_by_reference?tx_ref={$txRef}";
             $response = Http::withHeaders($headers)
                 ->withOptions(["verify" => false])
                 ->retry(3, 100)
