@@ -57,11 +57,19 @@ class CollectionController extends Controller
         return response()->json($response);
     }
 
-    public function verifyTransaction($transactionId)
+    public function verifyTransaction(Request $request)
     {
-        $transactionService = new TransactionService();
-        $response = $transactionService->transactionVerify($transactionId);
-        return response()->json($response);
+        if ($request->has("tx_ref")) {
+            $txRef = $request->get("tx_ref");
+            $transactionService = new TransactionService();
+            $response = $transactionService->transactionVerify($txRef);
+            return response()->json($response);
+        } else {
+            return response()->json(
+                ["message" => "Route missing required parameter"],
+                400
+            );
+        }
     }
 
     public function resendTransaction($transactionId)

@@ -34,9 +34,9 @@ class TransactionService
         return $this->fetchTransactions();
     }
 
-    public function transactionVerify($id)
+    public function transactionVerify($txRef)
     {
-        return $this->verifyTransaction($id);
+        return $this->verifyTransaction($txRef);
     }
     public function transactionResend($id)
     {
@@ -178,7 +178,7 @@ class TransactionService
     /**
      * method to verify a specific transaction
      */
-    private function verifyTransaction($transactionId)
+    private function verifyTransaction($txRef)
     {
         $headers = [
             "Authorization" => "Bearer " . $this->secretKey,
@@ -187,9 +187,7 @@ class TransactionService
         try {
             $uri =
                 "{$this->baseUrl}" .
-                "transactions/" .
-                $transactionId .
-                "/verify";
+                "transactions/verify_by_reference?tx_ref={$txRef}";
             $response = Http::withHeaders($headers)
                 ->withOptions(["verify" => false])
                 ->retry(3, 100)

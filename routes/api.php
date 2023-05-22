@@ -478,7 +478,7 @@ Route::group(["prefix" => "v1"], function () {
             App\Http\Controllers\API\CollectionController::class,
             "transactions",
         ]);
-        Route::get("transaction/verify/{id}", [
+        Route::get("transaction/verify", [
             App\Http\Controllers\API\CollectionController::class,
             "verifyTransaction",
         ]);
