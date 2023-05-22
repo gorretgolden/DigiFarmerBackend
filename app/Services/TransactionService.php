@@ -67,7 +67,6 @@ class TransactionService
             "Authorization" => "Bearer " . $this->secretKey,
         ];
 
-        return $bodyData;
         try {
             $uri = "{$this->baseUrl}" . "/charges?type=mobile_money_uganda";
             $response = Http::withHeaders($headers)
