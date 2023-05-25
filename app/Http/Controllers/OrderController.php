@@ -54,17 +54,26 @@ class OrderController extends Controller
         if (!$cart->isEmpty()) {
             foreach ($cart as $cart_data) {
                 $save_data[] = [
-                    "id" => $cart_data["id"],
                     "cart_id" => $cart_data["cart_id"],
                     "vendor_service_id" => $cart_data["vendor_service_id"],
                     "quantity" => $cart_data["quantity"],
                     "type" => $cart_data["type"],
                     "total_cost" => $cart_data["total_cost"],
-                    "user_id" => $cart_data["user_id"],
+                    "user_id" => $cart_data["user_id"] ?? $request->user()->id,
                 ];
             }
 
-            DB::table("cart_pivots")->insert($save_data);
+            foreach ($save_data as $save) {
+                $newCart[] = CartPivot::create([
+                    "cart_id" => $save["cart_id"],
+                    "vendor_service_id" => $save["vendor_service_id"],
+                    "quantity" => $save["quantity"],
+                    "type" => $save["type"],
+                    "total_cost" => $save["total_cost"],
+                    "user_id" => $save["user_id"],
+                ]);
+            }
+
             $orderModel = new Orders();
             $orderModel->payment_method = $request->payment_method;
             $orderModel->total_amount = $request->total_amount;
@@ -75,9 +84,9 @@ class OrderController extends Controller
             $orderModel->transaction_ref = $request->transaction_ref;
             $orderModel->external_ref = $request->external_ref;
             $orderModel->save();
-            foreach ($cart as $cartData) {
+            foreach ($newCart as $cartData) {
                 $orderdetail = new orderDetail();
-                $orderdetail->cart_pivot_id = $cartData->id;
+                $orderdetail->cart_pivot_id = $cartData["id"];
                 $orderModel->orderDetails()->save($orderdetail);
             }
 

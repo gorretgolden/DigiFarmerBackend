@@ -463,7 +463,7 @@ Route::group(["prefix" => "v1"], function () {
     });
 
     //protected routes
-    Route::middleware(["auth:api", "cors"])->group(function () {
+    Route::middleware(["auth:api,checkUser", "cors"])->group(function () {
         Route::resource(
             "tests",
             App\Http\Controllers\API\TestAPIController::class
