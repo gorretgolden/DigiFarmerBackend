@@ -98,8 +98,9 @@ class VendorServiceController extends AppBaseController
 
                 'price'=>'required|integer',
                 'weight'=>'required|integer',
+                'weight_unit'=>'required|string',
                 'stock_amount' =>'required|integer',
-                'weight_unit'=> 'required|string'
+                'animal_categories'=>'required|array'
             ]);
             $vendor_service->charge = $request->charge;
             $vendor_service->stock_amount = $request->stock_amount;
@@ -107,6 +108,7 @@ class VendorServiceController extends AppBaseController
             $vendor_service->weight_unit = $request->weight_unit;
             $vendor_service->status = 'on-sale';
             $vendor_service->save();
+            $vendor_service->animal_categories()->attach($request->animal_categories);
         }
 
 
@@ -153,7 +155,6 @@ class VendorServiceController extends AppBaseController
 
             ]);
 
-
             $vendor_service->price = $request->price;
             $vendor_service->stock_amount = $request->stock_amount;
             $vendor_service->status = 'on-sale';
@@ -174,10 +175,12 @@ class VendorServiceController extends AppBaseController
         //agronomist
           if($category == 'Agronomists'){
             $request->validate([
-                'expertise'=>'required|string|min:10',
+              'expertise'=>'required|string|min:10',
                 'charge' => 'required|integer',
                 'charge_unit'=>'required|string',
-                'access' => 'required|string'
+                'access' => 'required|string',
+                'crops'=>'required|array'
+
 
             ]);
 
@@ -195,6 +198,7 @@ class VendorServiceController extends AppBaseController
             $vendor_service->charge_unit = $request->charge_unit;
             $vendor_service->access = $request->access;
             $vendor_service->save();
+            $vendor_service->crops()->attach($request->crops);
         }
 
         //vet
@@ -363,10 +367,171 @@ class VendorServiceController extends AppBaseController
         }
 
         $vendorService->name = ucwords($request->name);
-        $vendorService->price = $request->price;
+
         $vendorService->is_verified = $request->is_verified;
         $vendorService->description = $request->description;
         $vendorService->save();
+
+         if(!empty($request->price)){
+             $vendorService->price = $request->price;
+              $vendorService->save();
+
+        }
+
+
+        //optional params
+        if(!empty($request->sub_category_id)){
+             $vendorService->sub_category_id = $request->sub_category_id;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->charge)){
+             $vendorService->charge = $request->charge;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->weight)){
+             $vendorService->weight = $request->weight;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->weight_unit)){
+             $vendorService->weight_unit = $request->weight_unit;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->stock_amount)){
+             $vendorService->stock_amount = $request->stock_amount;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->expertise)){
+             $vendorService->expertise = $request->expertise;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->charge_frequency)){
+             $vendorService->charge_frequency = $request->charge_frequency;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->zoom_details)){
+             $vendorService->zoom_details = $request->zoom_details;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->starting_date)){
+             $vendorService->starting_date = $request->starting_date;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->ending_date)){
+             $vendorService->ending_date = $request->ending_date;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->starting_time)){
+             $vendorService->starting_time = $request->starting_time;
+              $vendorService->save();
+
+        }
+
+
+        if(!empty($request->ending_time)){
+             $vendorService->ending_time = $request->ending_time;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->principal)){
+             $vendorService->principal = $request->principal;
+              $vendorService->save();
+
+        }
+
+
+         if(!empty($request->interest_rate)){
+             $vendorService->interest_rate = $request->interest_rate;
+              $vendorService->save();
+
+        }
+
+
+         if(!empty($request->status)){
+             $vendorService->status = $request->status;
+              $vendorService->save();
+
+        }
+
+          if(!empty($request->document_type)){
+             $vendorService->document_type = $request->document_type;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->terms)){
+             $vendorService->terms = $request->terms;
+              $vendorService->save();
+
+        }
+
+
+         if(!empty($request->loan_pay_back)){
+             $vendorService->loan_pay_back = $request->loan_pay_back;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->access)){
+             $vendorService->access = $request->access;
+              $vendorService->save();
+
+        }
+
+         if(!empty($request->loan_plan_id )){
+             $vendorService->loan_plan_id  = $request->loan_plan_id ;
+              $vendorService->save();
+
+        }
+
+        if(!empty($request->user_id)){
+             $vendorService->user_id = $request->user_id;
+              $vendorService->save();
+
+        }
+
+          if(!empty($request->address_id)){
+            $address = Address::find($request->address_id);
+            $vendorService->location = $address->district_name;
+            $vendorService->save();
+
+        }
+
+         if(!empty($request->crops)){
+
+            $vendorService->crops()->attach($request->crops);
+
+        }
+
+        if(!empty($request->animal_categories)){
+
+            $vendorService->animal_categories()->attach($request->animal_categories);
+
+        }
+
+
+
+
 
 
         if(!empty($request->file('image'))){

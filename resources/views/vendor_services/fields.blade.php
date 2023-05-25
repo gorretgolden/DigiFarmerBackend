@@ -2,8 +2,7 @@
 $categories = App\Models\Category::where('is_active', 1)
     ->where('type', 'vendors')
     ->pluck('name', 'id');
-$crops = App\Models\Crop::where('is_active', 1)
-    ->pluck('name', 'id');
+$crops = App\Models\Crop::where('is_active', 1)->pluck('name', 'id');
 $live_stock = App\Models\AnimalCategory::where('is_active', 1)
     ->where('type', 'livestock')
     ->pluck('name', 'id');
@@ -119,7 +118,7 @@ $loan_plans = \DB::table('loan_plans')
     {!! Form::select('crops[]', $crops, null, [
         'class' => 'form-control custom-select',
         'placeholder' => 'Select crop',
-        'multiple'
+        'multiple',
     ]) !!}
 </div>
 
@@ -127,7 +126,7 @@ $loan_plans = \DB::table('loan_plans')
 <!-- Price  Field -->
 <div class="form-group col-sm-6" id="price-container">
     {!! Form::label('price', 'Price:') !!}
-    {!! Form::number('price', null, ['class' => 'form-control', 'min' => 1000]) !!}
+    {!! Form::number('price', null, ['class' => 'form-control', 'min' => 500]) !!}
 </div>
 
 
@@ -141,9 +140,14 @@ $loan_plans = \DB::table('loan_plans')
 <!-- Status Field -->
 <div class="form-group col-sm-6" id="status-container">
     {!! Form::label('status', 'Status:') !!}
-    {!! Form::select('status', ['available-for-rent'=>'Available for rent','on-sale' => 'On-sale', 'sold' => 'Sold', 'open' => 'Open'], null, [
-        'class' => 'form-control custom-select',
-    ]) !!}
+    {!! Form::select(
+        'status',
+        ['available-for-rent' => 'Available for rent', 'on-sale' => 'On-sale', 'sold' => 'Sold', 'open' => 'Open'],
+        null,
+        [
+            'class' => 'form-control custom-select',
+        ],
+    ) !!}
 </div>
 
 <!--animal feeds-->
@@ -600,9 +604,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#expertise-container').show()
 
 
-            }
-
-            else if (category == 'Insurance') {
+            } else if (category == 'Insurance') {
                 $('#principal-container').hide()
                 $('#interest-rate-container').hide()
                 $('#interest-rate-unit-container').hide()
@@ -624,9 +626,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#terms-container').show()
 
 
-            }
-
-            else if (category == 'Farm Equipments') {
+            } else if (category == 'Farm Equipments') {
                 $('#principal-container').hide()
                 $('#interest-rate-container').hide()
                 $('#interest-rate-unit-container').hide()
@@ -649,8 +649,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#expertise-container').hide()
 
 
-            }
-            else {
+            } else {
                 $('#address-container').show()
                 $("#zoom-details-container").hide();
 

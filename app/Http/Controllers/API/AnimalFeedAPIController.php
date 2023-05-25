@@ -48,7 +48,7 @@ class AnimalFeedAPIController extends AppBaseController
                                   ->where('is_verified',1)
                                   ->orderBy('vendor_services.id','DESC')
                                   ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-                                  ->get();
+                                  ->paginate(10);
 
         $response = [
             'success'=>true,
@@ -215,7 +215,7 @@ class AnimalFeedAPIController extends AppBaseController
         ->orWhere('description','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','DESC')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-        ->get();
+          ->paginate(10);
 
 
 
@@ -275,7 +275,7 @@ class AnimalFeedAPIController extends AppBaseController
      ->whereBetween('price', [$request->min_price, $request->max_price])
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+    ->paginate(10);
 
 
 
@@ -344,7 +344,7 @@ class AnimalFeedAPIController extends AppBaseController
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+      ->paginate(10);
 
 
 
@@ -406,7 +406,7 @@ class AnimalFeedAPIController extends AppBaseController
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','ASC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
+      ->paginate(10);
 
 
 
@@ -435,7 +435,7 @@ class AnimalFeedAPIController extends AppBaseController
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','DESC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
+    ->paginate(10);
 
 
     $response = [

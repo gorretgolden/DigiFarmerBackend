@@ -31,7 +31,7 @@ class SellerProductAPIController extends Controller
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-        ->get();
+        ->paginate(10);;
 
         if($farm_equipments->count() == 0){
 
@@ -74,7 +74,7 @@ public function farm_equipments(Request $request,$id)
                           ->where('vendor_services.sub_category_id',$id)
                           ->orderBy('vendor_services.id','DESC')
                           ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-                          ->get();
+                          ->paginate(10);;
 
 
 
@@ -231,7 +231,7 @@ public function farm_equipments_sub_categories(Request $request){
         ->orderBy('vendor_services.id','DESC')
         ->where('vendor_services.name', 'like', '%' . $search. '%')->orWhere('description','like', '%' . $search.'%')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-        ->get();
+        ->paginate(10);;
 
 
 
@@ -286,7 +286,7 @@ public function farm_equipments_sub_categories(Request $request){
              ->whereBetween('price', [$request->min_price, $request->max_price])
              ->orderBy('vendor_services.id','DESC')
              ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-             ->get();
+             ->paginate(10);;
 
 
 
@@ -353,7 +353,7 @@ public function farm_equipments_sub_categories(Request $request){
              ->where('location',$district->name)
              ->orderBy('vendor_services.id','DESC')
              ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-             ->get();
+             ->paginate(10);
 
 
 
@@ -412,7 +412,7 @@ public function farm_equipments_sub_categories(Request $request){
             ->where('vendor_services.status','on-sale')->where('is_verified',1)
             ->orderBy('vendor_services.id','ASC')
             ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-            ->get();
+            ->paginate(10);
 
             $response = [
                 'success'=>true,
@@ -437,7 +437,7 @@ public function farm_equipments_sub_categories(Request $request){
             ->where('vendor_services.status','on-sale')->where('is_verified',1)
             ->orderBy('vendor_services.id','DESC')
             ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-            ->get();
+            ->paginate(10);
 
 
             $response = [

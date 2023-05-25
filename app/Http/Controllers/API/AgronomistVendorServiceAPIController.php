@@ -37,7 +37,7 @@ class AgronomistVendorServiceAPIController extends Controller
                       ->where('crops.id',$id)
                       ->orderBy('vendor_Services.id','DESC')
                       ->select('vendor_services.id as id','vendor_services.name as name','crops.name as crop','vendor_services.image','description','charge_unit','charge','is_verified','location')
-                      ->get();
+                     ->paginate(10);
 
   // dd($animal_feeds);
 
@@ -129,7 +129,7 @@ class AgronomistVendorServiceAPIController extends Controller
         ->orWhere('expertise','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','ASC')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-        ->get();
+        ->paginate(10);
 
 
 
@@ -185,7 +185,7 @@ public function charge_range(Request $request){
      ->whereBetween('charge', [$request->min_charge, $request->max_charge])
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+     ->paginate(10);
 
 
 
@@ -253,7 +253,7 @@ public function charge_range(Request $request){
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+     ->paginate(10);
 
 
      $all_agronomist_services = DB::table('vendor_services')
@@ -311,7 +311,7 @@ public function charge_range(Request $request){
     ->where('is_verified',1)
     ->orderBy('vendor_services.id','ASC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
+    ->paginate(10);
 
 
 
@@ -338,8 +338,7 @@ public function charge_range(Request $request){
     ->where('is_verified',1)
     ->orderBy('vendor_services.id','DESC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
-
+    ->paginate(10);
 
 
 

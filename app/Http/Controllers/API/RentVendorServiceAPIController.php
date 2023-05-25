@@ -29,7 +29,7 @@ class RentVendorServiceAPIController extends Controller
     public function index(Request $request)
     {
 
-        $rentVendorServices = VendorService::where('status','available-for-rent')->where('is_verified',1)->latest()->get();
+        $rentVendorServices = VendorService::where('status','available-for-rent')->where('is_verified',1)->latest()->paginate(10);
         $response = [
             'success'=>true,
             'data'=> [
@@ -90,7 +90,7 @@ public function rent_services(Request $request,$id)
                           ->where('vendor_services.sub_category_id',$id)
                           ->orderBy('vendor_services.id','DESC')
                           ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-                          ->get();
+                          ->paginate(10);
 
 
 
@@ -249,7 +249,7 @@ public function rent_sub_categories(Request $request){
         ->orWhere('description','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','DESC')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"))
-        ->get();
+        ->paginate(10);
 
 
 
@@ -305,8 +305,7 @@ public function rent_sub_categories(Request $request){
      ->whereBetween('charge', [$request->min_price, $request->max_price])
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
-
+     ->paginate(10);
 
      if(count($rent_services)==0){
         $response = [
@@ -372,7 +371,7 @@ public function rent_sub_categories(Request $request){
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+     ->paginate(10);
 
 
 
@@ -437,7 +436,7 @@ public function rent_sub_categories(Request $request){
     ->where('vendor_services.status','available-for-rent')->where('is_verified',1)
     ->orderBy('vendor_services.name','ASC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
+    ->paginate(10);
 
 
 
@@ -465,7 +464,7 @@ public function rent_sub_categories(Request $request){
     ->where('vendor_services.status','available-for-rent')->where('is_verified',1)
     ->orderBy('vendor_services.name','DESC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
+    ->paginate(10);
 
 
     $response = [

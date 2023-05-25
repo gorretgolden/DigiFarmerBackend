@@ -26,7 +26,7 @@ class TrainingVendorServiceAPIController extends Controller
         ->where('is_verified',1)
         ->orderBy('vendor_services.id','DESC')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-        ->get();
+        ->paginate(10);
 
         if(count($trainingVendorServices) == 0){
 
@@ -121,8 +121,7 @@ class TrainingVendorServiceAPIController extends Controller
                           ->where('vendor_services.sub_category_id',$id)
                           ->orderBy('vendor_services.id','DESC')
                           ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-                          ->get();
-
+                          ->paginate(10);
 
 
     if ($trainings->count() == 0) {
@@ -229,7 +228,7 @@ class TrainingVendorServiceAPIController extends Controller
         ->orWhere('description','like', '%' . $search.'%')
         ->orderBy('vendor_services.id','DESC')
         ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-        ->get();
+        ->paginate(10);
 
 
         if(count($trainings) == 0){
@@ -285,7 +284,7 @@ public function charge_range(Request $request){
      ->whereBetween('charge', [$request->min_charge, $request->max_charge])
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+     ->paginate(10);
 
 
      if(count($training_services)==0){
@@ -352,7 +351,7 @@ public function charge_range(Request $request){
      ->where('location',$district->name)
      ->orderBy('vendor_services.id','DESC')
      ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-     ->get();
+     ->paginate(10);
 
      $all_training_services = DB::table('vendor_services')
      ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
@@ -410,7 +409,7 @@ public function charge_range(Request $request){
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','ASC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
+   ->paginate(10);
 
 
 
@@ -438,8 +437,7 @@ public function charge_range(Request $request){
     ->where('is_verified',1)
     ->orderBy('vendor_services.name','DESC')
     ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-    ->get();
-
+    ->paginate(10);
 
     $response = [
         'success'=>true,

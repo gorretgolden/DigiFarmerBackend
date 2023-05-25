@@ -320,8 +320,8 @@ class VendorServiceAPIController extends Controller
            $user->save();
         }
 
-        $admin = User::where('user_type','admin')->first();
-        $admin->notify(new NewVendorServiceNotification($vendor_service));
+        //$admin = User::where('user_type','admin')->first();
+        //$admin->notify(new NewVendorServiceNotification($vendor_service));
 
         $response = [
             'success'=>true,

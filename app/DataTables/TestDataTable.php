@@ -65,11 +65,7 @@ class TestDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
-            'image',
-            'user_id',
-            'description',
-            'date'
+            'name'
         ];
     }
 
