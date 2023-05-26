@@ -816,69 +816,6 @@ class UserAPIController extends AppBaseController
     }
 
     public function userVerifications(Request $request)
-<<<<<<< HEAD
-   {
-       if(!$request->hasFile('image')) {
-           return response()->json(['upload_file_not_found'], 400);
-        }
-
-       $allowedfileExtension=['pdf','jpg','png'];
-       $files = $request->file('image');
-       $errors = [];
-
-       foreach ($files as $file) {
-
-        $extension = $file->getClientOriginalExtension();
-
-        $check = in_array($extension,$allowedfileExtension);
-
-        $existing_user = UserVerification::where('user_id',auth()->user()->id)->first();
-
-
-
-        if($check) {
-            foreach ($request->file('image') as $imagefile) {
-
-                if($existing_user){
-                    $response = [
-                        'success'=>false,
-                        'message'=>'You already uploaded your documents for verification'
-                       ];
-
-                    return response()->json($response,200);
-                }else{
-                    $verification = new UserVerification();
-                    $path = $imagefile->store('/images/resource', ['disk' =>   'user-verification-documents']);
-                    $verification->image = $path;
-                    $verification->user_id = auth()->user()->id;
-                    $verification->verified = false;
-                    $verification->save();
-
-                }
-
-
-
-
-              }
-
-      }
-        else{
-
-            return response()->json(['invalid_file_format'], 422);
-        }
-
-        return response()->json(['file_uploaded'], 200);
-
-    }
-}
-
-
-
-
-
-    public function userVerificationsff(Request $request)
-=======
->>>>>>> e47c18abd994c64a7b02ea977d6509b1a0506953
     {
         if (!$request->hasFile("image")) {
             return response()->json(["upload_file_not_found"], 400);
