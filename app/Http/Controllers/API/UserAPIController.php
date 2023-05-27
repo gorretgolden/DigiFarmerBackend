@@ -669,6 +669,7 @@ class UserAPIController extends AppBaseController
     public function contact(Request $request)
     {
         $token = $request->user_token;
+
         $res = DB::table("users")
             ->select("avatar", "description", "type", "token", "online", "name")
             ->where("token", "!=", $token)

@@ -30,7 +30,7 @@ Route::group(["prefix" => "v1"], function () {
     Route::any("contact", [
         App\Http\Controllers\API\UserAPIController::class,
         "contact",
-    ]);
+    ])->middleware("checkUser");
     Route::any("get_rtc_token", [
         App\Http\Controllers\API\AccessTokenController::class,
         "getRtcToken",
