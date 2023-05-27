@@ -599,7 +599,7 @@ class UserAPIController extends AppBaseController
             $map = [];
             $map["type"] = $input["type"];
             $map["open_id"] = $input["open_id"];
-            $result = DB::table("google_users")
+            $result = DB::table("users")
                 ->select(
                     "avatar",
                     "description",
@@ -615,8 +615,19 @@ class UserAPIController extends AppBaseController
                 $input["created_at"] = Carbon::now();
                 $input["access_token"] = md5(uniqid() . rand(10000, 99999));
                 $input["expiry_date"] = Carbon::now()->addDays(30);
-                $user_id = DB::table("google_users")->insertGetId($input);
-                $user_result = DB::table("google_users")
+                $input["first_name"] = $input["name"];
+                $input["last_name"] = $input["name"];
+                $input["username"] = $input["name"];
+                $input["user_type"] = "farmer";
+                $input["isAdmin"] = 0;
+                $input["is_verified"] = 0;
+                $input["is_active"] = 0;
+                $input["is_vendor"] = 0;
+                $input["password"] = Hash::make($input["email"]);
+                $input["is_verified_otp"] = 0;
+
+                $user_id = DB::table("users")->insertGetId($input);
+                $user_result = DB::table("users")
                     ->select(
                         "avatar",
                         "description",
@@ -636,7 +647,7 @@ class UserAPIController extends AppBaseController
             } else {
                 $access_token = md5(uniqid() . rand(10000, 99999));
                 $expire_date = Carbon::now()->addDays(30);
-                DB::table("google_users")
+                DB::table("users")
                     ->where($map)
                     ->update([
                         "access_token" => $access_token,
@@ -657,7 +668,8 @@ class UserAPIController extends AppBaseController
     public function contact(Request $request)
     {
         $token = $request->user_token;
-        $res = DB::table("google_users")
+
+        $res = DB::table("users")
             ->select("avatar", "description", "type", "token", "online", "name")
             ->where("token", "!=", $token)
             ->get();
@@ -683,7 +695,7 @@ class UserAPIController extends AppBaseController
             $doc_id = "";
         }
         //get the other user
-        $res = DB::table("google_users")
+        $res = DB::table("users")
             ->select("avatar", "name", "token", "fcmtoken")
             ->where("token", "=", $to_token)
             ->first();
@@ -781,7 +793,7 @@ class UserAPIController extends AppBaseController
             ];
         }
 
-        DB::table("google_users")
+        DB::table("users")
             ->where("token", "=", $token)
             ->update(["fcmtoken" => $fcmtoken]);
 
