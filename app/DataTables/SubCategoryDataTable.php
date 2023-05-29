@@ -37,7 +37,7 @@ class SubCategoryDataTable extends DataTable
      */
     public function query(SubCategory $model)
     {
-        return $model->newQuery()->with(['category']);
+        return $model->newQuery()->with(['category'])->orderBy('id','DESC');
     }
 
     /**
