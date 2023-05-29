@@ -61,6 +61,7 @@ class VendorServiceController extends AppBaseController
     public function store(CreateVendorServiceRequest $request)
     {
 
+       // dd($request->all());
 
         $sub_category = SubCategory::find($request->sub_category_id);
         $category = $sub_category->category->name;
@@ -144,6 +145,21 @@ class VendorServiceController extends AppBaseController
             $vendor_service->ending_time = $request->ending_time;
             $vendor_service->ending_time = $request->ending_time;
             $vendor_service->status = 'open';
+            $vendor_service->save();
+        }
+
+        //rent
+        if($category == 'Rent'){
+            $request->validate([
+                'charge'=>'required',
+                'charge_frequency' =>'required|string',
+                'stock_amount' =>'required|integer'
+
+            ]);
+            $vendor_service->charge = $request->charge;
+            $vendor_service->charge_frequency = $request->charge_frequency;
+            $vendor_service->stock_amount = $request->stock_amount;
+            $vendor_service->status = 'available-for-rent';
             $vendor_service->save();
         }
 

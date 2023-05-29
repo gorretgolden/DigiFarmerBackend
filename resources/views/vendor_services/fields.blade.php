@@ -684,7 +684,7 @@ $loan_plans = \DB::table('loan_plans')
             var access_text = $(this).find("option:selected").text()
             console.log(access_text)
 
-            if (access_text == 'Online') {
+            if (access_text == 'online') {
 
                 $("#zoom-details-container").show();
 
