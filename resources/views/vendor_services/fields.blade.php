@@ -236,13 +236,6 @@ $loan_plans = \DB::table('loan_plans')
 
 
 <!--training vendors , veterinary and agronomist-->
-<!-- Zoom Details Field -->
-<div class="form-group col-sm-12 col-lg-12" id="zoom-details-container">
-    {!! Form::label('zoom_details', 'Zoom Details:') !!}
-    {!! Form::textarea('zoom_details', null, ['class' => 'form-control']) !!}
-</div>
-
-
 
 
 <!--training vendors-->
@@ -271,6 +264,13 @@ $loan_plans = \DB::table('loan_plans')
     {!! Form::label('ending_time', 'Ending Time:') !!}
     {!! Form::text('ending_time', null, ['class' => 'form-control', 'id' => 'ending_time']) !!}
 </div>
+
+<!-- Zoom Details Field -->
+<div class="form-group col-sm-12 col-lg-12" id="zoom-details-container">
+    {!! Form::label('zoom_details', 'Zoom Details:') !!}
+    {!! Form::textarea('zoom_details', null, ['class' => 'form-control']) !!}
+</div>
+
 
 
 <!--finance-->
@@ -370,7 +370,7 @@ $loan_plans = \DB::table('loan_plans')
         'access',
         ['online' => 'Online', 'offline' => 'Offline', 'call' => 'Call', 'in-person' => 'In-person'],
         null,
-        ['class' => 'form-control type', 'placeholder' => 'Select access type'],
+        ['class' => 'form-control type', 'placeholder' => 'Select access type', 'id' => 'access'],
     ) !!}
 </div>
 
@@ -378,7 +378,6 @@ $loan_plans = \DB::table('loan_plans')
 
 @push('scripts')
     <script>
-        console.log('hfgkkgy778889k');
         $(document).ready(function() {
 
             //user address
@@ -541,6 +540,8 @@ $loan_plans = \DB::table('loan_plans')
                 $('#ending-date-container').show()
                 $('#starting-time-container').show()
                 $('#ending-time-container').show()
+                $('#charge-container').show()
+                $('#access-container').show()
                 $('#status-container').hide()
                 $('#weight-container').hide()
                 $('#weight-unit-container').hide()
@@ -674,6 +675,21 @@ $loan_plans = \DB::table('loan_plans')
             } else {
                 $('#poultry').hide()
                 $('#livestock').hide()
+            }
+
+
+        });
+
+        $('#access').on('change', function() {
+            var access_text = $(this).find("option:selected").text()
+            console.log(access_text)
+
+            if (access_text == 'Online') {
+
+                $("#zoom-details-container").show();
+
+            } else {
+                $("#zoom-details-container").hide();
             }
 
 

@@ -61,6 +61,7 @@ class VendorServiceController extends AppBaseController
     public function store(CreateVendorServiceRequest $request)
     {
 
+
         $sub_category = SubCategory::find($request->sub_category_id);
         $category = $sub_category->category->name;
         $location = Address::where('id',$request->address_id)->first();
@@ -73,7 +74,8 @@ class VendorServiceController extends AppBaseController
         $vendor_service->is_verified = $request->is_verified;
         $vendor_service->price_unit = 'UGX';
         if(!empty($request->file('image'))){
-            $vendor_service->image = \App\Models\ImageUploader::upload($request->file('image'),'rent');
+            $vendor_service->image = \App\Models\ImageUploader::upload($request->file('image'),'vendor_services');
+
         }
         $vendor_service->user_id = $request->user_id;
         $vendor_service->location = $location->district_name;
@@ -115,7 +117,6 @@ class VendorServiceController extends AppBaseController
         //trainings
         if($category == 'Farmer Trainings'){
             $request->validate([
-                'name' => 'required|string|unique:training_vendor_services',
                 'charge' => 'required|integer',
                 'period' => 'nullable|integer',
                 'access' => 'required|string',
