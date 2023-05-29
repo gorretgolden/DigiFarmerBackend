@@ -6,6 +6,16 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <h1>Edit Vendor Service</h1>
+                    <div>
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a
+                                        href="#">{{ $vendorService->sub_category->category->name }}</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $vendorService->sub_category->name }}</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
@@ -17,7 +27,11 @@
 
         <div class="card">
 
-            {!! Form::model($vendorService, ['route' => ['vendorServices.update', $vendorService->id], 'method' => 'patch', 'files' => true]) !!}
+            {!! Form::model($vendorService, [
+                'route' => ['vendorServices.update', $vendorService->id],
+                'method' => 'patch',
+                'files' => true,
+            ]) !!}
 
             <div class="card-body">
                 <div class="row">

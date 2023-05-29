@@ -368,7 +368,7 @@ $loan_plans = \DB::table('loan_plans')
     {!! Form::label('Access') !!}
     {!! Form::select(
         'access',
-        ['online' => 'Online', 'offline' => 'Offline', 'call' => 'Call', 'in-person' => 'In-person'],
+        ['online' => 'online', 'chat' => 'chat', 'call' => 'call', 'in-person' => 'in-person'],
         null,
         ['class' => 'form-control type', 'placeholder' => 'Select access type', 'id' => 'access'],
     ) !!}
