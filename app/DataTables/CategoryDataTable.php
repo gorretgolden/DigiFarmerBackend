@@ -38,7 +38,7 @@ class CategoryDataTable extends DataTable
      */
     public function query(Category $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->orderBy('id','DESC');
     }
 
     /**

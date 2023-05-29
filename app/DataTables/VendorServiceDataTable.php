@@ -36,7 +36,7 @@ class VendorServiceDataTable extends DataTable
      */
     public function query(VendorService $model)
     {
-        return $model->newQuery()->with(['sub_category','vendor']);
+        return $model->newQuery()->with(['sub_category','vendor'])->orderBy('id','DESC');
     }
 
     /**

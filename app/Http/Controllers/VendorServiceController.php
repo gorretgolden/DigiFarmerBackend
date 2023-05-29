@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\LoanPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use App\Models\VendorService;
 
 
 class VendorServiceController extends AppBaseController
@@ -69,7 +70,6 @@ class VendorServiceController extends AppBaseController
 
         //required fields
         $vendor_service->name = ucwords($request->name);
-        $vendor_service->rent_vendor_sub_category_id = $request->rent_vendor_sub_category_id;
         $vendor_service->is_verified = $request->is_verified;
         $vendor_service->price_unit = 'UGX';
         if(!empty($request->file('image'))){
