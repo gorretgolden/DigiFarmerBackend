@@ -1,6 +1,7 @@
 <?php
 $categories = App\Models\Category::where('is_active', 1)
     ->where('type', 'vendors')
+    ->orderBy('name', 'ASC')
     ->pluck('name', 'id');
 $crops = App\Models\Crop::where('is_active', 1)->pluck('name', 'id');
 $live_stock = App\Models\AnimalCategory::where('is_active', 1)
@@ -9,6 +10,8 @@ $live_stock = App\Models\AnimalCategory::where('is_active', 1)
 $poultry = App\Models\AnimalCategory::where('is_active', 1)
     ->where('type', 'poultry')
     ->pluck('name', 'id');
+
+$all_animals = App\Models\AnimalCategory::where('is_active', 1)->pluck('name', 'id');
 $users = App\Models\User::where('user_type', 'farmer')->pluck('username', 'id');
 $loan_plans = \DB::table('loan_plans')
     ->select(\DB::raw("CONCAT(value, ' ', period_unit) AS duration"), 'id')
@@ -123,6 +126,18 @@ $loan_plans = \DB::table('loan_plans')
 </div>
 
 
+<!-- Animals Field -->
+<div class="form-group col-sm-6" id="animals-container">
+    {!! Form::label('animal_categories', 'Animal:') !!}
+    {!! Form::select('animal_categories[]', $all_animals, null, [
+        'class' => 'form-control custom-select',
+        'placeholder' => 'Select animals',
+        'multiple',
+    ]) !!}
+</div>
+
+
+
 <!-- Price  Field -->
 <div class="form-group col-sm-6" id="price-container">
     {!! Form::label('price', 'Price:') !!}
@@ -214,7 +229,7 @@ $loan_plans = \DB::table('loan_plans')
     {!! Form::label('charge', 'Charge :') !!}
     {!! Form::number(
         'charge',
-
+    
         null,
         ['class' => 'form-control', 'min' => 1000],
     ) !!}
@@ -458,6 +473,23 @@ $loan_plans = \DB::table('loan_plans')
 
 
             });
+            $('#category_id').select2({
+                theme: "classic",
+                width: 'resolve'
+            })
+            $('#sub_category_id').select2({
+                theme: "classic",
+                width: 'resolve'
+            })
+            $('#user_id').select2({
+                theme: "classic",
+                width: 'resolve'
+            })
+
+            $('#farmer-address').select2({
+                theme: "classic",
+                width: 'resolve'
+            })
 
             $('#ending_time').datetimepicker({
                 format: 'hh:mm A',
@@ -520,6 +552,7 @@ $loan_plans = \DB::table('loan_plans')
         $('#access-container').hide()
         $('#livestock').hide()
         $('#poultry').hide()
+        $('#animals-container').hide()
 
         $('#category_id').on('change', function() {
             var category = $(this).find("option:selected").text()
@@ -534,6 +567,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#ending-date-container').hide()
                 $('#starting-time-container').hide()
                 $('#ending-time-container').hide()
+                $('#animals-container').hide()
 
             } else if (category == 'Farmer Trainings') {
                 $('#starting-date-container').show()
@@ -547,6 +581,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#weight-unit-container').hide()
                 $('#stock-container').hide()
                 $('#crop-container').hide()
+                $('#animals-container').hide()
 
             } else if (category == 'Rent') {
 
@@ -562,6 +597,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#weight-unit-container').hide()
                 $('#price-container').hide()
                 $('#crop-container').hide()
+                $('#animals-container').hide()
 
 
             } else if (category == 'Finance') {
@@ -582,6 +618,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#weight-unit-container').hide()
                 $('#price-container').hide()
                 $('#crop-container').hide()
+                $('#animals-container').hide()
 
 
             } else if (category == 'Agronomists') {
@@ -603,6 +640,31 @@ $loan_plans = \DB::table('loan_plans')
                 $('#crop-container').show()
                 $('#charge-container').show()
                 $('#expertise-container').show()
+                $('#access-container').show()
+                $('#animals-container').hide()
+
+
+            } else if (category == 'Veterinary') {
+                $('#principal-container').hide()
+                $('#interest-rate-container').hide()
+                $('#interest-rate-unit-container').hide()
+                $('#document-type-container').hide()
+                $('#loan-plan-container').hide()
+                $('#charge-frequency-container').hide()
+                $('#stock-container').hide()
+                $('#status-container').hide()
+                $('#starting-date-container').hide()
+                $('#ending-date-container').hide()
+                $('#starting-time-container').hide()
+                $('#ending-time-container').hide()
+                $('#weight-container').hide()
+                $('#weight-unit-container').hide()
+                $('#price-container').hide()
+                $('#crop-container').hide()
+                $('#charge-container').show()
+                $('#expertise-container').show()
+                $('#access-container').show()
+                $('#animals-container').show()
 
 
             } else if (category == 'Insurance') {
@@ -625,6 +687,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#crop-container').hide()
                 $('#charge-container').hide()
                 $('#terms-container').show()
+                $('#animals-container').hide()
 
 
             } else if (category == 'Farm Equipments') {
@@ -648,6 +711,7 @@ $loan_plans = \DB::table('loan_plans')
                 $('#charge-container').hide()
                 $('#terms-container').hide()
                 $('#expertise-container').hide()
+                $('#animals-container').hide()
 
 
             } else {

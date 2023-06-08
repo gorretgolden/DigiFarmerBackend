@@ -194,7 +194,7 @@ class VendorServiceController extends AppBaseController
             $request->validate([
               'expertise'=>'required|string|min:10',
                 'charge' => 'required|integer',
-                'charge_unit'=>'required|string',
+                'charge_unit'=>'nullable|string',
                 'access' => 'required|string',
                 'crops'=>'required|array'
 
@@ -212,7 +212,7 @@ class VendorServiceController extends AppBaseController
             }
             $vendor_service->expertise = $request->expertise;
             $vendor_service->charge = $request->charge;
-            $vendor_service->charge_unit = $request->charge_unit;
+            $vendor_service->charge_unit ='UGX';
             $vendor_service->access = $request->access;
             $vendor_service->save();
             $vendor_service->crops()->attach($request->crops);
@@ -223,7 +223,7 @@ class VendorServiceController extends AppBaseController
             $request->validate([
                 'expertise'=>'required|string|min:10',
                 'charge' => 'required|integer',
-                'charge_unit'=>'required|string',
+                'charge_unit'=>'nullable|string',
                 'access' => 'required|string'
 
             ]);
@@ -239,7 +239,7 @@ class VendorServiceController extends AppBaseController
             }
             $vendor_service->expertise = $request->expertise;
             $vendor_service->charge = $request->charge;
-            $vendor_service->charge_unit = $request->charge_unit;
+            $vendor_service->charge_unit = 'UGX';
             $vendor_service->access = $request->access;
             $vendor_service->save();
         }

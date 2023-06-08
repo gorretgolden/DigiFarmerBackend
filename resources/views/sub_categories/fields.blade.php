@@ -1,5 +1,7 @@
 <?php
-$categories = App\Models\Category::where('is_active', 1)->orderBy('name','ASC')->pluck('name', 'id');
+$categories = App\Models\Category::where('is_active', 1)
+    ->orderBy('name', 'ASC')
+    ->pluck('name', 'id');
 
 ?>
 
@@ -57,33 +59,4 @@ $categories = App\Models\Category::where('is_active', 1)->orderBy('name','ASC')-
     </div>
 </div>
 @push('scripts')
-    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
-
-
-    {{-- <script type="text/javascript">
-        $(document).ready(function() {
-
-            $('#animals-container').hide()
-
-            $('#category_id').on('change', function() {
-                $(this).find("option:selected").text()
-                var name = $(this).find("option:selected").text()
-
-                if (name == 'Animal Feeds') {
-                    console.log(this.value)
-                    $('#animals-container').show()
-                    $('#image-container').hide()
-
-                } else {
-                    $('#animals-container').hide()
-
-                }
-
-
-            });
-
-
-
-        });
-    </script> --}}
 @endpush
