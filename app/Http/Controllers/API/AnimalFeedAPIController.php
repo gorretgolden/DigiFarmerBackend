@@ -13,6 +13,7 @@ use App\Models\District;
 use App\Models\AnimalCategory;
 use App\Notifications\NewAnimalFeedNotification;
 use DB;
+use App\Models\SubCategory;
 
 /**
  * Class AnimalFeedController
@@ -41,14 +42,14 @@ class AnimalFeedAPIController extends AppBaseController
 
 
              $animalFeeds = DB::table('vendor_services')
-                                  ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
-                                  ->join('categories','categories.id','=','sub_categories.category_id')
-                                  ->where('categories.name','Animal Feeds')
-                                  ->where('vendor_services.status','on-sale')
-                                  ->where('is_verified',1)
-                                  ->orderBy('vendor_services.id','DESC')
-                                  ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-                                  ->paginate(10);
+                                ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                                ->join('categories','categories.id','=','sub_categories.category_id')
+                                ->where('categories.name','Animal Feeds')
+                                ->where('vendor_services.status','on-sale')
+                                 ->where('is_verified',1)
+                                ->orderBy('vendor_services.id','DESC')
+                                ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+                                ->paginate(10);
 
         $response = [
             'success'=>true,
@@ -99,7 +100,64 @@ class AnimalFeedAPIController extends AppBaseController
 
     }
 
+   //animal feeds under a sub category
+    public function subcategory_animal_feeds(Request $request,$id)
+  {
+    $sub_category = SubCategory::find($id);
 
+
+
+    if (empty($sub_category)) {
+        $response = [
+            'success'=>false,
+            'message'=> 'Sub category not found'
+         ];
+
+         return response()->json($response,404);
+
+    }
+
+    $animal_feeds  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Animal Feeds')
+                          ->where('vendor_services.status','on-sale')->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+                          ->paginate(10);
+
+
+
+
+    if ($animal_feeds->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No  animal feeds have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-animal-feeds' =>$animal_feeds->count(),
+                'animal-feeds'=>$animal_feeds
+            ],
+            'message'=> 'Animal Feeds under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+    }
+
+
+
+
+}
 
 
 

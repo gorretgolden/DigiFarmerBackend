@@ -135,7 +135,7 @@ class CartItemController extends Controller
                 $success["id"] = $new_cart_product->id;
                 $success["cart_id"] = $new_cart_product->cart_id;
                 $success["vendor_service_id"] =
-                    $new_cart_product->vendor_service_id;
+                $new_cart_product->vendor_service_id;
                 $success["quantity"] = $new_cart_product->quantity;
                 $success["type"] = $new_cart_product->type;
                 $success["total_cost"] = $new_cart_product->total_cost;

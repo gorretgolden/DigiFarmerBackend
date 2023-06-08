@@ -24,7 +24,7 @@ class SearchAPIController extends Controller
                 'success'=>false,
                 'message'=> 'Enter a search keyword'
               ];
-             return response()->json($response,200);
+             return response()->json($response,400);
 
         }
 

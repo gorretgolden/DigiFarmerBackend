@@ -93,8 +93,6 @@ class RentVendorService extends Model
 
     public function getImageAttribute($value)
     {
-
-
      return $this->dir.$value;
     }
 

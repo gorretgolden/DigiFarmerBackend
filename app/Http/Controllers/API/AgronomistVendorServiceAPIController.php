@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\District;
 use App\Notifications\NewAgronomistNotification;
 use DB;
+use App\Models\SubCategory;
 /**use App\Models\VendorCategory;
 
  * Class AgronomistVendorServiceController
@@ -24,6 +25,105 @@ use DB;
 class AgronomistVendorServiceAPIController extends Controller
 {
 
+
+
+    ///agronomist subcategories
+    public function agronomist_sub_categories(Request $request){
+
+    $agronomist_sub_categories = DB::table('categories')
+        ->join('sub_categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Agronomist')
+        ->where('sub_categories.is_active',1)
+        ->orderBy('sub_categories.name','ASC')
+        ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+        ->get();
+
+        if ($agronomist_sub_categories->count() == 0) {
+            $response = [
+                'success'=>false,
+                'message'=> 'No sub categories under agronomist services'
+             ];
+
+             return response()->json($response,404);
+
+        }
+        else{
+
+
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-agronomist-sub-categories' =>count($agronomist_sub_categories),
+                    'agronomist-sub-categories'=>$agronomist_sub_categories
+                ],
+                'message'=> 'Agronomist sub categories retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+}
+
+
+  ///agronomist services under a subcategory
+      public function subcategory_agro_services(Request $request,$id)
+{
+    $sub_category = SubCategory::find($id);
+
+
+
+    if (empty($sub_category)) {
+        $response = [
+            'success'=>false,
+            'message'=> 'Sub category not found'
+         ];
+
+         return response()->json($response,404);
+
+    }
+
+    $agro_services  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Agronomist')
+                          ->where('vendor_services.status','on-sale')->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+                          ->paginate(10);
+
+
+
+
+    if ($agro_services->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No  agronomist services have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-agro-services' =>$agro_services->count(),
+                'agro-services'=>$agro_services
+            ],
+            'message'=> 'Agronomist services under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+    }
+
+
+
+
+}
 
    //get agronomists under a crop
    public function crop_agromonomist_service(Request $request,$id)

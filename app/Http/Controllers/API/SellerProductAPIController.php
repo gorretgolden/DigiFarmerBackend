@@ -66,7 +66,19 @@ public function farm_equipments(Request $request,$id)
 {
     $sub_category = SubCategory::find($id);
 
-   $farm_equipments  = DB::table('vendor_services')
+
+
+    if (empty($sub_category)) {
+        $response = [
+            'success'=>false,
+            'message'=> 'Sub category not found'
+         ];
+
+         return response()->json($response,404);
+
+    }
+
+    $farm_equipments  = DB::table('vendor_services')
                           ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
                           ->join('categories','categories.id','=','sub_categories.category_id')
                           ->where('categories.name','Farm Equipments')
@@ -74,7 +86,8 @@ public function farm_equipments(Request $request,$id)
                           ->where('vendor_services.sub_category_id',$id)
                           ->orderBy('vendor_services.id','DESC')
                           ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
-                          ->paginate(10);;
+                          ->paginate(10);
+
 
 
 

@@ -10,6 +10,9 @@ use App\Models\orderDetail;
 use App\Http\Requests\OrderRequest;
 use Illuminate\Http\Request;
 use DB;
+use App\Models\User;
+use App\Notifications\NewOrderNotification;
+use App\Notifications\NewFarmerOrder;
 
 class OrderController extends Controller
 {
@@ -48,11 +51,38 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $cart = CartItem::all();
 
-        if (!$cart->isEmpty()) {
-            foreach ($cart as $cart_data) {
+    {
+        $cart_user = Cart::where('user_id',auth()->user()->id)->first();
+
+        if(empty($cart_user)){
+
+               return response()->json(
+                [
+                    "success" => false,
+                    "message" => "User has no cart",
+                ],
+                404
+            );
+
+        }
+        $cart = CartItem::where('cart_id',$cart_user->id)->get();
+        $data = [];
+        $save_data =[];
+
+        if(empty($cart)){
+
+               return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Your cart it empty",
+                ],
+                404
+            );
+
+        }else{
+
+             foreach ($cart as $cart_data) {
                 $save_data[] = [
                     "cart_id" => $cart_data["cart_id"],
                     "vendor_service_id" => $cart_data["vendor_service_id"],
@@ -72,7 +102,32 @@ class OrderController extends Controller
                     "total_cost" => $save["total_cost"],
                     "user_id" => $save["user_id"],
                 ]);
+
+
+                //update farmer and vendor details
+                $vendor_service = VendorService::find($save["vendor_service_id"]);
+                $vendor = $vendor_service->vendor;
+
+                $data['vendor_service'] = $vendor_service->name;
+                $data['vendor'] = $vendor;
+                $data['vendor_name'] = $vendor_service->vendor->username;
+                $data['farmer_name'] = auth()->user()->username;
+                $data['farmer_email'] = auth()->user()->email;
+                $data['vendor_email'] = $vendor_service->vendor->email;
+
+
+
             }
+
+
+             $farmer = User::find(auth()->user()->id);
+             $vendor = User::find($data['vendor']['id']);
+
+            $vendor->notify(new NewFarmerOrder($data));
+            $farmer->notify(new NewOrderNotification($data));
+
+            dd($data);
+
 
             $orderModel = new Orders();
             $orderModel->payment_method = $request->payment_method;
@@ -84,13 +139,24 @@ class OrderController extends Controller
             $orderModel->transaction_ref = $request->transaction_ref;
             $orderModel->external_ref = $request->external_ref;
             $orderModel->save();
+
+            //update order id
+            $data['order_id'] = $orderModel->id;
+
+
             foreach ($newCart as $cartData) {
                 $orderdetail = new orderDetail();
                 $orderdetail->cart_pivot_id = $cartData["id"];
                 $orderModel->orderDetails()->save($orderdetail);
             }
 
+               //send notifacation after order
+
+
             CartItem::where(["user_id" => $request->user()->id])->delete();
+
+            //notify farmer and vendor
+
             return response()->json(
                 [
                     "success" => true,
@@ -99,12 +165,15 @@ class OrderController extends Controller
                 ],
                 201
             );
-        } else {
-            return response()->json(
-                ["message" => "You add some items to cart"],
-                402
-            );
+
+
         }
+
+
+
+
+
+
     }
 
     /**

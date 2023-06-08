@@ -91,6 +91,65 @@ class FinanceVendorServiceAPIController extends Controller
     }
 
 
+    //finance services under a sub category
+       public function subcategory_finance_services(Request $request,$id)
+{
+    $sub_category = SubCategory::find($id);
+
+
+
+    if (empty($sub_category)) {
+        $response = [
+            'success'=>false,
+            'message'=> 'Sub category not found'
+         ];
+
+         return response()->json($response,404);
+
+    }
+
+    $finance_services  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Finance')
+                          ->where('vendor_services.status','on-sale')->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+                          ->paginate(10);
+
+
+
+
+    if ($finance_services->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No  finance services have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-finance-services' =>$finance_services->count(),
+                'finance-services'=>$finance_services
+            ],
+            'message'=> 'Finance services under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+    }
+
+
+
+
+}
+
 
      public function random_strings($length_of_string)
      {

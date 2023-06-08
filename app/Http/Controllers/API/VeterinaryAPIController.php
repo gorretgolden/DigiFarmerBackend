@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\District;
 use App\Notification\NewVeterinaryNotification;
 use DB;
+use App\Models\SubCategory;
 
 /**
  * Class VeterinaryController
@@ -62,6 +63,105 @@ class VeterinaryAPIController extends AppBaseController
 
 
     }
+
+
+    //get vet sub categories
+       public function vet_sub_categories(Request $request){
+
+    $vet_sub_categories = DB::table('categories')
+        ->join('sub_categories','categories.id','=','sub_categories.category_id')
+        ->where('categories.name','Veterinary')
+        ->where('sub_categories.is_active',1)
+        ->orderBy('sub_categories.name','ASC')
+        ->select('sub_categories.id','sub_categories.name',DB::raw("CONCAT('storage/sub_categories/', sub_categories.image) AS image"),'categories.name as category')
+        ->get();
+
+        if ($vet_sub_categories->count() == 0) {
+            $response = [
+                'success'=>false,
+                'message'=> 'No sub categories under vet services'
+             ];
+
+             return response()->json($response,404);
+
+        }
+        else{
+
+
+            $response = [
+                'success'=>true,
+                'data'=> [
+                    'total-vet-sub-categories' =>count($vet_sub_categories),
+                    'vet-sub-categories'=>$vet_sub_categories
+                ],
+                'message'=> 'Vet sub categories retrieved successfully'
+             ];
+
+             return response()->json($response,200);
+        }
+
+
+}
+
+
+    //vet services under a sub category
+    public function subcategory_vet_services(Request $request,$id)
+{
+    $sub_category = SubCategory::find($id);
+
+
+
+    if (empty($sub_category)) {
+        $response = [
+            'success'=>false,
+            'message'=> 'Sub category not found'
+         ];
+
+         return response()->json($response,404);
+
+    }
+
+    $vet_services  = DB::table('vendor_services')
+                          ->join('sub_categories','vendor_services.sub_category_id','=','sub_categories.id')
+                          ->join('categories','categories.id','=','sub_categories.category_id')
+                          ->where('categories.name','Veterinary')
+                          ->where('vendor_services.status','on-sale')->where('is_verified',1)
+                          ->where('vendor_services.sub_category_id',$id)
+                          ->orderBy('vendor_services.id','DESC')
+                          ->select('vendor_services.*',DB::raw("CONCAT('storage/vendor_services/', vendor_services.image) AS image"))
+                          ->paginate(10);
+
+
+
+
+    if ($vet_services->count() == 0) {
+        $response = [
+            'success'=>true,
+            'message'=> 'No  vet services have been posted under '.$sub_category->name
+         ];
+
+         return response()->json($response,404);
+
+    }
+    else{
+
+
+        $response = [
+            'success'=>true,
+            'data'=> [
+                'total-vet-services' =>$vet_services->count(),
+                'vet-services'=>$vet_services
+            ],
+            'message'=> 'Vet services under '.$sub_category->name.' retrieved successfully'
+         ];
+
+         return response()->json($response,200);
+    }
+
+
+
+
+}
 
     //filter by price range
 public function charge_range(Request $request){

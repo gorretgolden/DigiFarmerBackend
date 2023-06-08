@@ -86,6 +86,7 @@ class User extends Authenticable implements  Wallet
         'last_name' => 'required|string',
         'email' => 'required|unique:users,id|email',
         'image_url' => 'nullable',
+        'image_url'=>'image|mimes:jpeg,png,jpg|max:2048',
         'country_id' => 'nullable',
         'phone' => 'required|unique:users,id|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:9',
         'password' => 'required',

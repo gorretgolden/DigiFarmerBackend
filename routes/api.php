@@ -143,7 +143,18 @@ Route::group(["prefix" => "v1"], function () {
         Route::get("/farm_equipments", [
             App\Http\Controllers\API\SellerProductAPIController::class,
             "farm_equipments_sub_categories",
-        ]); //farm equipments
+        ]);
+
+         Route::get("/agronomist_services", [
+            App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,
+            "agronomist_sub_categories",
+        ]);
+
+         Route::get("/vet_services", [
+            App\Http\Controllers\API\VeterinaryAPIController::class,
+            "vet_sub_categories",
+         ]);
+
         Route::get("/rent_services", [
             App\Http\Controllers\API\RentVendorServiceAPIController::class,
             "rent_sub_categories",
@@ -151,15 +162,16 @@ Route::group(["prefix" => "v1"], function () {
         Route::get("/finance_services", [
             App\Http\Controllers\API\FinanceVendorServiceAPIController::class,
             "finance_sub_categories",
-        ]); //farm equipments
+        ]);
         Route::get("/insurance_services", [
             App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,
             "insurance_sub_categories",
-        ]); //farm equipments
+        ]);
         Route::get("/training_services", [
             App\Http\Controllers\API\TrainingVendorServiceAPIController::class,
             "training_sub_categories",
         ]); //trainings
+
         Route::get("/animal_feeds", [
             App\Http\Controllers\API\AnimalFeedAPIController::class,
             "animal_feed_sub_categories",
@@ -168,28 +180,50 @@ Route::group(["prefix" => "v1"], function () {
         Route::get("/{id}/rent_services", [
             App\Http\Controllers\API\RentVendorServiceAPIController::class,
             "rent_services",
-        ]); //vendors
-        //  Route::get('/{id}/animal_feeds', [App\Http\Controllers\API\AnimalFeedsAPIController::class,'animal_feeds']);//vendors
+        ]);
+
+         Route::get("/{id}/animal_feeds", [
+            App\Http\Controllers\API\AnimalFeedAPIController::class,
+            "subcategory_animal_feeds",
+        ]);
+
+
         Route::get("/{id}/training_services", [
             App\Http\Controllers\API\TrainingVendorServiceAPIController::class,
             "trainings",
         ]); //trainings vendors
+
         Route::get("/{id}/farm_equipments", [
             App\Http\Controllers\API\SellerProductAPIController::class,
             "farm_equipments",
         ]); //farm equipments
+
         Route::get("crop/{id}/agronomists", [
             App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,
             "crop_agromonomist_service",
-        ]); //vendors
-        Route::get("/{id}/veterinary", [
-            App\Http\Controllers\API\SellerProductAPIController::class,
-            "farm_equipments",
-        ]); //vendors
-        Route::get("/{id}/finance", [
-            App\Http\Controllers\API\SellerProductAPIController::class,
-            "farm_equipments",
-        ]); //vendors
+        ]);
+
+
+        Route::get("/{id}/agronomist_services", [
+            App\Http\Controllers\API\AgronomistVendorServiceAPIController::class,
+            "subcategory_agro_services",
+        ]);
+
+
+        Route::get("/{id}/vet_services", [
+            App\Http\Controllers\API\VeterinaryAPIController::class,
+            "subcategory_vet_services",
+        ]); //vet services
+
+        Route::get("/{id}/finance_services", [
+            App\Http\Controllers\API\FinanceVendorServiceAPIController::class,
+            "subcategory_finance_services",
+        ]); //finance
+
+          Route::get("/{id}/insurance_services", [
+            App\Http\Controllers\API\InsuaranceVendorServiceAPIController::class,
+            "insurance_services",
+        ]);
     });
 
     Route::get("market/crops_on_sales", [
@@ -898,9 +932,6 @@ Route::group(["prefix" => "v1"], function () {
     });
 });
 
-//Route::resource('crop_oders', App\Http\Controllers\API\CropOrderAPIController::class);
-
-//Route::resource('crop_orders', App\Http\Controllers\API\CropOrderAPIController::class);
 
 Route::resource(
     "onboardings",

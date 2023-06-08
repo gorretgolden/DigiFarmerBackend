@@ -339,3 +339,6 @@ Route::resource('subCategories', App\Http\Controllers\SubCategoryController::cla
 
 
 Route::resource('vendorServices', App\Http\Controllers\VendorServiceController::class);
+
+
+Route::resource('services', App\Http\Controllers\ServiceController::class);

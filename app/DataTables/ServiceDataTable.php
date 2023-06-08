@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\CropOnSale;
+use App\Models\Service;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class CropOnSaleDataTable extends DataTable
+class ServiceDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,23 +18,18 @@ class CropOnSaleDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('image', function($data){
-            return '<img src='.$data->image.' class="img-thumbnail w-25"/> ';
-
-
-
-        })->rawColumns(['image', 'action']);
-
+        return $dataTable->addColumn('action', 'services.datatables_actions');
     }
+
     /**
      * Get query source of dataTable.
-     *   })->addColumn('action', 'crop_on_sales.datatables_actions')->
-     * @param \App\Models\CropOnSale $model
+     *
+     * @param \App\Models\Service $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(CropOnSale $model)
+    public function query(Service $model)
     {
-        return $model->newQuery()->with(['user','crop'])->orderBy('id','DESC');
+        return $model->newQuery();
     }
 
     /**
@@ -70,17 +65,7 @@ class CropOnSaleDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'image',
-            'quantity',
-            'quantity_unit',
-            'selling_price',
-            'price_unit',
-            'is_sold',
-            'crop'=> new \Yajra\DataTables\Html\Column(['title'=>"Crop",'data'=>'crop.name','email'=>'crop.name']),
-            'user'=> new \Yajra\DataTables\Html\Column(['title'=>"Farmer",'data'=>'user.username','username'=>'user.username']),
-            'location'
-
-
+            'name'
         ];
     }
 
@@ -91,6 +76,6 @@ class CropOnSaleDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'crop_on_sales_datatable_' . time();
+        return 'services_datatable_' . time();
     }
 }

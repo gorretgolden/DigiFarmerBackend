@@ -318,72 +318,6 @@
         </li>
 
 
-        <li class="nav-item">
-
-            <a href="{{ route('sellerProducts.index') }}" class="nav-link ">
-                <p>Farm Equipments</p>
-            </a>
-
-        </li>
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('trainingVendorServices.index') }}" class="nav-link ">
-                <p>Farmer Trainings</p>
-            </a>
-
-
-        </li>
-
-
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('animalFeeds.index') }}" class="nav-link ">
-                <p>Animal Feeds</p>
-            </a>
-
-
-        </li>
-
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('rentVendorServices.index') }}" class="nav-link ">
-                <p>Rent Services</p>
-            </a>
-
-
-        </li>
-
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('insuaranceVendorServices.index') }}" class="nav-link ">
-                <p>Insuarance Services</p>
-            </a>
-
-
-        </li>
-
-
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('financeVendorServices.index') }}" class="nav-link ">
-                <p>Finance Services</p>
-            </a>
-
-
-        </li>
-
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('agronomistVendorServices.index') }}" class="nav-link ">
-                <p>Agronomist Services</p>
-            </a>
-
-
-        </li>
-
-        <li class="nav-item-one nav-item">
-            <a href="{{ route('veterinaries.index') }}" class="nav-link ">
-                <p>Veterinary Services</p>
-            </a>
-
-
-        </li>
-
-
 
 
 
@@ -423,6 +357,28 @@
 </li>
 
 
+<li class="nav-item-one nav-item">
+    <a href="javascript:;" class="waves-effect nav-link ">
+        <i class="fa fa-users mr-2" aria-hidden="true"></i>
+        <p class="ml-2"> Orders</p>
+    </a>
+
+    <ul class="menu-content" style="display: none">
+
+
+        <li class="nav-item">
+            <a href="{{ route('vendorServices.index') }}" class="nav-link ">
+                <p>All Orders</p>
+            </a>
+        </li>
+
+
+
+
+
+
+    </ul>
+</li>
 
 
 

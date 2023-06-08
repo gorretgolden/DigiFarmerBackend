@@ -36,6 +36,10 @@ class VendorServiceAPIController extends Controller
         return $this->sendResponse($trainingVendorServices->toArray(), 'Training Vendor Services retrieved successfully');
     }
 
+    //get vendor services under a sub category
+
+
+
     //create a vendor service
     public function store(Request $request)
     {

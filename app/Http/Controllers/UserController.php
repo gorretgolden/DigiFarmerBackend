@@ -122,6 +122,7 @@ class UserController extends AppBaseController
             'country_id' => 'nullable',
             'phone' => 'required|unique:users,id|min:9',
             'email_verified_at' => 'datetime',
+            'image_url.*' => 'image|mimes:jpeg,png,jpg|max:2048'
 
         ];
         $request->validate($farmer_rules);

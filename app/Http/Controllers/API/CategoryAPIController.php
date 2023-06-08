@@ -12,6 +12,7 @@ use Response;
 use App\Models\SubCategory;
 use DB;
 
+
 /**
  * Class CategoryController
  * @package App\Http\Controllers\API
@@ -31,7 +32,15 @@ class CategoryAPIController extends AppBaseController
     public function index(Request $request)
     {
         $categories = Category::where('is_active',1)->latest()->get(['id','name','image']);
-        $response = [
+
+        if($categories->count()==0){
+             $response = [
+            'success'=>false,
+            'message'=> 'No categories have been posted'
+            ];
+             return response()->json($response,404);
+        }else{
+             $response = [
             'success'=>true,
             'data'=> [
                 'total'=>count($categories),
@@ -40,6 +49,9 @@ class CategoryAPIController extends AppBaseController
             'message'=> 'Categories retrieved successfully'
          ];
          return response()->json($response,200);
+
+        }
+
     }
 
     //get vendor categories
